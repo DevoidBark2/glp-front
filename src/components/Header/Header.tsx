@@ -2,7 +2,8 @@
 import React from 'react';
 import {platformMenu} from "@/app/constans";
 import Link from "next/link";
-import {Avatar, Badge, Image} from "antd";
+import {Avatar, Badge} from "antd";
+import Image from "next/image"
 import {usePathname} from "next/navigation";
 import {Button, Dropdown, MenuProps} from "antd";
 import {UserOutlined} from "@ant-design/icons";
@@ -40,33 +41,35 @@ const HeaderBlock = () => {
 
     const pathName = usePathname();
 
-    return <div className="bg-[#00B96B] px-20 p-6 flex items-center justify-between">
-        <div className="flex">
-            <div className="border-dashed border-2 border-black-500 text-center">Логотип</div>
-            <div className="flex ml-10">
-                {
-                    platformMenu.map((menuItem) => (
-                        <Link
-                            key={menuItem.key}
-                            href={menuItem.link}
-                            className={`text-white hover:border-b-2 border-b-indigo-500 ml-5 ${pathName === menuItem.link ? 'border-b-2 border-b-indigo-500' : ''}`}
-                        >
-                            {menuItem.title}
-                        </Link>
-                    ))
-                }
+    return <div className="bg-[#00B96B] p-6">
+        <div className="flex justify-between container mx-auto">
+            <div className="flex">
+                <div className="border-dashed border-2 border-black-500 text-center">Логотип</div>
+                <div className="flex ml-10">
+                    {
+                        platformMenu.map((menuItem) => (
+                            <Link
+                                key={menuItem.key}
+                                href={menuItem.link}
+                                className={`text-white hover:border-b-2 border-b-indigo-500 ml-5 ${pathName === menuItem.link ? 'border-b-2 border-b-indigo-500' : ''}`}
+                            >
+                                {menuItem.title}
+                            </Link>
+                        ))
+                    }
+                </div>
             </div>
-        </div>
-        <div>
-            <Dropdown menu={{ items }} placement="bottomLeft">
-               <div className="flex items-center">
-                   <Badge count={1}>
-                       <Avatar shape="square" icon={<UserOutlined />} />
-                   </Badge>
-                   <div className="text-white ml-2">Петров Иван Михайлович</div>
-               </div>
-            </Dropdown>
+            <div>
+                <Dropdown menu={{ items }} placement="bottomLeft">
+                    <div className="flex items-center">
+                        <Badge count={1}>
+                            <Avatar shape="square" icon={<UserOutlined />} />
+                        </Badge>
+                        <div className="text-white ml-2">Петров Иван Михайлович</div>
+                    </div>
+                </Dropdown>
 
+            </div>
         </div>
     </div>;
 }
