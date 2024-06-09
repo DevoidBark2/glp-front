@@ -1,4 +1,5 @@
-import {ColorPicker, Divider} from "antd";
+"use client"
+import {ColorPicker, Divider, Select} from "antd";
 
 const SettingsPage = () => {
     return(
@@ -14,14 +15,27 @@ const SettingsPage = () => {
                             <ColorPicker defaultValue="#1677ff" disabledAlpha={true} />
                         </div>
                         <Divider/>
-                        <div className="flex items-center justify-between border-b-2 pb-2 mt-2">
+                        <div className="flex items-center justify-between pb-2 mt-2">
                             <h3>Цвет вершин</h3>
                             <ColorPicker defaultValue="#1677ff" disabledAlpha={true} />
                         </div>
+                        <Divider/>
                     </div>
                     <div className="w-1/2 border-l-2 pl-2 pr-2">
-
-                        <ColorPicker defaultValue="#1677ff" disabledAlpha={true} />
+                        <div className="flex items-center justify-between pb-2">
+                            <h3>Вид вершины</h3>
+                            <Select className="w-40 p-3" defaultValue={1}>
+                                <Select.Option value={1}>Круг</Select.Option>
+                                <Select.Option value={2}>Треугольник</Select.Option>
+                                <Select.Option value={3}>Квадрат</Select.Option>
+                            </Select>
+                        </div>
+                        <Divider/>
+                        <div className="flex items-center justify-between pb-2">
+                            <h3>Обводка вершины</h3>
+                            <ColorPicker defaultValue="#1677ff" disabledAlpha={true} />
+                        </div>
+                        <Divider/>
                     </div>
                 </div>
             </div>
