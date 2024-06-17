@@ -11,6 +11,9 @@
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
     "antd": "^5.18.0",
+    "antd-input-otp": "^2.1.0",
+    "axios": "^1.7.2",
+    "cookie-cutter": "^0.2.0",
     "mobx": "^6.12.3",
     "mobx-react": "^9.1.1",
     "next": "14.2.3",

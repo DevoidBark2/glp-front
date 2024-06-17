@@ -41,9 +41,11 @@ export default function RootLayout({
                       colorPrimaryBorder: "#00b96b"
                   },
                   Menu: {
-                    // colorPrimary: "red",
-                    //   colorPrimaryBg: "red",
-                    //   colorBgLayout: "red",
+                    colorPrimary: "red",
+                      colorPrimaryBg: "red",
+                      colorBgLayout: "red",
+                      colorPrimaryActive: "#00b96b",
+                      colorPrimaryBgHover: "#00b96b"
                   },
               }
             }}

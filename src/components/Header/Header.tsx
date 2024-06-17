@@ -1,43 +1,70 @@
 "use client"
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {platformMenu} from "@/app/constans";
 import Link from "next/link";
 import {Avatar, Badge} from "antd";
 import Image from "next/image"
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {Button, Dropdown, MenuProps} from "antd";
 import {UserOutlined} from "@ant-design/icons";
+import {useMobxStores} from "@/stores/stores";
+import {observer} from "mobx-react";
+import {getUserRole} from "@/lib/users";
 
-const items: MenuProps['items'] = [
-    {
-        key: '1',
-        label: (
-            <div className="flex items-center">
-                <Image src="/static/profile_icon.svg" alt="Профиль" width={20} height={20}/>
-                <Link href="/platform/profile" className="ml-2 text-black hover:text-black">Мой профиль</Link>
-            </div>
-        ),
-    },
-    {
-        key: '2',
-        label: (
-            <div className="flex items-center">
-                <Image src="/static/settings_icon.svg" alt="Настройки" width={20} height={20}/>
-                <Link href="/platform/settings" className="ml-2 text-black hover:text-black">Настройки</Link>
-            </div>
-        ),
-    },
-    {
-        key: '3',
-        label: (
-            <div className="flex items-center">
-                <Image src="/static/logout_icon.svg" alt="Выйти из аккаунта" width={20} height={20}/>
-                <p className="ml-2 text-black hover:text-black">Выйти</p>
-            </div>
-        ),
-    },
-];
+
 const HeaderBlock = () => {
+
+    const {userStore} = useMobxStores();
+    const router = useRouter();
+
+    const [items,setItems] = useState<MenuProps['items']>([
+        {
+            key: '1',
+            label: (
+                <div className="flex items-center">
+                    <Image src="/static/profile_icon.svg" alt="Профиль" width={20} height={20}/>
+                    <Link href="/platform/profile" className="ml-2 text-black hover:text-black">Мой профиль</Link>
+                </div>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <div className="flex items-center">
+                    <Image src="/static/control_panel_icon.svg" alt="Профиль" width={20} height={20}/>
+                    <Link href="/control_panel" className="ml-2 text-black hover:text-black">Панель учителя</Link>
+                </div>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <div className="flex items-center">
+                    <Image src="/static/settings_icon.svg" alt="Настройки" width={20} height={20}/>
+                    <Link href="/platform/settings" className="ml-2 text-black hover:text-black">Настройки</Link>
+                </div>
+            ),
+        },
+        {
+            key: '4',
+            label: (
+                <div className="flex items-center" onClick={() => userStore.logout().then(() => {
+                    router.push('/login')
+                })}>
+                    <Image src="/static/logout_icon.svg" alt="Выйти из аккаунта" width={20} height={20}/>
+                    <p className="ml-2 text-black hover:text-black">Выйти</p>
+                </div>
+            ),
+        },
+    ]);
+
+    const userRole: { role: string } | null = getUserRole();
+
+    useEffect(() => {
+        if (userRole !== null && userRole.role === "student") {
+            setItems(items?.filter(item => item?.key !== '2'));
+        }
+    }, [])
 
     const pathName = usePathname();
 
@@ -74,4 +101,4 @@ const HeaderBlock = () => {
     </div>;
 }
 
-export default HeaderBlock;
+export default observer(HeaderBlock);

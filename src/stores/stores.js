@@ -1,10 +1,13 @@
 import React from "react";
 import UserStore from "./UserStore";
+import PostStore from "@/stores/PostStore";
 
 const userStore = new UserStore();
+const postStore = new PostStore();
 
 export const RootStore = {
-    userStore
+    userStore,
+    postStore
 };
 const StoreContext = React.createContext(RootStore);
 
