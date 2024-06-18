@@ -2,6 +2,7 @@ import {action, makeAutoObservable} from "mobx";
 import {GET, POST} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import {notification} from "antd"
+import dayjs from "dayjs";
 
 export type Post = {
     id: number;
@@ -29,12 +30,13 @@ class PostStore{
         this.createPostModal = value;
     })
     getAllPosts = action(async () => {
+        this.setLoading(true);
         const token = getUserToken()
 
         await GET(`/api/posts?token=${token}`).then(response => {
             this.allPosts = response.response.map(postMapper)
         }).catch(e => {}).finally(() => {
-
+            this.setLoading(false);
         })
     })
 
@@ -45,7 +47,7 @@ class PostStore{
         form.append('image',values.image.originFileObj)
         form.append('name',values.title)
         form.append('content',values.content)
-        form.append('publish_date','2024-10-06')
+        form.append('publish_date',dayjs().format('YYYY-MM-DD HH:mm'))
 
         this.setLoading(true)
         return await POST(`/api/posts?token=${token}`,form).then(response => {
@@ -70,7 +72,7 @@ const postMapper = (post: Post) => {
         name: post.name,
         image: post.image,
         content: post.content,
-        publish_date: post.publish_date
+        publish_date: dayjs(post.publish_date).format('YYYY-MM-DD HH:mm')
     };
 }
 

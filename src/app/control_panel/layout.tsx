@@ -19,6 +19,11 @@ const items: MenuItem[] = [
         key: 'sub23',
         label: <Link href="/control_panel/posts">Посты</Link>,
         icon: <MailOutlined />,
+    },
+    {
+        key: 'sub324',
+        label: <Link href="/control_panel/students">Студенты</Link>,
+        icon: <MailOutlined />,
     }
 ];
 const ControlPanelLayout: React.FC<LayoutProps> = ({ children }) => {

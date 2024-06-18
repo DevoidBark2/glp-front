@@ -1,37 +1,56 @@
 "use client"
-import {Button, Form, Input, Modal, notification, Table, UploadProps} from "antd";
+import {Button, Form, Input, Modal, notification, Table, TableColumnsType, UploadProps} from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
 import Image from "next/image"
-import Link from "next/link";
-import {MAIN_COLOR} from "@/app/constans";
+import {convertTimeFromStringToDate} from "@/app/constans";
 import TextArea from "antd/es/input/TextArea";
 import {InboxOutlined} from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
-const columns = [
+const columns: TableColumnsType = [
     {
         title: 'Картинка',
         dataIndex: 'image',
         key: 'image',
+        width: '20%',
         render: (value:any,record:Post) => {
-            return <Image src={`http://localhost:5000${record.image}`} width={40} height={10} alt={record.name}/>
+            return <Image src={`http://localhost:5000${record.image}`} width={200} height={200} alt={record.name}/>
         }
     },
     {
         title: 'Заголовок',
         dataIndex: 'name',
+        width: '20%',
         key: 'name',
     },
     {
-        title: 'Дата публикации',
         dataIndex: 'publish_date',
         key: 'publish_date',
+        width: '20%',
+        title: 'Дата публикации',
+        sorter: (a: { publish_date: string }, b: { publish_date: string }) => {
+            return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
+        }
     },
+    {
+        title: "Действия",
+        width: '20%',
+        align: 'center' as const,
+        render: (_:any, record:any) => (
+            <div>
+                <Button type="default">Изменить</Button>
+                <Button danger type="primary" style={{marginLeft:'20px'}} >
+                    Удалить
+                </Button>
+            </div>
+        ),
+    },
+
 ];
 
 
@@ -116,7 +135,7 @@ const PostPage = () => {
             <div>
                 <Button className="mb-5" type="primary" onClick={() => postStore.setCreatePostModal(true)}>Добавить пост</Button>
             </div>
-            <Table dataSource={postStore.allPosts} columns={columns}/>
+            <Table dataSource={postStore.allPosts} columns={columns} loading={postStore.loading}/>
         </div>
     )
 }
