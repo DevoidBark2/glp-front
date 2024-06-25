@@ -1,5 +1,5 @@
 import {action, makeAutoObservable} from "mobx";
-import {GET, POST} from "@/lib/fetcher";
+import {GET, POST, PUT} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import {notification} from "antd"
 import dayjs from "dayjs";
@@ -64,6 +64,11 @@ class PostStore{
         this.allPosts = [...this.allPosts, value]
     })
 
+    addReactionPost = action(async (emoji:string) => {
+        await PUT('/api/post',emoji).then(response => {
+
+        })
+    })
 }
 
 const postMapper = (post: Post) => {

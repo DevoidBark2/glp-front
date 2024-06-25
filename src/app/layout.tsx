@@ -47,6 +47,9 @@ export default function RootLayout({
                       colorPrimaryActive: "#00b96b",
                       colorPrimaryBgHover: "#00b96b"
                   },
+                  Spin: {
+                    colorPrimary: "green"
+                  }
               }
             }}
         >
