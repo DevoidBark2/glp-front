@@ -2,6 +2,7 @@
 import {Button, Table, TableColumnsType} from "antd";
 import React from "react";
 import {convertTimeFromStringToDate} from "@/app/constans";
+import Link from "next/link";
 
 const columns: TableColumnsType = [
     {
@@ -44,9 +45,7 @@ const SectionPage = () => {
     return(
         <div className="bg-white h-full p-5">
             <div className="bg-white h-full p-5">
-                <div>
-                    <Button className="mb-5" type="primary" onClick={() => {}}>Добавить раздел</Button>
-                </div>
+                <Link href="sections/add"><Button className="mb-5" type="primary" onClick={() => {}}>Добавить раздел</Button></Link>
                 <Table dataSource={[]} columns={columns}/>
             </div>
         </div>

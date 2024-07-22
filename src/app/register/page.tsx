@@ -29,7 +29,6 @@ const RegisterPage = () => {
     const {userStore} = useMobxStores();
     const [form] = Form.useForm();
     const [formLayout] = useState<LayoutType>('vertical');
-    const [studentEnabledFields,setStudentEnabledFields] = useState<boolean>(true)
 
     function onChange() {
 
@@ -40,8 +39,8 @@ const RegisterPage = () => {
     };
 
     return(
-        <div className="flex h-screen">
-            <div className="m-auto pt-15 pb-15">
+        <div className="flex h-screen pt-15 pb-15">
+            <div className="m-auto">
 
                 {
                     !userStore.registerSuccess ?

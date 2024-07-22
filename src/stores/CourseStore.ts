@@ -17,8 +17,8 @@ type Course = {
     teacher: Teacher
 }
 
-type TeacherCourse = {
-    id: number;
+export type TeacherCourse = {
+    key: number;
     name: string;
     image: string;
     publish_date: Date
@@ -96,7 +96,7 @@ const teachCourseMapper = (course: TeacherCourse) => {
         id: course.id,
         name: course.name,
         image: course.image,
-        publish_date: course.publish_date
+        publish_date: dayjs(course.publish_date).format("YYYY-MM-DD HH:mm")
     }
 }
 export default CourseStore
