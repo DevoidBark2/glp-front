@@ -1,5 +1,5 @@
 import {action, makeAutoObservable} from "mobx";
-import {GET, POST, PUT} from "@/lib/fetcher";
+import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import {notification} from "antd"
 import dayjs from "dayjs";
@@ -66,6 +66,15 @@ class PostStore{
 
     addReactionPost = action(async (emoji:string) => {
         await PUT('/api/post',emoji).then(response => {
+
+        })
+    })
+
+    deletePost = action(async (postId: number) => {
+        const token = getUserToken();
+        await DELETE(`/api/posts?postId=${postId}&token=${token}`).then(() => {
+
+        }).catch(e => {
 
         })
     })

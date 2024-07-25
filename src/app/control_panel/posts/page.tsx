@@ -12,46 +12,7 @@ import Dragger from "antd/es/upload/Dragger";
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
-const columns: TableColumnsType = [
-    {
-        title: 'Картинка',
-        dataIndex: 'image',
-        key: 'image',
-        width: '20%',
-        render: (value:any,record:Post) => {
-            return <Image src={`http://localhost:5000${record.image}`} width={200} height={200} alt={record.name}/>
-        }
-    },
-    {
-        title: 'Заголовок',
-        dataIndex: 'name',
-        width: '20%',
-        key: 'name',
-    },
-    {
-        dataIndex: 'publish_date',
-        key: 'publish_date',
-        width: '20%',
-        title: 'Дата публикации',
-        sorter: (a: { publish_date: string }, b: { publish_date: string }) => {
-            return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
-        }
-    },
-    {
-        title: "Действия",
-        width: '20%',
-        align: 'center' as const,
-        render: (_:any, record:any) => (
-            <div>
-                <Button type="default">Изменить</Button>
-                <Button danger type="primary" style={{marginLeft:'20px'}} >
-                    Удалить
-                </Button>
-            </div>
-        ),
-    },
 
-];
 
 
 
@@ -78,10 +39,51 @@ const PostPage = () => {
         },
     };
 
+    const columns: TableColumnsType<Post> = [
+        {
+            title: 'Изображение',
+            dataIndex: 'image',
+            key: 'image',
+            width: '20%',
+            render: (_,record) => {
+                return <Image src={`http://localhost:5000${record.image}`} width={200} height={200} alt={record.name}/>
+            }
+        },
+        {
+            title: 'Заголовок',
+            dataIndex: 'name',
+            width: '20%',
+            key: 'name',
+        },
+        {
+            dataIndex: 'publish_date',
+            key: 'publish_date',
+            width: '20%',
+            title: 'Дата публикации',
+            sorter: (a,b) => {
+                return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
+            }
+        },
+        {
+            title: "Действия",
+            width: '20%',
+            align: 'center',
+            render: (_:any, record) => (
+                <div>
+                    <Button type="default">Изменить</Button>
+                    <Button danger type="primary" style={{marginLeft:'20px'}} onClick={() => postStore.deletePost(record.id)} >
+                        Удалить
+                    </Button>
+                </div>
+            ),
+        },
+
+    ];
 
     useEffect(() => {
         postStore.getAllPosts()
     },[])
+
     return(
         <div className="bg-white h-full p-5">
             <Modal

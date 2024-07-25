@@ -38,3 +38,23 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(error.response.data,{status:error.response.status})
     }
 }
+
+export async function DELETE(req: NextRequest) {
+    const { searchParams } = new URL(req.url);
+    const token = searchParams.get('token');
+    const postId = searchParams.get("postId")
+
+    try {
+        const response = await axios.delete(nextConfig.env?.API_URL + `api/posts/${postId}`,{
+            headers: {
+                Authorization: token
+            }
+        });
+
+        const responseData = response.data;
+        return NextResponse.json({ response: responseData });
+    } catch (error: any) {
+        console.error(error)
+        return NextResponse.json(error.response.data,{status:error.response.status})
+    }
+}

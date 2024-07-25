@@ -24,6 +24,12 @@ export default function RootLayout({
                     colorPrimaryActive: 'lightgray',
                     colorPrimaryTextHover: 'lightgray',
                 },
+                FloatButton: {
+                    colorPrimaryHover: '#02d079',
+                    colorPrimary: '#00b96b',
+                    colorPrimaryActive: 'lightgray',
+                    colorPrimaryTextHover: 'lightgray',
+                },
                 Radio: {
                    colorPrimary: "#00b96b",
                     colorPrimaryActive: '#02d079',
