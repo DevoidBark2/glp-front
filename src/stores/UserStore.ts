@@ -18,6 +18,11 @@ class UserStore {
     }
 
     loading: boolean = false;
+    openLeaveCourseModal: boolean = false;
+
+    setOpenLeaveCourseModal = action((value: boolean) => {
+        this.openLeaveCourseModal = value;
+    })
 
     setLoading = action((value: boolean) => {
         this.loading = value
@@ -31,7 +36,6 @@ class UserStore {
     loginUser = action(async(values:any) => {
         this.setLoading(true)
         await POST("/api/login",values).then(response => {
-            debugger
             //сохранение в куки данные пользователя
             signInUser({
                 token: response.response.token,
@@ -77,8 +81,10 @@ class UserStore {
         this.setLoading(true)
         const user = getCookieUserDetails()
 
-        await GET(`/api/get_user?token=${user.user.token}`).then(response => {
+        return await GET(`/api/get_user?token=${user.user.token}`).then(response => {
             this.setUserProfileDetails(response.response)
+        }).finally(() => {
+            this.setLoading(false)
         })
     })
 }

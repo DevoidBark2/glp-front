@@ -51,7 +51,6 @@ class PostStore{
 
         this.setLoading(true)
         return await POST(`/api/posts?token=${token}`,form).then(response => {
-            debugger
             notification.success({message: response.response.message})
             this.pushPost(postMapper(response.response.post));
         }).finally(() => {

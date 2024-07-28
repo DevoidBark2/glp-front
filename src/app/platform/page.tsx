@@ -41,7 +41,6 @@ const PlatformPage = () => {
                                             allowExpandReactions={false}
                                             onReactionClick={(emoji, event) => {
                                                 setEmojiItem(emoji.emoji)
-                                                debugger
                                                 postStore.addReactionPost(emoji.emoji)
                                             }}
                                         />

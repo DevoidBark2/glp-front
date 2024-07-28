@@ -38,7 +38,6 @@ const SettingsPage = () => {
                                 <h3>Цвет вершин</h3>
                                 <ColorPicker value={settingsStore.userSettings?.vertex_color} onChange={(value,hex) => {
                                     if (settingsStore.userSettings) {
-                                        debugger
                                         settingsStore.userSettings.vertex_color = hex;
                                         settingsStore.changeSetting();
                                     }

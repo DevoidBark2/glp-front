@@ -10,10 +10,21 @@ type Teacher = {
     email:string;
 }
 
-type Course = {
+type Category = {
+    id: number;
+    name: string
+}
+
+export type Course = {
     id: number;
     name: string;
     image: string;
+    category: Category;
+    access_right: number;
+    level: number;
+    small_description: string;
+    content_description: string;
+    duration: number
     teacher: Teacher
 }
 
@@ -31,6 +42,18 @@ class CourseStore{
     loadingCourses: boolean = false;
 
     loadingCreateCourse: boolean = false;
+    selectedCourseForDetailModal: Course | null = null
+
+    setSelectedCourseForDetailModal = action((course: Course) => {
+        this.selectedCourseForDetailModal = course;
+    })
+
+    openCourseDetailsModal: boolean = false;
+    setOpenCourseDetailsModal = action((value: boolean) => {
+        this.openCourseDetailsModal = value;
+    })
+
+
 
     setLoadingCreateCourse = ((value: boolean) => {
         this.loadingCreateCourse = value;
@@ -46,6 +69,7 @@ class CourseStore{
         this.setLoadingCourses(true)
         await GET('/api/courses').then(response => {
             this.courses = response.response.courses.map(courseMapper)
+            this.setLoadingCourses(false)
         }).catch(e => {
             notification.error({message: e.response.data.message})
         })
@@ -57,13 +81,14 @@ class CourseStore{
 
         const form = new FormData();
         form.append('name',values.name_course)
-        form.append('description',values.description)
-        form.append('image',values.image.originFileObj)
+        form.append('small_description',values.description)
+        // form.append('image',values.image.originFileObj)
         form.append('category',values.category)
         form.append('access_right',Number(values.access_right))
         form.append('duration',values.duration)
         form.append('level',Number(values.level))
         form.append('publish_date',dayjs().format('YYYY-MM-DD HH:mm'))
+        form.append("content_description",values.content_description)
 
         await POST(`/api/courses?token=${token}`,form).catch(e => {
             notification.error({message: e.response.data.message})
@@ -87,6 +112,12 @@ const courseMapper = (course: Course) => {
         id: course.id,
         name: course.name,
         image: course.image,
+        category: course.category,
+        access_right: course.access_right,
+        level:course.level,
+        small_description: course.small_description,
+        content_description: course.content_description,
+        duration: course.duration,
         teacher: course.teacher
     };
 }

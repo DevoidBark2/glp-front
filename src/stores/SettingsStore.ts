@@ -43,7 +43,6 @@ class SettingsStore{
 
         const changeUserSettings = this.userSettings;
         const token = getUserToken();
-        debugger
 
         await PUT(`/api/user-settings?token=${token}`,{changeUserSettings: changeUserSettings}).then(response => {
             notification.success({message:response.response.message})

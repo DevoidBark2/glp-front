@@ -1,5 +1,5 @@
 "use client"
-import {Button, Col, Flex, Form, notification, Row, Select, UploadProps} from "antd";
+import {Button, Col, Form, notification, Row, Select, UploadProps} from "antd";
 import {useMobxStores} from "@/stores/stores";
 import {Input} from "antd/lib";
 import {InboxOutlined} from "@ant-design/icons";
@@ -7,6 +7,8 @@ import Dragger from "antd/es/upload/Dragger";
 import React from "react";
 import {useRouter} from "next/navigation";
 import {observer} from "mobx-react";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const CourseAddPage = () => {
 
@@ -55,9 +57,9 @@ const CourseAddPage = () => {
                     <Col span={12}>
                         <Form.Item
                             name="description"
-                            label="Описание"
+                            label="Краткое описание"
                         >
-                            <Input placeholder="Введите описание курса"/>
+                            <Input placeholder="Введите краткое описание курса"/>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -118,6 +120,13 @@ const CourseAddPage = () => {
                         <Select.Option value={2}>Средний</Select.Option>
                         <Select.Option value={3}>Высокий</Select.Option>
                     </Select>
+                </Form.Item>
+
+                <Form.Item
+                    name="content_description"
+                    label="Слдержание курса"
+                >
+                    <ReactQuill theme="snow"/>
                 </Form.Item>
 
                 <div className="flex flex-col items-center">
