@@ -1,6 +1,14 @@
-import React from "react";
-import {Menu, MenuProps} from "antd";
-import {AppstoreOutlined, TeamOutlined, BarsOutlined,LogoutOutlined} from "@ant-design/icons";
+"use client"
+import React, {useState} from "react";
+import {Button, Divider, Menu, MenuProps} from "antd";
+import {
+    AppstoreOutlined,
+    TeamOutlined,
+    BarsOutlined,
+    LogoutOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined
+} from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image"
 
@@ -60,16 +68,38 @@ const items: MenuItem[] = [
     }
 ];
 const ControlPanelLayout: React.FC<LayoutProps> = ({ children }) => {
+    const [collapsed, setCollapsed] = useState(false);
+
+    const toggleCollapsed = () => {
+        setCollapsed(!collapsed);
+    };
+
     return (
-        <div className="flex p-10 bg-[rgba(89,186,145,0.9)] h-screen">
-            <Menu
-                style={{ width: 256 }}
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                mode="inline"
-                items={items}
-            />
-            <div className="px-10 w-full">
+        <div className="flex bg-[rgba(89,186,145,0.9)]">
+           <div className="flex flex-col bg-white h-screen relative">
+               <div className="flex flex-col items-center justify-center p-5 ">
+                   <Image src="/static/logout_icon.svg" alt="Выйти" width={40} height={40}
+                          className="absolute right-0"/>
+                   <div className="rounded-full bg-red-600 h-16 w-16"></div>
+                   <h1>Петров Иван Михайлович</h1>
+                   <div className="flex items-center gap-2">
+                       <Image src="/static/light_theme_icon.svg" alt="Светлая тема" width={30} height={30}/>
+                       <Image src="/static/notification_icon.svg" alt="Уведомление" width={40} height={40}/>
+                       <Image src="/static/settings_panel_icon.svg" alt="Настройки" width={30} height={30}/>
+                       <Image src="/static/profile_panel_icon.svg" alt="Настройки" width={30} height={30}/>
+                   </div>
+               </div>
+               <Divider/>
+               <Menu
+                   style={{width: 300}}
+                   defaultSelectedKeys={['1']}
+                   defaultOpenKeys={['sub1']}
+                   mode="inline"
+                   inlineCollapsed={collapsed}
+                   items={items}
+               />
+           </div>
+            <div className="p-6 w-full">
                 {children}
             </div>
         </div>

@@ -1,10 +1,9 @@
 "use client"
-import {Button, Form, Input, Modal, notification, Table, TableColumnsType, UploadProps} from "antd";
+import {Button, Form, Input, Modal, notification, Switch, Table, TableColumnsType, UploadProps} from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
-import Image from "next/image"
 import {convertTimeFromStringToDate} from "@/app/constans";
 import TextArea from "antd/es/input/TextArea";
 import {InboxOutlined} from "@ant-design/icons";
@@ -41,28 +40,25 @@ const PostPage = () => {
 
     const columns: TableColumnsType<Post> = [
         {
-            title: 'Изображение',
-            dataIndex: 'image',
-            key: 'image',
-            width: '20%',
-            render: (_,record) => {
-                return <Image src={`http://localhost:5000${record.image}`} width={200} height={200} alt={record.name}/>
-            }
-        },
-        {
-            title: 'Заголовок',
+            title: 'Название',
             dataIndex: 'name',
             width: '20%',
-            key: 'name',
         },
         {
             dataIndex: 'publish_date',
-            key: 'publish_date',
             width: '20%',
             title: 'Дата публикации',
             sorter: (a,b) => {
                 return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
             }
+        },
+        {
+            title: "Активация",
+            render: (value,record) => <Switch defaultChecked />
+        },
+        {
+            title: "Печать",
+            render: (value,record) => <Switch defaultChecked />
         },
         {
             title: "Действия",

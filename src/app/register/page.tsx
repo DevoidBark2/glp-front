@@ -1,16 +1,13 @@
 "use client"
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
-import {Button, Form, Input, Radio, DatePicker, Select, notification} from "antd";
-import React, {useEffect, useState} from "react";
+import {Button, Form, Input, DatePicker, notification} from "antd";
+import React, {useState} from "react";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
 import Link from "next/link";
 import ru from "antd/es/date-picker/locale/ru_RU"
 import {MAIN_COLOR} from "@/app/constans";
 import {OTPProps} from "antd/es/input/OTP";
-
-type LayoutType = Parameters<typeof Form>[0]['layout'];
-
 
 const buddhistLocale = {
     ...ru,
@@ -28,7 +25,6 @@ const buddhistLocale = {
 const RegisterPage = () => {
     const {userStore} = useMobxStores();
     const [form] = Form.useForm();
-    const [formLayout] = useState<LayoutType>('vertical');
 
     function onChange() {
 
@@ -50,7 +46,7 @@ const RegisterPage = () => {
 
                            <Form
                                form={form}
-                               layout={formLayout}
+                               layout="vertical"
                                style={{width:300}}
                                onFinish={() => userStore.registerUser(form.getFieldsValue()).catch(e => {
                                    notification.error({
@@ -154,7 +150,7 @@ const RegisterPage = () => {
 
                                <div className="flex flex-col items-center">
                                    <Form.Item style={{marginTop: '22px'}}>
-                                       <Button type="primary" htmlType="submit"
+                                       <Button type="primary" htmlType="submit" loading={userStore.loading}
                                                style={{padding: '20px 43px', display: "flex", alignItems: "center"}}>
                                            Зарегистрироваться
                                        </Button>

@@ -72,7 +72,7 @@ export const getCookieUserDetails = () => {
             return JSON.parse(user);
         }
 
-        return "";
+        return null;
     }
 }
 export const getUserRole = () => {

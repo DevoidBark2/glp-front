@@ -2,33 +2,28 @@
 import {observer} from "mobx-react";
 import {Button, Table, TableColumnsType} from "antd";
 import React, {useEffect} from "react";
-import Image from "next/image";
 import {convertTimeFromStringToDate} from "@/app/constans";
 import {useMobxStores} from "@/stores/stores";
 import Link from "next/link";
-import {TeacherCourse} from "@/stores/CourseStore";
+import {Course, TeacherCourse} from "@/stores/CourseStore";
 
-const columns: TableColumnsType<TeacherCourse> = [
+const columns: TableColumnsType<Course> = [
     {
-        title: 'Картинка',
-        dataIndex: 'image',
-        width: '20%',
-        render: (value:any,record) => {
-            return <Image src={`http://localhost:5000${record.image}`} width={200} height={200} alt={record.image}/>
-        }
-    },
-    {
-        title: 'Заголовок',
+        title: 'Название',
         dataIndex: 'name',
         width: '20%',
     },
     {
+      title: "Категория",
+      dataIndex: "category"
+    },
+    {
+        title: 'Дата публикации',
         dataIndex: 'publish_date',
         width: '20%',
-        title: 'Дата публикации',
-        // sorter: (a: { publish_date: string }, b: { publish_date: string }) => {
-        //     return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
-        // }
+        sorter: (a,b) => {
+            return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
+        }
     },
     {
         title: "Действия",
@@ -56,10 +51,13 @@ const CoursesPage = () => {
     return(
         <div className="bg-white h-full p-5">
             <div className="bg-white h-full p-5">
-                <div>
-                    <Link href="courses/add">
-                        <Button className="mb-5" type="primary">Добавить курс</Button>
-                    </Link>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-green-800 font-bold text-3xl">Доступные курсы</h1>
+                    <div>
+                        <Link href="courses/add">
+                            <Button className="mb-5" type="primary">Добавить курс</Button>
+                        </Link>
+                    </div>
                 </div>
                 <Table dataSource={courseStore.teacherCourses} columns={columns}/>
             </div>

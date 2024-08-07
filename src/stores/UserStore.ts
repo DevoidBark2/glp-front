@@ -1,6 +1,5 @@
 import {action, makeAutoObservable} from "mobx"
 import {GET, POST} from "@/lib/fetcher";
-import {notification} from "antd";
 import {delete_cookie, getCookieUserDetails, signInUser} from "@/lib/users";
 
 type userProfile = {
@@ -19,6 +18,16 @@ class UserStore {
 
     loading: boolean = false;
     openLeaveCourseModal: boolean = false;
+    openLoginModal: boolean = false;
+    openRegisterModal: boolean = false;
+
+    setOpenLoginModal = action((value: boolean) => {
+        this.openLoginModal = value;
+    })
+
+    setOpenRegisterModal = action((value: boolean) => {
+        this.openRegisterModal = value;
+    })
 
     setOpenLeaveCourseModal = action((value: boolean) => {
         this.openLeaveCourseModal = value;
@@ -36,13 +45,15 @@ class UserStore {
     loginUser = action(async(values:any) => {
         this.setLoading(true)
         await POST("/api/login",values).then(response => {
+            debugger
             //сохранение в куки данные пользователя
             signInUser({
-                token: response.response.token,
-                email: response.response.email,
-                role: response.response.role,
-                user_name: response.response.user_name
+                token: response.response.data.token,
+                email: response.response.data.email,
+                role: response.response.data.role,
+                user_name: response.response.data.user_name
             })
+            this.setOpenLoginModal(false)
         }).finally(() => {
             this.setLoading(false)
         })

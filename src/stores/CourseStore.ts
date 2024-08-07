@@ -25,6 +25,7 @@ export type Course = {
     small_description: string;
     content_description: string;
     duration: number
+    publish_date: Date
     teacher: Teacher
 }
 
@@ -61,7 +62,7 @@ class CourseStore{
 
     courses: Course[] = []
 
-    teacherCourses: TeacherCourse[] = []
+    teacherCourses: Course[] = []
     setLoadingCourses = action((value: boolean) => {
         this.loadingCourses = value;
     })
@@ -90,7 +91,7 @@ class CourseStore{
         form.append('publish_date',dayjs().format('YYYY-MM-DD HH:mm'))
         form.append("content_description",values.content_description)
 
-        await POST(`/api/courses?token=${token}`,form).catch(e => {
+        return await POST(`/api/courses?token=${token}`,form).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => this.setLoadingCreateCourse(false))
     })
@@ -100,7 +101,7 @@ class CourseStore{
         const token = getUserToken();
 
         await GET(`/api/get-user-courses?token=${token}`).then((response) => {
-            this.teacherCourses = response.response.courses.map(teachCourseMapper)
+            this.teacherCourses = response.response.courses.map(courseMapper)
         }).catch(e => {
             notification.error({message: e.response.data.message})
         })
@@ -118,16 +119,17 @@ const courseMapper = (course: Course) => {
         small_description: course.small_description,
         content_description: course.content_description,
         duration: course.duration,
+        publish_date: dayjs(course.publish_date).format("YYYY-MM-DD HH:mm"),
         teacher: course.teacher
     };
 }
 
-const teachCourseMapper = (course: TeacherCourse) => {
-    return {
-        id: course.id,
-        name: course.name,
-        image: course.image,
-        publish_date: dayjs(course.publish_date).format("YYYY-MM-DD HH:mm")
-    }
-}
+// const teachCourseMapper = (course: TeacherCourse) => {
+//     return {
+//         id: course.id,
+//         name: course.name,
+//         image: course.image,
+//         publish_date:
+//     }
+// }
 export default CourseStore

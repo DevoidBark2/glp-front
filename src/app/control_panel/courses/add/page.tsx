@@ -51,7 +51,7 @@ const CourseAddPage = () => {
                             label="Назвавние курса"
                             rules={[{required: true,message:"Название курса обязательно!"}]}
                         >
-                            <Input placholder="Введите название курса"/>
+                            <Input placeholder="Введите название курса"/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -108,7 +108,7 @@ const CourseAddPage = () => {
                     name="duration"
                     label="Время прохождения"
                 >
-                    <Input placeholer="Введите время прохождения" type="number"/>
+                    <Input placeholder="Введите время прохождения" type="number"/>
                 </Form.Item>
 
                 <Form.Item
