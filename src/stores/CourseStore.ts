@@ -27,6 +27,7 @@ export type Course = {
     duration: number
     publish_date: Date
     teacher: Teacher
+    status: string
 }
 
 export type TeacherCourse = {
@@ -70,9 +71,10 @@ class CourseStore{
         this.setLoadingCourses(true)
         await GET('/api/courses').then(response => {
             this.courses = response.response.courses.map(courseMapper)
-            this.setLoadingCourses(false)
         }).catch(e => {
             notification.error({message: e.response.data.message})
+        }).finally(() => {
+            this.setLoadingCourses(false);
         })
     })
 
@@ -96,14 +98,15 @@ class CourseStore{
         }).finally(() => this.setLoadingCreateCourse(false))
     })
 
-    getUserCourse = action(async () => {
+    getCoursesForCreator = action(async () => {
         this.setLoadingCourses(true)
-        const token = getUserToken();
 
-        await GET(`/api/get-user-courses?token=${token}`).then((response) => {
-            this.teacherCourses = response.response.courses.map(courseMapper)
+        await GET(`/api/get-user-courses`).then((response) => {
+            this.teacherCourses = response.data.courses.map(courseMapper)
         }).catch(e => {
             notification.error({message: e.response.data.message})
+        }).finally(() => {
+            this.setLoadingCourses(false)
         })
     })
 }
@@ -119,6 +122,7 @@ const courseMapper = (course: Course) => {
         small_description: course.small_description,
         content_description: course.content_description,
         duration: course.duration,
+        status: course.status,
         publish_date: dayjs(course.publish_date).format("YYYY-MM-DD HH:mm"),
         teacher: course.teacher
     };

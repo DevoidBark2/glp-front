@@ -1,5 +1,6 @@
 import axios from "axios"
 import {delete_cooki} from "../lib/users";
+import {axiosInstance} from "@/utils/axiosInstance";
 
 const logoutUser = () => {
     delete_cooki("userToken")
@@ -23,7 +24,7 @@ export const POST = async (url, values) => {
 
 export const GET = async (url) => {
     try{
-        const {data} = await axios.get(url)
+        const {data} = await axiosInstance.get(url)
         return data
     }catch (e){
         if(e.response.status === 401){

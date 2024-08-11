@@ -108,17 +108,14 @@ export const getUserFIO = () => {
 }
 
 export const getUserToken = () => {
-    if(!isServer){
-        const user = cookieCutter.get(COOKIE_NAME);
+    const user = cookieCutter.get(COOKIE_NAME);
 
-        if (user) {
-            const userValues = JSON.parse(user);
-            if (userValues.user && userValues.user.token) {
-                return userValues.user.token;
-            }
+    if (user) {
+        const userValues = JSON.parse(user);
+        if (userValues.user && userValues.user.token) {
+            return userValues.user.token;
         }
-
-        return null;
     }
+
     return null;
 }
