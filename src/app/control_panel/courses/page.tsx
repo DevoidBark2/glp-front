@@ -33,8 +33,13 @@ const CoursesPage = () => {
             render: (_,record) => showCourseStatus(record)
         },
         {
+            dataIndex: "duration",
+            title: "Кол-во часов, ч.",
+            sorter: (a,b) => a.duration - b.duration
+        },
+        {
             title: "Действия",
-            align: 'end' as const,
+            align: 'start',
             render: (_:any, record) => (
                 <div className="flex justify-end">
                     {record.status === StatusCourseEnum.NEW && <Button onClick={() => courseStore.publishCourse(record.id)} type="default">Опубликовать</Button>}

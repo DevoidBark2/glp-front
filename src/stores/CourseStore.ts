@@ -48,6 +48,11 @@ class CourseStore{
 
     showConfirmDeleteCourseModal: boolean = false;
 
+    loadingCourseDetails: boolean = true;
+
+    setLoadingCourseDetails = action((value: boolean) => {
+        this.loadingCourseDetails = value
+    })
     setShowConfirmDeleteCourseModal = action((value: boolean) => {
         this.showConfirmDeleteCourseModal = value;
     })
