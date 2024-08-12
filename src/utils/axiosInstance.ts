@@ -7,6 +7,6 @@ const token = getUserToken();
 export const axiosInstance = axios.create({
     baseURL: nextConfig.env?.API_URL,
     headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: token
     }
 })

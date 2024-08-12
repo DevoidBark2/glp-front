@@ -4,12 +4,14 @@ import PostStore from "@/stores/PostStore";
 import SettingsStore from "@/stores/SettingsStore";
 import CourseStore from "@/stores/CourseStore";
 import GraphStore from "@/stores/GraphStore";
+import NomenclatureStore from "@/stores/NomenclatureStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
 const settingsStore = new SettingsStore();
 const courseStore = new CourseStore();
 const graphStore = new GraphStore();
+const nomenclatureStore = new NomenclatureStore();
 
 export const RootStore = {
     userStore,
@@ -17,6 +19,7 @@ export const RootStore = {
     settingsStore,
     courseStore,
     graphStore,
+    nomenclatureStore
 };
 const StoreContext = React.createContext(RootStore);
 

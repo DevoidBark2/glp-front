@@ -55,7 +55,11 @@ export default function RootLayout({
                   },
                   Spin: {
                     colorPrimary: "green"
-                  }
+                  },
+                  Pagination: {
+                    colorPrimary: "#00b96b",
+                      colorPrimaryHover: "#00b96b"
+                }
               }
             }}
         >

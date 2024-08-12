@@ -46,6 +46,12 @@ class CourseStore{
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
 
+    showConfirmDeleteCourseModal: boolean = false;
+
+    setShowConfirmDeleteCourseModal = action((value: boolean) => {
+        this.showConfirmDeleteCourseModal = value;
+    })
+
     setSelectedCourseForDetailModal = action((course: Course) => {
         this.selectedCourseForDetailModal = course;
     })
@@ -100,18 +106,31 @@ class CourseStore{
 
     getCoursesForCreator = action(async () => {
         this.setLoadingCourses(true)
-
-        await GET(`/api/get-user-courses`).then((response) => {
-            this.teacherCourses = response.data.courses.map(courseMapper)
+        const token = getUserToken();
+        await GET(`/api/get-user-courses?token=${token}`).then((response) => {
+            this.teacherCourses = response.response.data.courses.map(courseMapper)
         }).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => {
             this.setLoadingCourses(false)
         })
     })
+
+    publishCourse = action(async(courseId: number) =>{
+        const token = getUserToken();
+        await POST(`/api/courses-publish?token=${token}`,{courseId: courseId}).then(response => {
+            notification.success({message: response.response.data.message})
+        }).catch(e => {
+            notification.warning({message: e.response.data.message})
+        })
+    })
+
+    getCourseDetails = action(async(courseId: number) => {
+        return await GET(`/api/course-details?courseId=${courseId}`)
+    })
 }
 
-const courseMapper = (course: Course) => {
+export const courseMapper = (course: Course) => {
     return {
         id: course.id,
         name: course.name,

@@ -1,27 +1,16 @@
 "use client"
 import {observer} from "mobx-react";
-import {Button, Table, TableColumnsType} from "antd";
+import {Button, Divider, Modal, Table, TableColumnsType} from "antd";
 import React, {useEffect} from "react";
 import {useMobxStores} from "@/stores/stores";
 import Link from "next/link";
 import {Course} from "@/stores/CourseStore";
 import {convertTimeFromStringToDate} from "@/app/constans";
+import {FILTER_STATUS_COURSE} from "@/constants";
+import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 const CoursesPage = () => {
     const {courseStore} = useMobxStores()
-
-    const showCourseStatus = (course: Course) => {
-        switch (course.status) {
-            case StatusCourseEnum.NEW:
-                return "Новый"
-            case StatusCourseEnum.ACTIVE:
-                return "Активный"
-            case StatusCourseEnum.CLOSED:
-                return "Закрытый"
-            case StatusCourseEnum.IN_PROCESSING:
-                return "В обработке"
-        }
-    }
 
     const columns: TableColumnsType<Course> = [
         {
@@ -38,15 +27,22 @@ const CoursesPage = () => {
         {
             title: "Статус",
             dataIndex: "status",
+            filters: FILTER_STATUS_COURSE,
+            onFilter: (value, record) => record.status.startsWith(value as string),
+            filterSearch: true,
             render: (_,record) => showCourseStatus(record)
         },
         {
             title: "Действия",
-            align: 'center' as const,
+            align: 'end' as const,
             render: (_:any, record) => (
-                <div>
-                    <Button type="default">Изменить</Button>
-                    <Button danger type="primary" style={{marginLeft:'20px'}} >
+                <div className="flex justify-end">
+                    {record.status === StatusCourseEnum.NEW && <Button onClick={() => courseStore.publishCourse(record.id)} type="default">Опубликовать</Button>}
+                    <Button className="ml-2" type="default"><Link href={`courses/${record.id}`}>
+                        Изменить
+                    </Link></Button>
+                    <Button className="ml-2" onClick={() => courseStore.setShowConfirmDeleteCourseModal(true)}
+                            danger type="primary">
                         Удалить
                     </Button>
                 </div>
@@ -59,19 +55,30 @@ const CoursesPage = () => {
     },[])
 
     return(
-        <div className="bg-white h-full p-5">
+        <>
+            <Modal
+                open={courseStore.showConfirmDeleteCourseModal}
+                onCancel={() => courseStore.setShowConfirmDeleteCourseModal(false)}
+                title="Удаление курса"
+            >
+               <h1 className="text-xl"> Вы уверены, что хотите удалить курс?</h1>
+            </Modal>
             <div className="bg-white h-full p-5">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные курсы</h1>
-                    <div>
-                        <Link href={"courses/add"}>
-                            <Button type="primary">Добавить курс</Button>
-                        </Link>
+                <div className="bg-white h-full p-5">
+                    <div className="flex items-center justify-between">
+                        <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные курсы</h1>
+                        <div>
+                            <Link href={"courses/add"}>
+                                <Button type="primary">Добавить курс</Button>
+                            </Link>
+                        </div>
                     </div>
+                    <Divider/>
+                    <Table dataSource={courseStore.teacherCourses} columns={columns}
+                           loading={courseStore.loadingCourses}/>
                 </div>
-                <Table dataSource={courseStore.teacherCourses} columns={columns} loading={courseStore.loadingCourses}/>
             </div>
-        </div>
+        </>
     )
 }
 

@@ -24,7 +24,7 @@ export const POST = async (url, values) => {
 
 export const GET = async (url) => {
     try{
-        const {data} = await axiosInstance.get(url)
+        const {data} = await axios.get(url)
         return data
     }catch (e){
         if(e.response.status === 401){

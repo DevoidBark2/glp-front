@@ -1,18 +1,20 @@
 "use client"
-import {Button, Col, Form, notification, Row, Select, UploadProps} from "antd";
+import {Breadcrumb, Button, Col, Form, notification, Row, Select, UploadProps} from "antd";
 import {useMobxStores} from "@/stores/stores";
 import {Input} from "antd/lib";
 import {InboxOutlined} from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {observer} from "mobx-react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+import Link from "next/link";
+import {LEVEL_COURSE} from "@/constants";
 
 const CourseAddPage = () => {
 
-    const {courseStore} = useMobxStores();
+    const {courseStore,nomenclatureStore} = useMobxStores();
     const [createCourseForm] = Form.useForm();
     const router = useRouter();
 
@@ -33,8 +35,28 @@ const CourseAddPage = () => {
         },
     };
 
+    const [accessRight, setAccessRight] = useState<number | null>(null);
+
+    const handleAccessRightChange = (value: number) => {
+        setAccessRight(value);
+    };
+
+    useEffect(() => {
+        nomenclatureStore.getCategories();
+    },[])
+
     return(
         <div className="bg-white h-full p-5 overflow-y-auto overflow-x-hidden">
+            <Breadcrumb
+                items={[
+                    {
+                        title: <Link href={"/control_panel/courses"}>Доступные курсы</Link>,
+                    },
+                    {
+                        title: 'Новый курс',
+                    },
+                ]}
+            />
             <h1 className="text-center text-3xl">Добавление курса</h1>
             <Form
                 form={createCourseForm}
@@ -48,7 +70,7 @@ const CourseAddPage = () => {
                     <Col span={12}>
                         <Form.Item
                             name="name_course"
-                            label="Назвавние курса"
+                            label="Название курса"
                             rules={[{required: true,message:"Название курса обязательно!"}]}
                         >
                             <Input placeholder="Введите название курса"/>
@@ -81,12 +103,14 @@ const CourseAddPage = () => {
                        <Form.Item
                            name="category"
                            label="Категория"
+                           rules={[{required: true,message:"Категория курса обязательно!"}]}
                        >
-                           <Select>
-                               <Select.Option value={1}>Программирование</Select.Option>
-                               <Select.Option value={2}>Высшая математика</Select.Option>
-                               <Select.Option value={3}>Дискретная математика</Select.Option>
-                               <Select.Option value={4}>Математический анализ</Select.Option>
+                           <Select loading={nomenclatureStore.loadingCategories}>
+                               {
+                                   nomenclatureStore.categories.map(category => (
+                                       <Select.Option value={category.id}>{category.name}</Select.Option>
+                                   ))
+                               }
                            </Select>
                        </Form.Item>
                    </Col>
@@ -95,18 +119,30 @@ const CourseAddPage = () => {
                        <Form.Item
                            name="access_right"
                            label="Права доступа"
+                           rules={[{required: true,message:"Права доступа курса обязательно!"}]}
                        >
-                           <Select>
+                           <Select onChange={handleAccessRightChange}>
                                <Select.Option value={0}>Открытый</Select.Option>
                                <Select.Option value={1}>Закрытый</Select.Option>
                            </Select>
                        </Form.Item>
                    </Col>
+                   {accessRight === 1 && (
+                       <Col span={12}>
+                           <Form.Item
+                               name="restricted_access_detail"
+                               label="Детали закрытого доступа"
+                           >
+                               <Input placeholder="Введите детали закрытого доступа" />
+                           </Form.Item>
+                       </Col>
+                   )}
                </Row>
 
                 <Form.Item
                     name="duration"
                     label="Время прохождения"
+                    rules={[{required: true,message:"Время прохождения курса обязательно!"}]}
                 >
                     <Input placeholder="Введите время прохождения" type="number"/>
                 </Form.Item>
@@ -114,17 +150,18 @@ const CourseAddPage = () => {
                 <Form.Item
                     name="level"
                     label="Уровень сложности"
+                    rules={[{required: true,message:"Уровень сложности курса обязательно!"}]}
                 >
                     <Select>
-                        <Select.Option value={1}>Начинающий</Select.Option>
-                        <Select.Option value={2}>Средний</Select.Option>
-                        <Select.Option value={3}>Высокий</Select.Option>
+                        {LEVEL_COURSE.map(level => (
+                            <Select.Option value={level.id}>{level.title}</Select.Option>
+                        ))}
                     </Select>
                 </Form.Item>
 
                 <Form.Item
                     name="content_description"
-                    label="Слдержание курса"
+                    label="Содержание курса"
                 >
                     <ReactQuill theme="snow"/>
                 </Form.Item>
