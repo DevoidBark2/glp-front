@@ -101,8 +101,8 @@ const UsersPage = () => {
 
     useEffect(() => {
         userStore.getUsers();
-        setFilteredData(userStore.allUsers);
-    }, [userStore.allUsers]);
+        // setFilteredData(userStore.allUsers);
+    }, []);
 
     return (
         <div className="bg-white h-full p-5">
@@ -118,7 +118,7 @@ const UsersPage = () => {
             </div>
             <Divider />
             <Table
-                dataSource={filteredData}
+                dataSource={userStore.allUsers}
                 columns={columns}
                 pagination={{ pageSize: 10 }}
                 rowClassName={(record, index) =>
