@@ -4,7 +4,7 @@ import {notification} from "antd";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
 
-type Teacher = {
+export type Teacher = {
     id: number;
     name: string;
     email:string;
@@ -98,9 +98,9 @@ class CourseStore{
         form.append('small_description',values.description)
         // form.append('image',values.image.originFileObj)
         form.append('category',values.category)
-        form.append('access_right',Number(values.access_right))
+        form.append('access_right',values.access_right)
         form.append('duration',values.duration)
-        form.append('level',Number(values.level))
+        form.append('level',values.level)
         form.append('publish_date',dayjs().format('YYYY-MM-DD HH:mm'))
         form.append("content_description",values.content_description)
 

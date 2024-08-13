@@ -78,6 +78,23 @@ const items: MenuItem[] = [
             },
         ]
     },
+    {
+        key: 'sub2321asфывфывd3',
+        label: <p>Логирование</p>,
+        icon: <BarsOutlined />,
+        children: [
+            {
+                key: 'sub2321dsadфывыфвsad3',
+                label: <Link href={"/control_panel/events"}>События пользователей</Link>,
+                icon: <BarsOutlined />,
+            },
+        ]
+    },
+    {
+        key: 'sub2фывыфв3',
+        label: <Link href="/control_panel/users">Пользователи</Link>,
+        icon: <BarsOutlined />,
+    },
 ];
 const ControlPanelLayout: React.FC<LayoutProps> = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);

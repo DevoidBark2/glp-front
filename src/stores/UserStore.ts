@@ -1,6 +1,7 @@
 import {action, makeAutoObservable} from "mobx"
 import {GET, POST} from "@/lib/fetcher";
-import {delete_cookie, getCookieUserDetails, signInUser} from "@/lib/users";
+import {delete_cookie, getCookieUserDetails, getUserToken, signInUser} from "@/lib/users";
+import dayjs from "dayjs";
 
 type userProfile = {
     birth_day : Date
@@ -11,11 +12,23 @@ type userProfile = {
     second_name:string
     university: string
 }
+
+export type User = {
+    id: number;
+    first_name: string;
+    second_name: string;
+    last_name: string;
+    role: string;
+    is_active: boolean;
+    email: string;
+    created_at: Date;
+}
 class UserStore {
     constructor(){
         makeAutoObservable(this, {});
     }
 
+    allUsers: User[] = [];
     loading: boolean = false;
     openLeaveCourseModal: boolean = false;
     openLoginModal: boolean = false;
@@ -88,6 +101,12 @@ class UserStore {
         this.userProfileDetails = value
     })
 
+    getUsers = action(async () => {
+        const token = getUserToken();
+        await GET(`/api/users?token=${token}`).then(response => {
+            this.allUsers = response.response.data.map(usersMapper)
+        })
+    })
     getUserProfile = action(async () => {
         this.setLoading(true)
         const user = getCookieUserDetails()
@@ -99,5 +118,16 @@ class UserStore {
         })
     })
 }
-
+const usersMapper = (value: User) => {
+    return {
+        id: value.id,
+        first_name: value.first_name,
+        second_name: value.second_name,
+        last_name: value.last_name,
+        is_active: value.is_active,
+        role: value.role,
+        email: value.email,
+        createdAt: dayjs(value.created_at).format("YYYY-MM-DD HH:mm"),
+    }
+}
 export default UserStore;
