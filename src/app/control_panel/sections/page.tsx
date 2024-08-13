@@ -1,5 +1,5 @@
 "use client"
-import {Button, Table, TableColumnsType} from "antd";
+import {Button, Divider, Table, TableColumnsType} from "antd";
 import React from "react";
 import {convertTimeFromStringToDate} from "@/app/constans";
 import Link from "next/link";
@@ -42,10 +42,18 @@ const columns: TableColumnsType = [
 
 ];
 const SectionPage = () => {
-    return(
+    return (
         <div className="bg-white h-full p-5">
             <div className="bg-white h-full p-5">
-                <Link href="sections/add"><Button className="mb-5" type="primary" onClick={() => {}}>Добавить раздел</Button></Link>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные разделы</h1>
+                    <div>
+                        <Link href={"sections/add"}>
+                            <Button type="primary">Добавить раздел</Button>
+                        </Link>
+                    </div>
+                </div>
+                <Divider/>
                 <Table dataSource={[]} columns={columns}/>
             </div>
         </div>

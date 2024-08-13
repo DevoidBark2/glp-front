@@ -131,6 +131,7 @@ class CourseStore{
     })
 
     getCourseDetails = action(async(courseId: number) => {
+        this.setLoadingCourseDetails(true);
         return await GET(`/api/course-details?courseId=${courseId}`)
     })
 }

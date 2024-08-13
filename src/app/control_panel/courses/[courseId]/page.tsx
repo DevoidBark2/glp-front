@@ -1,7 +1,7 @@
 "use client"
 import {useParams} from "next/navigation";
 import {Breadcrumb, Button, Col, Divider, Form, notification, Row, Select, Spin} from "antd";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
@@ -13,13 +13,15 @@ import 'react-quill/dist/quill.snow.css';
 const CoursePage = () => {
     const {courseId} = useParams();
     const {courseStore,nomenclatureStore} = useMobxStores();
+    const [courseName,setCourseName] = useState(null)
     const [form] = Form.useForm();
 
     useEffect(() => {
         nomenclatureStore.getCategories();
         courseStore.getCourseDetails(Number(courseId)).then(response => {
-            debugger
             form.setFieldsValue(response.response.data);
+            form.setFieldValue("category",response.response.data.category.id);
+            setCourseName(response.response.data.name)
         }).finally(() => {
             courseStore.setLoadingCourseDetails(false)
         })
@@ -31,7 +33,7 @@ const CoursePage = () => {
                     <Breadcrumb items={[ {
                         title: <Link href={"/control_panel/courses"}>Доступные курсы</Link>,
                     },{
-                        title: <p>{courseId}</p>,
+                        title: <p>{!courseName ? <Spin/> : courseName}</p>,
                     }]}/>
                 </div>
                 <h1 className="text-center text-3xl">Редактирование курса</h1>
