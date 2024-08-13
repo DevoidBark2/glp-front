@@ -5,6 +5,7 @@ import {StoresProvider} from "@/stores/stores"
 import {roboto} from "@/app/fonts";
 import {ConfigProvider} from "antd";
 import React from "react";
+import {MAIN_COLOR} from "@/app/constans";
 
 export default function RootLayout({
   children,
@@ -18,47 +19,47 @@ export default function RootLayout({
             theme={{
               components: {
                 Button: {
-                    colorPrimaryBorderHover: 'red',
-                    colorPrimaryHover: '#02d079',
-                    colorPrimary: '#00b96b',
+                    colorPrimaryBorderHover: MAIN_COLOR,
+                    colorPrimaryHover: MAIN_COLOR,
+                    colorPrimary: MAIN_COLOR,
                     colorPrimaryActive: 'lightgray',
                     colorPrimaryTextHover: 'lightgray',
                 },
                 FloatButton: {
-                    colorPrimaryHover: '#02d079',
-                    colorPrimary: '#00b96b',
+                    colorPrimaryHover:MAIN_COLOR,
+                    colorPrimary: MAIN_COLOR,
                     colorPrimaryActive: 'lightgray',
                     colorPrimaryTextHover: 'lightgray',
                 },
                 Radio: {
-                   colorPrimary: "#00b96b",
-                    colorPrimaryActive: '#02d079',
-                    colorPrimaryBgHover: "#00b96b",
-                    colorPrimaryHover: "#00b96b"
+                   colorPrimary: MAIN_COLOR,
+                    colorPrimaryActive: MAIN_COLOR,
+                    colorPrimaryBgHover: MAIN_COLOR,
+                    colorPrimaryHover: MAIN_COLOR
                 },
                 Input: {
-                    colorPrimaryHover: "#00b96b",
-                    colorPrimaryActive: "#00b96b",
-                    colorPrimaryBorder: "#00b96b",
+                    colorPrimaryHover: MAIN_COLOR,
+                    colorPrimaryActive: MAIN_COLOR,
+                    colorPrimaryBorder:MAIN_COLOR,
                 },
                   DatePicker: {
-                      colorPrimaryHover: "#00b96b",
-                      colorPrimaryActive: "#00b96b",
-                      colorPrimaryBorder: "#00b96b"
+                      colorPrimaryHover: MAIN_COLOR,
+                      colorPrimaryActive: MAIN_COLOR,
+                      colorPrimaryBorder: MAIN_COLOR
                   },
                   Menu: {
-                    colorPrimary: "red",
-                      colorPrimaryBg: "red",
-                      colorBgLayout: "red",
-                      colorPrimaryActive: "#00b96b",
-                      colorPrimaryBgHover: "#00b96b"
+                    colorPrimary: MAIN_COLOR,
+                      colorPrimaryBg: MAIN_COLOR,
+                      colorBgLayout: MAIN_COLOR,
+                      colorPrimaryActive: MAIN_COLOR,
+                      colorPrimaryBgHover: MAIN_COLOR
                   },
                   Spin: {
-                    colorPrimary: "green"
+                    colorPrimary: MAIN_COLOR
                   },
                   Pagination: {
-                    colorPrimary: "#00b96b",
-                      colorPrimaryHover: "#00b96b"
+                    colorPrimary: MAIN_COLOR,
+                      colorPrimaryHover: MAIN_COLOR
                 }
               }
             }}

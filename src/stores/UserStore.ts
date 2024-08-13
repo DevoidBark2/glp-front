@@ -101,10 +101,14 @@ class UserStore {
         this.userProfileDetails = value
     })
 
+    setAllUsers = action((values: User[]) => {
+        this.allUsers = values;
+    })
+
     getUsers = action(async () => {
         const token = getUserToken();
         await GET(`/api/users?token=${token}`).then(response => {
-            this.allUsers = response.response.data.map(usersMapper)
+            this.setAllUsers(response.response.data.map(usersMapper))
         })
     })
     getUserProfile = action(async () => {

@@ -1,6 +1,7 @@
 "use client";
 import {observer} from "mobx-react";
-import {Button, Divider, Input, Table, TableColumnsType, Tag, Tooltip, Space, Modal} from "antd";
+import {Button, Divider, Table, Tag, Tooltip, Space, Modal} from "antd";
+import type {TableColumnsType} from "antd"
 import React, {useEffect, useState} from "react";
 import {useMobxStores} from "@/stores/stores";
 import {User} from "@/stores/UserStore";
@@ -9,15 +10,13 @@ import dayjs from "dayjs";
 
 const UsersPage = () => {
     const {userStore} = useMobxStores();
-    const [searchText, setSearchText] = useState<string>("");
-    const [filteredData, setFilteredData] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const columns: TableColumnsType<User> = [
         {
-            dataIndex: ["first_name", "second_name"],
+            dataIndex: "first_name",
             title: "Полное имя",
-            render: (text, record) => `${record.first_name} ${record.second_name}`,
+            render: (text, record) => `${record.first_name} ${record.second_name} ${record.last_name}`,
             sorter: (a, b) => a.first_name.localeCompare(b.first_name),
             filterSearch: true,
             onFilter: (value, record) =>
@@ -28,13 +27,12 @@ const UsersPage = () => {
             dataIndex: "role",
             title: "Роль",
             filters: [
-                {text: 'Администратор', value: 'admin'},
-                {text: 'Пользователь', value: 'user'},
-                {text: 'Модератор', value: 'moderator'},
+                {text: 'Администратор', value: 'student'},
+                {text: 'Пользователь', value: 'teacher'},
             ],
             onFilter: (value, record) => record.role === value,
             render: (role) => {
-                const color = role === "admin" ? "red" : role === "moderator" ? "geekblue" : "green";
+                const color = role === "teacher" ? "red" : role === "student" ? "geekblue" : "green";
                 return <Tag color={color}>{role}</Tag>;
             },
         },
@@ -69,7 +67,6 @@ const UsersPage = () => {
         {
             dataIndex: "created_at",
             title: "Дата создания",
-            render: (date) => dayjs(date).format("DD.MM.YYYY HH:mm"),
             sorter: (a, b) => dayjs(a.created_at).unix() - dayjs(b.created_at).unix(),
         },
         {
@@ -88,39 +85,24 @@ const UsersPage = () => {
         },
     ];
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value.toLowerCase();
-        setSearchText(value);
-        setFilteredData(
-            userStore.allUsers.filter((item) =>
-                `${item.first_name} ${item.second_name}`.toLowerCase().includes(value) ||
-                item.email.toLowerCase().includes(value)
-            )
-        );
-    };
-
     useEffect(() => {
         userStore.getUsers();
-        // setFilteredData(userStore.allUsers);
     }, []);
 
     return (
         <div className="bg-white h-full p-5">
             <div className="flex items-center justify-between">
                 <h1 className="text-green-800 font-bold text-3xl mb-2">Пользователи</h1>
-                <Input
-                    placeholder="Поиск по имени или email..."
-                    value={searchText}
-                    onChange={handleSearch}
-                    prefix={<SearchOutlined />}
-                    style={{ width: "300px" }}
-                />
             </div>
             <Divider />
             <Table
+                rowKey={(record) => record.id}
                 dataSource={userStore.allUsers}
                 columns={columns}
                 pagination={{ pageSize: 10 }}
+                expandable={{
+                    expandedRowRender: (record: User) => <p style={{ margin: 0 }}>{record.id}</p>,
+                }}
                 rowClassName={(record, index) =>
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                 }
