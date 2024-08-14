@@ -50,6 +50,11 @@ const items: MenuItem[] = [
         icon: <BarsOutlined />,
     },
     {
+        key: 'banners',
+        label: <Link href={"/control_panel/banners"}>Баннеры</Link>,
+        icon: <BarsOutlined />,
+    },
+    {
         key: 'students',
         label: <Link href={"/control_panel/students"}>Студенты</Link>,
         icon: <TeamOutlined />,

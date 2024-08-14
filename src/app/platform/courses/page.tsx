@@ -37,7 +37,7 @@ const CoursesPage = () => {
                           <div className="flex justify-between">
                               <div className="flex flex-col">
                                   <h3 className="font-bold">{course.name}</h3>
-                                  <p>{course.teacher.name}</p>
+                                  <p>{course.user.first_name}</p>
                               </div>
                               <div>
                                   <img src="https://cdn.stepik.net/media/cache/images/courses/194856/cover_Sl6ky3x/2023ab5a2b085ae4307c6d4e981c7a68.png" alt={course.name} width={80} height={80}/>

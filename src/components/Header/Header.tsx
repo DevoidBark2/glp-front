@@ -4,13 +4,12 @@ import {platformMenu} from "@/app/constans";
 import Link from "next/link";
 import {Avatar, Badge, Modal, Spin} from "antd";
 import Image from "next/image"
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname} from "next/navigation";
 import {Button, Dropdown, MenuProps} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import {useMobxStores} from "@/stores/stores";
 import {observer} from "mobx-react";
 import {getCookieUserDetails, getUserRole} from "@/lib/users";
-import LoginPage from "@/app/login/page";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
 
 type UserType = {

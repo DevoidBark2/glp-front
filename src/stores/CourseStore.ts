@@ -8,7 +8,7 @@ import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 
 export type Teacher = {
     id: number;
-    name: string;
+    first_name: string;
     email:string;
 }
 
@@ -28,7 +28,7 @@ export type Course = {
     content_description: string;
     duration: number
     publish_date: Date
-    teacher: Teacher
+    user: Teacher
     status: StatusCourseEnum
 }
 
@@ -83,7 +83,7 @@ class CourseStore{
     getAllCourses = action(async () => {
         this.setLoadingCourses(true)
         await GET('/api/courses').then(response => {
-            this.courses = response.response.courses.map(courseMapper)
+            this.courses = response.response.data.map(courseMapper)
         }).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => {
@@ -151,7 +151,7 @@ export const courseMapper = (course: Course) => {
         duration: course.duration,
         status: course.status,
         publish_date: dayjs(course.publish_date).format("YYYY-MM-DD HH:mm"),
-        teacher: course.teacher
+        user: course.user
     };
 }
 

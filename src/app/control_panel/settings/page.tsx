@@ -1,8 +1,9 @@
 "use client"
-import {Divider, Segmented, Input, Form, Button, Switch, Tabs, Select, InputNumber, DatePicker} from "antd";
+import {Divider, Segmented, Input, Form, Button, Switch, Tabs, Select, InputNumber, DatePicker, Tooltip} from "antd";
 import React, {useEffect} from "react";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
+import {InfoCircleOutlined} from "@ant-design/icons";
 
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
@@ -38,67 +39,67 @@ const SettingsControlPage = () => {
                             <Form.Item label="Режим обслуживания">
                                 <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                             </Form.Item>
-                            <Form.Item label="Частота обновления данных">
-                                <Segmented<string>
-                                    options={['Ежедневно', 'Еженедельно', 'Ежемесячно', 'Ежеквартально', 'Ежегодно']}
-                                    onChange={(value) => {
-                                        console.log(value); // string
-                                    }}
-                                />
-                            </Form.Item>
-                            <Form.Item label="Язык по умолчанию">
-                                <Select defaultValue="ru">
-                                    <Select.Option value="en">Английский</Select.Option>
-                                    <Select.Option value="ru">Русский</Select.Option>
-                                    <Select.Option value="es">Испанский</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Включить GDPR">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                            </Form.Item>
+                            {/*<Form.Item label="Частота обновления данных">*/}
+                            {/*    <Segmented<string>*/}
+                            {/*        options={['Ежедневно', 'Еженедельно', 'Ежемесячно', 'Ежеквартально', 'Ежегодно']}*/}
+                            {/*        onChange={(value) => {*/}
+                            {/*            console.log(value); // string*/}
+                            {/*        }}*/}
+                            {/*    />*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Язык по умолчанию">*/}
+                            {/*    <Select defaultValue="ru">*/}
+                            {/*        <Select.Option value="en">Английский</Select.Option>*/}
+                            {/*        <Select.Option value="ru">Русский</Select.Option>*/}
+                            {/*        <Select.Option value="es">Испанский</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Включить GDPR">*/}
+                            {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                            {/*</Form.Item>*/}
                             {/* Новые настройки */}
-                            <Form.Item label="Тема оформления">
-                                <Select defaultValue="light">
-                                    <Select.Option value="light">Светлая</Select.Option>
-                                    <Select.Option value="dark">Тёмная</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Фоновое изображение">
-                                <Input placeholder="Введите URL фонового изображения" />
-                            </Form.Item>
-                            <Form.Item label="Срок действия сессии">
-                                <InputNumber min={5} max={120} defaultValue={30} /> минут
-                            </Form.Item>
-                            <Form.Item label="Настройки автоматического обновления интерфейса">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                            </Form.Item>
-                            <Form.Item label="Частота обновления интерфейса">
-                                <Select defaultValue="10">
-                                    <Select.Option value="5">Каждые 5 секунд</Select.Option>
-                                    <Select.Option value="10">Каждые 10 секунд</Select.Option>
-                                    <Select.Option value="30">Каждые 30 секунд</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Мультиязычность интерфейса">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                            </Form.Item>
-                            <Form.Item label="Настройка часового пояса">
-                                <Select defaultValue="UTC">
-                                    <Select.Option value="UTC">UTC</Select.Option>
-                                    <Select.Option value="GMT">GMT</Select.Option>
-                                    <Select.Option value="EST">EST</Select.Option>
-                                    <Select.Option value="PST">PST</Select.Option>
-                                </Select>
-                            </Form.Item>
+                            {/*<Form.Item label="Тема оформления">*/}
+                            {/*    <Select defaultValue="light">*/}
+                            {/*        <Select.Option value="light">Светлая</Select.Option>*/}
+                            {/*        <Select.Option value="dark">Тёмная</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Фоновое изображение">*/}
+                            {/*    <Input placeholder="Введите URL фонового изображения" />*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Срок действия сессии">*/}
+                            {/*    <InputNumber min={5} max={120} defaultValue={30} /> минут*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Настройки автоматического обновления интерфейса">*/}
+                            {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Частота обновления интерфейса">*/}
+                            {/*    <Select defaultValue="10">*/}
+                            {/*        <Select.Option value="5">Каждые 5 секунд</Select.Option>*/}
+                            {/*        <Select.Option value="10">Каждые 10 секунд</Select.Option>*/}
+                            {/*        <Select.Option value="30">Каждые 30 секунд</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Мультиязычность интерфейса">*/}
+                            {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Настройка часового пояса">*/}
+                            {/*    <Select defaultValue="UTC">*/}
+                            {/*        <Select.Option value="UTC">UTC</Select.Option>*/}
+                            {/*        <Select.Option value="GMT">GMT</Select.Option>*/}
+                            {/*        <Select.Option value="EST">EST</Select.Option>*/}
+                            {/*        <Select.Option value="PST">PST</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
                             <Form.Item label="Настройки кэширования данных">
                                 <Select defaultValue="enabled">
                                     <Select.Option value="enabled">Включено</Select.Option>
                                     <Select.Option value="disabled">Отключено</Select.Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="Тестовые данные">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                            </Form.Item>
+                            {/*<Form.Item label="Тестовые данные">*/}
+                            {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                            {/*</Form.Item>*/}
                             <Form.Item label="Настройки для разработчиков">
                                 <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                             </Form.Item>
@@ -112,8 +113,8 @@ const SettingsControlPage = () => {
                     {/* User Management Settings */}
                     <TabPane tab="Управление пользователями" key="2">
                         <Form layout="vertical">
-                            <Form.Item label="Роли пользователей по умолчанию">
-                                <Select mode="multiple" placeholder="Выберите роли">
+                            <Form.Item label="Роль пользователя по умолчанию">
+                                <Select placeholder="Выберите роль">
                                     <Select.Option value="admin">Администратор</Select.Option>
                                     <Select.Option value="instructor">Инструктор</Select.Option>
                                     <Select.Option value="student">Студент</Select.Option>
@@ -122,25 +123,34 @@ const SettingsControlPage = () => {
                             </Form.Item>
                             <Form.Item label="Автоматическое подтверждение регистрации">
                                 <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                <Tooltip title="Включение автоматического подтверждения регистрации: при регистрации нового пользователя, система автоматически отправит им подтверждение email, чтобы обеспечить безопасность и ускорить процесс регистрации">
+                                    <InfoCircleOutlined className="ml-2 text-gray-500" />
+                                </Tooltip>
                             </Form.Item>
                             <Form.Item label="Минимальный возраст для регистрации">
                                 <InputNumber min={13} max={100} defaultValue={18} />
                             </Form.Item>
                             <Form.Item label="Уведомления о жалобах пользователей">
                                 <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                <Tooltip title="Включение уведомлений о новых жалобах пользователей: вы будете получать уведомления каждый раз, когда новый отзыв или жалоба поступает в систему">
+                                    <InfoCircleOutlined className="ml-2 text-gray-500" />
+                                </Tooltip>
                             </Form.Item>
-                            <Form.Item label="Настройки уровней доступа для ролей">
-                                <Select defaultValue="basic">
-                                    <Select.Option value="basic">Базовый</Select.Option>
-                                    <Select.Option value="advanced">Расширенный</Select.Option>
-                                    <Select.Option value="admin">Администратор</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Период неактивности до блокировки аккаунта">
+                            {/*<Form.Item label="Настройки уровней доступа для ролей">*/}
+                            {/*    <Select defaultValue="basic">*/}
+                            {/*        <Select.Option value="basic">Базовый</Select.Option>*/}
+                            {/*        <Select.Option value="advanced">Расширенный</Select.Option>*/}
+                            {/*        <Select.Option value="admin">Администратор</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
+                            <Form.Item label="Период неактивности до блокировки аккаунта, дней">
                                 <InputNumber min={1} max={365} defaultValue={30} />
                             </Form.Item>
                             <Form.Item label="Панель мониторинга активности пользователей">
                                 <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                <Tooltip title="Панель мониторинга активности пользователей: позволяет администратору отслеживать действия пользователей на сайте, что помогает обнаруживать потенциальные нарушения безопасности и обеспечивает более эффективное управление контентом">
+                                    <InfoCircleOutlined className="ml-2 text-gray-500" />
+                                </Tooltip>
                             </Form.Item>
                             <Form.Item label="Частота обновления данных на панели">
                                 <Select defaultValue="5_minutes">
@@ -149,42 +159,26 @@ const SettingsControlPage = () => {
                                     <Select.Option value="15_minutes">15 минут</Select.Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item label="Уровень уведомлений для пользователей">
-                                <Select defaultValue="all">
-                                    <Select.Option value="all">Все уведомления</Select.Option>
-                                    <Select.Option value="important">Только важные</Select.Option>
-                                    <Select.Option value="none">Без уведомлений</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Автоматическая генерация отчетов по пользователям">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                            </Form.Item>
-                            <Form.Item label="Частота отчетов">
-                                <Select defaultValue="monthly">
-                                    <Select.Option value="daily">Ежедневно</Select.Option>
-                                    <Select.Option value="weekly">Еженедельно</Select.Option>
-                                    <Select.Option value="monthly">Ежемесячно</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Шаблоны email уведомлений">
-                                <Input.TextArea rows={4} placeholder="Введите шаблон email уведомлений" />
-                            </Form.Item>
-                            <Form.Item label="Шаблоны SMS уведомлений">
-                                <Input.TextArea rows={4} placeholder="Введите шаблон SMS уведомлений" />
-                            </Form.Item>
-                            <Form.Item label="Персонализация интерфейса для ролей">
-                                <Select defaultValue="default">
-                                    <Select.Option value="default">Стандартный</Select.Option>
-                                    <Select.Option value="custom">Кастомизированный</Select.Option>
-                                </Select>
-                            </Form.Item>
-                            <Form.Item label="Блокировка пользователей по регионам">
-                                <Select mode="multiple" placeholder="Выберите регионы для блокировки">
-                                    <Select.Option value="us">США</Select.Option>
-                                    <Select.Option value="eu">Европа</Select.Option>
-                                    <Select.Option value="asia">Азия</Select.Option>
-                                </Select>
-                            </Form.Item>
+                            {/*<Form.Item label="Уровень уведомлений для пользователей">*/}
+                            {/*    <Select defaultValue="all">*/}
+                            {/*        <Select.Option value="all">Все уведомления</Select.Option>*/}
+                            {/*        <Select.Option value="important">Только важные</Select.Option>*/}
+                            {/*        <Select.Option value="none">Без уведомлений</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Персонализация интерфейса для ролей">*/}
+                            {/*    <Select defaultValue="default">*/}
+                            {/*        <Select.Option value="default">Стандартный</Select.Option>*/}
+                            {/*        <Select.Option value="custom">Кастомизированный</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Блокировка пользователей по регионам">*/}
+                            {/*    <Select mode="multiple" placeholder="Выберите регионы для блокировки">*/}
+                            {/*        <Select.Option value="us">США</Select.Option>*/}
+                            {/*        <Select.Option value="eu">Европа</Select.Option>*/}
+                            {/*        <Select.Option value="asia">Азия</Select.Option>*/}
+                            {/*    </Select>*/}
+                            {/*</Form.Item>*/}
                             <Form.Item>
                                 <Button type="primary">Сохранить изменения</Button>
                             </Form.Item>
@@ -600,7 +594,7 @@ const SettingsControlPage = () => {
                             <Form.Item label="Настройка отчетов">
                                 <Select mode="multiple" placeholder="Выберите типы отчетов">
                                     <Select.Option value="user_activity">Активность пользователей</Select.Option>
-                                    <Select.Option value="financial">Финансовые отчеты</Select.Option>
+                                    {/*<Select.Option value="financial">Финансовые отчеты</Select.Option>*/}
                                     <Select.Option value="course_performance">Эффективность курсов</Select.Option>
                                     <Select.Option value="engagement">Уровень вовлеченности</Select.Option>
                                     <Select.Option value="content_quality">Качество контента</Select.Option>
@@ -621,32 +615,32 @@ const SettingsControlPage = () => {
                                     Установите частоту, с которой будут генерироваться отчеты.
                                 </div>
                             </Form.Item>
-                            <Form.Item label="Включить тепловые карты">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                <div className="text-gray-500 mt-1">
-                                    Включение тепловых карт для визуализации активности пользователей на сайте.
-                                </div>
-                            </Form.Item>
-                            <Form.Item label="Настройка пороговых значений для уведомлений">
-                                <Form.Item label="Минимальный порог активности пользователей">
-                                    <InputNumber min={0} defaultValue={100} />
-                                    <div className="text-gray-500 mt-1">
-                                        Установите минимальный порог для активности пользователей, при котором будут отправляться уведомления.
-                                    </div>
-                                </Form.Item>
-                                <Form.Item label="Минимальный порог для финансовых показателей">
-                                    <InputNumber min={0} defaultValue={5000} />
-                                    <div className="text-gray-500 mt-1">
-                                        Установите порог для финансовых показателей, при котором будут отправляться уведомления.
-                                    </div>
-                                </Form.Item>
-                            </Form.Item>
-                            <Form.Item label="Включить прогнозные аналитические отчеты">
-                                <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                <div className="text-gray-500 mt-1">
-                                    Позволяет включить прогнозные отчеты для анализа будущих тенденций на основе исторических данных.
-                                </div>
-                            </Form.Item>
+                            {/*<Form.Item label="Включить тепловые карты">*/}
+                            {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                            {/*    <div className="text-gray-500 mt-1">*/}
+                            {/*        Включение тепловых карт для визуализации активности пользователей на сайте.*/}
+                            {/*    </div>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Настройка пороговых значений для уведомлений">*/}
+                            {/*    <Form.Item label="Минимальный порог активности пользователей">*/}
+                            {/*        <InputNumber min={0} defaultValue={100} />*/}
+                            {/*        <div className="text-gray-500 mt-1">*/}
+                            {/*            Установите минимальный порог для активности пользователей, при котором будут отправляться уведомления.*/}
+                            {/*        </div>*/}
+                            {/*    </Form.Item>*/}
+                            {/*    <Form.Item label="Минимальный порог для финансовых показателей">*/}
+                            {/*        <InputNumber min={0} defaultValue={5000} />*/}
+                            {/*        <div className="text-gray-500 mt-1">*/}
+                            {/*            Установите порог для финансовых показателей, при котором будут отправляться уведомления.*/}
+                            {/*        </div>*/}
+                            {/*    </Form.Item>*/}
+                            {/*</Form.Item>*/}
+                            {/*<Form.Item label="Включить прогнозные аналитические отчеты">*/}
+                            {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                            {/*    <div className="text-gray-500 mt-1">*/}
+                            {/*        Позволяет включить прогнозные отчеты для анализа будущих тенденций на основе исторических данных.*/}
+                            {/*    </div>*/}
+                            {/* </Form.Item> */}
                             <Form.Item label="Параметры фильтрации данных">
                                 <Form.Item label="Фильтр по дате">
                                     <DatePicker.RangePicker />
@@ -654,16 +648,16 @@ const SettingsControlPage = () => {
                                         Установите диапазон дат для фильтрации данных в отчетах.
                                     </div>
                                 </Form.Item>
-                                <Form.Item label="Фильтр по пользователям">
-                                    <Select mode="multiple" placeholder="Выберите пользователей">
-                                        <Select.Option value="user1">Пользователь 1</Select.Option>
-                                        <Select.Option value="user2">Пользователь 2</Select.Option>
-                                        <Select.Option value="user3">Пользователь 3</Select.Option>
-                                    </Select>
-                                    <div className="text-gray-500 mt-1">
-                                        Выберите пользователей для фильтрации данных в отчетах.
-                                    </div>
-                                </Form.Item>
+                                {/*<Form.Item label="Фильтр по пользователям">*/}
+                                {/*    <Select mode="multiple" placeholder="Выберите пользователей">*/}
+                                {/*        <Select.Option value="user1">Пользователь 1</Select.Option>*/}
+                                {/*        <Select.Option value="user2">Пользователь 2</Select.Option>*/}
+                                {/*        <Select.Option value="user3">Пользователь 3</Select.Option>*/}
+                                {/*    </Select>*/}
+                                {/*    <div className="text-gray-500 mt-1">*/}
+                                {/*        Выберите пользователей для фильтрации данных в отчетах.*/}
+                                {/*    </div>*/}
+                                {/*</Form.Item>*/}
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary">Сохранить изменения</Button>

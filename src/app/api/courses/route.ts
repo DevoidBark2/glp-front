@@ -4,7 +4,7 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
-        const response = await axios.get(nextConfig.env?.API_URL + 'api/get-all-courses');
+        const response = await axios.get(nextConfig.env?.API_URL + 'api/courses');
 
         const responseData = response.data;
         return NextResponse.json({ response: responseData });
