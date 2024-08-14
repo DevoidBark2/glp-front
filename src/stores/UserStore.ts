@@ -29,7 +29,7 @@ class UserStore {
     }
 
     allUsers: User[] = [];
-    loading: boolean = true;
+    loading: boolean = false;
     openLeaveCourseModal: boolean = false;
     openLoginModal: boolean = false;
     openRegisterModal: boolean = false;

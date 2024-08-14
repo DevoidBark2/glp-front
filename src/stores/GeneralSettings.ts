@@ -16,13 +16,11 @@ export class GeneralSettings {
         makeAutoObservable(this)
     }
 
-    generalSettings: GeneralSettingsType | {} = {}
+    generalSettings: GeneralSettingsType | null = null
 
     getGeneralSettings = action(async () => {
         const token = getUserToken();
-        return await GET(`/api/general-settings?token=${token}`).then(response => {
-            this.generalSettings = response.response.data;
-        });
+        return await GET(`/api/general-settings?token=${token}`);
     })
 
     saveGeneralSetting = action(async (values:any) => {

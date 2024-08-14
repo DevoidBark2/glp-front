@@ -11,7 +11,10 @@ const SettingsControlPage = () => {
     const [formForSec] = Form.useForm()
 
     useEffect(() => {
-        generalSettingsStore.getGeneralSettings();
+        generalSettingsStore.getGeneralSettings().then((response) => {
+            debugger
+            formForSec.setFieldValue("min_password", response.response.data[0].min_password_length)
+        });
     }, []);
 
     return (
@@ -22,7 +25,7 @@ const SettingsControlPage = () => {
                 </div>
                 <Divider />
 
-                <Tabs defaultActiveKey="1">
+                <Tabs defaultActiveKey="1" tabPosition="top">
                     {/* Platform-wide Settings */}
                     <TabPane tab="Общие настройки" key="1">
                         <Form layout="vertical">
@@ -392,7 +395,7 @@ const SettingsControlPage = () => {
                                 </div>
                             </Form.Item>
                             <Form.Item label="Минимальная длина пароля" name="min_password">
-                                <InputNumber min={6} max={20} defaultValue={8} />
+                                <InputNumber min={6} max={20} />
                                 <div className="text-gray-500 mt-1">
                                     Устанавливает минимальную длину пароля для пользователей, чтобы повысить безопасность учетных записей.
                                 </div>
