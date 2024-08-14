@@ -34,7 +34,7 @@ const GraphPage = () => {
         context.lineTo(25, 105);
         context.fill();
 
-        canvas.addEventListener('click', (event) => {
+        canvas.addEventListener('click', (event:any) => {
             setCircleVisible(true)
             const rect = canvas.getBoundingClientRect()
             setCircleX(event.clientX - rect.left)
@@ -42,7 +42,7 @@ const GraphPage = () => {
         })
     }, [])
 
-    const drawCircle = (event) => {
+    const drawCircle = (event: any) => {
         const canvas = event.target
         const context = canvas.getContext('2d')
         if (circleVisible) {

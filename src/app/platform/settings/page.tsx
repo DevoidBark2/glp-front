@@ -1,5 +1,5 @@
 "use client"
-import {ColorPicker, Divider, Select, Skeleton, Spin} from "antd";
+import {ColorPicker, Divider, Select, Spin} from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect} from "react";

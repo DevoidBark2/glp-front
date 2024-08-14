@@ -1,10 +1,9 @@
 import axios from "axios"
-import {delete_cooki} from "../lib/users";
-import {axiosInstance} from "@/utils/axiosInstance";
+import {delete_cookie_by_name} from "@/lib/users";
 
 const logoutUser = () => {
-    delete_cooki("userToken")
-    delete_cooki("admin_auth")
+    delete_cookie_by_name("userToken")
+    delete_cookie_by_name("admin_auth")
     window.localStorage.removeItem("user_data")
     window.location.href = "/login"
 }

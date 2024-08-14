@@ -13,6 +13,9 @@ import {getCookieUserDetails, getUserRole} from "@/lib/users";
 import LoginPage from "@/app/login/page";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
 
+type UserType = {
+    user: {user_name: string}
+}
 
 const HeaderBlock = () => {
 
@@ -20,7 +23,7 @@ const HeaderBlock = () => {
     const [loading,setLoading] = useState<boolean>(false)
     const pathName = usePathname();
     const userRole: { role: string } | null = getUserRole();
-    const [currentUser,setCurrentUser] = useState(null);
+    const [currentUser,setCurrentUser] = useState<UserType | null>(null);
 
     const [items,setItems] = useState<MenuProps['items']>([
         {
@@ -109,7 +112,7 @@ const HeaderBlock = () => {
                                 <Badge count={1}>
                                     <Avatar shape="square" icon={<UserOutlined/>}/>
                                 </Badge>
-                                <div className="text-white ml-2">{currentUser.user.user_name}</div>
+                                <div className="text-white ml-2">{currentUser.user?.user_name}</div>
                             </div>
                         </Dropdown> : <div>
                             <Button onClick={() => userStore.setOpenLoginModal(true)}>Войти в профиль</Button>

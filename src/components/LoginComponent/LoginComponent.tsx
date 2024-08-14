@@ -46,7 +46,7 @@ const LoginComponent = () => {
                 </Form.Item>
 
                 <div className="flex justify-end">
-                    <Link href="/forgot-password" style={{color: MAIN_COLOR}}>Восстановить пароль</Link>
+                    <Link href={"/forgot-password"} style={{color: MAIN_COLOR}}>Восстановить пароль</Link>
                 </div>
 
                 <div className="flex flex-col items-center">
@@ -56,7 +56,7 @@ const LoginComponent = () => {
                             Войти
                         </Button>
                     </Form.Item>
-                    <p>Нет аккаунта? <Link href="/register" style={{color: MAIN_COLOR}}>Зарегистрируйся</Link></p>
+                    <p>Нет аккаунта? <Link href={"/register"} style={{color: MAIN_COLOR}}>Зарегистрируйся</Link></p>
                 </div>
 
             </Form>

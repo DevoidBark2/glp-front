@@ -29,7 +29,7 @@ class UserStore {
     }
 
     allUsers: User[] = [];
-    loading: boolean = false;
+    loading: boolean = true;
     openLeaveCourseModal: boolean = false;
     openLoginModal: boolean = false;
     openRegisterModal: boolean = false;
@@ -106,13 +106,13 @@ class UserStore {
     })
 
     getUsers = action(async () => {
+        this.setLoading(true)
         const token = getUserToken();
         await GET(`/api/users?token=${token}`).then(response => {
             this.setAllUsers(response.response.data.map(usersMapper))
-        })
+        }).finally(() => this.setLoading(false))
     })
     getUserProfile = action(async () => {
-        this.setLoading(true)
         const user = getCookieUserDetails()
 
         return await GET(`/api/get_user?token=${user.user.token}`).then(response => {
@@ -123,6 +123,7 @@ class UserStore {
     })
 }
 const usersMapper = (value: User) => {
+    debugger
     return {
         id: value.id,
         first_name: value.first_name,
@@ -131,7 +132,7 @@ const usersMapper = (value: User) => {
         is_active: value.is_active,
         role: value.role,
         email: value.email,
-        createdAt: dayjs(value.created_at).format("YYYY-MM-DD HH:mm"),
+        createdAt: dayjs(value.created_at, "YYYY-MM-DD HH:mm"),
     }
 }
 export default UserStore;

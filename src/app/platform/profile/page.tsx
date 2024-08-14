@@ -4,16 +4,16 @@ import {Button, Divider, Form, Input, Modal, Progress, Skeleton} from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
+
 const ProfilePage = () => {
 
     const {userStore} = useMobxStores()
-
     const [form] = Form.useForm();
-
     const [userCourses,setUserCourses] = useState([
         {id:1,name: "Курс по HTTP",image: "https://cdn.stepik.net/media/cache/images/courses/194856/cover_Sl6ky3x/2023ab5a2b085ae4307c6d4e981c7a68.png",},
         {id:1,name: "Курс по Java",image: "https://cdn.stepik.net/media/cache/images/courses/194856/cover_Sl6ky3x/2023ab5a2b085ae4307c6d4e981c7a68.png",}
     ])
+
     useEffect(() => {
         userStore.getUserProfile?.().then(() => {
             form.setFieldsValue(userStore.userProfileDetails)
@@ -25,7 +25,7 @@ const ProfilePage = () => {
 
             <Modal
                 open={userStore.openLeaveCourseModal}
-                onCancel={() => userStore.setOpenLeaveCourseModal?.(false)}
+                onCancel={() => userStore.setOpenLeaveCourseModal(false)}
             >
                 Вы точно хотите покинуть курс?
             </Modal>

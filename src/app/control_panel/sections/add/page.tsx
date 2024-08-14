@@ -48,9 +48,9 @@ const SectionAddPage = () => {
 
     const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
-    const handleCourseChange = (value) => {
+    const handleCourseChange = (value: number) => {
         const course = courseStore.teacherCourses.find(item => item.id === value);
-        setSelectedCourse(course);
+        setSelectedCourse(course!);
     };
 
     useEffect(() => {
@@ -120,7 +120,7 @@ const SectionAddPage = () => {
                             <p><strong>Уровень:</strong> {selectedCourse.level}</p>
                             <p><strong>Длительность:</strong> {selectedCourse.duration} часов</p>
                             <p><strong>Описание:</strong> {selectedCourse.small_description}</p>
-                            <p><strong>Статус:</strong> {showCourseStatus(selectedCourse)}</p>
+                            <p><strong>Статус:</strong> {showCourseStatus(selectedCourse.status)}</p>
                             <p><strong>Права доступа:</strong> {selectedCourse.access_right === 0 ? 'Открытый' : 'Закрытый'}</p>
                         </Card>
                     )}

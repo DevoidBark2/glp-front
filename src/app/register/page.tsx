@@ -2,7 +2,7 @@
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {Button, Form, Input, DatePicker, notification} from "antd";
-import React, {useState} from "react";
+import React from "react";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
 import Link from "next/link";
 import ru from "antd/es/date-picker/locale/ru_RU"
@@ -155,7 +155,7 @@ const RegisterPage = () => {
                                            Зарегистрироваться
                                        </Button>
                                    </Form.Item>
-                                   <p>Есть аккаунт? <Link href="/login" style={{color:MAIN_COLOR}}>Авторизуйся</Link></p>
+                                   <p>Есть аккаунт? <Link href={"/login"} style={{color:MAIN_COLOR}}>Авторизуйся</Link></p>
                                </div>
                            </Form>
                        </> : <>

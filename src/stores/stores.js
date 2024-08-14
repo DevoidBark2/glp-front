@@ -6,6 +6,7 @@ import CourseStore from "@/stores/CourseStore";
 import GraphStore from "@/stores/GraphStore";
 import NomenclatureStore from "@/stores/NomenclatureStore";
 import EventStore from "@/stores/EventStore";
+import {GeneralSettings} from "@/stores/GeneralSettings";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -14,6 +15,7 @@ const courseStore = new CourseStore();
 const graphStore = new GraphStore();
 const nomenclatureStore = new NomenclatureStore();
 const eventStore = new EventStore();
+const generalSettingsStore = new GeneralSettings();
 
 export const RootStore = {
     userStore,
@@ -23,6 +25,7 @@ export const RootStore = {
     graphStore,
     nomenclatureStore,
     eventStore,
+    generalSettingsStore
 };
 const StoreContext = React.createContext(RootStore);
 

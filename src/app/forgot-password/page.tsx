@@ -3,7 +3,6 @@ import {observer} from "mobx-react";
 import React, {useState} from "react";
 import {Button, Form, Input} from "antd";
 import {useMobxStores} from "@/stores/stores";
-import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
 import Link from "next/link";
 import {MAIN_COLOR} from "@/app/constans";
 
@@ -49,7 +48,7 @@ const ForgotPasswordPage = () => {
                             </Button>
                         </Form.Item>
 
-                        <Link href="/login" style={{color:MAIN_COLOR}}>Войти в аккаунт</Link>
+                        <Link href={"/login"} style={{color:MAIN_COLOR}}>Войти в аккаунт</Link>
                     </div>
 
                 </Form>

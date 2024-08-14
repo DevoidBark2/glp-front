@@ -5,8 +5,15 @@ import type {TableColumnsType} from "antd"
 import React, {useEffect, useState} from "react";
 import {useMobxStores} from "@/stores/stores";
 import {User} from "@/stores/UserStore";
-import {SearchOutlined, EditOutlined, CheckCircleOutlined, CloseCircleOutlined} from "@ant-design/icons";
+import {
+    EditOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+    DeleteOutlined,
+    PlusCircleOutlined
+} from "@ant-design/icons";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 const UsersPage = () => {
     const {userStore} = useMobxStores();
@@ -27,8 +34,22 @@ const UsersPage = () => {
             dataIndex: "role",
             title: "Роль",
             filters: [
-                {text: 'Администратор', value: 'student'},
-                {text: 'Пользователь', value: 'teacher'},
+                {
+                    text: (
+                        <Tag color="geekblue">
+                            Студент
+                        </Tag>
+                    ),
+                    value: 'student',
+                },
+                {
+                    text: (
+                        <Tag color="red">
+                            Преподаватель
+                        </Tag>
+                    ),
+                    value: 'teacher',
+                },
             ],
             onFilter: (value, record) => record.role === value,
             render: (role) => {
@@ -39,6 +60,15 @@ const UsersPage = () => {
         {
             dataIndex: "is_active",
             title: "Статус",
+            filters: [
+                {text: <Tag icon={<CheckCircleOutlined />} color="success">
+                        Активен
+                    </Tag>, value: true},
+                {text: <Tag icon={<CloseCircleOutlined />} color="error">
+                        Неактивен
+                    </Tag>, value: false},
+            ],
+            onFilter: (value, record) => record.is_active === value,
             render: (isActive) =>
                 isActive ? (
                     <Tag icon={<CheckCircleOutlined />} color="success">
@@ -66,21 +96,30 @@ const UsersPage = () => {
         },
         {
             dataIndex: "created_at",
-            title: "Дата создания",
+            title: "Дата регистрации",
             sorter: (a, b) => dayjs(a.created_at).unix() - dayjs(b.created_at).unix(),
+            render: (value) => dayjs(value).format("DD.MM.YYYY HH:mm")
         },
         {
             title: "Действия",
             key: "actions",
             render: (_, record) => (
-                <Space size="middle">
-                    <Button
-                        icon={<EditOutlined />}
-                        onClick={() => setSelectedUser(record)}
-                    >
-                        Редактировать
-                    </Button>
-                </Space>
+                <div className="flex items-center justify-start">
+                    <Tooltip title="Редактировать">
+                        <Button
+                            shape="circle"
+                            icon={<EditOutlined/>}
+                            onClick={() => setSelectedUser(record)}
+                            style={{marginRight: '10px'}}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Удалить">
+                        <Button
+                            danger type="primary"
+                            icon={<DeleteOutlined/>}
+                        />
+                    </Tooltip>
+                </div>
             ),
         },
     ];
@@ -93,16 +132,20 @@ const UsersPage = () => {
         <div className="bg-white h-full p-5">
             <div className="flex items-center justify-between">
                 <h1 className="text-green-800 font-bold text-3xl mb-2">Пользователи</h1>
+                <div>
+                    <Link href={"users/add"}>
+                        <Button type="primary" icon={<PlusCircleOutlined />}>Новый пользователь</Button>
+                    </Link>
+                </div>
             </div>
-            <Divider />
+            <Divider/>
             <Table
                 rowKey={(record) => record.id}
                 dataSource={userStore.allUsers}
                 columns={columns}
-                pagination={{ pageSize: 10 }}
-                expandable={{
-                    expandedRowRender: (record: User) => <p style={{ margin: 0 }}>{record.id}</p>,
-                }}
+                pagination={{pageSize: 10}}
+                loading={userStore.loading}
+                showSorterTooltip={false}
                 rowClassName={(record, index) =>
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                 }
@@ -119,7 +162,7 @@ const UsersPage = () => {
                         <p><strong>Email:</strong> {selectedUser.email}</p>
                         <p><strong>Роль:</strong> {selectedUser.role}</p>
                         <p><strong>Статус:</strong> {selectedUser.is_active ? "Активен" : "Неактивен"}</p>
-                        <p><strong>Дата создания:</strong> {dayjs(selectedUser.created_at).format("DD.MM.YYYY HH:mm")}</p>
+                        <p><strong>Дата регистрации:</strong> {dayjs(selectedUser.created_at).format("DD.MM.YYYY HH:mm")}</p>
                         {/* Добавьте здесь форму для редактирования */}
                     </div>
                 )}

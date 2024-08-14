@@ -108,7 +108,7 @@ const CourseAddPage = () => {
                            <Select loading={nomenclatureStore.loadingCategories}>
                                {
                                    nomenclatureStore.categories.map(category => (
-                                       <Select.Option value={category.id}>{category.name}</Select.Option>
+                                       <Select.Option key={category.id} value={category.id}>{category.name}</Select.Option>
                                    ))
                                }
                            </Select>
@@ -154,7 +154,7 @@ const CourseAddPage = () => {
                 >
                     <Select>
                         {LEVEL_COURSE.map(level => (
-                            <Select.Option value={level.id}>{level.title}</Select.Option>
+                            <Select.Option key={level.id} value={level.id}>{level.title}</Select.Option>
                         ))}
                     </Select>
                 </Form.Item>

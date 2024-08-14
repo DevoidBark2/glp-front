@@ -9,6 +9,7 @@ import {convertTimeFromStringToDate} from "@/app/constans";
 import {FILTER_STATUS_COURSE} from "@/constants";
 import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
+
 const CoursesPage = () => {
     const {courseStore} = useMobxStores()
 
@@ -21,7 +22,7 @@ const CoursesPage = () => {
             title: 'Дата публикации',
             dataIndex: 'publish_date',
             sorter: (a,b) => {
-                return convertTimeFromStringToDate(a.publish_date) - convertTimeFromStringToDate(b.publish_date)
+                return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime()
             }
         },
         {
@@ -30,7 +31,7 @@ const CoursesPage = () => {
             filters: FILTER_STATUS_COURSE,
             onFilter: (value, record) => record.status.startsWith(value as string),
             filterSearch: true,
-            render: (_,record) => showCourseStatus(record)
+            render: (value) => showCourseStatus(value)
         },
         {
             dataIndex: "duration",
@@ -79,7 +80,8 @@ const CoursesPage = () => {
                         </div>
                     </div>
                     <Divider/>
-                    <Table dataSource={courseStore.teacherCourses} columns={columns}
+                    <Table rowKey={(record) => record.id} dataSource={courseStore.teacherCourses} columns={columns}
+                           rowSelection={{type: "checkbox"}}
                            loading={courseStore.loadingCourses}/>
                 </div>
             </div>

@@ -9,16 +9,8 @@ import TextArea from "antd/es/input/TextArea";
 import {InboxOutlined} from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 
-type LayoutType = Parameters<typeof Form>[0]['layout'];
-
-
-
-
-
 const PostPage = () => {
-
     const {postStore} = useMobxStores();
-    const [formLayout] = useState<LayoutType>('vertical');
     const [form] = Form.useForm()
 
     const props: UploadProps = {
@@ -89,7 +81,7 @@ const PostPage = () => {
             >
                 <Form
                     form={form}
-                    layout={formLayout}
+                    layout={"vertical"}
                     onFinish={postStore.createPost}
                 >
                     <Form.Item

@@ -6,16 +6,15 @@ import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {EventUser} from "@/stores/EventStore";
 import {ReloadOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
-import dayjs from "dayjs";
 import {eventColors, eventTooltips} from "@/constants";
 import {convertTimeFromStringToDate, MAIN_COLOR} from "@/app/constans";
+import {ActionEvent} from "@/enums/ActionEventUser";
 
 const { RangePicker } = DatePicker;
 const EventPage = () => {
     const {eventStore} = useMobxStores();
     const [searchText, setSearchText] = useState<string>("");
     const [filteredData, setFilteredData] = useState<EventUser[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<EventUser | null>(null);
 
     const columns: TableColumnsType<EventUser> = [
         {
@@ -23,8 +22,8 @@ const EventPage = () => {
             title: "Событие",
             filters: Object.keys(eventColors).map((key) => ({
                 text: (
-                    <Tooltip title={eventTooltips[key] || "Описание недоступно"}>
-                        <Tag color={eventColors[key]}>{key}</Tag>
+                    <Tooltip title={eventTooltips[key as ActionEvent] || "Описание недоступно"}>
+                        <Tag color={eventColors[key as ActionEvent]}>{key}</Tag>
                     </Tooltip>
                 ),
                 value: key,  // Здесь используется строковое название события
@@ -53,7 +52,8 @@ const EventPage = () => {
         {
             dataIndex: "createdAt",
             title: "Создано",
-            sorter: (a,b) => convertTimeFromStringToDate(a.createdAt) - convertTimeFromStringToDate(b.createdAt)
+            sorter: (a,b) =>
+                convertTimeFromStringToDate(a.createdAt).getTime() - convertTimeFromStringToDate(b.createdAt).getTime()
         },
         {
             dataIndex: "user",
@@ -91,20 +91,6 @@ const EventPage = () => {
         );
     };
 
-    const handleDateFilter = (dates: [dayjs.Dayjs, dayjs.Dayjs]) => {
-        const [start, end] = dates;
-        setFilteredData(
-            eventStore.userEvents.filter((item) => {
-                const eventDate = convertTimeFromStringToDate(item.createdAt);
-                return eventDate >= start.valueOf() && eventDate <= end.valueOf();
-            })
-        );
-    };
-
-    const handleEventClick = (record: EventUser) => {
-        setSelectedEvent(record);
-    };
-
     useEffect(() => {
         eventStore.getAllEvents().finally(() => {
             eventStore.setLoadingEvents(false)
@@ -128,7 +114,7 @@ const EventPage = () => {
                     prefix={<SearchOutlined/>}
                     style={{width: "300px"}}
                 />
-                <RangePicker onChange={(dates) => dates && handleDateFilter(dates)}/>
+                <RangePicker />
             </div>
             <Table
                 dataSource={eventStore.userEvents}

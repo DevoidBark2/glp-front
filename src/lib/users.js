@@ -12,7 +12,7 @@ export const set_cookie = function (name, data) {
     const expires = "expires=" + d.toUTCString();
     document.cookie = name + "=" + data + ";" + expires + ";path=/";
 };
-export const delete_cooki = function (name) {
+export const delete_cookie_by_name = function (name) {
     const d = new Date();
     d.setTime(d.getTime());
     const expires = "expires=" + d.toUTCString();
