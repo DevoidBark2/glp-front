@@ -1,8 +1,8 @@
 "use client";
 import {observer} from "mobx-react";
-import {Button, Divider, Table, Tag, Tooltip, Space, Modal} from "antd";
+import {Button, Divider, Table, Tag, Tooltip, Space, Modal, message} from "antd";
 import type {TableColumnsType} from "antd"
-import React, {useEffect, useState} from "react";
+import React, {Key, useEffect, useState} from "react";
 import {useMobxStores} from "@/stores/stores";
 import {User} from "@/stores/UserStore";
 import {
@@ -14,11 +14,13 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Link from "next/link";
+import GlobalActionComponent from "@/components/GlobalActionComponent/GlobalActionComponent";
+import useSelectedRows from "@/hooks/useSelectedRows";
 
 const UsersPage = () => {
     const {userStore} = useMobxStores();
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
+    const { selectedRows, setSelectedRows } = useSelectedRows();
     const columns: TableColumnsType<User> = [
         {
             dataIndex: "first_name",
@@ -124,6 +126,14 @@ const UsersPage = () => {
         },
     ];
 
+    const handleDelete = () => {
+        if (selectedRows.length === 0) {
+            message.warning("Выберите элеменыты");
+            return;
+        }
+    };
+
+
     useEffect(() => {
         userStore.getUsers();
     }, []);
@@ -131,10 +141,13 @@ const UsersPage = () => {
     return (
         <div className="bg-white h-full p-5">
             <div className="flex items-center justify-between">
-                <h1 className="text-green-800 font-bold text-3xl mb-2">Пользователи</h1>
+                <div className="flex items-center">
+                    <h1 className="text-green-800 font-bold text-3xl mb-2 mr-2">Пользователи</h1>
+                    <GlobalActionComponent handleDelete={handleDelete}/>
+                </div>
                 <div>
                     <Link href={"users/add"}>
-                        <Button type="primary" icon={<PlusCircleOutlined />}>Новый пользователь</Button>
+                    <Button type="primary" icon={<PlusCircleOutlined />}>Новый пользователь</Button>
                     </Link>
                 </div>
             </div>
@@ -149,6 +162,13 @@ const UsersPage = () => {
                 rowClassName={(record, index) =>
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                 }
+                rowSelection={{type: "checkbox", onChange: (selectedRowKeys: Key[]) => {
+                        const selectedRowsArray: number[] = selectedRowKeys.map(key =>
+                            Number(key),
+                        );
+                        setSelectedRows(selectedRowsArray);
+                    },
+                }}
             />
             <Modal
                 open={!!selectedUser}

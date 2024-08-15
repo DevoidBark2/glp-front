@@ -11,8 +11,6 @@ import {
     Divider,
     Upload,
     Tooltip,
-    Tag,
-    Space,
     DatePicker,
     notification
 } from "antd";
@@ -27,12 +25,6 @@ const UserCreatePage = () => {
     const {userStore} = useMobxStores()
     const [form] = Form.useForm();
     const router = useRouter();
-
-    const handleImageChange = (info) => {
-        if (info.file.status === 'done') {
-            console.log('Image uploaded successfully:', info.file.response);
-        }
-    };
 
     return (
         <div className="bg-white h-full p-5 overflow-y-auto overflow-x-hidden">
@@ -180,37 +172,10 @@ const UserCreatePage = () => {
                 <Form.Item
                     label="Двухфакторная аутентификация (2FA)"
                     name="2fa"
+                    tooltip={"Включите двухфакторную аутентификацию для повышения безопасности."}
+                    valuePropName="checked"
                 >
-                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                    <Tooltip title="Включите двухфакторную аутентификацию для повышения безопасности.">
-                        <InfoCircleOutlined className="ml-2 text-gray-500" />
-                    </Tooltip>
-                </Form.Item>
-
-                <Form.Item
-                    label="Аватар пользователя"
-                    name="avatar"
-                >
-                    <Upload
-                        name="avatar"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="/upload"
-                        onChange={handleImageChange}
-                    >
-                        <div>
-                            <UploadOutlined />
-                            <div className="ant-upload-text">Загрузить изображение</div>
-                        </div>
-                    </Upload>
-                </Form.Item>
-
-                <Form.Item
-                    label="Дата последнего входа"
-                    name="last_login"
-                >
-                    <Input disabled value="Неизвестно" />
+                    <Switch />
                 </Form.Item>
 
                 <Divider />
