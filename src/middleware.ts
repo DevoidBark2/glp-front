@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
     //     return Response.redirect(new URL('/platform', request.url));
     // }
 
-    if (!currentUser && request.nextUrl.pathname === '/') {
+    if (request.nextUrl.pathname === '/') {
         return Response.redirect(new URL('/platform', request.url));
     }
 }

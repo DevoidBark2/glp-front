@@ -11,6 +11,8 @@ import {useMobxStores} from "@/stores/stores";
 import {observer} from "mobx-react";
 import {getCookieUserDetails, getUserRole} from "@/lib/users";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
+import RegisterComponent from "@/components/RegisterComponent/RegisterComponent";
+import ForgorPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
 
 type UserType = {
     user: {user_name: string}
@@ -74,7 +76,6 @@ const HeaderBlock = () => {
         setLoading(false)
     }, [])
 
-    console.log(currentUser)
     return <>
         <Modal
             open={userStore.openLoginModal}
@@ -83,6 +84,24 @@ const HeaderBlock = () => {
             footer={null}
         >
            <LoginComponent/>
+        </Modal>
+
+        <Modal
+            open={userStore.openRegisterModal}
+            title="Регистрация"
+            onCancel={() => userStore.setOpenRegisterModal(false)}
+            footer={null}
+        >
+            <RegisterComponent/>
+        </Modal>
+
+        <Modal
+            open={userStore.openForgotPasswordModal}
+            title="Восстановление пароля"
+            onCancel={() => userStore.setOpenForgotPasswordModal(false)}
+            footer={null}
+        >
+            <ForgorPasswordComponent/>
         </Modal>
         <div className="bg-[#00B96B] p-6">
             <div className="flex justify-between container mx-auto items-center">

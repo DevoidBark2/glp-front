@@ -3,7 +3,6 @@ import {useMobxStores} from "@/stores/stores";
 import {Button, Form, Input, notification} from "antd";
 import React from "react";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
-import Link from "next/link";
 import {MAIN_COLOR} from "@/app/constans";
 
 const LoginComponent = () => {
@@ -16,9 +15,10 @@ const LoginComponent = () => {
                 form={form}
                 layout="vertical"
                 style={{width: 300}}
-                onFinish={() => userStore.loginUser(form.getFieldsValue()).then(() => {
-
+                onFinish={(values) => userStore.loginUser(values).then(() => {
+                    form.resetFields();
                 }).catch((e) => {
+                    debugger
                     notification.error({
                         message: e.response.data.message
                     })
@@ -29,9 +29,7 @@ const LoginComponent = () => {
                     name="email"
                     rules={[{required: true, message: "Поле обязательно!"}]}
                 >
-                    <Input
-                        placeholder="Введите Email"
-                    />
+                    <Input placeholder="Введите Email"/>
                 </Form.Item>
 
                 <Form.Item
@@ -46,7 +44,9 @@ const LoginComponent = () => {
                 </Form.Item>
 
                 <div className="flex justify-end">
-                    <Link href={"/forgot-password"} style={{color: MAIN_COLOR}}>Восстановить пароль</Link>
+                    <span className="hover:cursor-pointer" onClick={() => {
+                        userStore.setOpenForgotPasswordModal(true)
+                    }} style={{color: MAIN_COLOR}}>Восстановить пароль</span>
                 </div>
 
                 <div className="flex flex-col items-center">
@@ -56,7 +56,9 @@ const LoginComponent = () => {
                             Войти
                         </Button>
                     </Form.Item>
-                    <p>Нет аккаунта? <Link href={"/register"} style={{color: MAIN_COLOR}}>Зарегистрируйся</Link></p>
+                    <p>Нет аккаунта? <span className="hover:cursor-pointer" onClick={() => {
+                        userStore.setOpenRegisterModal(true)
+                    }} style={{color: MAIN_COLOR}}>Зарегистрируйся</span></p>
                 </div>
 
             </Form>

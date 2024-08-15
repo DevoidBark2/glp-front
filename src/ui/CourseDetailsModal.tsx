@@ -1,3 +1,4 @@
+"use client"
 import React, {useState} from "react";
 import {Divider, Input, Modal, Rate} from "antd";
 import Image from "next/image"
@@ -5,9 +6,15 @@ import {CourseDetailsModalProps} from "@/interfaces/CourseDetailsModalProps";
 import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
 import CourseAccessComponent from "@/components/CourseAccessComponent/CourseAccessComponent";
 import {AccessRightEnum} from "@/enums/AccessCourseEnum";
+import {useRouter} from "next/navigation";
+import {getCookieUserDetails} from "@/lib/users";
+import {useMobxStores} from "@/stores/stores";
+import {observer} from "mobx-react";
 
 const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({course,openModal,setOpenModal}) => {
     const [inputSecretKeyModal,setInputSecretKeyModal] = useState<boolean>(false)
+    const router = useRouter();
+    const {userStore} = useMobxStores();
 
     return <>
         <Modal
@@ -27,7 +34,18 @@ const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({course,openModal
             okText="Начать"
             cancelText="Закрыть"
             width="60%"
-            onOk={() => course && course.access_right === AccessRightEnum.PRIVATE ? setInputSecretKeyModal(true) : alert("Открыт")}
+            onOk={() => {
+                if (course && course.access_right === AccessRightEnum.PRIVATE) {
+                    setInputSecretKeyModal(true);
+                } else {
+                    const currentUser = getCookieUserDetails();
+                    if (!currentUser) {
+                        userStore.setOpenLoginModal(true);
+                        return;
+                    }
+                    router.push(`/platform/courses/${course.id}`);
+                }
+            }}
             onCancel={() => setOpenModal(false)}
         >
             <div className="flex justify-between mt-6">
@@ -71,4 +89,4 @@ const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({course,openModal
     </>
 }
 
-export default CourseDetailsModal;
+export default observer(CourseDetailsModal);

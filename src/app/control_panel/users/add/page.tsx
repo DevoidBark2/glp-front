@@ -24,7 +24,7 @@ const UserCreatePage = () => {
             <Breadcrumb
                 items={[
                     {
-                        title: <Link href="/control_panel/users">Пользователи</Link>,
+                        title: <Link href={"/control_panel/users"}>Пользователи</Link>,
                     },
                     {
                         title: 'Новый пользователь',
@@ -38,6 +38,14 @@ const UserCreatePage = () => {
                 onFinish={onFinish}
             >
                 <Form.Item
+                    label="Фамилия"
+                    name="second_name"
+                    rules={[{ required: true, message: 'Пожалуйста, введите фамилию!' }]}
+                >
+                    <Input placeholder="Введите фамилию" />
+                </Form.Item>
+
+                <Form.Item
                     label="Имя"
                     name="first_name"
                     rules={[{ required: true, message: 'Пожалуйста, введите имя!' }]}
@@ -46,11 +54,19 @@ const UserCreatePage = () => {
                 </Form.Item>
 
                 <Form.Item
-                    label="Фамилия"
+                    label="Отчество"
                     name="last_name"
-                    rules={[{ required: true, message: 'Пожалуйста, введите фамилию!' }]}
+                    rules={[{ required: true, message: 'Пожалуйста, введите отчество!' }]}
                 >
-                    <Input placeholder="Введите фамилию" />
+                    <Input placeholder="Введите отчество" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Дата рождения"
+                    name="birth_date"
+                    rules={[{ required: true, message: 'Пожалуйста, выберите дату рождения!' }]}
+                >
+                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
                 </Form.Item>
 
                 <Form.Item
@@ -70,14 +86,6 @@ const UserCreatePage = () => {
                     rules={[{ required: true, message: 'Пожалуйста, введите телефонный номер!' }]}
                 >
                     <Input placeholder="Введите телефонный номер" />
-                </Form.Item>
-
-                <Form.Item
-                    label="Дата рождения"
-                    name="birth_date"
-                    rules={[{ required: true, message: 'Пожалуйста, выберите дату рождения!' }]}
-                >
-                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
                 </Form.Item>
 
                 <Form.Item

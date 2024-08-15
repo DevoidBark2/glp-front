@@ -1,34 +1,49 @@
-import {LevelCourseEnum} from "@/enums/LevelCourseEnum";
+import { LevelCourseEnum } from "@/enums/LevelCourseEnum";
 import Image from "next/image";
+import React from "react";
 
-const CourseLevelComponent = ({level}: {level: number}) => {
+type CourseLevelComponentProps = {
+    level: LevelCourseEnum;
+};
 
-    const renderLevelCourse = (level: number) => {
+const CourseLevelComponent: React.FC<CourseLevelComponentProps> = ({ level }) => {
+    const getLevelDetails = (level: LevelCourseEnum) => {
         switch (level) {
             case LevelCourseEnum.LIGHT:
-                return (
-                  <div className="flex items-center">
-                      <Image src="/static/light_level_icon.svg" alt="Легкий уровень" width={50} height={50}/>
-                      <p className="ml-2">Легкий уровень <br/> сложности</p>
-                  </div>
-                );
+                return {
+                    icon: "/static/light_level_icon.svg",
+                    altText: "Легкий уровень",
+                    description: <>
+                        Легкий уровень <br /> сложности
+                    </>
+                };
             case LevelCourseEnum.MIDDLE:
-                return (
-                    <div className="flex items-center">
-                        <Image src="/static/middle_level_icon.svg" alt="Средний уровень" width={50} height={50}/>
-                        <p className="ml-2">Средний уровень <br/> сложности</p>
-                    </div>
-                );
+                return {
+                    icon: "/static/middle_level_icon.svg",
+                    altText: "Средний уровень",
+                    description: <>
+                        Средний уровень <br /> сложности
+                    </>
+                };
             case LevelCourseEnum.HARD:
-                return (
-                    <div className="flex items-center">
-                        <Image src="/static/hard_level_icon.svg" alt="Сложный уровень" width={50} height={50}/>
-                        <p className="ml-2">Сложный уровень <br/> сложности</p>
-                    </div>
-                );
+                return {
+                    icon: "/static/hard_level_icon.svg",
+                    altText: "Сложный уровень",
+                    description:<>
+                        Сложный уровень <br /> сложности
+                    </>
+                };
         }
-    }
-    return renderLevelCourse(level);
+    };
+
+    const { icon, altText, description } = getLevelDetails(level);
+
+    return (
+        <div className="flex items-center">
+            <Image src={icon} alt={altText} width={50} height={50} />
+            <p className="ml-2">{description}</p>
+        </div>
+    );
 };
 
 export default CourseLevelComponent;

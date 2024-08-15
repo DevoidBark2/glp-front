@@ -33,6 +33,11 @@ class UserStore {
     openLeaveCourseModal: boolean = false;
     openLoginModal: boolean = false;
     openRegisterModal: boolean = false;
+    openForgotPasswordModal: boolean = false;
+
+    setOpenForgotPasswordModal = action((value: boolean) => {
+        this.openForgotPasswordModal = value;
+    })
 
     setOpenLoginModal = action((value: boolean) => {
         this.openLoginModal = value;
@@ -55,22 +60,25 @@ class UserStore {
         this.userEditModal = value;
     })
 
-    loginUser = action(async(values:any) => {
-        this.setLoading(true)
-        await POST("/api/login",values).then(response => {
-            debugger
-            //сохранение в куки данные пользователя
+    loginUser = action(async (values: any) => {
+        this.setLoading(true);
+        try {
+            const response = await POST("/api/login", values);
             signInUser({
                 token: response.response.data.token,
                 email: response.response.data.email,
                 role: response.response.data.role,
-                user_name: response.response.data.user_name
-            })
-            this.setOpenLoginModal(false)
-        }).finally(() => {
-            this.setLoading(false)
-        })
-    })
+                user_name: response.response.data.user_name,
+            });
+            this.setOpenLoginModal(false);
+            return response;
+        } catch (error) {
+            throw error;
+        } finally {
+            this.setLoading(false);
+        }
+    });
+
 
     registerSuccess: boolean = false;
 

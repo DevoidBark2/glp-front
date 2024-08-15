@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@uiw/react-codemirror": "^4.23.0",
     "antd": "^5.18.0",
     "antd-input-otp": "^2.1.0",
     "axios": "^1.7.2",
+    "codemirror": "^6.0.1",
     "cookie-cutter": "^0.2.0",
     "dayjs": "^1.11.11",
     "emoji-picker-react": "^4.10.0",

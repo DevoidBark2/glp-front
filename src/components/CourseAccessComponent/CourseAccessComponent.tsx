@@ -1,26 +1,37 @@
 import Image from "next/image";
-import {AccessRightEnum} from "@/enums/AccessCourseEnum";
+import { AccessRightEnum } from "@/enums/AccessCourseEnum";
+import React from "react";
 
-const CourseAccessComponent = ({access_level} : {access_level: number}) => {
-    const renderLevelCourse = (access_level: number) => {
+type CourseAccessComponentProps = {
+    access_level: AccessRightEnum;
+};
+
+const CourseAccessComponent: React.FC<CourseAccessComponentProps> = React.memo(({ access_level }) => {
+    const getAccessDetails = (access_level: AccessRightEnum) => {
         switch (access_level) {
             case AccessRightEnum.PUBLIC:
-                return (
-                    <div className="flex items-center ml-2">
-                        <Image src="/static/open_access_icon.svg" alt="Открытый доступ" width={50} height={50}/>
-                        <p className="ml-2">Уровень доступа: <br/> Публичный</p>
-                    </div>
-                );
+                return {
+                    icon: "/static/open_access_icon.svg",
+                    altText: "Открытый доступ",
+                    description: "Публичный"
+                };
             case AccessRightEnum.PRIVATE:
-                return (
-                    <div className="flex items-center ml-2">
-                        <Image src="/static/close_access_icon.svg" alt="Закрытый доступ" width={50} height={50}/>
-                        <p className="ml-2">Уровень доступа: <br/> Приватный</p>
-                    </div>
-                );
+                return {
+                    icon: "/static/close_access_icon.svg",
+                    altText: "Закрытый доступ",
+                    description: "Приватный"
+                };
         }
-    }
-    return renderLevelCourse(access_level);
-}
+    };
+
+    const { icon, altText, description } = getAccessDetails(access_level);
+
+    return (
+        <div className="flex items-center ml-2">
+            <Image src={icon} alt={altText} width={50} height={50} />
+            <p className="ml-2">Уровень доступа: <br /> {description}</p>
+        </div>
+    );
+});
 
 export default CourseAccessComponent;
