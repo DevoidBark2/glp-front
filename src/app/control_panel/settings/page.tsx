@@ -13,7 +13,6 @@ const SettingsControlPage = () => {
 
     useEffect(() => {
         generalSettingsStore.getGeneralSettings().then((response) => {
-            debugger
             formForSec.setFieldValue("min_password", response.response.data[0].min_password_length)
         });
     }, []);
@@ -357,7 +356,6 @@ const SettingsControlPage = () => {
                             form={formForSec}
                             layout="vertical"
                             onFinish={(values) => {
-                                debugger
                                 return generalSettingsStore.saveGeneralSetting(formForSec.getFieldsValue());
                             }}
                         >

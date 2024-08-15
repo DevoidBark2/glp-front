@@ -24,6 +24,5 @@ export class GeneralSettings {
     })
 
     saveGeneralSetting = action(async (values:any) => {
-        debugger
     })
 }

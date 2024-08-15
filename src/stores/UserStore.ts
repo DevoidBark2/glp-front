@@ -2,6 +2,7 @@ import {action, makeAutoObservable} from "mobx"
 import {GET, POST} from "@/lib/fetcher";
 import {delete_cookie, getCookieUserDetails, getUserToken, signInUser} from "@/lib/users";
 import dayjs from "dayjs";
+import {notification} from "antd";
 
 type userProfile = {
     birth_day : Date
@@ -34,6 +35,11 @@ class UserStore {
     openLoginModal: boolean = false;
     openRegisterModal: boolean = false;
     openForgotPasswordModal: boolean = false;
+    createUserLoading: boolean = false;
+
+    setCreateUserLoading = action((value: boolean) => {
+        this.createUserLoading = value;
+    })
 
     setOpenForgotPasswordModal = action((value: boolean) => {
         this.openForgotPasswordModal = value;
@@ -129,10 +135,25 @@ class UserStore {
             this.setLoading(false)
         })
     })
+
+    createUser = action(async (values: any) => {
+        this.setCreateUserLoading(true)
+        try{
+            const token = getUserToken();
+            const response = await POST(`/api/user?token=${token}`,values);
+            this.allUsers = [...this.allUsers,usersMapper(response.response.data)]
+
+            return response;
+        }catch (e){
+            throw e
+        }
+        finally {
+            this.setCreateUserLoading(false)
+        }
+    })
 }
 const usersMapper = (value: User) => {
-    debugger
-    return {
+    const user: User = {
         id: value.id,
         first_name: value.first_name,
         second_name: value.second_name,
@@ -140,7 +161,9 @@ const usersMapper = (value: User) => {
         is_active: value.is_active,
         role: value.role,
         email: value.email,
-        createdAt: dayjs(value.created_at, "YYYY-MM-DD HH:mm"),
+        created_at: dayjs(value.created_at, "YYYY-MM-DD HH:mm").toDate(),
     }
+
+    return user;
 }
 export default UserStore;

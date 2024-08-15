@@ -18,7 +18,6 @@ const LoginComponent = () => {
                 onFinish={(values) => userStore.loginUser(values).then(() => {
                     form.resetFields();
                 }).catch((e) => {
-                    debugger
                     notification.error({
                         message: e.response.data.message
                     })

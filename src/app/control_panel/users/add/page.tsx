@@ -1,22 +1,37 @@
 "use client";
+import React from "react";
 import { observer } from "mobx-react";
-import { Breadcrumb, Form, Input, Button, Select, Switch, Divider, Upload, Tooltip, Tag, Space, DatePicker } from "antd";
+import {
+    Breadcrumb,
+    Form,
+    Input,
+    Button,
+    Select,
+    Switch,
+    Divider,
+    Upload,
+    Tooltip,
+    Tag,
+    Space,
+    DatePicker,
+    notification
+} from "antd";
 import { UploadOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import React from "react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/bootstrap.css";
+import {useMobxStores} from "@/stores/stores";
+import {useRouter} from "next/navigation";
 
 const UserCreatePage = () => {
+    const {userStore} = useMobxStores()
     const [form] = Form.useForm();
+    const router = useRouter();
 
     const handleImageChange = (info) => {
         if (info.file.status === 'done') {
             console.log('Image uploaded successfully:', info.file.response);
         }
-    };
-
-    const onFinish = (values) => {
-        console.log('Полученные данные:', values);
-        // Здесь можно добавить логику для сохранения пользователя
     };
 
     return (
@@ -35,7 +50,14 @@ const UserCreatePage = () => {
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={onFinish}
+                scrollToFirstError
+                onFinish={(values) => userStore.createUser(values).then(response => {
+                    router.push('/control_panel/users')
+                    notification.success({message: response.response.message})
+                }).catch((e) => {
+                    debugger
+                    notification.error({message: e.response.data.result})
+                })}
             >
                 <Form.Item
                     label="Фамилия"
@@ -63,7 +85,7 @@ const UserCreatePage = () => {
 
                 <Form.Item
                     label="Дата рождения"
-                    name="birth_date"
+                    name="birth_day"
                     rules={[{ required: true, message: 'Пожалуйста, выберите дату рождения!' }]}
                 >
                     <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
@@ -83,16 +105,28 @@ const UserCreatePage = () => {
                 <Form.Item
                     label="Телефонный номер"
                     name="phone"
-                    rules={[{ required: true, message: 'Пожалуйста, введите телефонный номер!' }]}
                 >
-                    <Input placeholder="Введите телефонный номер" />
+                    <PhoneInput
+                        inputStyle={{width:'100%', height:'25px'}}
+                        country={"ru"}
+                        enableSearch={true}
+                        searchPlaceholder={"Пожалуйста, введите телефонный номер!"}
+                    />
+
                 </Form.Item>
 
                 <Form.Item
-                    label="Адрес"
-                    name="address"
+                    label="Город"
+                    name="city"
                 >
-                    <Input.TextArea placeholder="Введите адрес" rows={3} />
+                    <Input placeholder="Введите город" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Университет"
+                    name="university"
+                >
+                    <Input placeholder="Введите университет" />
                 </Form.Item>
 
                 <Form.Item
@@ -101,7 +135,7 @@ const UserCreatePage = () => {
                     rules={[{ required: true, message: 'Пожалуйста, выберите роль!' }]}
                 >
                     <Select placeholder="Выберите роль">
-                        <Select.Option value="admin">Администратор</Select.Option>
+                        <Select.Option value="teacher">Преподаватель</Select.Option>
                         <Select.Option value="user">Пользователь</Select.Option>
                         <Select.Option value="manager">Менеджер</Select.Option>
                     </Select>
@@ -136,49 +170,21 @@ const UserCreatePage = () => {
 
                 <Form.Item
                     label="Активен"
+                    tooltip={"Активный пользователь может войти в систему и использовать все доступные функции."}
                     name="is_active"
                     valuePropName="checked"
-                    initialValue={true}
                 >
-                    <Switch checkedChildren="Да" unCheckedChildren="Нет" />
-                    <Tooltip title="Активный пользователь может войти в систему и использовать все доступные функции.">
-                        <InfoCircleOutlined className="ml-2 text-gray-500" />
-                    </Tooltip>
+                    <Switch />
                 </Form.Item>
 
                 <Form.Item
                     label="Двухфакторная аутентификация (2FA)"
                     name="2fa"
-                    valuePropName="checked"
                 >
                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                     <Tooltip title="Включите двухфакторную аутентификацию для повышения безопасности.">
                         <InfoCircleOutlined className="ml-2 text-gray-500" />
                     </Tooltip>
-                </Form.Item>
-
-                <Form.Item
-                    label="Настройки уведомлений"
-                    name="notifications"
-                >
-                    <Space direction="vertical" style={{ width: '100%' }}>
-                        <Switch checkedChildren="Email" unCheckedChildren="No Email" /> Email уведомления
-                        <Switch checkedChildren="SMS" unCheckedChildren="No SMS" /> SMS уведомления
-                        <Switch checkedChildren="Push" unCheckedChildren="No Push" /> Push уведомления
-                    </Space>
-                </Form.Item>
-
-                <Form.Item
-                    label="Метки"
-                    name="tags"
-                >
-                    <Select
-                        mode="tags"
-                        placeholder="Введите метки"
-                        style={{ width: '100%' }}
-                    >
-                        {/* Опционально можно добавить предустановленные метки */}
-                    </Select>
                 </Form.Item>
 
                 <Form.Item
@@ -190,7 +196,7 @@ const UserCreatePage = () => {
                         listType="picture-card"
                         className="avatar-uploader"
                         showUploadList={false}
-                        action="/upload" // URL для загрузки изображения
+                        action="/upload"
                         onChange={handleImageChange}
                     >
                         <div>
@@ -210,7 +216,7 @@ const UserCreatePage = () => {
                 <Divider />
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={userStore.createUserLoading}>
                         Создать пользователя
                     </Button>
                 </Form.Item>

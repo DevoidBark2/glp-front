@@ -163,7 +163,6 @@ const UsersPage = () => {
                         <p><strong>Роль:</strong> {selectedUser.role}</p>
                         <p><strong>Статус:</strong> {selectedUser.is_active ? "Активен" : "Неактивен"}</p>
                         <p><strong>Дата регистрации:</strong> {dayjs(selectedUser.created_at).format("DD.MM.YYYY HH:mm")}</p>
-                        {/* Добавьте здесь форму для редактирования */}
                     </div>
                 )}
             </Modal>
