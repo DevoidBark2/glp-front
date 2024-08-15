@@ -21,7 +21,7 @@ type UserType = {
 const HeaderBlock = () => {
 
     const {userStore} = useMobxStores();
-    const [loading,setLoading] = useState<boolean>(false)
+    const [loading,setLoading] = useState<boolean>(true)
     const pathName = usePathname();
     const userRole: { role: string } | null = getUserRole();
     const [currentUser,setCurrentUser] = useState<UserType | null>(null);
@@ -66,7 +66,6 @@ const HeaderBlock = () => {
     ]);
 
     useEffect(() => {
-        setLoading(true)
         if (userRole !== null && userRole.role === "student") {
             setItems(items?.filter(item => item?.key !== '2'));
         }
