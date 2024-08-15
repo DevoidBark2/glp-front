@@ -12,7 +12,7 @@ import {observer} from "mobx-react";
 import {getCookieUserDetails, getUserRole} from "@/lib/users";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
 import RegisterComponent from "@/components/RegisterComponent/RegisterComponent";
-import ForgorPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
+import ForgotPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
 
 type UserType = {
     user: {user_name: string}
@@ -101,7 +101,7 @@ const HeaderBlock = () => {
             onCancel={() => userStore.setOpenForgotPasswordModal(false)}
             footer={null}
         >
-            <ForgorPasswordComponent/>
+            <ForgotPasswordComponent/>
         </Modal>
         <div className="bg-[#00B96B] p-6">
             <div className="flex justify-between container mx-auto items-center">
@@ -115,7 +115,8 @@ const HeaderBlock = () => {
                                 <Link
                                     key={menuItem.key}
                                     href={menuItem.link}
-                                    className={`text-white hover:border-b-2 border-b-indigo-500 ml-5 ${pathName === menuItem.link ? 'border-b-2 border-b-indigo-500' : ''}`}
+                                    className={`text-white hover:border-b-2 border-b-indigo-500 ml-5 
+                                    ${pathName === menuItem.link ? 'border-b-2 border-b-indigo-500' : ''}`}
                                 >
                                     {menuItem.title}
                                 </Link>
@@ -123,20 +124,28 @@ const HeaderBlock = () => {
                         }
                     </div>
                 </div>
-                <div>
-                    {
-                        loading ? <Spin size="large"/> : currentUser ? <Dropdown menu={{items}} placement="bottomLeft">
-                            <div className="flex items-center">
-                                <Badge count={1}>
+                <div className="flex items-center space-x-4">
+                    {loading ? (
+                        <Spin size="large"/>
+                    ) : currentUser ? (
+                        <Dropdown menu={{items}} placement="bottomLeft">
+                            <div
+                                className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300">
+                                <Badge count={1} className="mr-2">
                                     <Avatar shape="square" icon={<UserOutlined/>}/>
                                 </Badge>
-                                <div className="text-white ml-2">{currentUser.user?.user_name}</div>
+                                <div className="text-white font-semibold">{currentUser.user?.user_name}</div>
                             </div>
-                        </Dropdown> : <div>
-                            <Button onClick={() => userStore.setOpenLoginModal(true)}>Войти в профиль</Button>
-                        </div>
-                    }
-
+                        </Dropdown>
+                    ) : (
+                        <Button
+                            type="default"
+                            onClick={() => userStore.setOpenLoginModal(true)}
+                            className="transition-transform duration-300 transform hover:scale-105"
+                        >
+                            Войти в профиль
+                        </Button>
+                    )}
                 </div>
             </div>
         </div>
