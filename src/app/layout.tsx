@@ -60,13 +60,22 @@ export default function RootLayout({
                   Pagination: {
                     colorPrimary: MAIN_COLOR,
                       colorPrimaryHover: MAIN_COLOR
-                }
+                  },
+                  Tabs: {
+                    colorPrimary: MAIN_COLOR,
+                      colorPrimaryHover: MAIN_COLOR,
+                      colorPrimaryActive: MAIN_COLOR
+                  },
+                  Switch: {
+                    colorPrimary: MAIN_COLOR,
+                      colorPrimaryHover: MAIN_COLOR
+                  }
               }
             }}
         >
           <StoresProvider>
             <AntdRegistry>
-              {children}
+                {children}
             </AntdRegistry>
           </StoresProvider>
         </ConfigProvider>

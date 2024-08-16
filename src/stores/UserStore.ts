@@ -153,7 +153,7 @@ class UserStore {
     })
 
     deleteUser = action(async (userIds: number[]) => {
-        debugger
+
     })
 }
 const usersMapper = (value: User) => {

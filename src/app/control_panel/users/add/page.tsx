@@ -9,12 +9,9 @@ import {
     Select,
     Switch,
     Divider,
-    Upload,
-    Tooltip,
     DatePicker,
     notification
 } from "antd";
-import { UploadOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
@@ -47,7 +44,6 @@ const UserCreatePage = () => {
                     router.push('/control_panel/users')
                     notification.success({message: response.response.message})
                 }).catch((e) => {
-                    debugger
                     notification.error({message: e.response.data.result})
                 })}
             >
