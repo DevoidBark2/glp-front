@@ -24,7 +24,7 @@ const UserCreatePage = () => {
     const router = useRouter();
 
     return (
-        <div className="bg-white h-full p-5 overflow-y-auto overflow-x-hidden">
+        <div className="bg-white p-5 overflow-y-auto overflow-y-scroll" style={{height: 'calc(100vh - 60px)'}}>
             <Breadcrumb
                 items={[
                     {

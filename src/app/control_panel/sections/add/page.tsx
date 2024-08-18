@@ -16,7 +16,7 @@ import {
     Switch,
     Modal,
     Divider,
-    Tooltip,
+    Tooltip, Radio, List,
 } from "antd";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
@@ -44,21 +44,31 @@ const SectionAddPage = () => {
                     label="Курс"
                     rules={[{ required: true, message: "Выберите курс" }]}
                 >
-                    <Select
-                        placeholder="Выберите курс"
-                        onChange={(value) => {
-                            const course = courseStore.teacherCourses.find(
-                                (item) => item.id === value
-                            );
-                            setSelectedCourse(course || null);
+                    <List
+                        grid={{ gutter: 16, column: 4 }}
+                        dataSource={courseStore.teacherCourses}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <Card
+                                    key={item.id}
+                                    title={item.name}
+                                    hoverable
+                                    style={{ width: 240, margin: 8 }}
+                                >
+                                    <Card.Meta
+                                        title={item.name}
+                                        description={item.description}
+                                        style={{ textAlign: 'left' }}
+                                    />
+                                </Card>
+                            </List.Item>
+                        )}
+                        itemLayout="vertical"
+                        onChange={(selected) => {
+                            console.log(selected)
+                            createSectionForm.setFieldsValue({ course: selected });
                         }}
-                    >
-                        {courseStore.teacherCourses.map((item) => (
-                            <Select.Option key={item.id} value={item.id}>
-                                {item.name}
-                            </Select.Option>
-                        ))}
-                    </Select>
+                    />
                 </Form.Item>
             ),
         },

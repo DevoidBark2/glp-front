@@ -1,5 +1,5 @@
 import {action, makeAutoObservable} from "mobx"
-import {GET, POST} from "@/lib/fetcher";
+import {DELETE, GET, POST} from "@/lib/fetcher";
 import {delete_cookie, getCookieUserDetails, getUserToken, signInUser} from "@/lib/users";
 import dayjs from "dayjs";
 import {notification} from "antd";
@@ -152,8 +152,15 @@ class UserStore {
         }
     })
 
-    deleteUser = action(async (userIds: number[]) => {
+    deleteUsers = action(async (userIds: number[]) => {
+        try{
+            const response = await DELETE(`/api/users?userIds=${userIds}`)
+            this.allUsers = this.allUsers.filter(user => !userIds.includes(user.id))
 
+            return response;
+        }catch (e){
+            throw e;
+        }
     })
 }
 const usersMapper = (value: User) => {

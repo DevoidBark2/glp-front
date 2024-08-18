@@ -40,19 +40,21 @@ const UsersPage = () => {
 
     const handleBulkStatusUpdate = (status: boolean) => {
         if (selectedRows.length === 0) {
-            message.warning("Выберите элементы");
+            message.warning("Выберите пользователей,которых хотите удалить!");
             return;
         }
 
-        selectedRows.forEach((id) => {
-            const user = userStore.allUsers.find(user => user.id === id);
-            if (user) {
-                user.is_active = status;
-            }
-        });
-        message.success(`Users updated successfully!`);
-        userStore.getUsers(); // Refresh data
-        setSelectedRows([]);
+        userStore.deleteUsers(selectedRows).then()
+
+        // selectedRows.forEach((id) => {
+        //     const user = userStore.allUsers.find(user => user.id === id);
+        //     if (user) {
+        //         user.is_active = status;
+        //     }
+        // });
+        // message.success(`Users updated successfully!`);
+        // userStore.getUsers(); // Refresh data
+        // setSelectedRows([]);
     };
 
     const handleBulkEmail = () => {
