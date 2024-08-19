@@ -12,7 +12,8 @@ import {
     Row,
     Select,
     Table,
-    TableColumnsType, Tag,
+    TableColumnsType,
+    Tag,
     Tooltip
 } from "antd";
 import {
@@ -20,28 +21,31 @@ import {
     CheckCircleOutlined,
     CodeOutlined,
     DeleteOutlined,
-    EditOutlined, EyeOutlined,
+    EditOutlined,
+    EyeOutlined,
     PlusCircleOutlined,
     PlusOutlined,
     ProjectOutlined,
     ReconciliationOutlined,
 } from "@ant-design/icons";
 import {CourseComponentType} from "@/enums/CourseComponentType";
-import Link from "next/link";
 import {FILTER_TYPE_COMPONENT_COURSE} from "@/constants";
 import {useMobxStores} from "@/stores/stores";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {observer} from "mobx-react";
 import {CourseComponentTypeI} from "@/stores/CourseComponent";
+import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
+import {convertTimeFromStringToDate} from "@/app/constans";
 
 const TaskPage = () => {
     const {courseComponentStore} = useMobxStores()
 
-    const [typeTask,setTypeTask] = useState('')
+    const [typeTask,setTypeTask] = useState<CourseComponentType | null>(null)
+    const [changedComponent,setChangedComponent] = useState(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const handleTypeChange = (value: string) => {
+    const handleTypeChange = (value: CourseComponentType) => {
         setTypeTask(value);
     };
 
@@ -66,9 +70,13 @@ const TaskPage = () => {
             dataIndex: 'title',
             render: (text, record) => (
                 <Tooltip title={text ? `Перейти к редактированию: ${text}` : 'Название не указано'}>
-                    <Link href={text ? `courses/${record.id}` : '#'} style={{ color: text ? 'blue' : 'grey' }}>
-                        {text ? text : 'Название не указано'}
-                    </Link>
+                    <p
+                        className="hover:cursor-pointer"
+                        onClick={() => handleChangeComponentTask(record)}
+                        style={{ color: text ? 'blue' : 'grey' }}
+                    >
+                        {text ?? 'Название не указано'}
+                    </p>
                 </Tooltip>
             ),
         },
@@ -86,26 +94,18 @@ const TaskPage = () => {
             ),
         },
         {
-            title: "Количество вопросов",
-            dataIndex: "questions",
-            render: (questions) => questions?.length,
-        },
-        {
             title: "Дата создания",
-            dataIndex: "createdAt",
-            render: (date) => date ? new Date(date).toLocaleDateString() : 'Не указана',
-        },
-        {
-            title: "Дата обновления",
-            dataIndex: "updatedAt",
-            render: (date) => date ? new Date(date).toLocaleDateString() : 'Не указана',
+            dataIndex: "created_at",
+            sorter: (a, b) => {
+                return convertTimeFromStringToDate(a.created_at).getTime() - convertTimeFromStringToDate(b.created_at).getTime();
+            },
         },
         {
             title: "Статус",
             dataIndex: "status",
             render: (status) => (
-                <Tag color={status === 'active' ? 'green' : 'red'}>
-                    {status === 'active' ? 'Активен' : 'Неактивен'}
+                <Tag color={status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
+                    {status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
                 </Tag>
             ),
         },
@@ -114,59 +114,58 @@ const TaskPage = () => {
             align: 'start',
             render: (_, record) => (
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                    <Tooltip title="Просмотреть содержимое">
+                    <Tooltip title="Предварительный просмотр">
                         <Button
                             type="default"
                             icon={<EyeOutlined />}
                             className="mr-2"
                             onClick={() => {
-                                // Обработчик для предварительного просмотра содержимого
                                 console.log(`Просмотр содержимого для ${record.id}`);
                             }}
-                        >
-                            Просмотреть
-                        </Button>
+                        />
                     </Tooltip>
                     <Tooltip title="Редактировать компонент">
                         <Button
                             type="default"
                             icon={<EditOutlined />}
                             className="mr-2"
-                        >
-                            <Link href={`tasks/${record.id}`}>
-                                Изменить
-                            </Link>
-                        </Button>
+                            onClick={() => handleChangeComponentTask(record)}
+                        />
                     </Tooltip>
-                    <Tooltip title="Удалить курс">
-                        <Popconfirm
-                            title="Удалить курс?"
-                            description="Вы уверены, что хотите удалить этот курс? Это действие нельзя будет отменить."
-                            // onConfirm={() => courseStore.setShowConfirmDeleteCourseModal(true)}
-                            okText="Да"
-                            cancelText="Нет"
-                        >
-                            <Button
-                                danger
-                                type="primary"
-                                icon={<DeleteOutlined />}
-                            />
-                        </Popconfirm>
-                    </Tooltip>
+                    <Popconfirm
+                        title="Удалить компонент?"
+                        description="Вы уверены, что хотите удалить этот компонент? Это действие нельзя будет отменить."
+                        okText="Да"
+                        cancelText="Нет"
+                    >
+                        <Button
+                            danger
+                            type="primary"
+                            icon={<DeleteOutlined />}
+                        />
+                    </Popconfirm>
                 </div>
-            ),
+            )
         },
     ];
 
+    const handleChangeComponentTask = (record: CourseComponentTypeI) => {
+        setChangedComponent(record.id)
+        setTypeTask(record.type);
+        form.setFieldsValue(record);
+        setIsModalVisible(true)
+    }
+
     const onFinish = (values: CourseComponentTypeI) => {
-        debugger
         if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
            message.warning("Вопрос должен быть хотя бы 1!")
            return;
         }
+
+        changedComponent ? courseComponentStore.changeComponent(values) :
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
-            setTypeTask('')
+            setTypeTask(null)
             setIsModalVisible(false)
         });
     }
@@ -187,13 +186,22 @@ const TaskPage = () => {
                         <Button onClick={() => setIsModalVisible(true)} icon={<PlusCircleOutlined/>} type="primary">Добавить компонент</Button>
                     </div>
                     <Divider/>
-                    <Table dataSource={courseComponentStore.courseComponents} columns={columns}/>
+                    <Table
+                        rowKey={(record) => record.id}
+                        dataSource={courseComponentStore.courseComponents}
+                        columns={columns}
+                    />
                 </div>
             </div>
             <Modal
                 title="Новый компонент"
                 open={isModalVisible}
-                onCancel={() => setIsModalVisible(false)}
+                onCancel={() => {
+                    form.resetFields();
+                    setChangedComponent(null)
+                    setTypeTask(null);
+                    setIsModalVisible(false)
+                }}
                 width={800}
                 footer={null}
             >
@@ -202,7 +210,12 @@ const TaskPage = () => {
                     form={form}
                     onFinish={onFinish}
                 >
-                    <Form.Item label="Тип задания" name="type">
+                    <Form.Item name="id" hidden></Form.Item>
+                    <Form.Item
+                        label="Тип задания"
+                        name="type"
+                        rules={[{required: true, message: "Выберите тип задания!"}]}
+                    >
                         <Select
                             placeholder="Выберите тип задания"
                             onChange={handleTypeChange}
@@ -216,7 +229,7 @@ const TaskPage = () => {
                         </Select>
                     </Form.Item>
 
-                    {typeTask === "text" && (
+                    {typeTask === CourseComponentType.Text && (
                         <>
                             <Form.Item
                                 name="title"
@@ -249,7 +262,7 @@ const TaskPage = () => {
                             </Form.Item>
                         </>
                     )}
-                    {typeTask === 'quiz' && (
+                    {typeTask === CourseComponentType.Quiz && (
                         <>
                             <Form.Item
                                 label="Заголовок компонента"
@@ -355,7 +368,7 @@ const TaskPage = () => {
                         </>
                     )}
 
-                    {typeTask === 'coding' && (
+                    {typeTask === CourseComponentType.Coding && (
                         <>
                             <Form.Item label="Выберите язык программирования" required>
                                 <Select
@@ -425,7 +438,7 @@ const TaskPage = () => {
                     {/*)}*/}
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">Добавить</Button>
+                        <Button type="primary" htmlType="submit">{changedComponent ? "Изменить" : "Добавить"}</Button>
                     </Form.Item>
                 </Form>
             </Modal>
