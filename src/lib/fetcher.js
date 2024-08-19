@@ -5,7 +5,7 @@ const logoutUser = () => {
     delete_cookie_by_name("userToken")
     delete_cookie_by_name("admin_auth")
     window.localStorage.removeItem("user_data")
-    window.location.href = "/login"
+    window.location.href = "/platform"
 }
 export const POST = async (url, values) => {
     try{

@@ -37,12 +37,12 @@ const items: MenuItem[] = [
                 label: <Link href={"/control_panel/sections"}>Разделы</Link>,
                 icon: <BarsOutlined />,
             },
+            {
+                key: 'tasks',
+                label: <Link href={"/control_panel/tasks"}>Компоненты</Link>,
+                icon: <BarsOutlined />,
+            },
         ]
-    },
-    {
-        key: 'tasks',
-        label: <Link href={"/control_panel/tasks"}>Задания</Link>,
-        icon: <BarsOutlined />,
     },
     {
         key: 'posts',

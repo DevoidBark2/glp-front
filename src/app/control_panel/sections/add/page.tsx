@@ -3,37 +3,107 @@ import {
     Breadcrumb,
     Button,
     Card,
-    Col,
-    DatePicker,
     Form,
     Input,
     message,
-    Row,
-    Select,
     Steps,
     Upload,
-    UploadProps,
-    Switch,
     Modal,
-    Divider,
-    Tooltip, Radio, List,
+    Divider, List, Badge, Table, type TableColumnsType,
 } from "antd";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Course } from "@/stores/CourseStore";
-import { InboxOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+    ClockCircleOutlined,
+    UploadOutlined,
+    PlusOutlined, DeleteOutlined
+} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
+import {Section} from "@jridgewell/trace-mapping";
 
 const SectionAddPage = () => {
     const { courseStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
-    const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-    const [current, setCurrent] = useState(0);
+    const [current, setCurrent] = useState(2);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const router = useRouter();
+    const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
+    const [newTask, setNewTask] = useState({
+        title: "",
+        description: "",
+        type: "",
+        options: [],
+        correctAnswers: [],
+        file: null,
+        code: "",
+        sequence: [],
+        matching: [],
+        languages: '',
+        questions: [{ question: '', options: [''], correctOption: null }],
+    });
+    const handleTypeChange = (value) => {
+        setNewTask({ ...newTask, type: value });
+    };
+
+    const addQuestion = () => {
+        setNewTask({
+            ...newTask,
+            questions: [...newTask.questions, { question: '', options: [''], correctOption: null }],
+        });
+    };
+
+    const removeQuestion = (index) => {
+        const updatedQuestions = newTask.questions.filter((_, i) => i !== index);
+        setNewTask({ ...newTask, questions: updatedQuestions });
+    };
+
+    const handleFileChange = (info) => {
+        if (info.file.status === 'done') {
+            setNewTask({ ...newTask, file: info.file.originFileObj });
+        }
+    };
+
+    const languages = [
+        { value: 'javascript', label: 'JavaScript' },
+        { value: 'python', label: 'Python' },
+        { value: 'java', label: 'Java' }
+    ];
+
+    const handleLanguageChange = (value:string) => {
+        setNewTask({ ...newTask, languages: value });
+    };
+
+    const removeOption = (questionIndex, optionIndex) => {
+        const updatedQuestions = [...newTask.questions];
+        updatedQuestions[questionIndex].options = updatedQuestions[questionIndex].options.filter((_, i) => i !== optionIndex);
+        setNewTask({ ...newTask, questions: updatedQuestions });
+    };
+
+    const handleQuestionChange = (index, key, value) => {
+        const updatedQuestions = [...newTask.questions];
+        updatedQuestions[index] = { ...updatedQuestions[index], [key]: value };
+        setNewTask({ ...newTask, questions: updatedQuestions });
+    };
+
+    const handleOptionChange = (questionIndex, optionIndex, value) => {
+        const updatedQuestions = [...newTask.questions];
+        updatedQuestions[questionIndex].options[optionIndex] = value;
+        setNewTask({ ...newTask, questions: updatedQuestions });
+    };
+    const handleSelectCourse = (courseId: number) => {
+        setSelectedCourseId(courseId);
+        createSectionForm.setFieldsValue({ course: courseId });
+    };
+
+    const columns: TableColumnsType<Section> = [
+        {
+            title: "Название",
+            dataIndex: ""
+        }
+    ]
 
     const steps = [
         {
@@ -41,103 +111,129 @@ const SectionAddPage = () => {
             content: (
                 <Form.Item
                     name="course"
-                    label="Курс"
-                    rules={[{ required: true, message: "Выберите курс" }]}
                 >
                     <List
-                        grid={{ gutter: 16, column: 4 }}
+                        grid={{ gutter: 16, column: 6 }}
                         dataSource={courseStore.teacherCourses}
                         renderItem={(item) => (
                             <List.Item>
-                                <Card
-                                    key={item.id}
-                                    title={item.name}
-                                    hoverable
-                                    style={{ width: 240, margin: 8 }}
-                                >
-                                    <Card.Meta
+                                <Badge text={item.status}>
+                                    <Card
+                                        key={item.id}
                                         title={item.name}
-                                        description={item.description}
-                                        style={{ textAlign: 'left' }}
-                                    />
-                                </Card>
+                                        hoverable
+                                        onClick={() => handleSelectCourse(item.id)}
+                                        style={{
+                                            width: 240,
+                                            margin: 8,
+                                            border: selectedCourseId === item.id ? '2px solid #1890ff' : '2px solid #f0f0f0',
+                                            backgroundColor: selectedCourseId === item.id ? '#e6f7ff' : '#fff',
+                                            transition: 'all 0.3s ease',
+                                        }}
+                                    >
+                                        <Card.Meta
+                                            description={
+                                                <div>
+                                                    <p><ClockCircleOutlined /> {item.duration} ч.</p>
+                                                    <p>Категория: {item.category.name}</p>
+                                                    <p>Уровень: {item.level}</p>
+                                                    <p>Дата публикации: {new Date(item.publish_date).toLocaleDateString()}</p>
+                                                </div>
+                                            }
+                                            style={{ textAlign: 'left' }}
+                                        />
+                                    </Card>
+                                </Badge>
                             </List.Item>
                         )}
-                        itemLayout="vertical"
-                        onChange={(selected) => {
-                            console.log(selected)
-                            createSectionForm.setFieldsValue({ course: selected });
-                        }}
                     />
                 </Form.Item>
             ),
         },
         {
-            title: "Информация о секции",
+            title: "Информация о разделе",
             content: (
                 <>
                     <Form.Item
-                        name="sectionName"
-                        label="Название секции"
-                        rules={[{ required: true, message: "Введите название секции" }]}
+                        name="name"
+                        label="Название раздела"
+                        rules={[{required: true, message: "Введите название раздела"}]}
                     >
-                        <Input placeholder="Введите название секции..." />
+                        <Input placeholder="Введите название раздела..."/>
                     </Form.Item>
+
                     <Form.Item
-                        name="sectionDescription"
-                        label="Описание секции"
-                        rules={[{ required: true, message: "Введите описание секции" }]}
+                        name="description"
+                        label="Описание раздела"
+                        rules={[{required: true, message: "Введите описание раздела"}]}
                     >
                         <TextArea
-                            placeholder="Введите описание секции..."
-                            autoSize={{ minRows: 3, maxRows: 6 }}
+                            placeholder="Введите описание раздела..."
+                            autoSize={{minRows: 3, maxRows: 6}}
                         />
                     </Form.Item>
+
                     <Form.Item
-                        name="publishDate"
-                        label="Дата публикации"
-                        rules={[{ required: true, message: "Выберите дату публикации" }]}
+                        name="uploadFile"
+                        label="Дополнительные материалы"
+                        tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
                     >
-                        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                        <Upload beforeUpload={() => false}>
+                            <Button icon={<UploadOutlined/>}>Загрузить файл</Button>
+                        </Upload>
                     </Form.Item>
+
                     <Form.Item
-                        name="accessLevel"
-                        label="Доступность"
-                        rules={[{ required: true, message: "Выберите уровень доступа" }]}
+                        label="Ссылки на внешние ресурсы"
+                        tooltip="Добавьте ссылки на связанные внешние ресурсы"
                     >
-                        <Select placeholder="Выберите уровень доступа">
-                            <Select.Option value="public">Открытый</Select.Option>
-                            <Select.Option value="private">Закрытый (только подписчики)</Select.Option>
-                        </Select>
+                        <Form.List name="externalLinks">
+                            {(fields, { add, remove }) => (
+                                <>
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <div key={key} className="flex items-center mb-4">
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name]}
+                                                rules={[{ type: 'url', message: 'Введите корректный URL' }]}
+                                                style={{ flexGrow: 1 }}
+                                            >
+                                                <Input placeholder="Введите URL" />
+                                            </Form.Item>
+                                            <Button
+                                                type="link"
+                                                onClick={() => remove(name)}
+                                                icon={<DeleteOutlined />}
+                                                danger
+                                            />
+                                        </div>
+                                    ))}
+                                    <Form.Item>
+                                        <Button
+                                            type="dashed"
+                                            onClick={() => add()}
+                                            style={{ width: '100%' }}
+                                            icon={<PlusOutlined />}
+                                        >
+                                            Добавить ссылку
+                                        </Button>
+                                    </Form.Item>
+                                </>
+                            )}
+                        </Form.List>
                     </Form.Item>
                 </>
             ),
         },
         {
-            title: "Мультимедиа",
+            title: "Содержимое раздела",
             content: (
-                <>
-                    <Form.Item
-                        name="upload"
-                        label="Загрузка файлов"
-                        valuePropName="fileList"
-                        getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
-                    >
-                        <Upload.Dragger name="files" action="/upload.do">
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">Нажмите или перетащите файл в эту область</p>
-                            <p className="ant-upload-hint">Поддерживаются любые файлы</p>
-                        </Upload.Dragger>
-                    </Form.Item>
-                    <Form.Item
-                        name="multimediaLinks"
-                        label="Ссылки на мультимедиа"
-                    >
-                        <Input placeholder="Введите ссылки на видео или изображения..." />
-                    </Form.Item>
-                </>
+                <div className="flex">
+                   <div className="w-1/4"> <Input placeholder="Введите название или тег..."/></div>
+                  <div className="w-3/4 ml-5">
+                      <Table columns={columns}/>
+                  </div>
+                </div>
             ),
         },
         {
@@ -162,7 +258,7 @@ const SectionAddPage = () => {
                         ]}
                     >
                         <Divider>Название секции</Divider>
-                        <p>{createSectionForm.getFieldValue("sectionName")}</p>
+                        <p>{createSectionForm.getFieldValue("name")}</p>
                         <Divider>Описание секции</Divider>
                         <p>{createSectionForm.getFieldValue("sectionDescription")}</p>
                         <Divider>Дата публикации</Divider>
@@ -177,12 +273,25 @@ const SectionAddPage = () => {
         },
     ];
 
-    const next = () => setCurrent(current + 1);
+    const next = async () => {
+        if(current === 0 && !selectedCourseId) {
+            message.warning("Выберите курс!")
+            return;
+        }
+
+        if (current === 1) {
+            await createSectionForm.validateFields(["name", "description"]);
+            setCurrent(current + 1);
+        } else {
+            setCurrent(current + 1);
+        }
+    };
     const prev = () => setCurrent(current - 1);
 
     const onFinish = (values: any) => {
+        debugger
+        const valuesItem =createSectionForm.getFieldsValue(true)
         message.success("Секция успешно добавлена!");
-        // Логика отправки данных на сервер
         router.push("/control_panel/sections");
     };
 
@@ -195,7 +304,7 @@ const SectionAddPage = () => {
             <Breadcrumb
                 items={[
                     {
-                        title: <Link href="/control_panel/sections">Разделы</Link>,
+                        title: <Link href={"/control_panel/sections"}>Разделы</Link>,
                     },
                     {
                         title: <span>Новый раздел</span>,
