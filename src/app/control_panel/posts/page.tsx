@@ -5,28 +5,24 @@ import {
     Input,
     Modal,
     notification,
+    Popconfirm,
     Switch,
     Table,
     TableColumnsType,
-    UploadProps,
-    Card,
-    Tooltip
+    Tooltip,
+    UploadProps
 } from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
-import TextArea from "antd/es/input/TextArea";
-import {
-    InboxOutlined,
-    PlusCircleOutlined,
-    EditOutlined,
-    DeleteOutlined,
-    PrinterOutlined,
-    InfoCircleOutlined
-} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, InboxOutlined, PlusCircleOutlined, UploadOutlined} from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import dayjs from "dayjs";
+import Link from "next/link";
+import {PostStatusEnum} from "@/enums/PostStatusEnum";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const PostPage = () => {
     const {postStore} = useMobxStores();
@@ -65,27 +61,20 @@ const PostPage = () => {
             dataIndex: 'publish_date',
             width: '20%',
             title: 'Дата публикации',
-            sorter: (a, b) => dayjs(a.publish_date).valueOf() - dayjs(b.publish_date).valueOf(),
-            render: (value) => <span>{dayjs(value).format('YYYY-MM-DD HH:mm')}</span>
+            sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
+            render: (value) => dayjs(value).format('YYYY-MM-DD HH:mm')
         },
         {
-            title: "Активация",
+            title: "Статус",
+            dataIndex: "status",
+            render: (_, record) => <p>{record.status}</p>,
+        },
+        {
+            title: "Опубликован",
+            dataIndex: "is_publish",
             render: (_, record) => (
                 <Tooltip
-                    title={
-                        <span>
-                        <InfoCircleOutlined style={{color: '#1890ff', marginRight: '5px'}} />
-                        Включите, чтобы активировать пост.
-                    </span>
-                    }
-                    color="#f6f6f6"
-                    overlayInnerStyle={{
-                        color: '#595959',
-                        backgroundColor: '#e6f7ff',
-                        border: '1px solid #91d5ff',
-                        borderRadius: '4px',
-                        padding: '8px',
-                    }}
+                    title="Включите, чтобы опубликовать пост."
                 >
                     <Switch defaultChecked={false} onChange={(checked) => console.log('Switch to:', checked)} />
                 </Tooltip>
@@ -96,11 +85,44 @@ const PostPage = () => {
             width: '20%',
             align: 'center',
             render: (_, record) => (
-                <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
-                    <Button icon={<EditOutlined />}
-                            // onClick={() => postStore.editPost(record.id)}
-                    >Изменить</Button>
-                    <Button danger icon={<DeleteOutlined />} onClick={() => postStore.deletePost(record.id)}>Удалить</Button>
+                <div className="flex justify-end">
+                    {record.status === PostStatusEnum.NEW && (
+                        <Tooltip title="Отправить на проверку">
+                            <Button
+                                type="default"
+                                icon={<UploadOutlined />}
+                                className="mr-2"
+                            />
+                        </Tooltip>
+                    )}
+                    <Tooltip title="Редактировать пост">
+                        <Button
+                            type="default"
+                            icon={<EditOutlined />}
+                            className="mr-2"
+                            disabled={record.status === PostStatusEnum.IN_PROCESSING}
+                            onClick={() => {
+                                form.setFieldsValue(record);
+                                setModalVisible(true)
+                            }}
+                        >
+                            Изменить
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Удалить курс">
+                        <Popconfirm
+                            title="Удалить курс?"
+                            description="Вы уверены, что хотите удалить этот курс? Это действие нельзя будет отменить."
+                            okText="Да"
+                            cancelText="Нет"
+                        >
+                            <Button
+                                danger
+                                type="primary"
+                                icon={<DeleteOutlined />}
+                            />
+                        </Popconfirm>
+                    </Tooltip>
                 </div>
             ),
         },
@@ -130,7 +152,7 @@ const PostPage = () => {
                     }}
                 >
                     <Form.Item
-                        name="title"
+                        name="name"
                         label="Заголовок"
                         rules={[{required: true, message: 'Введите заголовок поста!'}]}
                     >
@@ -138,10 +160,18 @@ const PostPage = () => {
                     </Form.Item>
 
                     <Form.Item
+                        name="description"
+                        label="Описание"
+                        rules={[{required: true, message: 'Введите описание поста!'}]}
+                    >
+                        <Input placeholder="Введите описание поста"/>
+                    </Form.Item>
+
+                    <Form.Item
                         name="content"
                         label="Контент поста"
                     >
-                        <TextArea rows={4}/>
+                        <ReactQuill theme="snow"/>
                     </Form.Item>
 
                     <Form.Item

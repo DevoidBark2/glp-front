@@ -3,13 +3,17 @@ import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import {notification} from "antd"
 import dayjs, {Dayjs} from "dayjs";
+import {PostStatusEnum} from "@/enums/PostStatusEnum";
 
 export type Post = {
     id: number;
     name: string;
     image: string;
+    description: string;
     content: string;
-    publish_date: Dayjs;
+    status: PostStatusEnum;
+    is_publish: boolean;
+    created_at: Dayjs;
 }
 class PostStore{
     constructor(){
@@ -31,7 +35,6 @@ class PostStore{
     })
     getAllPosts = action(async () => {
         this.setLoading(true);
-
         await GET(`/api/posts`).then(response => {
             this.allPosts = response.response.data.map(postMapper)
         }).catch(e => {}).finally(() => {
@@ -41,25 +44,20 @@ class PostStore{
 
     createPost = action(async (values: any) => {
         const token = getUserToken();
-
         const form = new FormData();
-        form.append('image',values.image.originFileObj)
-        form.append('name',values.title)
+        //form.append('image',values.image.originFileObj)
+        form.append('name',values.name)
+        form.append('description',values.description);
         form.append('content',values.content)
-        form.append('publish_date',dayjs().format('YYYY-MM-DD HH:mm'))
 
         this.setLoading(true)
         return await POST(`/api/posts?token=${token}`,form).then(response => {
+            this.allPosts = [...this.allPosts, postMapper(response.response.data)]
             notification.success({message: response.response.message})
-            this.pushPost(postMapper(response.response.post));
         }).finally(() => {
             this.setLoading(false)
             this.setCreatePostModal(false)
         })
-    })
-
-    pushPost = action((value: any) => {
-        this.allPosts = [...this.allPosts, value]
     })
 
     addReactionPost = action(async (emoji:string) => {
@@ -83,8 +81,11 @@ const postMapper = (post: Post) => {
         id: post.id,
         name: post.name,
         image: post.image,
+        description: post.description,
         content: post.content,
-        publish_date: dayjs(post.publish_date)
+        status: post.status,
+        is_publish: post.is_publish,
+        publish_date: dayjs(post.created_at)
     };
 }
 

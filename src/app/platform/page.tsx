@@ -46,26 +46,26 @@ const PlatformPage = () => {
     return(
         <div className="container mx-auto">
             <div className="px-6">
-                <Carousel
-                    className="mt-6"
-                    arrows
-                    infinite={true}
-                    autoplay={true}
-                    autoplaySpeed={5000}
-                >
-                    <div>
-                        <h3 style={contentStyle}>1</h3>
-                    </div>
-                    <div>
-                        <h3 style={contentStyle}>2</h3>
-                    </div>
-                    <div>
-                        <h3 style={contentStyle}>3</h3>
-                    </div>
-                    <div>
-                        <h3 style={contentStyle}>4</h3>
-                    </div>
-                </Carousel>
+                {/*<Carousel*/}
+                {/*    className="mt-6"*/}
+                {/*    arrows*/}
+                {/*    infinite={true}*/}
+                {/*    autoplay={true}*/}
+                {/*    autoplaySpeed={5000}*/}
+                {/*>*/}
+                {/*    <div>*/}
+                {/*        <h3 style={contentStyle}>1</h3>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <h3 style={contentStyle}>2</h3>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <h3 style={contentStyle}>3</h3>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <h3 style={contentStyle}>4</h3>*/}
+                {/*    </div>*/}
+                {/*</Carousel>*/}
                 <p className="mt-6 text-gray-800 text-4xl mb-6">Новости</p>
                 <div className="flex items-start">
                     <div className="flex flex-col w-3/4">
@@ -76,7 +76,7 @@ const PlatformPage = () => {
                                 {!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>
                                     <div style={{height: 300, width: 500}}/>
                                 </Watermark> : <Image
-                                    src={`http://localhost:4200${post.image}`}
+                                    src={`http://localhost:5000${post.image}`}
                                     width={500} height="auto" alt={post.name}
                                 />}
                                 <div className="ml-5 flex w-full">

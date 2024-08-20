@@ -25,9 +25,10 @@ export async function POST(req: NextRequest) {
     const form = await req.formData();
 
     try {
-        const response = await axios.post(nextConfig.env?.API_URL + `api/posts?token=${token}`,form,{
+        const response = await axios.post(nextConfig.env?.API_URL + `api/posts`,form,{
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                Authorization: token
             }
         });
 
