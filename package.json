@@ -13,6 +13,7 @@
     "@uiw/react-codemirror": "^4.23.0",
     "antd": "^5.18.0",
     "antd-input-otp": "^2.1.0",
+    "aos": "^2.3.4",
     "axios": "^1.7.2",
     "codemirror": "^6.0.1",
     "cookie-cutter": "^0.2.0",
@@ -30,6 +31,7 @@
     "react-spring": "^9.7.3"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-beautiful-dnd": "^13.1.8",

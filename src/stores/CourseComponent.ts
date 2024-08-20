@@ -1,6 +1,6 @@
 import {action, makeAutoObservable} from "mobx";
 import {CourseComponentType} from "@/enums/CourseComponentType";
-import {GET, POST} from "@/lib/fetcher";
+import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
 import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
@@ -27,27 +27,77 @@ class CourseComponent {
         makeAutoObservable(this)
     }
 
+    loadingCourseComponent: boolean = false;
     courseComponents: CourseComponentTypeI[] = []
+    searchResults: CourseComponentTypeI[] = [];
+    selectedComponents: CourseComponentTypeI[] = [];
+
+    setLoadingCourseComponent = action((value: boolean) => {
+        this.loadingCourseComponent = value
+    })
 
     addComponentCourse = action(async (values: CourseComponentTypeI) => {
         const token = getUserToken();
         await POST(`/api/component-task?token=${token}`, values).then(response => {
             this.courseComponents = [...this.courseComponents, componentTaskMapper(response.response.data.component)]
+            notification.success({message: response.response.data.message})
         }).catch(e => {
             notification.error({message: e.response.data.message})
         })
     })
 
     getAllComponent = action(async () => {
+        this.setLoadingCourseComponent(true)
         const token = getUserToken()
         await GET(`/api/component-task?token=${token}`).then(response => {
             this.courseComponents = response.response.data.map(componentTaskMapper)
         })
     })
 
-    changeComponent = action(async (values) => {
-        debugger
+    changeComponent = action(async (values:CourseComponentTypeI) => {
+        const token = getUserToken();
+        await PUT(`/api/component-task?token=${token}`, values).then(response => {
+            notification.success({message: response.response.message})
+            const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
+            this.courseComponents[changedComponentIndex] = values;
+            this.courseComponents = [...this.courseComponents];
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
+        })
     })
+
+    deleteComponent = action(async (componentId: number) => {
+        const token = getUserToken();
+        await DELETE(`/api/component-task?token=${token}&componentId=${componentId}`).then(response => {
+            this.courseComponents = this.courseComponents.filter(component => component.id !== componentId);
+            notification.success({message: response.response.message})
+        });
+    })
+
+    // Метод для выполнения поиска к
+    searchComponents = action(async (query: string) => {
+        const token = getUserToken();
+        await GET(`/api/search-components?query=${query}&token=${token}`).then(response => {
+            this.searchResults = response.response.data;
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
+        });
+    })
+
+    // Метод для добавления компонента в таблицу
+    addComponentToTable = action((component: CourseComponentTypeI) => {
+        // Проверяем, что компонент не был добавлен ранее
+        debugger
+        const exists = this.selectedComponents.find(item => item.id === component.id);
+        if (!exists) {
+            this.selectedComponents = [...this.selectedComponents,component];
+        }
+    })
+
+    // Метод для удаления компонента из таблицы
+    removeComponentFromTable(id: number) {
+        this.selectedComponents = this.selectedComponents.filter(item => item.id !== id);
+    }
 }
 
 const componentTaskMapper = (state: CourseComponentTypeI) => {
@@ -60,7 +110,7 @@ const componentTaskMapper = (state: CourseComponentTypeI) => {
         title: state.title,
         status: state.status,
         tags: state.tags,
-        created_at: dayjs(state.created_at).format('YYYY-MM-DD HH:mm')
+        created_at: dayjs(state.created_at).toDate()
     }
 
     return component;

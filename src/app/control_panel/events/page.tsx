@@ -43,9 +43,10 @@ const EventPage = () => {
         {
             dataIndex: "description",
             title: "Описание",
+            ellipsis: true,
             render: (text) => (
                 <Tooltip title={text}>
-                    <span>{text.length > 30 ? `${text.substring(0, 30)}...` : text}</span>
+                    <span>{text}</span>
                 </Tooltip>
             ),
         },

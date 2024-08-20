@@ -1,6 +1,7 @@
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 import {ActionEvent} from "@/enums/ActionEventUser";
 import {CourseComponentType} from "@/enums/CourseComponentType";
+import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
 
 export const FILTER_STATUS_COURSE = [
     {id: 1, text: 'Закрытый', value: StatusCourseEnum.CLOSED},
@@ -12,6 +13,11 @@ export const FILTER_STATUS_COURSE = [
 export const FILTER_TYPE_COMPONENT_COURSE = [
     {id: 1, text: 'Текст', value: CourseComponentType.Text},
     {id: 1, text: 'Квиз', value: CourseComponentType.Quiz},
+]
+
+export const FILTER_STATUS_COMPONENT_COURSE = [
+    {id: 1, text: 'Активен', value: StatusComponentTaskEnum.ACTIVATED},
+    {id: 1, text: 'Неактивен', value: StatusComponentTaskEnum.DEACTIVATED},
 ]
 
 export const LEVEL_COURSE = [

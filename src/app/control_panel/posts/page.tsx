@@ -1,32 +1,52 @@
-"use client"
-import {Button, Form, Input, Modal, notification, Switch, Table, TableColumnsType, UploadProps} from "antd";
+"use client";
+import {
+    Button,
+    Form,
+    Input,
+    Modal,
+    notification,
+    Switch,
+    Table,
+    TableColumnsType,
+    UploadProps,
+    Card,
+    Tooltip
+} from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
-import {convertTimeFromStringToDate} from "@/app/constans";
 import TextArea from "antd/es/input/TextArea";
-import {InboxOutlined} from "@ant-design/icons";
+import {
+    InboxOutlined,
+    PlusCircleOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    PrinterOutlined,
+    InfoCircleOutlined
+} from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
+import dayjs from "dayjs";
 
 const PostPage = () => {
     const {postStore} = useMobxStores();
-    const [form] = Form.useForm()
+    const [form] = Form.useForm();
+    const [modalVisible, setModalVisible] = useState(false);
 
     const props: UploadProps = {
         name: 'file',
         multiple: true,
-        onChange(info:any) {
-            const { status } = info.file;
+        onChange(info: any) {
+            const {status} = info.file;
             if (status === 'done') {
-                notification.success({message: `${info.file.name} file uploaded successfully.`});
-                form.setFieldValue("image",info.file)
+                notification.success({message: `${info.file.name} загружен успешно.`});
+                form.setFieldValue("image", info.file);
             } else if (status === 'error') {
-                notification.error({message: `${info.file.name} file upload failed.`});
+                notification.error({message: `${info.file.name} ошибка загрузки.`});
             }
         },
         onDrop(e) {
-            console.log('Dropped files', e.dataTransfer.files);
+            console.log('Файлы перетащены', e.dataTransfer.files);
         },
     };
 
@@ -35,33 +55,52 @@ const PostPage = () => {
             title: 'Название',
             dataIndex: 'name',
             width: '20%',
+            render: (text) => (
+                <Tooltip title={text}>
+                    {text}
+                </Tooltip>
+            ),
         },
         {
             dataIndex: 'publish_date',
             width: '20%',
             title: 'Дата публикации',
-            sorter: (a,b) => {
-                return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
-            }
+            sorter: (a, b) => dayjs(a.publish_date).valueOf() - dayjs(b.publish_date).valueOf(),
+            render: (value) => <span>{dayjs(value).format('YYYY-MM-DD HH:mm')}</span>
         },
         {
             title: "Активация",
-            render: (value,record) => <Switch defaultChecked />
-        },
-        {
-            title: "Печать",
-            render: (value,record) => <Switch defaultChecked />
+            render: (_, record) => (
+                <Tooltip
+                    title={
+                        <span>
+                        <InfoCircleOutlined style={{color: '#1890ff', marginRight: '5px'}} />
+                        Включите, чтобы активировать пост.
+                    </span>
+                    }
+                    color="#f6f6f6"
+                    overlayInnerStyle={{
+                        color: '#595959',
+                        backgroundColor: '#e6f7ff',
+                        border: '1px solid #91d5ff',
+                        borderRadius: '4px',
+                        padding: '8px',
+                    }}
+                >
+                    <Switch defaultChecked={false} onChange={(checked) => console.log('Switch to:', checked)} />
+                </Tooltip>
+            ),
         },
         {
             title: "Действия",
             width: '20%',
             align: 'center',
-            render: (_:any, record) => (
-                <div>
-                    <Button type="default">Изменить</Button>
-                    <Button danger type="primary" style={{marginLeft:'20px'}} onClick={() => postStore.deletePost(record.id)} >
-                        Удалить
-                    </Button>
+            render: (_, record) => (
+                <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
+                    <Button icon={<EditOutlined />}
+                            // onClick={() => postStore.editPost(record.id)}
+                    >Изменить</Button>
+                    <Button danger icon={<DeleteOutlined />} onClick={() => postStore.deletePost(record.id)}>Удалить</Button>
                 </div>
             ),
         },
@@ -69,20 +108,26 @@ const PostPage = () => {
     ];
 
     useEffect(() => {
-        postStore.getAllPosts()
-    },[])
+        postStore.getAllPosts();
+    }, []);
 
-    return(
+    return (
         <div className="bg-white h-full p-5">
             <Modal
-                open={postStore.createPostModal}
-                onCancel={() => postStore.setCreatePostModal(false)}
+                title="Создать новый пост"
+                open={modalVisible}
+                onCancel={() => setModalVisible(false)}
                 footer={null}
+                afterClose={() => form.resetFields()}
+                centered
             >
                 <Form
                     form={form}
-                    layout={"vertical"}
-                    onFinish={postStore.createPost}
+                    layout="vertical"
+                    onFinish={(values) => {
+                        postStore.createPost(values);
+                        setModalVisible(false);
+                    }}
                 >
                     <Form.Item
                         name="title"
@@ -96,7 +141,7 @@ const PostPage = () => {
                         name="content"
                         label="Контент поста"
                     >
-                        <TextArea/>
+                        <TextArea rows={4}/>
                     </Form.Item>
 
                     <Form.Item
@@ -105,12 +150,11 @@ const PostPage = () => {
                     >
                         <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
+                                <InboxOutlined/>
                             </p>
-                            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                            <p className="ant-upload-text">Нажмите или перетащите файл в эту область для загрузки</p>
                             <p className="ant-upload-hint">
-                                Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-                                banned files.
+                                Поддержка одиночной или массовой загрузки. Запрещено загружать конфиденциальные данные.
                             </p>
                         </Dragger>
                     </Form.Item>
@@ -122,12 +166,20 @@ const PostPage = () => {
                     </div>
                 </Form>
             </Modal>
-            <div>
-                <Button className="mb-5" type="primary" onClick={() => postStore.setCreatePostModal(true)}>Добавить пост</Button>
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-gray-800 font-bold text-3xl">Доступные посты</h1>
+                <Button type="primary" icon={<PlusCircleOutlined/>} onClick={() => setModalVisible(true)}>
+                    Добавить пост
+                </Button>
             </div>
-            <Table dataSource={postStore.allPosts} columns={columns} loading={postStore.loading}/>
+            <Table
+                loading={postStore.loading}
+                dataSource={postStore.allPosts}
+                columns={columns}
+                rowKey={(record) => record.id}
+            />
         </div>
-    )
+    );
 }
 
 export default observer(PostPage);

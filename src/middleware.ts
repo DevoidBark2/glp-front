@@ -16,12 +16,16 @@ export function middleware(request: NextRequest) {
     //     return Response.redirect(new URL('/platform', request.url));
     // }
 
+    if (!currentUser && isPrivateRoute(request.nextUrl.pathname)) {
+        return Response.redirect(new URL('/platform', request.url))
+    }
+
     if (request.nextUrl.pathname === '/') {
         return Response.redirect(new URL('/platform', request.url));
     }
 }
 
 function isPrivateRoute(pathname: string) {
-    const privateRoutes = ['/platform'];
+    const privateRoutes = ['/control_panel'];
     return privateRoutes.some(route => pathname.includes(route));
 }

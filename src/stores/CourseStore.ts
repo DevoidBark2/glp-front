@@ -3,12 +3,11 @@ import {GET, POST} from "@/lib/fetcher";
 import {notification} from "antd";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
-import {ActionEvent} from "@/enums/ActionEventUser";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 
 export type Teacher = {
     id: number;
-    first_name: string;
+    name: string;
     email:string;
 }
 

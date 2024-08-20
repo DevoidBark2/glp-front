@@ -7,113 +7,135 @@ import {
     Input,
     message,
     Steps,
-    Upload,
-    Modal,
-    Divider, List, Badge, Table, type TableColumnsType,
+    Upload, List, Badge, Table, AutoComplete, Tag, TableColumnsType, Tooltip,
 } from "antd";
 import { useMobxStores } from "@/stores/stores";
-import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
     ClockCircleOutlined,
     UploadOutlined,
-    PlusOutlined, DeleteOutlined
+    PlusOutlined,
+    DeleteOutlined,
+    BookOutlined,
+    CheckCircleOutlined,
+    CodeOutlined,
+    ProjectOutlined,
+    ReconciliationOutlined, EditOutlined
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
-import {Section} from "@jridgewell/trace-mapping";
+import {CourseComponentType} from "@/enums/CourseComponentType";
+import {Course} from "@/stores/CourseStore";
+import {CourseComponentTypeI} from "@/stores/CourseComponent";
+import {SectionCourseItem} from "@/stores/SectionCourse";
 
 const SectionAddPage = () => {
-    const { courseStore } = useMobxStores();
+    const { courseStore,courseComponentStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
-    const [current, setCurrent] = useState(2);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const router = useRouter();
+    const [current, setCurrent] = useState(0);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
-    const [newTask, setNewTask] = useState({
-        title: "",
-        description: "",
-        type: "",
-        options: [],
-        correctAnswers: [],
-        file: null,
-        code: "",
-        sequence: [],
-        matching: [],
-        languages: '',
-        questions: [{ question: '', options: [''], correctOption: null }],
-    });
-    const handleTypeChange = (value) => {
-        setNewTask({ ...newTask, type: value });
+
+    const handleSelectCourse = (course: Course) => {
+        setSelectedCourseId(course.id);
+        createSectionForm.setFieldsValue({ course: course });
     };
 
-    const addQuestion = () => {
-        setNewTask({
-            ...newTask,
-            questions: [...newTask.questions, { question: '', options: [''], correctOption: null }],
-        });
-    };
+    const columns: TableColumnsType<CourseComponentTypeI> = [
+        {
+            title: 'Название',
+            dataIndex: 'title',
+            key: 'title',
+            ellipsis: true,
+            render: (text: string,record) => (
+                <Tooltip title={`Перейти к компоненту: ${text}`}>
+                    <Link href={`/control_panel/tasks/${record.id}`} target="_blank">
+                        {text}
+                    </Link>
+                </Tooltip>
+            ),
+        },
+        {
+            title: 'Тип',
+            dataIndex: 'type',
+            key: 'type',
+            render: (value, record) => (
+                <span style={{ display: 'flex', alignItems: 'center' }}>
+                {typeIcons[record.type]}
+                    <span style={{ marginLeft: 8 }}>{value}</span>
+            </span>
+            ),
+        },
+        {
+            title: 'Действия',
+            key: 'actions',
+            render: (_, record) => (
+                <Button onClick={() => {
+                    courseComponentStore.removeComponentFromTable(record.id)
+                    const currentComponents = createSectionForm.getFieldValue('components') || [];
 
-    const removeQuestion = (index) => {
-        const updatedQuestions = newTask.questions.filter((_, i) => i !== index);
-        setNewTask({ ...newTask, questions: updatedQuestions });
-    };
+                    // Создаем новый массив, исключив из него удаляемый компонент
+                    const updatedComponents = currentComponents.filter((component: CourseComponentTypeI) => component.id !== record.id);
 
-    const handleFileChange = (info) => {
-        if (info.file.status === 'done') {
-            setNewTask({ ...newTask, file: info.file.originFileObj });
-        }
-    };
-
-    const languages = [
-        { value: 'javascript', label: 'JavaScript' },
-        { value: 'python', label: 'Python' },
-        { value: 'java', label: 'Java' }
+                    // Обновляем значение в форме
+                    createSectionForm.setFieldsValue({ components: updatedComponents });
+                }}>Удалить</Button>
+            ),
+        },
     ];
 
-    const handleLanguageChange = (value:string) => {
-        setNewTask({ ...newTask, languages: value });
+    const typeIcons = {
+        [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
+        [CourseComponentType.Quiz]: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
+        [CourseComponentType.Coding]: <CodeOutlined style={{ color: '#ff4d4f' }} />,
+        [CourseComponentType.MultiPlayChoice]: <ProjectOutlined style={{ color: '#faad14' }} />,
+        [CourseComponentType.Matching]: <ReconciliationOutlined style={{ color: '#2f54eb' }} />,
+        [CourseComponentType.Sequencing]: <EditOutlined style={{ color: '#13c2c2' }} />,
     };
-
-    const removeOption = (questionIndex, optionIndex) => {
-        const updatedQuestions = [...newTask.questions];
-        updatedQuestions[questionIndex].options = updatedQuestions[questionIndex].options.filter((_, i) => i !== optionIndex);
-        setNewTask({ ...newTask, questions: updatedQuestions });
-    };
-
-    const handleQuestionChange = (index, key, value) => {
-        const updatedQuestions = [...newTask.questions];
-        updatedQuestions[index] = { ...updatedQuestions[index], [key]: value };
-        setNewTask({ ...newTask, questions: updatedQuestions });
-    };
-
-    const handleOptionChange = (questionIndex, optionIndex, value) => {
-        const updatedQuestions = [...newTask.questions];
-        updatedQuestions[questionIndex].options[optionIndex] = value;
-        setNewTask({ ...newTask, questions: updatedQuestions });
-    };
-    const handleSelectCourse = (courseId: number) => {
-        setSelectedCourseId(courseId);
-        createSectionForm.setFieldsValue({ course: courseId });
-    };
-
-    const columns: TableColumnsType<Section> = [
-        {
-            title: "Название",
-            dataIndex: ""
+    const handleSearch = (value:string) => {
+        if (value && value.length > 2) {
+             courseComponentStore.searchComponents(value);
         }
-    ]
+    };
+
+    const handleSelect = (value:string,option:any) => {
+        debugger
+        const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
+        if (selectedComponent) {
+            courseComponentStore.addComponentToTable(selectedComponent);
+            const currentComponents = createSectionForm.getFieldValue('components') || [];
+
+            // Добавляем новый компонент к текущим
+            const updatedComponents = [...currentComponents, selectedComponent];
+
+            // Обновляем значение в форме
+            createSectionForm.setFieldsValue({ components: updatedComponents });
+        }
+    };
+
+    const renderType = (type: CourseComponentType) => {
+        switch (type) {
+            case CourseComponentType.Text:
+                return <Tag color="cyan">Текст</Tag>;
+            case CourseComponentType.Quiz:
+                return <Tag color="green">Квиз</Tag>;
+            case CourseComponentType.Coding:
+                return <Tag color="purple">Программирование</Tag>;
+            default:
+                return <Tag color="default">Неизвестно</Tag>;
+        }
+    };
 
     const steps = [
         {
             title: "Выбор курса",
             content: (
                 <Form.Item
-                    name="course"
+                    name="courseId"
                 >
                     <List
                         grid={{ gutter: 16, column: 6 }}
+                        loading={courseStore.loadingCourses}
                         dataSource={courseStore.teacherCourses}
                         renderItem={(item) => (
                             <List.Item>
@@ -122,7 +144,7 @@ const SectionAddPage = () => {
                                         key={item.id}
                                         title={item.name}
                                         hoverable
-                                        onClick={() => handleSelectCourse(item.id)}
+                                        onClick={() => handleSelectCourse(item)}
                                         style={{
                                             width: 240,
                                             margin: 8,
@@ -229,48 +251,44 @@ const SectionAddPage = () => {
             title: "Содержимое раздела",
             content: (
                 <div className="flex">
-                   <div className="w-1/4"> <Input placeholder="Введите название или тег..."/></div>
-                  <div className="w-3/4 ml-5">
-                      <Table columns={columns}/>
+                   <div className="w-1/4">
+                       <AutoComplete
+                           style={{ width: '100%' }}
+                           onSearch={handleSearch}
+                           onSelect={handleSelect}
+                           options={courseComponentStore.searchResults.map(component => ({
+                               value: component.title,
+                               label: <div className="flex items-center p-2 border-b-2">
+                                   <div style={{flex: 1}}>
+                                       <strong>{component.title}</strong>
+                                       <div style={{color: 'grey', fontSize: '12px'}}>{component.description}</div>
+                                   </div>
+                                   <div style={{marginLeft: '8px'}}>
+                                       {renderType(component.type)}
+                                   </div>
+                               </div>,
+                               key: component.id.toString(),
+                           }))}
+                           placeholder="Введите название или тег..."
+                       >
+                           <Input.Search/>
+                       </AutoComplete>
+                   </div>
+                    <div className="w-3/4 ml-5">
+                        <Form.Item
+                            name="components"
+                            label=" Компоненты"
+                            tooltip={{ title: "Выберите и добавьте компоненты раздела в таблицу. Эти компоненты будут связаны с текущим разделом." }}
+                        >
+                            <Table
+                                dataSource={courseComponentStore.selectedComponents}
+                                columns={columns}
+                            />
+                        </Form.Item>
                   </div>
                 </div>
             ),
-        },
-        {
-            title: "Предпросмотр",
-            content: (
-                <>
-                    <Button type="primary" onClick={() => setIsModalVisible(true)}>
-                        Предварительный просмотр
-                    </Button>
-                    <Modal
-                        title="Предварительный просмотр секции"
-                        visible={isModalVisible}
-                        onOk={() => setIsModalVisible(false)}
-                        onCancel={() => setIsModalVisible(false)}
-                        footer={[
-                            <Button key="back" onClick={() => setIsModalVisible(false)}>
-                                Закрыть
-                            </Button>,
-                            <Button key="submit" type="primary" onClick={() => setIsModalVisible(false)}>
-                                Подтвердить
-                            </Button>,
-                        ]}
-                    >
-                        <Divider>Название секции</Divider>
-                        <p>{createSectionForm.getFieldValue("name")}</p>
-                        <Divider>Описание секции</Divider>
-                        <p>{createSectionForm.getFieldValue("sectionDescription")}</p>
-                        <Divider>Дата публикации</Divider>
-                        <p>{createSectionForm.getFieldValue("publishDate")?.format("YYYY-MM-DD HH:mm:ss")}</p>
-                        <Divider>Уровень доступа</Divider>
-                        <p>{createSectionForm.getFieldValue("accessLevel")}</p>
-                        <Divider>Загруженные файлы и ссылки</Divider>
-                        <p>{createSectionForm.getFieldValue("multimediaLinks")}</p>
-                    </Modal>
-                </>
-            ),
-        },
+        }
     ];
 
     const next = async () => {
@@ -288,11 +306,14 @@ const SectionAddPage = () => {
     };
     const prev = () => setCurrent(current - 1);
 
-    const onFinish = (values: any) => {
-        debugger
-        const valuesItem =createSectionForm.getFieldsValue(true)
-        message.success("Секция успешно добавлена!");
-        router.push("/control_panel/sections");
+    const onFinish = () => {
+        const values =createSectionForm.getFieldsValue(true) as SectionCourseItem
+        if (!values.components || values.components.length === 0) {
+            message.warning("добавь что нибудь")
+        }
+
+        // message.success("Секция успешно добавлена!");
+        // router.push("/control_panel/sections");
     };
 
     useEffect(() => {

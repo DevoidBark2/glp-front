@@ -29,7 +29,7 @@ export async function DELETE(req: NextRequest) {
     const token = searchParams.get('token');
 
     try {
-        const response = await axios.delete(nextConfig.env?.API_URL + `api/users/${postId}`,{
+        const response = await axios.delete(nextConfig.env?.API_URL + `api/users/${userIds}`,{
             headers: {
                 Authorization: token
             }

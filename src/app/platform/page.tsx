@@ -2,8 +2,26 @@
 import {useMobxStores} from "@/stores/stores";
 import {observer} from "mobx-react";
 import React, {useEffect, useState} from "react";
-import {Button, Carousel, Checkbox, DatePicker, Empty, Image, Input, Select, Spin, Watermark} from "antd"
+import {
+    Button,
+    Carousel,
+    Checkbox,
+    DatePicker,
+    Divider,
+    Empty,
+    Image,
+    Input,
+    Select,
+    Spin,
+    Tooltip,
+    Watermark
+} from "antd"
 import EmojiPicker from "emoji-picker-react";
+import {CloseCircleOutlined, SearchOutlined} from "@ant-design/icons";
+
+function CheckOutlined() {
+    return null;
+}
 
 const PlatformPage = () => {
 
@@ -22,7 +40,7 @@ const PlatformPage = () => {
     const { RangePicker } = DatePicker;
 
     useEffect(() => {
-       postStore.getAllPosts?.()
+       postStore.getAllPosts()
     },[])
 
     return(
@@ -48,17 +66,17 @@ const PlatformPage = () => {
                         <h3 style={contentStyle}>4</h3>
                     </div>
                 </Carousel>
-                <p className="mt-6 text-4xl mb-6">Новости</p>
+                <p className="mt-6 text-gray-800 text-4xl mb-6">Новости</p>
                 <div className="flex items-start">
                     <div className="flex flex-col w-3/4">
                         {!postStore.loading ? postStore.allPosts.length > 0 ? postStore.allPosts?.map(post => (
                             <div key={post.id}
                                  className="p-5 relative flex mb-20 cursor-pointer rounded-md shadow-xl"
                             >
-                                {!post.image ? <Watermark content={["GLP","Graph Learning Platform"]}>
-                                    <div style={{ height: 300,width:500 }} />
+                                {!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>
+                                    <div style={{height: 300, width: 500}}/>
                                 </Watermark> : <Image
-                                    src={`http://localhost:5000${post.image}`}
+                                    src={`http://localhost:4200${post.image}`}
                                     width={500} height="auto" alt={post.name}
                                 />}
                                 <div className="ml-5 flex w-full">
@@ -67,11 +85,12 @@ const PlatformPage = () => {
                                             <div className="text-3xl font-semibold">{post.name}</div>
                                             <p className="">{post.content}</p>
                                         </div>
-                                        <p className="text-gray-400" title="Дата публикации">{post.publish_date.toString()}</p>
+                                        <p className="text-gray-400"
+                                           title="Дата публикации">{post.publish_date.toString()}</p>
                                     </div>
 
                                     <div className="absolute bottom-5 right-5">
-                                    <div className="flex flex-col">
+                                        <div className="flex flex-col">
                                             <EmojiPicker
                                                 reactionsDefaultOpen={true}
                                                 allowExpandReactions={false}
@@ -87,29 +106,77 @@ const PlatformPage = () => {
                             </div>
                         )) : <Empty description="Список пуст"/> : <Spin/>}
                     </div>
-                    <div className="w-1/4 bg-[#f5f5f5] ml-5 rounded flex flex-col gap-2 items-start p-4">
-                        <h1>Поиск и фильтры</h1>
-                        <Input placeholder='Поиск...'/>
-                        <RangePicker className="w-full" placeholder={["Начало","Конец"]}/>
+                    <div className="w-1/4 bg-white ml-5 rounded-lg shadow-lg flex flex-col gap-4 p-6">
+                        <h2 className="text-lg font-semibold text-gray-700">Поиск и фильтры</h2>
+
+                        <Input
+                            placeholder='Поиск...'
+                            prefix={<SearchOutlined className="text-gray-400"/>}
+                            className="p-2 rounded border border-gray-300 hover:border-blue-500 transition duration-200 ease-in-out"
+                        />
+
+                        <Divider className="border-gray-200"/>
+
+                        <RangePicker
+                            className="w-full rounded border border-gray-300 hover:border-blue-500 transition duration-200 ease-in-out"
+                            placeholder={["Начало", "Конец"]}
+                        />
+
+                        <Divider className="border-gray-200"/>
+
                         <Select
                             mode="multiple"
                             allowClear
-                            style={{ width: '100%' }}
+                            style={{width: '100%'}}
                             placeholder="Выберите категории"
+                            className="rounded border border-gray-300 hover:border-blue-500 transition duration-200 ease-in-out"
                             defaultValue={['a10', 'c12']}
-                            options={[{label: "1",value:1}]}
+                            options={[
+                                {label: "Категория 1", value: 1},
+                                {label: "Категория 2", value: 2},
+                                {label: "Категория 3", value: 3},
+                            ]}
                         />
-                        <div className="flex flex-col">
-                            <Checkbox value="A">A</Checkbox>
-                            <Checkbox value="B">B</Checkbox>
-                            <Checkbox value="C">C</Checkbox>
-                            <Checkbox value="D">D</Checkbox>
+
+                        <Divider className="border-gray-200"/>
+
+                        <div className="flex flex-col space-y-2">
+                            <Checkbox value="A"
+                                      className="hover:text-blue-500 transition duration-200 ease-in-out">A</Checkbox>
+                            <Checkbox value="B"
+                                      className="hover:text-blue-500 transition duration-200 ease-in-out">B</Checkbox>
+                            <Checkbox value="C"
+                                      className="hover:text-blue-500 transition duration-200 ease-in-out">C</Checkbox>
+                            <Checkbox value="D"
+                                      className="hover:text-blue-500 transition duration-200 ease-in-out">D</Checkbox>
                         </div>
-                        <div className="flex justify-end w-full">
-                            <Button danger color="red" type="primary">Сбросить</Button>
-                            <Button type="primary" className="ml-3">Применить</Button>
+
+                        <Divider className="border-gray-200"/>
+
+                        <div className="flex justify-end w-full gap-3">
+                            <Tooltip title="Сбросить фильтры">
+                                <Button
+                                    danger
+                                    type="primary"
+                                    icon={<CloseCircleOutlined/>}
+                                    className="flex items-center"
+                                >
+                                    Сбросить
+                                </Button>
+                            </Tooltip>
+
+                            <Tooltip title="Применить фильтры">
+                                <Button
+                                    type="primary"
+                                    icon={<CheckOutlined/>}
+                                    className="flex items-center"
+                                >
+                                    Применить
+                                </Button>
+                            </Tooltip>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

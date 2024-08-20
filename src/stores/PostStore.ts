@@ -2,14 +2,14 @@ import {action, makeAutoObservable} from "mobx";
 import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import {notification} from "antd"
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 
 export type Post = {
     id: number;
     name: string;
     image: string;
     content: string;
-    publish_date: Date;
+    publish_date: Dayjs;
 }
 class PostStore{
     constructor(){
@@ -84,7 +84,7 @@ const postMapper = (post: Post) => {
         name: post.name,
         image: post.image,
         content: post.content,
-        publish_date: dayjs(post.publish_date).format('YYYY-MM-DD HH:mm')
+        publish_date: dayjs(post.publish_date)
     };
 }
 

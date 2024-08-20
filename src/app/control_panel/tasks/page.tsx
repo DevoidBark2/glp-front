@@ -29,21 +29,29 @@ import {
     ReconciliationOutlined,
 } from "@ant-design/icons";
 import {CourseComponentType} from "@/enums/CourseComponentType";
-import {FILTER_TYPE_COMPONENT_COURSE} from "@/constants";
+import {FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE} from "@/constants";
 import {useMobxStores} from "@/stores/stores";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {observer} from "mobx-react";
 import {CourseComponentTypeI} from "@/stores/CourseComponent";
 import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
-import {convertTimeFromStringToDate} from "@/app/constans";
+import dayjs from "dayjs";
+import {exec} from "node:child_process";
 
 const TaskPage = () => {
     const {courseComponentStore} = useMobxStores()
 
     const [typeTask,setTypeTask] = useState<CourseComponentType | null>(null)
-    const [changedComponent,setChangedComponent] = useState(null)
+    const [changedComponent,setChangedComponent] = useState<number | null>(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [previewVisible, setPreviewVisible] = useState(false);
+    const [previewContent, setPreviewContent] = useState<CourseComponentTypeI | null>(null);
+
+    const handlePreview = (record: CourseComponentTypeI) => {
+        setPreviewContent(record);
+        setPreviewVisible(true);
+    };
 
     const handleTypeChange = (value: CourseComponentType) => {
         setTypeTask(value);
@@ -97,12 +105,15 @@ const TaskPage = () => {
             title: "Дата создания",
             dataIndex: "created_at",
             sorter: (a, b) => {
-                return convertTimeFromStringToDate(a.created_at).getTime() - convertTimeFromStringToDate(b.created_at).getTime();
+                return dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf();
             },
+            render: (_,record) => dayjs(record.created_at).format('YYYY-MM-DD HH:mm')
         },
         {
             title: "Статус",
             dataIndex: "status",
+            filters: FILTER_STATUS_COMPONENT_COURSE,
+            onFilter: (value, record) => record.status.startsWith(value as string),
             render: (status) => (
                 <Tag color={status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
                     {status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
@@ -118,10 +129,7 @@ const TaskPage = () => {
                         <Button
                             type="default"
                             icon={<EyeOutlined />}
-                            className="mr-2"
-                            onClick={() => {
-                                console.log(`Просмотр содержимого для ${record.id}`);
-                            }}
+                            onClick={() => handlePreview(record)}
                         />
                     </Tooltip>
                     <Tooltip title="Редактировать компонент">
@@ -136,6 +144,7 @@ const TaskPage = () => {
                         title="Удалить компонент?"
                         description="Вы уверены, что хотите удалить этот компонент? Это действие нельзя будет отменить."
                         okText="Да"
+                        onConfirm={() => courseComponentStore.deleteComponent(record.id)}
                         cancelText="Нет"
                     >
                         <Button
@@ -162,7 +171,9 @@ const TaskPage = () => {
            return;
         }
 
-        changedComponent ? courseComponentStore.changeComponent(values) :
+        changedComponent ? courseComponentStore.changeComponent(values).finally(() => {
+                setIsModalVisible(false)
+            }) :
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
             setTypeTask(null)
@@ -174,7 +185,9 @@ const TaskPage = () => {
 
 
     useEffect(() => {
-        courseComponentStore.getAllComponent();
+        courseComponentStore.getAllComponent().finally(() => {
+            courseComponentStore.setLoadingCourseComponent(false)
+        });
     }, []);
 
     return (
@@ -190,9 +203,11 @@ const TaskPage = () => {
                         rowKey={(record) => record.id}
                         dataSource={courseComponentStore.courseComponents}
                         columns={columns}
+                        loading={courseComponentStore.loadingCourseComponent}
                     />
                 </div>
             </div>
+
             <Modal
                 title="Новый компонент"
                 open={isModalVisible}
@@ -228,6 +243,25 @@ const TaskPage = () => {
                             {/*<Select.Option value={CourseComponentType.Sequencing}>Последовательность</Select.Option>*/}
                         </Select>
                     </Form.Item>
+
+                    {
+                        changedComponent && <Form.Item
+                            label="Статус"
+                            name="status"
+                        >
+                            <Select
+                                placeholder="Выберите статус"
+                                style={{ width: '100%' }}
+                            >
+                                <Select.Option value={StatusComponentTaskEnum.ACTIVATED}>
+                                    <Tag color="green">Активен</Tag>
+                                </Select.Option>
+                                <Select.Option value={StatusComponentTaskEnum.DEACTIVATED}>
+                                    <Tag color="red">Неактивен</Tag>
+                                </Select.Option>
+                            </Select>
+                        </Form.Item>
+                    }
 
                     {typeTask === CourseComponentType.Text && (
                         <>
@@ -299,7 +333,7 @@ const TaskPage = () => {
                                                     {(optionFields, { add: addOption, remove: removeOption }) => (
                                                         <>
                                                             {optionFields.map((optionField, oIndex) => (
-                                                                <Row gutter={8} align="middle" key={optionField.key}>
+                                                                <Row gutter={8} align="stretch" key={optionField.key}>
                                                                     <Col flex="auto">
                                                                         <Form.Item
                                                                             {...optionField}
@@ -310,18 +344,17 @@ const TaskPage = () => {
                                                                         </Form.Item>
                                                                     </Col>
                                                                     <Col>
-                                                                        {optionFields.length > 1 && (
-                                                                            <Button
-                                                                                type="text"
-                                                                                icon={<DeleteOutlined />}
-                                                                                onClick={() => removeOption(optionField.name)}
-                                                                            />
-                                                                        )}
+                                                                        <Button
+                                                                            type="text"
+                                                                            icon={<DeleteOutlined />}
+                                                                            onClick={() => removeOption(optionField.name)}
+                                                                        />
                                                                     </Col>
                                                                 </Row>
                                                             ))}
                                                             <Button
                                                                 type="dashed"
+                                                                className="mb-4"
                                                                 icon={<PlusOutlined />}
                                                                 onClick={() => addOption()}
                                                                 style={{ marginTop: 8 }}
@@ -356,6 +389,7 @@ const TaskPage = () => {
                                             </div>
                                         ))}
                                         <Button
+                                            className="mb-4"
                                             type="dashed"
                                             icon={<PlusOutlined />}
                                             onClick={() => add()}

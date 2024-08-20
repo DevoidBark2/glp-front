@@ -41,3 +41,45 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(error.response.data,{status:error.response.status})
     }
 }
+
+export async function PUT(req: NextRequest) {
+    const { searchParams } = new URL(req.url);
+    const token = searchParams.get('token');
+
+    const data = await req.json();
+
+    try {
+        const response = await axios.put(nextConfig.env?.API_URL + `api/component-task`,data,{
+            headers: {
+                Authorization: token
+            }
+        });
+
+        const responseData = response.data;
+        return NextResponse.json({ response: responseData });
+    } catch (error: any) {
+        console.error(error)
+        return NextResponse.json(error.response.data,{status:error.response.status})
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    const { searchParams } = new URL(req.url);
+    const componentId = searchParams.get('componentId');
+
+    const token = searchParams.get('token');
+
+    try {
+        const response = await axios.delete(nextConfig.env?.API_URL + `api/component-task/${componentId}`,{
+            headers: {
+                Authorization: token
+            }
+        });
+
+        const responseData = response.data;
+        return NextResponse.json({ response: responseData });
+    } catch (error: any) {
+        console.error(error)
+        return NextResponse.json(error.response.data,{status:error.response.status})
+    }
+}
