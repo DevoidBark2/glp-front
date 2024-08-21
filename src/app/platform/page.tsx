@@ -18,6 +18,7 @@ import {
 } from "antd"
 import EmojiPicker from "emoji-picker-react";
 import {CloseCircleOutlined, SearchOutlined} from "@ant-design/icons";
+import {FORMAT_VIEW_DATE} from "@/constants";
 
 function CheckOutlined() {
     return null;
@@ -86,7 +87,7 @@ const PlatformPage = () => {
                                             <p className="">{post.content}</p>
                                         </div>
                                         <p className="text-gray-400"
-                                           title="Дата публикации">{post.publish_date.toString()}</p>
+                                           title="Дата публикации">{post.created_at?.format(FORMAT_VIEW_DATE)}</p>
                                     </div>
 
                                     <div className="absolute bottom-5 right-5">

@@ -7,6 +7,7 @@ import {SectionCourseItem} from "@/stores/SectionCourse";
 import {observer} from "mobx-react";
 import dayjs, {Dayjs} from "dayjs";
 import {useMobxStores} from "@/stores/stores";
+import {FORMAT_VIEW_DATE} from "@/constants";
 
 const SectionPage = () => {
     const {sectionCourseStore} = useMobxStores();
@@ -44,7 +45,7 @@ const SectionPage = () => {
             key: 'publish_date',
             width: '20%',
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
-            render: (date: Dayjs) => dayjs(date).format('YYYY-MM-DD HH:mm')
+            render: (date: Dayjs) => dayjs(date).format(FORMAT_VIEW_DATE)
         },
         {
             title: "Действия",

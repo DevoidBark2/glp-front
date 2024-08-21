@@ -29,7 +29,7 @@ import {
     ReconciliationOutlined,
 } from "@ant-design/icons";
 import {CourseComponentType} from "@/enums/CourseComponentType";
-import {FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE} from "@/constants";
+import {FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE} from "@/constants";
 import {useMobxStores} from "@/stores/stores";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
@@ -107,7 +107,7 @@ const TaskPage = () => {
             sorter: (a, b) => {
                 return dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf();
             },
-            render: (_,record) => dayjs(record.created_at).format('YYYY-MM-DD HH:mm')
+            render: (_,record) => dayjs(record.created_at).format(FORMAT_VIEW_DATE)
         },
         {
             title: "Статус",

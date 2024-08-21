@@ -2,29 +2,57 @@ import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 import {ActionEvent} from "@/enums/ActionEventUser";
 import {CourseComponentType} from "@/enums/CourseComponentType";
 import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
+import {PostStatusEnum} from "@/enums/PostStatusEnum";
+import {UserRole} from "@/enums/UserRoleEnum";
+import {StatusUserEnum} from "@/enums/StatusUserEnum";
 
 export const FILTER_STATUS_COURSE = [
     {id: 1, text: 'Закрытый', value: StatusCourseEnum.CLOSED},
-    {id: 1, text: 'Активный', value: StatusCourseEnum.ACTIVE},
-    {id: 1, text: 'Новый', value: StatusCourseEnum.NEW},
-    {id: 1, text: 'В обработке', value: StatusCourseEnum.IN_PROCESSING},
+    {id: 2, text: 'Активный', value: StatusCourseEnum.ACTIVE},
+    {id: 3, text: 'Новый', value: StatusCourseEnum.NEW},
+    {id: 4, text: 'В обработке', value: StatusCourseEnum.IN_PROCESSING},
+]
+export const FILTER_STATUS_POST = [
+    {id: 1, text: 'Новый', value: PostStatusEnum.NEW},
+    {id: 2, text: 'В обработке', value: PostStatusEnum.IN_PROCESSING},
+    {id: 3, text: 'Активный', value: PostStatusEnum.ACTIVE},
+    {id: 4, text: 'Отклонен', value: PostStatusEnum.REJECT},
+]
+
+export const FILTER_ROLE_USER = [
+    {id: 1, text: 'Пользователь', value: UserRole.STUDENT},
+    {id: 2, text: 'Модератор', value: UserRole.MODERATOR},
+    {id: 3, text: 'Учитель', value: UserRole.TEACHER},
 ]
 
 export const FILTER_TYPE_COMPONENT_COURSE = [
     {id: 1, text: 'Текст', value: CourseComponentType.Text},
-    {id: 1, text: 'Квиз', value: CourseComponentType.Quiz},
+    {id: 2, text: 'Квиз', value: CourseComponentType.Quiz},
 ]
 
 export const FILTER_STATUS_COMPONENT_COURSE = [
     {id: 1, text: 'Активен', value: StatusComponentTaskEnum.ACTIVATED},
-    {id: 1, text: 'Неактивен', value: StatusComponentTaskEnum.DEACTIVATED},
+    {id: 2, text: 'Неактивен', value: StatusComponentTaskEnum.DEACTIVATED},
+]
+
+export const FILTER_STATUS_USER = [
+    {id: 1, text: 'Активен', value: StatusUserEnum.ACTIVATED},
+    {id: 2, text: 'Неактивен', value: StatusUserEnum.DEACTIVATED},
+    {id: 3, text: 'Удален', value: StatusUserEnum.DELETED},
+    {id: 4, text: 'Заблокирован', value: StatusUserEnum.BLOCKED},
 ]
 
 export const LEVEL_COURSE = [
-    {id:1, title: 'Начинающий'},
-    {id:2, title: 'Средний'},
-    {id:3, title: 'Высокий'},
+    {id: 1, title: 'Начинающий'},
+    {id: 2, title: 'Средний'},
+    {id: 3, title: 'Высокий'},
 ]
+export const userRoleColors = {
+    [UserRole.STUDENT] : "blue",
+    [UserRole.MODERATOR] : "gray",
+    [UserRole.TEACHER] : "green",
+    [UserRole.SUPER_ADMIN] : "black",
+}
 export const eventColors = {
     [ActionEvent.CREATE_COURSE]: "green",
     [ActionEvent.UPDATE_COURSE]: "blue",
@@ -157,3 +185,5 @@ export const GeneralSettingTooltips = {
         PLACEHOLDER: "Выберите сложность пароля"
     }
 }
+
+export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"

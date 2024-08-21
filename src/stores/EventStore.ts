@@ -4,6 +4,7 @@ import {GET} from "@/lib/fetcher";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
 import {ActionEvent} from "@/enums/ActionEventUser";
+import {FORMAT_VIEW_DATE} from "@/constants";
 
 export type EventUser = {
     id: number;
@@ -39,7 +40,7 @@ const eventMapper = (value:any) => {
         id: value.id,
         action: value.action,
         description: value.description,
-        createdAt: dayjs(value.created_at).format("YYYY-MM-DD HH:mm"),
+        createdAt: dayjs(value.created_at).format(FORMAT_VIEW_DATE),
         user: {
             id: value.user.id,
             name: value.user.first_name + " " + value.user.last_name,

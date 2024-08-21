@@ -2,7 +2,10 @@ import {action, makeAutoObservable} from "mobx"
 import {DELETE, GET, POST} from "@/lib/fetcher";
 import {delete_cookie, getCookieUserDetails, getUserToken, signInUser} from "@/lib/users";
 import dayjs from "dayjs";
-import {notification} from "antd";
+import {FORMAT_VIEW_DATE} from "@/constants";
+import {UserRole} from "@/enums/UserRoleEnum";
+import {StatusUserEnum} from "@/enums/StatusUserEnum";
+import {message} from "antd";
 
 type userProfile = {
     birth_day : Date
@@ -19,8 +22,8 @@ export type User = {
     first_name: string;
     second_name: string;
     last_name: string;
-    role: string;
-    is_active: boolean;
+    role: UserRole;
+    status: StatusUserEnum;
     email: string;
     created_at: Date;
 }
@@ -36,6 +39,84 @@ class UserStore {
     openRegisterModal: boolean = false;
     openForgotPasswordModal: boolean = false;
     createUserLoading: boolean = false;
+    searchUserText: string = ""
+    loadingSearchUser: boolean = false;
+    selectedGroupAction: StatusUserEnum | null = null;
+    selectedRowsUser: number[] = []
+
+    setSelectedRowsUsers = action((value: number[]) => {
+        this.selectedRowsUser = value;
+    })
+
+    setSelectedGroupAction = action((value: StatusUserEnum | null) => {
+        this.selectedGroupAction = value;
+    })
+
+    setLoadingSearchUser = action((value: boolean) => {
+        this.loadingSearchUser = value;
+    })
+
+    setSearchUserText = action((value: string) => {
+        this.searchUserText = value;
+        this.searchUsers();
+    })
+
+    searchUsers = action(async() => {
+        this.setLoadingSearchUser(true)
+        const token = getUserToken();
+        await GET(`/api/search-users?query=${this.searchUserText}&token=${token}`).then(response => {
+            this.allUsers = response.response.data.map(usersMapper);
+        }).finally(() => {
+            this.setLoadingSearchUser(false)
+        })
+    })
+
+    submitSelectedAction = action(async () => {
+        const token = getUserToken();
+
+        if (this.selectedRowsUser.length < 1) {
+           message.warning("Выберите пользователей!")
+           return;
+        }
+
+        if (!this.selectedGroupAction) {
+            message.warning("Выберите групповое действие!")
+            return;
+        }
+
+        await POST(`/api/global-action?token=${token}`,
+            {
+                action:this.selectedGroupAction ,
+                usersIds: this.selectedRowsUser
+            }).then(response => {
+            this.allUsers = this.allUsers.map((user) => {
+                if (this.selectedRowsUser.includes(user.id)) {
+                    return {
+                        ...user,
+                        status: this.getNewStatusBasedOnAction(this.selectedGroupAction),
+                    };
+                }
+                return user;
+            });
+            this.selectedRowsUser = []
+            this.setSelectedGroupAction(null)
+        }).catch(e => {})
+    })
+
+    getNewStatusBasedOnAction(action: string) {
+        switch(action) {
+            case 'activate':
+                return StatusUserEnum.ACTIVATED;
+            case 'deactivated':
+                return StatusUserEnum.DEACTIVATED;
+            case 'deleted':
+                return StatusUserEnum.DELETED;
+            case 'blocked':
+                return StatusUserEnum.BLOCKED;
+            default:
+                return StatusUserEnum.ACTIVATED; // По умолчанию
+        }
+    }
 
     setCreateUserLoading = action((value: boolean) => {
         this.createUserLoading = value;
@@ -126,6 +207,7 @@ class UserStore {
             this.setAllUsers(response.response.data.map(usersMapper))
         }).finally(() => this.setLoading(false))
     })
+
     getUserProfile = action(async () => {
         const user = getCookieUserDetails()
 
@@ -169,10 +251,10 @@ const usersMapper = (value: User) => {
         first_name: value.first_name,
         second_name: value.second_name,
         last_name: value.last_name,
-        is_active: value.is_active,
+        status: value.status,
         role: value.role,
         email: value.email,
-        created_at: dayjs(value.created_at, "YYYY-MM-DD HH:mm").toDate(),
+        created_at: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
     }
 
     return user;

@@ -5,7 +5,7 @@ import {
     AppstoreOutlined,
     TeamOutlined,
     BarsOutlined,
-    LogoutOutlined, SettingOutlined,
+    LogoutOutlined, SettingOutlined, ToolOutlined, BookOutlined, PartitionOutlined, SolutionOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image"
@@ -17,6 +17,28 @@ interface LayoutProps {
 type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
+    {
+        key: 'moderators_items',
+        label: <p>Панель модератора</p>,
+        icon: <ToolOutlined />,
+        children: [
+            {
+                key: 'manage-courses',
+                label: <Link href={"/control_panel/courses"}>Управление курсами</Link>,
+                icon: <BookOutlined />,
+            },
+            {
+                key: 'manage-sections',
+                label: <Link href={"/control_panel/sections"}>Управление разделами</Link>,
+                icon: <PartitionOutlined />,
+            },
+            {
+                key: 'manage-tasks',
+                label: <Link href={"/control_panel/tasks"}>Управление задачами</Link>,
+                icon: <SolutionOutlined />
+            },
+        ]
+    },
     {
         key: 'home',
         label: <Link href={"/control_panel"}>Главная</Link>,

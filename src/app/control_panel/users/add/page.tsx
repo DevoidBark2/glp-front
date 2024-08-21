@@ -124,8 +124,8 @@ const UserCreatePage = () => {
                 >
                     <Select placeholder="Выберите роль">
                         <Select.Option value="teacher">Преподаватель</Select.Option>
-                        <Select.Option value="user">Пользователь</Select.Option>
-                        <Select.Option value="manager">Менеджер</Select.Option>
+                        <Select.Option value="student">Пользователь</Select.Option>
+                        <Select.Option value="moderator">Модератор</Select.Option>
                     </Select>
                 </Form.Item>
 

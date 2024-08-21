@@ -4,6 +4,7 @@ import {notification} from "antd";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
+import {FORMAT_VIEW_DATE} from "@/constants";
 
 export type Teacher = {
     id: number;
@@ -102,7 +103,7 @@ class CourseStore{
         form.append('access_right',values.access_right)
         form.append('duration',values.duration)
         form.append('level',values.level)
-        form.append('publish_date',dayjs().format('YYYY-MM-DD HH:mm'))
+        form.append('publish_date',dayjs().format(FORMAT_VIEW_DATE))
         form.append("content_description",values.content_description)
 
         return await POST(`/api/courses?token=${token}`,form).catch(e => {
@@ -149,7 +150,7 @@ export const courseMapper = (course: Course) => {
         content_description: course.content_description,
         duration: course.duration,
         status: course.status,
-        publish_date: dayjs(course.publish_date).format("YYYY-MM-DD HH:mm"),
+        publish_date: dayjs(course.publish_date).format(FORMAT_VIEW_DATE),
         user: course.user
     };
 }

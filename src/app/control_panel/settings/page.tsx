@@ -1,5 +1,5 @@
 "use client"
-import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip} from "antd";
+import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio} from "antd";
 import React, {useEffect} from "react";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
@@ -657,6 +657,130 @@ const SettingsControlPage = () => {
                         {/*        </Form.Item>*/}
                         {/*    </Form>*/}
                         {/*</TabPane>*/}
+
+                        <TabPane tab="Управление модераторами" key="6">
+                            <Form
+                                layout="vertical"
+                                form={formForUserManagement}
+                                onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
+                            >
+
+                                {/* Настройки модерации постов */}
+                                <Form.Item
+                                    name="postModeration"
+                                    label="Настройки модерации постов"
+                                    tooltip="Настройте параметры проверки и модерации постов."
+                                >
+                                    <Checkbox.Group
+                                        options={[
+                                            { label: 'Требовать проверки перед публикацией', value: 'pre_publish' },
+                                            { label: 'Оповещать по электронной почте', value: 'email_notification' },
+                                            { label: 'Разрешить комментирование', value: 'allow_comments' },
+                                        ]}
+                                    />
+                                </Form.Item>
+
+                                {/* Настройки уведомлений */}
+                                <Form.Item
+                                    name="notificationSettings"
+                                    label="Настройки уведомлений"
+                                    tooltip="Настройте, как и когда вы хотите получать уведомления."
+                                >
+                                    <Radio.Group>
+                                        <Radio value="immediate">Немедленно</Radio>
+                                        <Radio value="daily">Ежедневно</Radio>
+                                        <Radio value="weekly">Еженедельно</Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+
+                                {/* Управление пользователями */}
+                                <Form.Item
+                                    name="userManagement"
+                                    label="Управление пользователями"
+                                    tooltip="Настройте права и роли пользователей."
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        allowClear
+                                        style={{ width: '100%' }}
+                                        placeholder="Выберите роли"
+                                        options={[
+                                            { label: 'Администратор', value: 'admin' },
+                                            { label: 'Модератор', value: 'moderator' },
+                                            { label: 'Пользователь', value: 'user' },
+                                        ]}
+                                    />
+                                </Form.Item>
+
+                                {/* Фильтры и поиск */}
+                                <Form.Item
+                                    name="postFilters"
+                                    label="Фильтры для постов"
+                                    tooltip="Настройте фильтры для поиска и отображения постов."
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        allowClear
+                                        style={{ width: '100%' }}
+                                        placeholder="Выберите фильтры"
+                                        options={[
+                                            { label: 'По дате публикации', value: 'date' },
+                                            { label: 'По статусу', value: 'status' },
+                                            { label: 'По категории', value: 'category' },
+                                        ]}
+                                    />
+                                </Form.Item>
+
+                                {/* Управление отчетами */}
+                                <Form.Item
+                                    name="reportSettings"
+                                    label="Настройки отчетов"
+                                    tooltip="Настройте параметры для генерации отчетов о модерации и активности."
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        allowClear
+                                        style={{ width: '100%' }}
+                                        placeholder="Выберите типы отчетов"
+                                        options={[
+                                            { label: 'Отчеты по модерации', value: 'moderation_reports' },
+                                            { label: 'Отчеты по активности', value: 'activity_reports' },
+                                        ]}
+                                    />
+                                </Form.Item>
+
+                                {/* Управление доступом к постам */}
+                                <Form.Item
+                                    name="postAccessControl"
+                                    label="Контроль доступа к постам"
+                                    tooltip="Настройте правила и уровни доступа к постам."
+                                >
+                                    <Checkbox.Group
+                                        options={[
+                                            { label: 'Ограничить доступ по статусу', value: 'status_based' },
+                                            { label: 'Ограничить доступ по категории', value: 'category_based' },
+                                            { label: 'Ограничить доступ по роли', value: 'role_based' },
+                                        ]}
+                                    />
+                                </Form.Item>
+
+                                {/* Настройки дополнительных параметров */}
+                                <Form.Item
+                                    name="additionalSettings"
+                                    label="Дополнительные настройки"
+                                    tooltip="Настройте дополнительные параметры для управления пользователями."
+                                >
+                                    <Input.TextArea placeholder="Введите дополнительные параметры..." rows={4} />
+                                </Form.Item>
+
+                                {/* Кнопка сохранения */}
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit">Сохранить изменения</Button>
+                                </Form.Item>
+                            </Form>
+                        </TabPane>
+
+
                     </Tabs>}
             </div>
         </div>

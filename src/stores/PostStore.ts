@@ -13,6 +13,7 @@ export type Post = {
     content: string;
     status: PostStatusEnum;
     is_publish: boolean;
+    rejectReason?: string[];
     created_at: Dayjs;
 }
 class PostStore{
@@ -68,11 +69,29 @@ class PostStore{
 
     deletePost = action(async (postId: number) => {
         const token = getUserToken();
-        await DELETE(`/api/posts?postId=${postId}&token=${token}`).then(() => {
-
+        await DELETE(`/api/posts?postId=${postId}&token=${token}`).then((response) => {
+            this.allPosts = this.allPosts.filter(post => post.id !== postId);
+            notification.success({message: response.response.message})
         }).catch(e => {
 
         })
+    })
+
+    submitReview = action(async (postId: number) => {
+        const token = getUserToken();
+        await PUT(`/api/submit-preview?postId=${postId}&token=${token}`).then(response => {
+            const changedPostIndex = this.allPosts.findIndex(post => post.id === postId);
+
+            if (changedPostIndex !== -1) {
+                const updatedPosts = [...this.allPosts];
+                updatedPosts[changedPostIndex] = {
+                    ...updatedPosts[changedPostIndex],
+                    status: PostStatusEnum.IN_PROCESSING
+                };
+                this.allPosts = updatedPosts;
+                notification.success({message: response.response.message});
+            }
+        }).catch()
     })
 }
 
@@ -85,7 +104,7 @@ const postMapper = (post: Post) => {
         content: post.content,
         status: post.status,
         is_publish: post.is_publish,
-        publish_date: dayjs(post.created_at)
+        publish_date: post.created_at
     };
 }
 

@@ -9,6 +9,7 @@ import {
     Switch,
     Table,
     TableColumnsType,
+    Tag,
     Tooltip,
     UploadProps
 } from "antd";
@@ -16,13 +17,22 @@ import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
-import {DeleteOutlined, EditOutlined, InboxOutlined, PlusCircleOutlined, UploadOutlined} from "@ant-design/icons";
+import {
+    CheckCircleOutlined,
+    ClockCircleOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    InboxOutlined,
+    PlusCircleOutlined,
+    SyncOutlined,
+    UploadOutlined
+} from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import dayjs from "dayjs";
-import Link from "next/link";
 import {PostStatusEnum} from "@/enums/PostStatusEnum";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
+import {FILTER_STATUS_POST, FORMAT_VIEW_DATE} from "@/constants";
 
 const PostPage = () => {
     const {postStore} = useMobxStores();
@@ -46,6 +56,49 @@ const PostPage = () => {
         },
     };
 
+    const getStatusTag = (status: PostStatusEnum, rejectReason?: string[]) => {
+        switch (status) {
+            case PostStatusEnum.NEW:
+                return (
+                    <Tooltip title="Новый">
+                        <Tag icon={<ClockCircleOutlined />} color="blue">
+                            Новый
+                        </Tag>
+                    </Tooltip>
+                );
+            case PostStatusEnum.IN_PROCESSING:
+                return (
+                    <Tooltip title="В обработке">
+                        <Tag icon={<SyncOutlined spin />} color="yellow">
+                            В обработке
+                        </Tag>
+                    </Tooltip>
+                );
+            case PostStatusEnum.ACTIVE:
+                return (
+                    <Tooltip title="Активный">
+                        <Tag icon={<CheckCircleOutlined />} color="green">
+                            Активный
+                        </Tag>
+                    </Tooltip>
+                );
+            case PostStatusEnum.REJECT:
+                return (
+                    <Tooltip title={rejectReason?.map((reason, index) => (
+                        <div key={index}>• {reason}</div>
+                    ))} color="red">
+                        <Tag color="red">Отклонен</Tag>
+                    </Tooltip>
+                );
+            default:
+                return (
+                    <Tooltip title="Неизвестный статус">
+                        <Tag color="gray">Неизвестный</Tag>
+                    </Tooltip>
+                );
+        }
+    };
+
     const columns: TableColumnsType<Post> = [
         {
             title: 'Название',
@@ -62,21 +115,24 @@ const PostPage = () => {
             width: '20%',
             title: 'Дата публикации',
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
-            render: (value) => dayjs(value).format('YYYY-MM-DD HH:mm')
+            render: (value) => dayjs(value).format(FORMAT_VIEW_DATE)
         },
         {
             title: "Статус",
             dataIndex: "status",
-            render: (_, record) => <p>{record.status}</p>,
+            filters: FILTER_STATUS_POST,
+            onFilter: (value, record) => record.status.startsWith(value as string),
+            filterSearch: true,
+            render: (_, record) => getStatusTag(record.status,record.rejectReason),
         },
         {
             title: "Опубликован",
             dataIndex: "is_publish",
             render: (_, record) => (
                 <Tooltip
-                    title="Включите, чтобы опубликовать пост."
+                    title={record.status !== PostStatusEnum.ACTIVE ? "Отправьте сначала на проверку перед публикацией поста." : "Включите, чтобы опубликовать пост."}
                 >
-                    <Switch defaultChecked={false} onChange={(checked) => console.log('Switch to:', checked)} />
+                    <Switch disabled={record.status !== PostStatusEnum.ACTIVE} defaultChecked={false} onChange={(checked) => console.log('Switch to:', checked)} />
                 </Tooltip>
             ),
         },
@@ -91,6 +147,7 @@ const PostPage = () => {
                             <Button
                                 type="default"
                                 icon={<UploadOutlined />}
+                                onClick={() => postStore.submitReview(record.id)}
                                 className="mr-2"
                             />
                         </Tooltip>
@@ -109,12 +166,13 @@ const PostPage = () => {
                             Изменить
                         </Button>
                     </Tooltip>
-                    <Tooltip title="Удалить курс">
+                    <Tooltip title="Удалить пост">
                         <Popconfirm
-                            title="Удалить курс?"
-                            description="Вы уверены, что хотите удалить этот курс? Это действие нельзя будет отменить."
+                            title="Удалить пост?"
+                            description="Вы уверены, что хотите удалить этот пост? Это действие нельзя будет отменить."
                             okText="Да"
                             cancelText="Нет"
+                            onConfirm={() => postStore.deletePost(record.id)}
                         >
                             <Button
                                 danger
