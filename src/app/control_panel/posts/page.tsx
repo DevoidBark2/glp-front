@@ -15,7 +15,7 @@ import {
 } from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
-import React, {useEffect, useState} from "react";
+import React, {Key, useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
@@ -33,6 +33,7 @@ import {PostStatusEnum} from "@/enums/PostStatusEnum";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {FILTER_STATUS_POST, FORMAT_VIEW_DATE} from "@/constants";
+import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 
 const PostPage = () => {
     const {postStore} = useMobxStores();
@@ -111,7 +112,7 @@ const PostPage = () => {
             ),
         },
         {
-            dataIndex: 'publish_date',
+            dataIndex: 'created_at',
             width: '20%',
             title: 'Дата публикации',
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
@@ -265,6 +266,15 @@ const PostPage = () => {
                 dataSource={postStore.allPosts}
                 columns={columns}
                 rowKey={(record) => record.id}
+                rowClassName={(_, index) =>
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                }
+                rowSelection={{
+                    type: "checkbox",
+                    // onChange: (selectedRowKeys: Key[]) => {
+                    //     userStore.setSelectedRowsUsers(selectedRowKeys.map(key => Number(key)));
+                    // },
+                }}
             />
         </div>
     );

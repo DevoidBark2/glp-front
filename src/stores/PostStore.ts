@@ -4,6 +4,7 @@ import {getUserToken} from "@/lib/users";
 import {notification} from "antd"
 import dayjs, {Dayjs} from "dayjs";
 import {PostStatusEnum} from "@/enums/PostStatusEnum";
+import {FORMAT_VIEW_DATE} from "@/constants";
 
 export type Post = {
     id: number;
@@ -14,7 +15,7 @@ export type Post = {
     status: PostStatusEnum;
     is_publish: boolean;
     rejectReason?: string[];
-    created_at: Dayjs;
+    created_at: Date;
 }
 class PostStore{
     constructor(){
@@ -104,7 +105,7 @@ const postMapper = (post: Post) => {
         content: post.content,
         status: post.status,
         is_publish: post.is_publish,
-        publish_date: post.created_at
+        created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate()
     };
 }
 
