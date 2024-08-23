@@ -19,6 +19,7 @@ import {
 import EmojiPicker from "emoji-picker-react";
 import {CloseCircleOutlined, SearchOutlined} from "@ant-design/icons";
 import {FORMAT_VIEW_DATE} from "@/constants";
+import dayjs from "dayjs";
 
 function CheckOutlined() {
     return null;
@@ -87,7 +88,7 @@ const PlatformPage = () => {
                                             <p className="">{post.content}</p>
                                         </div>
                                         <p className="text-gray-400"
-                                           title="Дата публикации">{post.created_at?.format(FORMAT_VIEW_DATE)}</p>
+                                           title="Дата публикации">{dayjs(post.created_at).format(FORMAT_VIEW_DATE)}</p>
                                     </div>
 
                                     <div className="absolute bottom-5 right-5">

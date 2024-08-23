@@ -1,14 +1,16 @@
 "use client"
 import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio} from "antd";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {GeneralSettingTooltips} from "@/constants";
 import {InfoCircleOutlined} from "@ant-design/icons";
-
+import {MAIN_COLOR} from "@/app/constans";
+type TabPosition = 'left' | 'right' | 'top' | 'bottom';
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
     const {generalSettingsStore} = useMobxStores()
+    const [mode, setMode] = useState<TabPosition>('top');
 
     const [ formForGeneral] = Form.useForm()
     const [ formForUserManagement] = Form.useForm()
@@ -27,7 +29,7 @@ const SettingsControlPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5">
+        <div className={`bg-white h-full p-5 shadow-2xl`}>
             <div className="bg-gray-50 p-5 rounded-lg shadow-md mb-5">
                 <div className="flex items-center">
                     <InfoCircleOutlined className="text-2xl text-blue-600 mr-3"/>
@@ -420,7 +422,9 @@ const SettingsControlPage = () => {
                                 {/*        Устанавливает время блокировки учетной записи после нескольких неудачных попыток входа.*/}
                                 {/*    </div>*/}
                                 {/*</Form.Item>*/}
-                                <Button type="primary" htmlType="submit">Сохранить изменения</Button>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit">Сохранить изменения</Button>
+                                </Form.Item>
                             </Form>
                         </TabPane>
 
@@ -665,7 +669,6 @@ const SettingsControlPage = () => {
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
 
-                                {/* Настройки модерации постов */}
                                 <Form.Item
                                     name="postModeration"
                                     label="Настройки модерации постов"
@@ -680,7 +683,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Настройки уведомлений */}
                                 <Form.Item
                                     name="notificationSettings"
                                     label="Настройки уведомлений"
@@ -693,7 +695,6 @@ const SettingsControlPage = () => {
                                     </Radio.Group>
                                 </Form.Item>
 
-                                {/* Управление пользователями */}
                                 <Form.Item
                                     name="userManagement"
                                     label="Управление пользователями"
@@ -712,7 +713,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Фильтры и поиск */}
                                 <Form.Item
                                     name="postFilters"
                                     label="Фильтры для постов"
@@ -731,7 +731,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Управление отчетами */}
                                 <Form.Item
                                     name="reportSettings"
                                     label="Настройки отчетов"
@@ -749,7 +748,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Управление доступом к постам */}
                                 <Form.Item
                                     name="postAccessControl"
                                     label="Контроль доступа к постам"
@@ -764,7 +762,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Настройки дополнительных параметров */}
                                 <Form.Item
                                     name="additionalSettings"
                                     label="Дополнительные настройки"
@@ -773,7 +770,6 @@ const SettingsControlPage = () => {
                                     <Input.TextArea placeholder="Введите дополнительные параметры..." rows={4} />
                                 </Form.Item>
 
-                                {/* Кнопка сохранения */}
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>

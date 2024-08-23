@@ -14,7 +14,7 @@ import LoginComponent from "@/components/LoginComponent/LoginComponent";
 import RegisterComponent from "@/components/RegisterComponent/RegisterComponent";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
 
-type UserType = {
+export type UserType = {
     user: {user_name: string}
 }
 

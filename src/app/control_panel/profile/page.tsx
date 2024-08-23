@@ -2,18 +2,23 @@
 import { Form, Input, Button, Select, Switch, Upload, Avatar, DatePicker, Radio, Tooltip, Divider } from "antd";
 import { UploadOutlined, UserOutlined, LockOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
+import {useMobxStores} from "@/stores/stores";
 
 const ProfilePage = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [avatar, setAvatar] = useState(null);
 
+    const {userStore} = useMobxStores()
+
     const handleUploadChange = (info:any) => {
+        debugger
         if (info.file.status === "uploading") {
             setLoading(true);
             return;
         }
         if (info.file.status === "done") {
+            debugger
             // setAvatar(URL.createObjectURL(info.file.originFileObj));
             setLoading(false);
         }
@@ -36,7 +41,7 @@ const ProfilePage = () => {
                     />
                 </Upload>
                 <div className="ml-6">
-                    <h2 className="text-2xl font-bold text-gray-800">Профиль администратора</h2>
+                    <h2 className="text-2xl font-bold text-gray-800">Профиль пользователя</h2>
                     <p className="text-gray-600">Здесь вы можете обновить ваши личные данные и настройки.</p>
                 </div>
             </div>
@@ -44,15 +49,6 @@ const ProfilePage = () => {
             <Form
                 form={form}
                 layout="vertical"
-                initialValues={{
-                    firstName: "Иван",
-                    lastName: "Петров",
-                    email: "admin@example.com",
-                    role: "Администратор",
-                    notifications: true,
-                    theme: "light",
-                    newsletter: false,
-                }}
                 onFinish={(values) => {
                     console.log("Updated Profile:", values);
                 }}
@@ -132,19 +128,13 @@ const ProfilePage = () => {
                     valuePropName="checked"
                     tooltip="Подписаться на нашу рассылку новостей и обновлений"
                 >
-                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                </Form.Item>
-
-                <Form.Item label="Загрузить резюме">
-                    <Upload>
-                        <Button icon={<UploadOutlined />}>Загрузить файл</Button>
-                    </Upload>
+                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" className="dark:hover:bg-black" />
                 </Form.Item>
 
                 <Divider />
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="mt-4">
+                    <Button type="primary" htmlType="submit" className="mt-4 dark:hover:bg-black">
                         Сохранить изменения
                     </Button>
                 </Form.Item>

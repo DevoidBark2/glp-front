@@ -93,7 +93,7 @@ class UserStore {
                 if (this.selectedRowsUser.includes(user.id)) {
                     return {
                         ...user,
-                        status: this.getNewStatusBasedOnAction(this.selectedGroupAction),
+                        status: this.getNewStatusBasedOnAction(this.selectedGroupAction!),
                     };
                 }
                 return user;
