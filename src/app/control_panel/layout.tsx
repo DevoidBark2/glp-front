@@ -17,7 +17,7 @@ import {set} from "mobx";
 const dark_color = "#e3d"
 const text1 = "#fe3"
 const text2 = "#bbcaa3"
-const findKeyByPathname = (pathName: string, items: MenuItem[]): string => {
+const findKeyByPathname = (pathName: string, items: any): string => {
     debugger
     if (!items.length) return '0';
     for (const item of items) {
@@ -27,7 +27,7 @@ const findKeyByPathname = (pathName: string, items: MenuItem[]): string => {
             return it.key;
         }
     }
-    return findKeyByPathname(pathName, items.map(i => i.children).flat().filter(Boolean))
+    return findKeyByPathname(pathName, items.map((i:any) => i.children).flat().filter(Boolean))
 
 }
 

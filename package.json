@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "@uiw/react-codemirror": "^4.23.0",
     "antd": "^5.18.0",
     "antd-input-otp": "^2.1.0",
@@ -19,6 +22,8 @@
     "cookie-cutter": "^0.2.0",
     "dayjs": "^1.11.11",
     "emoji-picker-react": "^4.10.0",
+    "eslint-plugin-jest-dom": "^5.4.0",
+    "eslint-plugin-testing-library": "^6.3.0",
     "framer-motion": "^11.3.28",
     "mobx": "^6.12.3",
     "mobx-react": "^9.1.1",
@@ -32,15 +37,22 @@
     "react-spring": "^9.7.3"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.0",
     "@types/aos": "^3.0.7",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
