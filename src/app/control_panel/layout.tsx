@@ -1,6 +1,6 @@
 "use client"
 import React, {Suspense, useEffect, useState} from "react";
-import {Divider, Menu, MenuProps, Skeleton, Spin} from "antd";
+import {Divider, Menu, MenuProps, Skeleton} from "antd";
 import Link from "next/link";
 import Image from "next/image"
 import {observer} from "mobx-react";
@@ -209,13 +209,14 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                     </div>
 
                     <Skeleton loading={loading}>
-                        <div className="flex flex-col items-center justify-center" style={{width:250}}>
+                        <div className="flex flex-col items-center justify-center" style={{width: 250}}>
                             <h1 className={`text-[${text1}] dark:text-[${text2}] text-lg font-bold mb-1`}>{currentUser?.user?.user_name}</h1>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="text-gray-300 text-sm">{currentUser?.user.role}</span>
                                 <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
                             </div>
                         </div>
+                        <span>Выбор из картинок для аватарки</span>
                     </Skeleton>
                     <div className="flex items-center gap-6 mt-6">
                         <div className="group relative cursor-pointer transform transition-transform hover:scale-110">
