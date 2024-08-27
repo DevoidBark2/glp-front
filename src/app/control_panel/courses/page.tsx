@@ -5,11 +5,11 @@ import React, {useEffect} from "react";
 import {useMobxStores} from "@/stores/stores";
 import Link from "next/link";
 import {Course} from "@/stores/CourseStore";
-import {convertTimeFromStringToDate} from "@/app/constans";
-import {FILTER_STATUS_COURSE} from "@/constants";
+import {FILTER_STATUS_COURSE, FORMAT_VIEW_DATE} from "@/constants";
 import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 import {EditOutlined, DeleteOutlined, UploadOutlined} from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const CoursesPage = () => {
     const {courseStore} = useMobxStores()
@@ -29,12 +29,10 @@ const CoursesPage = () => {
         {
             title: 'Дата публикации',
             dataIndex: 'publish_date',
-            sorter: (a, b) => {
-                return convertTimeFromStringToDate(a.publish_date).getTime() - convertTimeFromStringToDate(b.publish_date).getTime();
-            },
-            render: (text) => (
+            sorter: (a, b) => dayjs(a.publish_date).valueOf() - dayjs(b.publish_date).valueOf(),
+            render: (value) => (
                 <Tooltip title="Дата публикации курса">
-                    {text}
+                    {dayjs(value).format(FORMAT_VIEW_DATE)}
                 </Tooltip>
             ),
         },
@@ -107,7 +105,7 @@ const CoursesPage = () => {
     }, []);
 
     return (
-        <>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <Modal
                 open={courseStore.showConfirmDeleteCourseModal}
                 onCancel={() => courseStore.setShowConfirmDeleteCourseModal(false)}
@@ -115,7 +113,7 @@ const CoursesPage = () => {
             >
                 <h1 className="text-xl"> Вы уверены, что хотите удалить курс?</h1>
             </Modal>
-            <div className="bg-white h-full p-5">
+            <div>
                 <div className="flex items-center justify-between">
                     <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные курсы</h1>
                     <div>
@@ -125,19 +123,17 @@ const CoursesPage = () => {
                     </div>
                 </div>
                 <Divider />
-                <div style={{overflowY: 'auto', height: 'calc(100vh - 150px)'}}>
-                    <Table
-                        rowKey={(record) => record.id}
-                        dataSource={courseStore.teacherCourses}
-                        columns={columns}
-                        rowSelection={{type: "checkbox"}}
-                        loading={courseStore.loadingCourses}
-                        pagination={{ pageSize: 10 }}
-                        bordered
-                    />
-                </div>
+                <Table
+                    rowKey={(record) => record.id}
+                    dataSource={courseStore.teacherCourses}
+                    columns={columns}
+                    rowSelection={{type: "checkbox"}}
+                    loading={courseStore.loadingCourses}
+                    pagination={{ pageSize: 10 }}
+                    bordered
+                />
             </div>
-        </>
+        </div>
     );
 }
 

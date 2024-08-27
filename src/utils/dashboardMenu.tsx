@@ -12,7 +12,7 @@ import React from "react";
 
 export type MenuItem = Required<MenuProps>['items'][number];
 
-export const dashboardMenuItems: MenuItem[] = [
+export let dashboardMenuItems: MenuItem[] = [
     {
         key: 'moderators_items',
         type: "submenu",
@@ -51,7 +51,7 @@ export const dashboardMenuItems: MenuItem[] = [
         icon: <AppstoreOutlined />,
     },
     {
-        key: 'courses',
+        key: 'courses-parent',
         label: 'Курсы',
         icon: <BarsOutlined />,
         children: [

@@ -1,7 +1,6 @@
 "use client"
 import {Button, Divider, Table, TableColumnsType, Tooltip} from "antd";
 import React, {useEffect} from "react";
-import {convertTimeFromStringToDate} from "@/app/constans";
 import Link from "next/link";
 import {SectionCourseItem} from "@/stores/SectionCourse";
 import {observer} from "mobx-react";
@@ -66,7 +65,7 @@ const SectionPage = () => {
         sectionCourseStore.getAllSectionCourse();
     }, []);
     return (
-        <div className="bg-white h-full p-5">
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <div className="bg-white h-full p-5">
                 <div className="flex items-center justify-between">
                     <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные разделы</h1>

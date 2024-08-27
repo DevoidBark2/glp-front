@@ -109,7 +109,7 @@ const CategoryPage = () => {
                 </Form>
             </Modal>
 
-            <div className="bg-white h-full p-5">
+            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
                 <div className="bg-white h-full p-5">
                     <div className="flex items-center justify-between">
                         <h1 className="text-green-800 font-bold text-3xl">Доступные категории</h1>

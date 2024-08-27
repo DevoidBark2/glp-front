@@ -133,7 +133,7 @@ const PostPage = () => {
                 <Tooltip
                     title={record.status !== PostStatusEnum.ACTIVE ? "Отправьте сначала на проверку перед публикацией поста." : "Включите, чтобы опубликовать пост."}
                 >
-                    <Switch disabled={record.status !== PostStatusEnum.ACTIVE} defaultChecked={false} onChange={(checked) => console.log('Switch to:', checked)} />
+                    <Switch disabled={record.status !== PostStatusEnum.ACTIVE} defaultChecked={record.is_publish} onChange={(checked) => console.log('Switch to:', checked)} />
                 </Tooltip>
             ),
         },
@@ -189,11 +189,11 @@ const PostPage = () => {
     ];
 
     useEffect(() => {
-        postStore.getAllPosts();
+        postStore.getUserPosts();
     }, []);
 
     return (
-        <div className="bg-white h-full p-5">
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <Modal
                 title="Создать новый пост"
                 open={modalVisible}
@@ -263,7 +263,7 @@ const PostPage = () => {
             </div>
             <Table
                 loading={postStore.loading}
-                dataSource={postStore.allPosts}
+                dataSource={postStore.userPosts}
                 columns={columns}
                 rowKey={(record) => record.id}
                 rowClassName={(_, index) =>

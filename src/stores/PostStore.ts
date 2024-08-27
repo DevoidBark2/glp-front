@@ -23,7 +23,7 @@ class PostStore{
     }
 
     allPosts: Post[] = []
-
+    userPosts: Post[] = [];
     loading: boolean = false;
 
     setLoading = action((value:boolean) => {
@@ -44,6 +44,16 @@ class PostStore{
         })
     })
 
+    getUserPosts = action(async () => {
+        this.setLoading(true);
+        const token = getUserToken();
+        await GET(`/api/posts-user?token=${token}`).then(response => {
+            this.userPosts = response.response.data.map(postMapper)
+        }).catch(e => {}).finally(() => {
+            this.setLoading(false);
+        })
+    })
+
     createPost = action(async (values: any) => {
         const token = getUserToken();
         const form = new FormData();
@@ -54,7 +64,7 @@ class PostStore{
 
         this.setLoading(true)
         return await POST(`/api/posts?token=${token}`,form).then(response => {
-            this.allPosts = [...this.allPosts, postMapper(response.response.data)]
+            this.userPosts = [...this.userPosts, postMapper(response.response.data)]
             notification.success({message: response.response.message})
         }).finally(() => {
             this.setLoading(false)

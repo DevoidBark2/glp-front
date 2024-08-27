@@ -111,7 +111,7 @@ const UsersPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5">
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                 <div className="flex">
                     <h1 className="text-gray-800 font-bold text-3xl mb-4 md:mb-0 md:mr-4">

@@ -87,7 +87,6 @@ class CourseComponent {
     // Метод для добавления компонента в таблицу
     addComponentToTable = action((component: CourseComponentTypeI) => {
         // Проверяем, что компонент не был добавлен ранее
-        debugger
         const exists = this.selectedComponents.find(item => item.id === component.id);
         if (!exists) {
             this.selectedComponents = [...this.selectedComponents,component];

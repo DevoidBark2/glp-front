@@ -12,13 +12,11 @@ const ProfilePage = () => {
     const {userStore} = useMobxStores()
 
     const handleUploadChange = (info:any) => {
-        debugger
         if (info.file.status === "uploading") {
             setLoading(true);
             return;
         }
         if (info.file.status === "done") {
-            debugger
             // setAvatar(URL.createObjectURL(info.file.originFileObj));
             setLoading(false);
         }

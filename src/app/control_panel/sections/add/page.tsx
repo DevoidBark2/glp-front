@@ -99,7 +99,6 @@ const SectionAddPage = () => {
     };
 
     const handleSelect = (value:string,option:any) => {
-        debugger
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
         if (selectedComponent) {
             courseComponentStore.addComponentToTable(selectedComponent);

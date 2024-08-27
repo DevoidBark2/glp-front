@@ -4,7 +4,7 @@ import {useMobxStores} from "@/stores/stores";
 import {Button, Form, Input, notification} from "antd";
 import React from "react";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
-import {MAIN_COLOR} from "@/app/constans";
+import {MAIN_COLOR} from "@/constants";
 
 
 const RegisterComponent = () => {

@@ -5,6 +5,15 @@ import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
 import {PostStatusEnum} from "@/enums/PostStatusEnum";
 import {UserRole} from "@/enums/UserRoleEnum";
 import {StatusUserEnum} from "@/enums/StatusUserEnum";
+import {PlatformMenu} from "@/types/platformMenu";
+
+export const MAIN_COLOR = "#00b96b"
+
+export const platformMenu: PlatformMenu[] = [
+    { key: 1, title: "Главная", link: '/platform' },
+    { key: 2, title: "Визуализация", link: '/platform/graphs' },
+    { key: 3, title: "Курсы", link: '/platform/courses' },
+]
 
 export const FILTER_STATUS_COURSE = [
     {id: 1, text: 'Закрытый', value: StatusCourseEnum.CLOSED},

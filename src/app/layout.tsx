@@ -5,7 +5,7 @@ import {StoresProvider} from "@/stores/stores"
 import {roboto} from "@/app/fonts";
 import {ConfigProvider} from "antd";
 import React from "react";
-import {MAIN_COLOR} from "@/app/constans";
+import {MAIN_COLOR} from "@/constants";
 import {ThemeProviders} from "./themeProviders"
 import {lightTheme} from "@/themes/light_theme";
 import {darkTheme} from "@/themes/dark_theme";

@@ -150,7 +150,7 @@ export const courseMapper = (course: Course) => {
         content_description: course.content_description,
         duration: course.duration,
         status: course.status,
-        publish_date: dayjs(course.publish_date).format(FORMAT_VIEW_DATE),
+        publish_date: dayjs(course.publish_date,FORMAT_VIEW_DATE).toDate(),
         user: course.user
     };
 }

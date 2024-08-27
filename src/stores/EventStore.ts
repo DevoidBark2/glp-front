@@ -40,7 +40,7 @@ const eventMapper = (value:any) => {
         id: value.id,
         action: value.action,
         description: value.description,
-        createdAt: dayjs(value.created_at).format(FORMAT_VIEW_DATE),
+        createdAt: dayjs(value.created_at,FORMAT_VIEW_DATE).toDate(),
         user: {
             id: value.user.id,
             name: value.user.first_name + " " + value.user.last_name,

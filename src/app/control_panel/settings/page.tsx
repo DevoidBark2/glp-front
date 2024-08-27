@@ -5,7 +5,6 @@ import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {GeneralSettingTooltips} from "@/constants";
 import {InfoCircleOutlined} from "@ant-design/icons";
-import {MAIN_COLOR} from "@/app/constans";
 type TabPosition = 'left' | 'right' | 'top' | 'bottom';
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
@@ -29,7 +28,7 @@ const SettingsControlPage = () => {
     }, []);
 
     return (
-        <div className={`bg-white h-full p-5 shadow-2xl`}>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <div className="bg-gray-50 p-5 rounded-lg shadow-md mb-5">
                 <div className="flex items-center">
                     <InfoCircleOutlined className="text-2xl text-blue-600 mr-3"/>

@@ -6,9 +6,10 @@ import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {EventUser} from "@/stores/EventStore";
 import {ReloadOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
-import {eventColors, eventTooltips} from "@/constants";
-import {convertTimeFromStringToDate, MAIN_COLOR} from "@/app/constans";
+import {eventColors, eventTooltips, FORMAT_VIEW_DATE} from "@/constants";
+import {MAIN_COLOR} from "@/constants";
 import {ActionEvent} from "@/enums/ActionEventUser";
+import dayjs from "dayjs";
 
 const { RangePicker } = DatePicker;
 const EventPage = () => {
@@ -53,8 +54,8 @@ const EventPage = () => {
         {
             dataIndex: "createdAt",
             title: "Создано",
-            sorter: (a,b) =>
-                convertTimeFromStringToDate(a.createdAt).getTime() - convertTimeFromStringToDate(b.createdAt).getTime()
+            sorter: (a,b) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
+            render: (value) => dayjs(value).format(FORMAT_VIEW_DATE)
         },
         {
             dataIndex: "user",
@@ -99,7 +100,7 @@ const EventPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5">
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <div className="flex items-center justify-between">
                 <h1 className="text-green-800 font-bold text-3xl mb-2">Пользовательские события</h1>
                 <Button icon={<ReloadOutlined/>} onClick={handleRefresh}>

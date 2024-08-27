@@ -1,6 +1,5 @@
 "use client"
 import React, {useEffect, useState} from 'react';
-import {platformMenu} from "@/app/constans";
 import Link from "next/link";
 import {Avatar, Badge, Modal, Spin} from "antd";
 import Image from "next/image"
@@ -13,9 +12,11 @@ import {getCookieUserDetails, getUserRole} from "@/lib/users";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
 import RegisterComponent from "@/components/RegisterComponent/RegisterComponent";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
+import {UserRole} from "@/enums/UserRoleEnum";
+import {platformMenu} from "@/constants";
 
 export type UserType = {
-    user: {user_name: string}
+    user: {user_name: string,role: UserRole}
 }
 
 const HeaderBlock = () => {

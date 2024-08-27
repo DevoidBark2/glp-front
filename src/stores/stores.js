@@ -9,6 +9,7 @@ import EventStore from "@/stores/EventStore";
 import {GeneralSettings} from "@/stores/GeneralSettings";
 import CourseComponent from "@/stores/CourseComponent";
 import SectionCourse from "@/stores/SectionCourse";
+import StatisticsStore from "@/stores/statisticsStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -20,6 +21,7 @@ const eventStore = new EventStore();
 const generalSettingsStore = new GeneralSettings();
 const courseComponentStore = new CourseComponent();
 const sectionCourseStore = new SectionCourse();
+const statisticsStore = new StatisticsStore();
 
 export const RootStore = {
     userStore,
@@ -31,7 +33,8 @@ export const RootStore = {
     eventStore,
     generalSettingsStore,
     courseComponentStore,
-    sectionCourseStore
+    sectionCourseStore,
+    statisticsStore
 };
 const StoreContext = React.createContext(RootStore);
 
