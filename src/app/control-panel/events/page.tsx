@@ -64,7 +64,7 @@ const EventPage = () => {
                 <div>
                     <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
                     <Link
-                        href={`/control_panel/users/${record.user.id}`}
+                        href={`/control-panel/users/${record.user.id}`}
                         className="hover:text-black"
                     >
                         {record.user.name}
@@ -123,6 +123,7 @@ const EventPage = () => {
                 columns={columns}
                 loading={eventStore.loadingEvents}
                 pagination={{pageSize: 10}}
+                rowKey={(record) => record.id}
                 rowClassName={(record, index) =>
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                 }

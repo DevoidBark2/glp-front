@@ -14,13 +14,6 @@ export const platformMenu: PlatformMenu[] = [
     { key: 2, title: "Визуализация", link: '/platform/graphs' },
     { key: 3, title: "Курсы", link: '/platform/courses' },
 ]
-
-export const FILTER_STATUS_COURSE = [
-    {id: 1, text: 'Закрытый', value: StatusCourseEnum.CLOSED},
-    {id: 2, text: 'Активный', value: StatusCourseEnum.ACTIVE},
-    {id: 3, text: 'Новый', value: StatusCourseEnum.NEW},
-    {id: 4, text: 'В обработке', value: StatusCourseEnum.IN_PROCESSING},
-]
 export const FILTER_STATUS_POST = [
     {id: 1, text: 'Новый', value: PostStatusEnum.NEW},
     {id: 2, text: 'В обработке', value: PostStatusEnum.IN_PROCESSING},
@@ -61,6 +54,20 @@ export const userRoleColors = {
     [UserRole.MODERATOR] : "gray",
     [UserRole.TEACHER] : "green",
     [UserRole.SUPER_ADMIN] : "black",
+}
+export const FILTER_STATUS_COURSE = [
+    {id: 1, text: 'Закрытый', value: StatusCourseEnum.CLOSED},
+    {id: 2, text: 'Активный', value: StatusCourseEnum.ACTIVE},
+    {id: 3, text: 'Новый', value: StatusCourseEnum.NEW},
+    {id: 4, text: 'В обработке', value: StatusCourseEnum.IN_PROCESSING},
+    {id: 5, text: 'Отклонен', value: StatusCourseEnum.REJECTED},
+]
+export const statusCourses = {
+    [StatusCourseEnum.ACTIVE]: "blue",
+    [StatusCourseEnum.CLOSED]: "gray",
+    [StatusCourseEnum.NEW]: "green",
+    [StatusCourseEnum.IN_PROCESSING]: "yellow",
+    [StatusCourseEnum.REJECTED]: "red",
 }
 export const eventColors = {
     [ActionEvent.CREATE_COURSE]: "green",

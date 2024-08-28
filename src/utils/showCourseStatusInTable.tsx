@@ -37,7 +37,7 @@ export const showCourseStatus = (status: StatusCourseEnum) => {
     </span>
                 </Tag>);
         case StatusCourseEnum.CLOSED:
-            return (<Tag color="red">
+            return (<Tag color="gray">
         <span style={{display: 'flex', alignItems: 'center'}}>
     <span
         style={{
@@ -45,7 +45,7 @@ export const showCourseStatus = (status: StatusCourseEnum) => {
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            backgroundColor: 'red',
+            backgroundColor: 'black',
             marginRight: '8px',
         }}
     />
@@ -68,5 +68,21 @@ export const showCourseStatus = (status: StatusCourseEnum) => {
     В обработке
     </span>
                 </Tag>);
+        case StatusCourseEnum.REJECTED:
+            return (<Tag color="red">
+                <span style={{display: 'flex', alignItems: 'center'}}>
+    <span
+        style={{
+            display: 'inline-block',
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: 'red',
+            marginRight: '8px',
+        }}
+    />
+    Отклонен
+    </span>
+            </Tag>);
     }
 };

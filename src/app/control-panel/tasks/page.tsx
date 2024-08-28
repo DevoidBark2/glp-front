@@ -31,13 +31,16 @@ import {
 import {CourseComponentType} from "@/enums/CourseComponentType";
 import {FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE} from "@/constants";
 import {useMobxStores} from "@/stores/stores";
-import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {observer} from "mobx-react";
 import {CourseComponentTypeI} from "@/stores/CourseComponent";
 import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
 import dayjs from "dayjs";
-import {exec} from "node:child_process";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(
+    () => import('react-quill'),
+    { ssr: false }
+)
 
 const TaskPage = () => {
     const {courseComponentStore} = useMobxStores()

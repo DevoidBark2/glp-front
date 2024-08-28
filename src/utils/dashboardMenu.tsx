@@ -21,33 +21,33 @@ export let dashboardMenuItems: MenuItem[] = [
         children: [
             {
                 key: 'manage-courses',
-                label: <Link href={"/control_panel/manage-courses"}>Управление курсами</Link>,
+                label: <Link href={"/control-panel/manage-courses"}>Управление курсами</Link>,
                 title: "Управление курсами",
                 icon: <BookOutlined />,
             },
             {
                 key: 'manage-sections',
-                label: <Link href={"/control_panel/manage-sections"}>Управление разделами</Link>,
+                label: <Link href={"/control-panel/manage-sections"}>Управление разделами</Link>,
                 title: "Управление разделами",
                 icon: <PartitionOutlined />,
             },
             {
                 key: 'manage-components',
-                label: <Link href={"/control_panel/manage-component"}>Управление компонентами</Link>,
+                label: <Link href={"/control-panel/manage-component"}>Управление компонентами</Link>,
                 title: "Управление компонентами",
                 icon: <SolutionOutlined />
             },
             {
                 key: 'manage-posts',
-                label: <Link href={"/control_panel/manage-posts"}>Управление постами</Link>,
+                label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
                 title: "Управление компонентами",
                 icon: <SolutionOutlined />
             },
         ]
     },
     {
-        key: 'control_panel',
-        label: <Link href={"/control_panel"}>Главная</Link>,
+        key: 'control-panel',
+        label: <Link href={"/control-panel"}>Главная</Link>,
         icon: <AppstoreOutlined />,
     },
     {
@@ -57,39 +57,39 @@ export let dashboardMenuItems: MenuItem[] = [
         children: [
             {
                 key: 'courses',
-                label: <Link href={"/control_panel/courses"}>Ваши курсы</Link>,
+                label: <Link href={"/control-panel/courses"}>Ваши курсы</Link>,
                 icon: <BarsOutlined />,
             },
             {
                 key: 'sections',
-                label: <Link href={"/control_panel/sections"}>Разделы</Link>,
+                label: <Link href={"/control-panel/sections"}>Разделы</Link>,
                 icon: <BarsOutlined />,
             },
             {
                 key: 'tasks',
-                label: <Link href={"/control_panel/tasks"}>Компоненты</Link>,
+                label: <Link href={"/control-panel/tasks"}>Компоненты</Link>,
                 icon: <BarsOutlined />,
             },
         ]
     },
     {
         key: 'posts',
-        label: <Link href={"/control_panel/posts"}>Посты</Link>,
+        label: <Link href={"/control-panel/posts"}>Посты</Link>,
         icon: <BarsOutlined />,
     },
     {
         key: 'banners',
-        label: <Link href={"/control_panel/banners"}>Баннеры</Link>,
+        label: <Link href={"/control-panel/banners"}>Баннеры</Link>,
         icon: <BarsOutlined />,
     },
     {
         key: 'students',
-        label: <Link href={"/control_panel/students"}>Студенты</Link>,
+        label: <Link href={"/control-panel/students"}>Студенты</Link>,
         icon: <TeamOutlined />,
     },
     {
         key: 'settings',
-        label: <Link href={"/control_panel/settings"}>Настройки</Link>,
+        label: <Link href={"/control-panel/settings"}>Настройки</Link>,
         icon: <SettingOutlined />,
     },
     {
@@ -99,7 +99,7 @@ export let dashboardMenuItems: MenuItem[] = [
         children: [
             {
                 key: 'category',
-                label: <Link href={"/control_panel/category"}>Категории</Link>,
+                label: <Link href={"/control-panel/category"}>Категории</Link>,
                 icon: <BarsOutlined />,
             },
         ]
@@ -111,14 +111,14 @@ export let dashboardMenuItems: MenuItem[] = [
         children: [
             {
                 key: 'events',
-                label: <Link href={"/control_panel/events"}>События пользователей</Link>,
+                label: <Link href={"/control-panel/events"}>События пользователей</Link>,
                 icon: <BarsOutlined />,
             },
         ]
     },
     {
         key: 'users',
-        label: <Link href={"/control_panel/users"}>Пользователи</Link>,
+        label: <Link href={"/control-panel/users"}>Пользователи</Link>,
         icon: <BarsOutlined />,
     },
     {

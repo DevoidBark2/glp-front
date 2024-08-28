@@ -76,7 +76,7 @@ class CourseStore{
 
     courses: Course[] = []
 
-    teacherCourses: Course[] = []
+    userCourses: Course[] = []
     setLoadingCourses = action((value: boolean) => {
         this.loadingCourses = value;
     })
@@ -115,7 +115,7 @@ class CourseStore{
         this.setLoadingCourses(true)
         const token = getUserToken();
         await GET(`/api/get-user-courses?token=${token}`).then((response) => {
-            this.teacherCourses = response.response.data.courses.map(courseMapper)
+            this.userCourses = response.response.data.courses.map(courseMapper)
         }).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => {

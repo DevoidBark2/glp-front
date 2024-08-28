@@ -15,7 +15,7 @@ import {
 } from "antd";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
-import React, {Key, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
@@ -27,13 +27,16 @@ import {
     SyncOutlined,
     UploadOutlined
 } from "@ant-design/icons";
+import dynamic from 'next/dynamic'
 import Dragger from "antd/es/upload/Dragger";
 import dayjs from "dayjs";
 import {PostStatusEnum} from "@/enums/PostStatusEnum";
-import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {FILTER_STATUS_POST, FORMAT_VIEW_DATE} from "@/constants";
-import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
+const ReactQuill = dynamic(
+    () => import('react-quill'),
+    { ssr: false }
+)
 
 const PostPage = () => {
     const {postStore} = useMobxStores();

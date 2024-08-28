@@ -1,27 +1,29 @@
 "use client";
 import {observer} from "mobx-react";
-import {Button, Divider, Modal, Table, TableColumnsType, Tooltip, Popconfirm} from "antd";
+import {Button, Divider, Modal, Popconfirm, Table, TableColumnsType, Tag, Tooltip} from "antd";
 import React, {useEffect} from "react";
 import {useMobxStores} from "@/stores/stores";
 import Link from "next/link";
 import {Course} from "@/stores/CourseStore";
-import {FILTER_STATUS_COURSE, FORMAT_VIEW_DATE} from "@/constants";
+import {FORMAT_VIEW_DATE, statusCourses} from "@/constants";
 import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
-import {EditOutlined, DeleteOutlined, UploadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, PlusCircleOutlined, UploadOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
+import {isEditedCourse, isNewCourse} from "@/selectors/courseSelectors";
 
 const CoursesPage = () => {
     const {courseStore} = useMobxStores()
-
     const columns: TableColumnsType<Course> = [
         {
             title: 'Название',
             dataIndex: 'name',
-            render: (text, record) => (
-                <Tooltip title={`Перейти к курсу: ${text}`}>
-                    <Link href={`courses/${record.id}`}>
-                        {text}
+            sorter: (a, b) => a.name.localeCompare(b.name),
+            showSorterTooltip: false,
+            render: (value, record) => (
+                <Tooltip title={`Перейти к курсу: ${value}`}>
+                    <Link className="text-gray-800 font-semibold hover:text-gray-500" href={`courses/${record.id}`}>
+                        {value}
                     </Link>
                 </Tooltip>
             ),
@@ -30,6 +32,7 @@ const CoursesPage = () => {
             title: 'Дата публикации',
             dataIndex: 'publish_date',
             sorter: (a, b) => dayjs(a.publish_date).valueOf() - dayjs(b.publish_date).valueOf(),
+            showSorterTooltip: false,
             render: (value) => (
                 <Tooltip title="Дата публикации курса">
                     {dayjs(value).format(FORMAT_VIEW_DATE)}
@@ -39,8 +42,11 @@ const CoursesPage = () => {
         {
             title: "Статус",
             dataIndex: "status",
-            filters: FILTER_STATUS_COURSE,
-            onFilter: (value, record) => record.status.startsWith(value as string),
+            filters: Object.keys(statusCourses).map((key) => ({
+                text: <Tag color={statusCourses[key as StatusCourseEnum]}>{key}</Tag>,
+                value: key,
+            })),
+            onFilter: (value, record) => record.status === value,
             filterSearch: true,
             render: (value) => showCourseStatus(value)
         },
@@ -48,9 +54,10 @@ const CoursesPage = () => {
             dataIndex: "duration",
             title: "Кол-во часов, ч.",
             sorter: (a, b) => a.duration - b.duration,
-            render: (duration) => (
+            showSorterTooltip: false,
+            render: (value) => (
                 <Tooltip title="Длительность курса в часах">
-                    {duration}
+                    {value}
                 </Tooltip>
             ),
         },
@@ -58,22 +65,21 @@ const CoursesPage = () => {
             title: "Действия",
             align: 'start',
             render: (_, record) => (
-                <div className="flex justify-end">
-                    {record.status === StatusCourseEnum.NEW && (
+                <div className="flex justify-end gap-2">
+                    {isNewCourse(record) && (
                         <Tooltip title="Опубликовать курс">
                             <Button
                                 onClick={() => courseStore.publishCourse(record.id)}
                                 type="default"
                                 icon={<UploadOutlined />}
-                                className="mr-2"
                             />
                         </Tooltip>
                     )}
                     <Tooltip title="Редактировать курс">
                         <Button
                             type="default"
+                            disabled={isEditedCourse(record)}
                             icon={<EditOutlined />}
-                            className="mr-2"
                         >
                             <Link href={`courses/${record.id}`}>
                                 Изменить
@@ -115,17 +121,17 @@ const CoursesPage = () => {
             </Modal>
             <div>
                 <div className="flex items-center justify-between">
-                    <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные курсы</h1>
+                    <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные курсы</h1>
                     <div>
                         <Link href={"courses/add"}>
-                            <Button type="primary">Добавить курс</Button>
+                            <Button type="primary" icon={<PlusCircleOutlined/>}>Добавить курс</Button>
                         </Link>
                     </div>
                 </div>
                 <Divider />
                 <Table
                     rowKey={(record) => record.id}
-                    dataSource={courseStore.teacherCourses}
+                    dataSource={courseStore.userCourses}
                     columns={columns}
                     rowSelection={{type: "checkbox"}}
                     loading={courseStore.loadingCourses}

@@ -77,6 +77,7 @@ const SectionPage = () => {
                 </div>
                 <Divider/>
                 <Table
+                    rowKey={(record) => record.id}
                     loading={sectionCourseStore.loadingSectionsCourse}
                     dataSource={sectionCourseStore.sectionCourse}
                     columns={columns}

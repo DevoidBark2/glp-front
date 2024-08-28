@@ -1,6 +1,6 @@
 "use client"
-import {useParams} from "next/navigation";
-import {Breadcrumb, Button, Col, Divider, Form, Row, Select, Spin} from "antd";
+import {useParams, useRouter} from "next/navigation";
+import {Breadcrumb, Button, Col, Divider, Form, notification, Row, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {observer} from "mobx-react";
@@ -15,6 +15,7 @@ const CoursePage = () => {
     const {courseStore,nomenclatureStore} = useMobxStores();
     const [courseName,setCourseName] = useState(null)
     const [form] = Form.useForm();
+    const router = useRouter();
 
     useEffect(() => {
         nomenclatureStore.getCategories();
@@ -22,6 +23,9 @@ const CoursePage = () => {
             form.setFieldsValue(response.response.data);
             form.setFieldValue("category",response.response.data.category.id);
             setCourseName(response.response.data.name)
+        }).catch(e => {
+            router.push('/control-panel/courses')
+            notification.warning({message: e.response.data.result})
         }).finally(() => {
             courseStore.setLoadingCourseDetails(false)
         })
@@ -31,9 +35,9 @@ const CoursePage = () => {
             <div className="bg-white h-full p-5">
                 <div className="flex items-center justify-between">
                     <Breadcrumb items={[ {
-                        title: <Link href={"/control_panel/courses"}>Доступные курсы</Link>,
+                        title: <Link href={"/control-panel/courses"}>Доступные курсы</Link>,
                     },{
-                        title: <p>{!courseName ? <Spin/> : courseName}</p>,
+                        title: <p>{courseStore.loadingCourseDetails ? <Spin/> : courseName}</p>,
                     }]}/>
                 </div>
                 <h1 className="text-center text-3xl">Редактирование курса</h1>
@@ -42,7 +46,7 @@ const CoursePage = () => {
                     !courseStore.loadingCourseDetails ?  <Form
                         form={form}
                         // onFinish={() => courseStore.createCourse(form.getFieldsValue()).then((response) => {
-                        //     router.push('/control_panel/courses')
+                        //     router.push('/control-panel/courses')
                         //     notification.success({message: response.response.message})
                         // })}
                         layout="vertical"
@@ -149,7 +153,7 @@ const CoursePage = () => {
 
                         <div className="flex flex-col items-center">
                             <Form.Item style={{marginTop: '10px'}}>
-                                <Button type="primary" htmlType="submit" loading={courseStore.loadingCreateCourse}>Создать</Button>
+                                <Button type="primary" htmlType="submit" loading={courseStore.loadingCreateCourse}>Редактировать</Button>
                             </Form.Item>
                         </div>
                     </Form> : <Spin/>

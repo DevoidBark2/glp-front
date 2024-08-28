@@ -28,7 +28,7 @@ const UserCreatePage = () => {
             <Breadcrumb
                 items={[
                     {
-                        title: <Link href={"/control_panel/users"}>Пользователи</Link>,
+                        title: <Link href={"/control-panel/users"}>Пользователи</Link>,
                     },
                     {
                         title: 'Новый пользователь',
@@ -41,7 +41,7 @@ const UserCreatePage = () => {
                 layout="vertical"
                 scrollToFirstError
                 onFinish={(values) => userStore.createUser(values).then(response => {
-                    router.push('/control_panel/users')
+                    router.push('/control-panel/users')
                     notification.success({message: response.response.message})
                 }).catch((e) => {
                     notification.error({message: e.response.data.result})

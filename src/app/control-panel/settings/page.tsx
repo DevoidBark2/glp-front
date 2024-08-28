@@ -1,16 +1,14 @@
 "use client"
 import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio} from "antd";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {GeneralSettingTooltips} from "@/constants";
 import {InfoCircleOutlined} from "@ant-design/icons";
-type TabPosition = 'left' | 'right' | 'top' | 'bottom';
+
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
     const {generalSettingsStore} = useMobxStores()
-    const [mode, setMode] = useState<TabPosition>('top');
-
     const [ formForGeneral] = Form.useForm()
     const [ formForUserManagement] = Form.useForm()
     const [ formForCourseManagement] = Form.useForm()

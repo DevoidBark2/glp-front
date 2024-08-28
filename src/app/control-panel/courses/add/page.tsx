@@ -50,7 +50,7 @@ const CourseAddPage = () => {
             <Breadcrumb
                 items={[
                     {
-                        title: <Link href={"/control_panel/courses"}>Доступные курсы</Link>,
+                        title: <Link href={"/control-panel/courses"}>Доступные курсы</Link>,
                     },
                     {
                         title: 'Новый курс',
@@ -61,7 +61,7 @@ const CourseAddPage = () => {
             <Form
                 form={createCourseForm}
                 onFinish={() => courseStore.createCourse(createCourseForm.getFieldsValue()).then((response) => {
-                    router.push('/control_panel/courses')
+                    router.push('/control-panel/courses')
                     notification.success({message: response.response.message})
                 })}
                 layout="vertical"
@@ -90,7 +90,7 @@ const CourseAddPage = () => {
                     name="image"
                     label="Картинка"
                 >
-                    <Dragger {...props}>
+                    <Dragger {...props} disabled>
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
                         </p>

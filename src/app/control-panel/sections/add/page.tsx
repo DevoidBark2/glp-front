@@ -49,7 +49,7 @@ const SectionAddPage = () => {
             ellipsis: true,
             render: (text: string,record) => (
                 <Tooltip title={`Перейти к компоненту: ${text}`}>
-                    <Link href={`/control_panel/tasks/${record.id}`} target="_blank">
+                    <Link href={`/control-panel/tasks/${record.id}`} target="_blank">
                         {text}
                     </Link>
                 </Tooltip>
@@ -135,7 +135,7 @@ const SectionAddPage = () => {
                     <List
                         grid={{ gutter: 16, column: 6 }}
                         loading={courseStore.loadingCourses}
-                        dataSource={courseStore.teacherCourses}
+                        dataSource={courseStore.userCourses}
                         renderItem={(item) => (
                             <List.Item>
                                 <Badge text={item.status}>
@@ -312,7 +312,7 @@ const SectionAddPage = () => {
         }
 
         // message.success("Секция успешно добавлена!");
-        // router.push("/control_panel/sections");
+        // router.push("/control-panel/sections");
     };
 
     useEffect(() => {
@@ -324,7 +324,7 @@ const SectionAddPage = () => {
             <Breadcrumb
                 items={[
                     {
-                        title: <Link href={"/control_panel/sections"}>Разделы</Link>,
+                        title: <Link href={"/control-panel/sections"}>Разделы</Link>,
                     },
                     {
                         title: <span>Новый раздел</span>,

@@ -211,7 +211,7 @@ class UserStore {
     getUserProfile = action(async () => {
         const user = getCookieUserDetails()
 
-        return await GET(`/api/get_user?token=${user.user.token}`).then(response => {
+        return await GET(`/api/get-user?token=${user.user.token}`).then(response => {
             this.setUserProfileDetails(response.response)
         }).finally(() => {
             this.setLoading(false)

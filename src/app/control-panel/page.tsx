@@ -89,7 +89,7 @@ const ControlPanel = () => {
             <Row gutter={16}>
                 <Col span={8}>
                     <Card>
-                        <Skeleton paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
+                        <Skeleton active paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
                             <Statistic
                                 title="Активные пользователи"
                                 value={0}
@@ -100,7 +100,7 @@ const ControlPanel = () => {
                 </Col>
                 <Col span={8}>
                     <Card>
-                       <Skeleton paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
+                       <Skeleton active paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
                            <Statistic
                                title="Всего постов"
                                value={statisticsStore.statisticsData?.postCount}
@@ -111,7 +111,7 @@ const ControlPanel = () => {
                 </Col>
                 <Col span={8}>
                     <Card>
-                      <Skeleton paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
+                      <Skeleton active paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
                           <Statistic
                               title="Всего курсов"
                               value={statisticsStore.statisticsData?.courseCount}
@@ -127,7 +127,7 @@ const ControlPanel = () => {
                 <Col span={12}>
                     <Card title="Статистика постов">
                        <div className="flex justify-between">
-                           <Skeleton loading={statisticsStore.loadingStatisticsData}>
+                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
                                <Progress
                                    type="circle"
                                    strokeColor="green"
@@ -135,14 +135,14 @@ const ControlPanel = () => {
                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% опубликовано`}</p>}
                                />
                            </Skeleton>
-                           <Skeleton loading={statisticsStore.loadingStatisticsData}>
+                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
                                <Progress
                                    type="circle"
                                    percent={statisticsStore.statisticsData?.postsCountNew}
                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% новых`}</p>}
                                />
                            </Skeleton>
-                           <Skeleton loading={statisticsStore.loadingStatisticsData}>
+                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
                                <Progress
                                    type="circle"
                                    strokeColor="orange"
@@ -150,7 +150,7 @@ const ControlPanel = () => {
                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% в обработке`}</p>}
                                />
                            </Skeleton>
-                           <Skeleton loading={statisticsStore.loadingStatisticsData}>
+                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
                                <Progress
                                    type="circle"
                                    strokeColor="red"

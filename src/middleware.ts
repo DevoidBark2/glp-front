@@ -26,6 +26,6 @@ export function middleware(request: NextRequest) {
 }
 
 function isPrivateRoute(pathname: string) {
-    const privateRoutes = ['/control_panel'];
+    const privateRoutes = ['/control-panel'];
     return privateRoutes.some(route => pathname.includes(route));
 }

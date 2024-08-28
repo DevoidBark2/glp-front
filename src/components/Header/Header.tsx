@@ -42,7 +42,7 @@ const HeaderBlock = () => {
             label: (
                 <div className="flex items-center">
                     <Image src="/static/control_panel_icon.svg" alt="Профиль" width={20} height={20}/>
-                    <Link href={"/control_panel"} className="ml-2 text-black hover:text-black">Панель учителя</Link>
+                    <Link href={"/control-panel"} className="ml-2 text-black hover:text-black">Панель учителя</Link>
                 </div>
             ),
         },
