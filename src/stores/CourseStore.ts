@@ -5,6 +5,8 @@ import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 import {FORMAT_VIEW_DATE} from "@/constants";
+import {SectionCourseItem} from "@/stores/SectionCourse";
+import {CourseComponentTypeI} from "@/stores/CourseComponent";
 
 export type Teacher = {
     id: number;
@@ -51,6 +53,9 @@ class CourseStore{
     showConfirmDeleteCourseModal: boolean = false;
 
     loadingCourseDetails: boolean = true;
+
+    courseDetailsSections: SectionCourseItem[] = [];
+    courseDetailsComponent:CourseComponentTypeI[] = [];
 
     setLoadingCourseDetails = action((value: boolean) => {
         this.loadingCourseDetails = value
@@ -134,7 +139,9 @@ class CourseStore{
 
     getCourseDetails = action(async(courseId: number) => {
         this.setLoadingCourseDetails(true);
-        return await GET(`/api/course-details?courseId=${courseId}`)
+        const response = await GET(`/api/course-details?courseId=${courseId}`)
+        this.courseDetailsSections =  response.response.data.sections;
+        return response;
     })
 }
 

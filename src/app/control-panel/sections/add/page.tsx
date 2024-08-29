@@ -7,7 +7,7 @@ import {
     Input,
     message,
     Steps,
-    Upload, List, Badge, Table, AutoComplete, Tag, TableColumnsType, Tooltip,
+    Upload, List, Badge, Table, AutoComplete, Tag, TableColumnsType, Tooltip, notification,
 } from "antd";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
@@ -28,13 +28,14 @@ import TextArea from "antd/lib/input/TextArea";
 import {CourseComponentType} from "@/enums/CourseComponentType";
 import {Course} from "@/stores/CourseStore";
 import {CourseComponentTypeI} from "@/stores/CourseComponent";
-import {SectionCourseItem} from "@/stores/SectionCourse";
+import {useRouter} from "next/navigation";
 
 const SectionAddPage = () => {
-    const { courseStore,courseComponentStore } = useMobxStores();
+    const { courseStore,courseComponentStore,sectionCourseStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
     const [current, setCurrent] = useState(0);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
+    const router = useRouter();
 
     const handleSelectCourse = (course: Course) => {
         setSelectedCourseId(course.id);
@@ -306,13 +307,14 @@ const SectionAddPage = () => {
     const prev = () => setCurrent(current - 1);
 
     const onFinish = () => {
-        const values =createSectionForm.getFieldsValue(true) as SectionCourseItem
+        const values =createSectionForm.getFieldsValue(true)
         if (!values.components || values.components.length === 0) {
             message.warning("добавь что нибудь")
         }
-
-        // message.success("Секция успешно добавлена!");
-        // router.push("/control-panel/sections");
+        sectionCourseStore.addSection(values).then((response) => {
+            notification.success({message: response.response.message})
+            router.push("/control-panel/sections");
+        })
     };
 
     useEffect(() => {

@@ -2,8 +2,7 @@ import {action, makeAutoObservable} from "mobx";
 import {Course} from "@/stores/CourseStore";
 import {CourseComponentTypeI} from "@/stores/CourseComponent";
 import {getUserToken} from "@/lib/users";
-import {GET} from "@/lib/fetcher";
-import {Dayjs} from "dayjs";
+import {GET, POST} from "@/lib/fetcher";
 
 export type SectionCourseItem = {
     id: number;
@@ -13,7 +12,7 @@ export type SectionCourseItem = {
     course: Course;
     uploadFile: File[];
     components: CourseComponentTypeI[];
-    created_at: Dayjs
+    created_at: Date
 }
 
 class SectionCourse {
@@ -36,6 +35,13 @@ class SectionCourse {
             this.sectionCourse = response.response.data.map(sectionMapper);
         }).finally(() => {
             this.setLoadingSectionsCourse(false)
+        })
+    })
+
+    addSection = action(async (values: SectionCourseItem) => {
+        const token = getUserToken();
+        return await POST(`/api/sections?token=${token}`, values).catch(e => {
+            debugger
         })
     })
 }

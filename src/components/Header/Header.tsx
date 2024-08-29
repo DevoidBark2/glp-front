@@ -58,7 +58,9 @@ const HeaderBlock = () => {
         {
             key: '4',
             label: (
-                <div className="flex items-center" onClick={() => userStore.logout()}>
+                <div className="flex items-center" onClick={() => userStore.logout().then(() => {
+                    setCurrentUser(null)
+                })}>
                     <Image src="/static/logout_icon.svg" alt="Выйти из аккаунта" width={20} height={20}/>
                     <p className="ml-2 text-black hover:text-black">Выйти</p>
                 </div>
@@ -74,7 +76,7 @@ const HeaderBlock = () => {
         const user = getCookieUserDetails();
         setCurrentUser(user);
         setLoading(false)
-    }, [])
+    }, [userStore.openLoginModal])
 
     return <>
         <Modal
