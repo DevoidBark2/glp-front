@@ -1,5 +1,5 @@
 import {action, makeAutoObservable} from "mobx";
-import {GET, POST} from "@/lib/fetcher";
+import {GET, POST, PUT} from "@/lib/fetcher";
 import {notification} from "antd";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
@@ -142,6 +142,15 @@ class CourseStore{
         const response = await GET(`/api/course-details?courseId=${courseId}`)
         this.courseDetailsSections =  response.response.data.sections;
         return response;
+    })
+
+    changeCourse = action(async (values: Course) => {
+        const token = getUserToken();
+        await PUT(`/api/courses?token=${token}`,values).then(response => {
+            notification.success({message: response.response.message})
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
+        })
     })
 }
 

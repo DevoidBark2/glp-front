@@ -6,11 +6,11 @@ import {
     Col,
     Collapse,
     Divider,
-    Form,
+    Form, List, message, Modal,
     notification,
     Row,
     Select,
-    Spin,
+    Spin, Switch,
     Tabs, Tooltip
 } from "antd";
 import React, {useEffect, useState} from "react";
@@ -30,6 +30,28 @@ const CoursePage = () => {
     const [courseName,setCourseName] = useState(null)
     const [form] = Form.useForm();
     const router = useRouter();
+
+    const [isCourseLocked, setIsCourseLocked] = useState(false);
+    const [participants, setParticipants] = useState(['John Doe', 'Jane Smith']);
+
+    const handleLockToggle = (checked) => {
+        setIsCourseLocked(checked);
+        message.success(`Курс ${checked ? 'заблокирован' : 'разблокирован'}`);
+    };
+
+    const handleDeleteParticipants = () => {
+        Modal.confirm({
+            title: 'Удалить всех участников?',
+            content: 'Вы уверены, что хотите удалить всех участников курса? Это действие необратимо.',
+            onOk() {
+                setParticipants([]);
+                message.success('Все участники курса были удалены');
+            },
+            onCancel() {
+                message.info('Удаление участников отменено');
+            },
+        });
+    };
 
     useEffect(() => {
         nomenclatureStore.getCategories();
@@ -65,11 +87,13 @@ const CoursePage = () => {
                             children: <Form
                                 form={form}
                                 layout="vertical"
+                                onFinish={(values) => courseStore.changeCourse(values)}
                             >
                                 {
                                     !courseStore.loadingCourseDetails ? <>
                                         <Row gutter={80}>
                                             <Col span={12}>
+                                                <Form.Item name="id" hidden></Form.Item>
                                                 <Form.Item
                                                     name="name"
                                                     label="Название курса"
@@ -206,13 +230,34 @@ const CoursePage = () => {
                         {
                             label: 'Дополнительные настройки',
                             key: '3',
-                            children: <div>
-                                <ul>
-                                    <li>Заблокировать курс</li>
-                                    <li>Удалить всех участников курса</li>
-                                    <li></li>
-                                </ul>
-                            </div>,
+                            children: <>
+                                <div style={{ padding: '10px 0' }}>
+                                    <Switch
+                                        checked={isCourseLocked}
+                                        onChange={handleLockToggle}
+                                        checkedChildren="Курс заблокирован"
+                                        unCheckedChildren="Курс разблокирован"
+                                    />
+                                    <p style={{ marginTop: 10 }}>
+                                        {isCourseLocked ? 'Курс заблокирован для новых участников' : 'Курс открыт для регистрации'}
+                                    </p>
+                                </div>
+                                <div style={{ padding: '10px 0' }}>
+                                    <Button type="danger" onClick={handleDeleteParticipants}>
+                                        Удалить всех участников курса
+                                    </Button>
+                                </div>
+                                <div style={{ padding: '10px 0' }}>
+                                    <h4>Текущие участники:</h4>
+                                    <List
+                                        bordered
+                                        dataSource={participants}
+                                        renderItem={item => (
+                                            <List.Item>{item}</List.Item>
+                                        )}
+                                    />
+                                </div>
+                            </>
                         },
                     ]}
                 />
