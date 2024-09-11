@@ -55,14 +55,14 @@ class PostStore{
     })
 
     createPost = action(async (values: any) => {
+        this.setLoading(true)
         const token = getUserToken();
         const form = new FormData();
-        //form.append('image',values.image.originFileObj)
+        form.append('image',values.image.originFileObj)
         form.append('name',values.name)
         form.append('description',values.description);
         form.append('content',values.content)
 
-        this.setLoading(true)
         return await POST(`/api/posts?token=${token}`,form).then(response => {
             this.userPosts = [...this.userPosts, postMapper(response.response.data)]
             notification.success({message: response.response.message})

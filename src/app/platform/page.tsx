@@ -75,12 +75,12 @@ const PlatformPage = () => {
                             <div key={post.id}
                                  className="p-5 relative flex mb-20 cursor-pointer rounded-md shadow-xl"
                             >
-                                {!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>
-                                    <div style={{height: 300, width: 500}}/>
-                                </Watermark> : <Image
-                                    src={`http://localhost:5000${post.image}`}
-                                    width={500} height="auto" alt={post.name}
-                                />}
+                                {/*{!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>*/}
+                                {/*    <div style={{height: 300, width: 500}}/>*/}
+                                {/*</Watermark> : <Image*/}
+                                {/*    src={`http://localhost:5000${post.image}`}*/}
+                                {/*    width={500} height="auto" alt={post.name}*/}
+                                {/*/>}*/}
                                 <div className="ml-5 flex w-full">
                                     <div className="flex w-full justify-between">
                                         <div>

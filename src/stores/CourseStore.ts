@@ -1,5 +1,5 @@
 import {action, makeAutoObservable} from "mobx";
-import {GET, POST, PUT} from "@/lib/fetcher";
+import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
 import {notification} from "antd";
 import {getUserToken} from "@/lib/users";
 import dayjs from "dayjs";
@@ -49,19 +49,16 @@ class CourseStore{
 
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
-
-    showConfirmDeleteCourseModal: boolean = false;
-
     loadingCourseDetails: boolean = true;
-
+    successCreateCourseModal: boolean = false;
     courseDetailsSections: SectionCourseItem[] = [];
-    courseDetailsComponent:CourseComponentTypeI[] = [];
+
+    setSuccessCreateCourseModal = action((value: boolean) => {
+        this.successCreateCourseModal = value
+    })
 
     setLoadingCourseDetails = action((value: boolean) => {
         this.loadingCourseDetails = value
-    })
-    setShowConfirmDeleteCourseModal = action((value: boolean) => {
-        this.showConfirmDeleteCourseModal = value;
     })
 
     setSelectedCourseForDetailModal = action((course: Course) => {
@@ -72,8 +69,6 @@ class CourseStore{
     setOpenCourseDetailsModal = action((value: boolean) => {
         this.openCourseDetailsModal = value;
     })
-
-
 
     setLoadingCreateCourse = ((value: boolean) => {
         this.loadingCreateCourse = value;
@@ -98,8 +93,6 @@ class CourseStore{
 
     createCourse = action(async (values:any) => {
         this.setLoadingCreateCourse(true)
-        const token = getUserToken();
-
         const form = new FormData();
         form.append('name',values.name_course)
         form.append('small_description',values.description)
@@ -111,16 +104,15 @@ class CourseStore{
         form.append('publish_date',dayjs().format(FORMAT_VIEW_DATE))
         form.append("content_description",values.content_description)
 
-        return await POST(`/api/courses?token=${token}`,form).catch(e => {
+        return await POST(`/api/courses`,form).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => this.setLoadingCreateCourse(false))
     })
 
     getCoursesForCreator = action(async () => {
         this.setLoadingCourses(true)
-        const token = getUserToken();
-        await GET(`/api/get-user-courses?token=${token}`).then((response) => {
-            this.userCourses = response.response.data.courses.map(courseMapper)
+        await GET(`/api/get-user-courses`).then((response) => {
+            this.userCourses = response.data.courses.map(courseMapper)
         }).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => {
@@ -129,9 +121,11 @@ class CourseStore{
     })
 
     publishCourse = action(async(courseId: number) =>{
-        const token = getUserToken();
-        await POST(`/api/courses-publish?token=${token}`,{courseId: courseId}).then(response => {
-            notification.success({message: response.response.data.message})
+        await POST(`/api/courses-publish`,{courseId: courseId}).then(response => {
+            notification.success({message: response.message})
+            this.userCourses = this.userCourses.map(course =>
+                course.id === courseId ? { ...course, status: StatusCourseEnum.IN_PROCESSING } : course
+            );
         }).catch(e => {
             notification.warning({message: e.response.data.message})
         })
@@ -140,7 +134,7 @@ class CourseStore{
     getCourseDetails = action(async(courseId: number) => {
         this.setLoadingCourseDetails(true);
         const response = await GET(`/api/course-details?courseId=${courseId}`)
-        this.courseDetailsSections =  response.response.data.sections;
+        this.courseDetailsSections =  response.data.sections;
         return response;
     })
 
@@ -150,6 +144,18 @@ class CourseStore{
             notification.success({message: response.response.message})
         }).catch(e => {
             notification.error({message: e.response.data.message})
+        })
+    })
+
+    deleteCourse = action(async (courseId: number) => {
+        await DELETE(`/api/courses?courseId=${courseId}`).then(response => {
+            debugger
+            notification.success({message: response.message})
+            this.userCourses = this.userCourses.filter(course => courseId !== course.id)
+
+        }).catch(e => {
+            debugger
+            notification.warning({message: e.response.data.message})
         })
     })
 }
@@ -166,7 +172,7 @@ export const courseMapper = (course: Course) => {
         content_description: course.content_description,
         duration: course.duration,
         status: course.status,
-        publish_date: dayjs(course.publish_date,FORMAT_VIEW_DATE).toDate(),
+        publish_date: dayjs(course.publish_date, FORMAT_VIEW_DATE).toDate(),
         user: course.user
     };
 }

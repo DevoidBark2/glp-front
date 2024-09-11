@@ -7,14 +7,14 @@ import {ConfigProvider} from "antd";
 import React from "react";
 import {MAIN_COLOR} from "@/constants";
 import {ThemeProviders} from "./themeProviders"
-import {lightTheme} from "@/themes/light_theme";
-import {darkTheme} from "@/themes/dark_theme";
+import {useTheme} from "next-themes";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+    const { resolvedTheme } = useTheme()
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={roboto.className}>
@@ -45,6 +45,7 @@ export default function RootLayout({
                            colorPrimaryHover: MAIN_COLOR,
                            colorPrimaryActive: MAIN_COLOR,
                            colorPrimaryBorder:MAIN_COLOR,
+                           colorPrimaryBorderHover: MAIN_COLOR,
                        },
                        DatePicker: {
                            colorPrimaryHover: MAIN_COLOR,
@@ -68,18 +69,28 @@ export default function RootLayout({
                        Tabs: {
                            colorPrimary: MAIN_COLOR,
                            colorPrimaryHover: MAIN_COLOR,
-                           colorPrimaryActive: MAIN_COLOR
+                           colorPrimaryActive: MAIN_COLOR,
+                       },
+                       Checkbox: {
+                           colorPrimary: MAIN_COLOR,
+                           colorPrimaryHover: "#025834"
+                       },
+                       Table:{
+                           colorPrimary: "back"
                        },
                        Switch: {
                            colorPrimary: MAIN_COLOR,
                            // colorPrimaryHover: MAIN_COLOR
                        }
+                   },
+                   token: {
+
                    }
                }}
            >
                <StoresProvider>
                    <AntdRegistry>
-                       <div className={`bg-[${lightTheme.background}] dark:bg-[${darkTheme.background}]`}>{children}</div>
+                       <div>{children}</div>
                    </AntdRegistry>
                </StoresProvider>
            </ConfigProvider>

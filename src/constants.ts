@@ -8,6 +8,7 @@ import {StatusUserEnum} from "@/enums/StatusUserEnum";
 import {PlatformMenu} from "@/types/platformMenu";
 
 export const MAIN_COLOR = "#00b96b"
+export const UNAUTHORIZED_STATUS_CODE = 401
 
 export const platformMenu: PlatformMenu[] = [
     { key: 1, title: "Главная", link: '/platform' },

@@ -34,9 +34,8 @@ class NomenclatureStore {
 
     getCategories = action(async () => {
         this.setLoadingCategories(true)
-        const token = getUserToken();
-        await GET(`/api/categories?token=${token}`).then(response => {
-            this.categories = response.response.data.map(categoryMapper)
+        await GET(`/api/categories`).then(response => {
+            this.categories = response.data.map(this.categoryMapper)
         }).catch().finally(() => {
             this.setLoadingCategories(false)
         })
@@ -53,11 +52,10 @@ class NomenclatureStore {
         }).finally(() => {})
     })
 
-    createCategory = action (async (values: NomenclatureItem) => {
-        const token = getUserToken();
-        return await POST(`/api/categories?token=${token}`,values).then(response => {
-            this.categories = [...this.categories, response.response.data.category]
-            notification.success({message: response.response.data.message})
+    createCategory = action(async (values: NomenclatureItem) => {
+        return await POST(`/api/categories`,values).then(response => {
+            this.categories = [...this.categories, response.data.category]
+            notification.success({message: response.data.message})
         }).catch(e => {
             notification.error({message: e.response.data.message})
         }).finally(() => {
@@ -66,25 +64,19 @@ class NomenclatureStore {
     })
 
     handleChangeCategoryName = action(async (newName: string,values: NomenclatureItem) => {
-        if (newName === values.name) {
-            return;
-        }
-        const token = getUserToken();
-        await PUT(`/api/categories?token=${token}`, {...values, ...{name: newName}}).then(response => {
-            notification.success({message: response.response.data.message})
+        if (newName === values.name) return;
+        await PUT(`/api/categories`, {...values, ...{name: newName}}).then(response => {
+            notification.success({message: response.data.message})
         }).catch(e => {
             notification.warning({message: e.response.data.result.response.message[0]})
-        }).finally(() => {
-
         })
     })
 
-}
-
-const categoryMapper = (item: NomenclatureItem) => {
-    return {
-        id: item.id,
-        name: item.name
+    categoryMapper = (item: NomenclatureItem) => {
+        return {
+            id: item.id,
+            name: item.name
+        }
     }
 }
 

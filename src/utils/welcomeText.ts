@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-export const welcomeTextRender = (dateTimeInHour: string) => {
+export const welcomeTextRender = () => {
     const currentTime = dayjs().toDate().getHours();
     let greeting = "";
 

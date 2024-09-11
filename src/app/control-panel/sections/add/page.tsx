@@ -157,7 +157,7 @@ const SectionAddPage = () => {
                                             description={
                                                 <div>
                                                     <p><ClockCircleOutlined /> {item.duration} ч.</p>
-                                                    <p>Категория: {item.category.name}</p>
+                                                    <p>Категория: {item.category?.name ?? "Категория отсутствует"}</p>
                                                     <p>Уровень: {item.level}</p>
                                                     <p>Дата публикации: {new Date(item.publish_date).toLocaleDateString()}</p>
                                                 </div>

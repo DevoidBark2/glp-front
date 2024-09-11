@@ -1,6 +1,6 @@
 "use client";
 import {
-    Button,
+    Button, Empty,
     Form,
     Input,
     Modal,
@@ -19,10 +19,10 @@ import React, { useEffect, useState} from "react";
 import {Post} from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
-    ClockCircleOutlined,
+    ClockCircleOutlined, CloseOutlined,
     DeleteOutlined,
     EditOutlined,
-    InboxOutlined,
+    InboxOutlined, MoreOutlined,
     PlusCircleOutlined,
     SyncOutlined,
     UploadOutlined
@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 import {PostStatusEnum} from "@/enums/PostStatusEnum";
 import 'react-quill/dist/quill.snow.css';
 import {FILTER_STATUS_POST, FORMAT_VIEW_DATE} from "@/constants";
+import {useTheme} from "next-themes";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
@@ -109,8 +110,8 @@ const PostPage = () => {
             dataIndex: 'name',
             width: '20%',
             render: (text) => (
-                <Tooltip title={text}>
-                    {text}
+                <Tooltip color={resolvedTheme === "light" ? "black" : "white"} title={<label style={{color: resolvedTheme === "light" ? "white" : "black"}}>{text}</label>}>
+                    <span className="dark:text-white">{text}</span>
                 </Tooltip>
             ),
         },
@@ -119,7 +120,7 @@ const PostPage = () => {
             width: '20%',
             title: 'Дата публикации',
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
-            render: (value) => dayjs(value).format(FORMAT_VIEW_DATE)
+            render: (value) => <p className="dark:text-white">{dayjs(value).format(FORMAT_VIEW_DATE)}</p>
         },
         {
             title: "Статус",
@@ -145,14 +146,13 @@ const PostPage = () => {
             width: '20%',
             align: 'center',
             render: (_, record) => (
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
                     {record.status === PostStatusEnum.NEW && (
                         <Tooltip title="Отправить на проверку">
                             <Button
                                 type="default"
                                 icon={<UploadOutlined />}
                                 onClick={() => postStore.submitReview(record.id)}
-                                className="mr-2"
                             />
                         </Tooltip>
                     )}
@@ -160,15 +160,12 @@ const PostPage = () => {
                         <Button
                             type="default"
                             icon={<EditOutlined />}
-                            className="mr-2"
                             disabled={record.status === PostStatusEnum.IN_PROCESSING}
                             onClick={() => {
                                 form.setFieldsValue(record);
                                 setModalVisible(true)
                             }}
-                        >
-                            Изменить
-                        </Button>
+                        />
                     </Tooltip>
                     <Tooltip title="Удалить пост">
                         <Popconfirm
@@ -190,18 +187,24 @@ const PostPage = () => {
         },
 
     ];
+    const { resolvedTheme } = useTheme()
 
     useEffect(() => {
         postStore.getUserPosts();
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+        <div className="bg-white dark:bg-[#001529] dark:shadow-cyan-500/50 rounded-md h-full p-5 shadow-2xl  overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
             <Modal
-                title="Создать новый пост"
+                styles={{
+                    content: { backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" },
+                    header:  { backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" },
+                }}
+                title={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Создать новый пост</label>}
                 open={modalVisible}
                 onCancel={() => setModalVisible(false)}
                 footer={null}
+                closeIcon={<CloseOutlined style={{color: resolvedTheme === "light" ? "#000" : "#fff"}}/>}
                 afterClose={() => form.resetFields()}
                 centered
             >
@@ -215,15 +218,15 @@ const PostPage = () => {
                 >
                     <Form.Item
                         name="name"
-                        label="Заголовок"
+                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Заголовок</label>}
                         rules={[{required: true, message: 'Введите заголовок поста!'}]}
                     >
-                        <Input placeholder="Введите название поста"/>
+                        <Input style={{backgroundColor: resolvedTheme === "dark" && "#001529"}} placeholder="Введите название поста"/>
                     </Form.Item>
 
                     <Form.Item
                         name="description"
-                        label="Описание"
+                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Описание</label>}
                         rules={[{required: true, message: 'Введите описание поста!'}]}
                     >
                         <Input placeholder="Введите описание поста"/>
@@ -231,14 +234,14 @@ const PostPage = () => {
 
                     <Form.Item
                         name="content"
-                        label="Контент поста"
+                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Контент поста</label>}
                     >
                         <ReactQuill theme="snow"/>
                     </Form.Item>
 
                     <Form.Item
                         name="image"
-                        label="Изображение поста"
+                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Изображение поста</label>}
                     >
                         <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
@@ -258,11 +261,20 @@ const PostPage = () => {
                     </div>
                 </Form>
             </Modal>
+
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-gray-800 font-bold text-3xl">Доступные посты</h1>
-                <Button type="primary" icon={<PlusCircleOutlined/>} onClick={() => setModalVisible(true)}>
-                    Добавить пост
-                </Button>
+                <h1 className="text-gray-800 dark:text-white font-bold text-3xl">Доступные посты</h1>
+                <div>
+                    <Button
+                        className="flex items-center justify-center transition-transform transform hover:scale-105"
+                        type="primary"
+                        icon={<PlusCircleOutlined/>}
+                        onClick={() => setModalVisible(true)}
+                    >
+                        Добавить пост
+                    </Button>
+                    <Button className="ml-2" icon={ <MoreOutlined />}/>
+                </div>
             </div>
             <Table
                 loading={postStore.loading}
@@ -270,8 +282,21 @@ const PostPage = () => {
                 columns={columns}
                 rowKey={(record) => record.id}
                 rowClassName={(_, index) =>
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    resolvedTheme === "light" ? "bg-gray-50" : "bg-[#001529]"
                 }
+                locale={{
+                    emptyText:<Empty description="Список пуст">
+                        <Button
+                            className="flex items-center justify-center transition-transform transform hover:scale-105"
+                            type="primary"
+                            icon={<PlusCircleOutlined/>}
+                            onClick={() => setModalVisible(true)}
+                        >
+                            Добавить пост
+                        </Button>
+                    </Empty>
+                }}
+                rowHoverable={false}
                 rowSelection={{
                     type: "checkbox",
                     // onChange: (selectedRowKeys: Key[]) => {

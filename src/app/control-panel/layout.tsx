@@ -1,6 +1,6 @@
 "use client"
 import React, {Suspense, useEffect, useState} from "react";
-import {Divider, Menu, MenuProps, Skeleton} from "antd";
+import {Button, Divider, Menu, MenuProps, Modal, Skeleton, Upload} from "antd";
 import Link from "next/link";
 import Image from "next/image"
 import {observer} from "mobx-react";
@@ -14,9 +14,9 @@ import {
     AppstoreOutlined,
     BarsOutlined,
     BookOutlined, LogoutOutlined,
-    PartitionOutlined, SettingOutlined,
+    PartitionOutlined, PlusOutlined, SettingOutlined,
     SolutionOutlined,
-    ToolOutlined
+    ToolOutlined, UploadOutlined
 } from "@ant-design/icons";
 
 const dark_color = "#e3d"
@@ -121,6 +121,11 @@ let dashboardMenuItems: MenuItem[] = [
                 label: <Link href={"/control-panel/category"}>Категории</Link>,
                 icon: <BarsOutlined />,
             },
+            {
+                key: 'avatar_icons',
+                label: <Link href={"/control-panel/avatar-icons"}>Иконки пользователя</Link>,
+                icon: <BarsOutlined />,
+            },
         ]
     },
     {
@@ -188,22 +193,107 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
         setLoading(false)
     }, [])
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedAvatar, setSelectedAvatar] = useState(currentUser?.user?.avatar || "/static/default_avatar.png");
+    const [customImage, setCustomImage] = useState(null);
+
+    const avatarOptions = [
+        '/static/avatar1.png',
+        '/static/avatar2.png',
+        '/static/avatar3.png',
+        '/static/avatar4.png',
+    ];
+
+    const handleAvatarSelect = (avatar) => {
+        setSelectedAvatar(avatar);
+    };
+
+    const handleUpload = (file) => {
+        const reader = new FileReader();
+        // reader.onload = () => {
+        //     setCustomImage(reader.result);
+        // };
+        reader.readAsDataURL(file);
+        return false; // Prevent automatic upload
+    };
+
+    const showUploadModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+        if (customImage) setSelectedAvatar(customImage); // Save the uploaded image
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
     return (
         <div className="flex">
-            <div className={`flex flex-col bg-white dark:bg-[${dark_color}] h-screen p-6 shadow-xl`}>
-                <div className="flex flex-col items-center justify-center mb-10">
+            <Modal
+                title="Выберите аватар"
+                open={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+            >
+                <div className="grid grid-cols-4 gap-4">
+                    {avatarOptions.map((avatar, index) => (
+                        <div
+                            key={index}
+                            className={`border-2 rounded-full p-1 cursor-pointer ${selectedAvatar === avatar ? 'border-blue-500' : 'border-transparent'}`}
+                            onClick={() => handleAvatarSelect(avatar)}
+                        >
+                            <Image
+                                src={avatar}
+                                alt={`Аватар ${index + 1}`}
+                                width={80}
+                                height={80}
+                                className="rounded-full"
+                            />
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-4">
+                    <Upload
+                        showUploadList={false}
+                        beforeUpload={handleUpload}
+                        accept="image/*"
+                    >
+                        <Button icon={<PlusOutlined />}>Загрузить своё фото</Button>
+                    </Upload>
+                </div>
+                {customImage && (
+                    <div className="mt-4">
+                        <span>Предварительный просмотр:</span>
+                        <Image
+                            src={customImage}
+                            alt="Предварительный просмотр"
+                            width={100}
+                            height={100}
+                            className="rounded-full"
+                        />
+                    </div>
+                )}
+            </Modal>
+            <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
+                <div className="flex flex-col items-center justify-center mb-2">
                     <div className="relative mb-4">
-                        <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500
-                        to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform
-                        transition-all duration-300 hover:rotate-6 hover:scale-105">
-                            <div className="absolute top-0 right-0 bg-red-600 rounded-full p-2 transform
-                                transition-transform hover:scale-110 cursor-pointer shadow-lg">
-                                <Image
-                                    src="/static/logout_icon.svg"
-                                    alt="Выйти"
-                                    width={20}
-                                    height={20}
-                                />
+                        {/* Avatar Display */}
+                        <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300 hover:rotate-6 hover:scale-105">
+                            {/*<Image*/}
+                            {/*    src={selectedAvatar}*/}
+                            {/*    alt="Аватар"*/}
+                            {/*    width={90}*/}
+                            {/*    height={90}*/}
+                            {/*    className="rounded-full"*/}
+                            {/*/>*/}
+                            <div
+                                className="absolute bottom-0 right-0 bg-red-600 rounded-full p-2 transform transition-transform hover:scale-110 cursor-pointer shadow-lg"
+                                onClick={showUploadModal}
+                            >
+                                <Button type="text" icon={<UploadOutlined/>} size="small"/>
                             </div>
                         </div>
                     </div>
@@ -216,9 +306,8 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                                 <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
                             </div>
                         </div>
-                        <span>Выбор из картинок для аватарки</span>
                     </Skeleton>
-                    <div className="flex items-center gap-6 mt-6">
+                    <div className="flex items-center gap-6 mt-4">
                         <div className="group relative cursor-pointer transform transition-transform hover:scale-110">
                             <ThemeSwitch/>
                             <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white
@@ -285,6 +374,8 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                         defaultSelectedKeys={[selectedKey]}
                         mode="vertical"
                         items={dashboardMenuItems}
+                        theme={resolvedTheme === "light" ? "light" : "dark"}
+
                     /> : <>
                     {
                         [1,2,3,4,5,6,7,8].map(it => (

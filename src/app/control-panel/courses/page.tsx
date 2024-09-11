@@ -1,6 +1,18 @@
 "use client";
 import {observer} from "mobx-react";
-import {Button, Divider, Modal, Popconfirm, Table, TableColumnsType, Tag, Tooltip} from "antd";
+import {
+    Button,
+    Divider,
+    Dropdown,
+    Empty,
+    MenuProps,
+    Modal,
+    Popconfirm, Result,
+    Table,
+    TableColumnsType,
+    Tag,
+    Tooltip
+} from "antd";
 import React, {useEffect} from "react";
 import {useMobxStores} from "@/stores/stores";
 import Link from "next/link";
@@ -8,12 +20,15 @@ import {Course} from "@/stores/CourseStore";
 import {FORMAT_VIEW_DATE, statusCourses} from "@/constants";
 import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
-import {DeleteOutlined, EditOutlined, PlusCircleOutlined, UploadOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, MoreOutlined, PlusCircleOutlined, UploadOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
-import {isEditedCourse, isNewCourse} from "@/selectors/courseSelectors";
+import {isEditedCourse} from "@/selectors/courseSelectors";
+import {useRouter} from "next/navigation";
+import {coursesTable, paginationCount} from "@/tableConfig/coursesTable";
 
 const CoursesPage = () => {
     const {courseStore} = useMobxStores()
+    const router = useRouter();
     const columns: TableColumnsType<Course> = [
         {
             title: 'Название',
@@ -22,7 +37,7 @@ const CoursesPage = () => {
             showSorterTooltip: false,
             render: (value, record) => (
                 <Tooltip title={`Перейти к курсу: ${value}`}>
-                    <Link className="text-gray-800 font-semibold hover:text-gray-500" href={`courses/${record.id}`}>
+                    <Link className="text-gray-800 hover:text-gray-500 hover:cursor-pointer" href={`courses/${record.id}`}>
                         {value}
                     </Link>
                 </Tooltip>
@@ -66,36 +81,39 @@ const CoursesPage = () => {
             align: 'start',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    {isNewCourse(record) && (
-                        <Tooltip title="Опубликовать курс">
-                            <Button
-                                onClick={() => courseStore.publishCourse(record.id)}
-                                type="default"
-                                icon={<UploadOutlined />}
-                            />
-                        </Tooltip>
-                    )}
-                    <Tooltip title="Редактировать курс">
+                    <Tooltip title={
+                        !isEditedCourse(record)
+                            ? "Опубликовать курс"
+                            : "В данный момент курс не может быть опубликован, попробуйте позже"
+                    }>
+                        <Button
+                            onClick={() => courseStore.publishCourse(record.id)}
+                            disabled={isEditedCourse(record)}
+                            type="default"
+                            icon={<UploadOutlined />}
+                        />
+                    </Tooltip>
+                    <Tooltip title={isEditedCourse(record) ? "В данный момент курс нельзя изменить, попробуйте позже" : "Редактировать курс"}>
                         <Button
                             type="default"
+                            shape="circle"
                             disabled={isEditedCourse(record)}
+                            onClick={() => router.push(`courses/${record.id}`)}
                             icon={<EditOutlined />}
-                        >
-                            <Link href={`courses/${record.id}`}>
-                                Изменить
-                            </Link>
-                        </Button>
+                        />
                     </Tooltip>
                     <Tooltip title="Удалить курс">
                         <Popconfirm
                             title="Удалить курс?"
+                            placement="leftBottom"
                             description="Вы уверены, что хотите удалить этот курс? Это действие нельзя будет отменить."
-                            onConfirm={() => courseStore.setShowConfirmDeleteCourseModal(true)}
+                            onConfirm={() => courseStore.deleteCourse(record.id)}
                             okText="Да"
                             cancelText="Нет"
                         >
                             <Button
                                 danger
+                                disabled={isEditedCourse(record)}
                                 type="primary"
                                 icon={<DeleteOutlined />}
                             />
@@ -106,39 +124,83 @@ const CoursesPage = () => {
         },
     ];
 
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                  Удалить все курсы
+                </a>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+                    Экспортировать
+                </a>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
+                    3rd menu item
+                </a>
+            ),
+        },
+    ];
+
     useEffect(() => {
         courseStore.getCoursesForCreator()
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
             <Modal
-                open={courseStore.showConfirmDeleteCourseModal}
-                onCancel={() => courseStore.setShowConfirmDeleteCourseModal(false)}
-                title="Удаление курса"
+                open={courseStore.successCreateCourseModal}
+                onCancel={() => courseStore.setSuccessCreateCourseModal(false)}
+                footer={null}
             >
-                <h1 className="text-xl"> Вы уверены, что хотите удалить курс?</h1>
-            </Modal>
-            <div>
-                <div className="flex items-center justify-between">
-                    <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные курсы</h1>
-                    <div>
-                        <Link href={"courses/add"}>
-                            <Button type="primary" icon={<PlusCircleOutlined/>}>Добавить курс</Button>
-                        </Link>
-                    </div>
-                </div>
-                <Divider />
-                <Table
-                    rowKey={(record) => record.id}
-                    dataSource={courseStore.userCourses}
-                    columns={columns}
-                    rowSelection={{type: "checkbox"}}
-                    loading={courseStore.loadingCourses}
-                    pagination={{ pageSize: 10 }}
-                    bordered
+                <Result
+                    status="success"
+                    title="Курс успешно создан!"
+                    subTitle="Для успешного публикования курса необходимо создать, как минимум 1 раздел."
+                    extra={[
+                        <Button type="primary" onClick={() => router.push('/control-panel/sections')}> Перейти к разделам</Button>,
+                        <Button onClick={() => courseStore.setSuccessCreateCourseModal(false)}>Закрыть</Button>,
+                    ]}
                 />
+            </Modal>
+            <div className="flex items-center justify-between">
+                <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные курсы</h1>
+                <div>
+                    <Link href={"courses/add"}>
+                        <Button
+                            className="flex items-center justify-center transition-transform transform hover:scale-105"
+                            type="primary"
+                            icon={<PlusCircleOutlined/>}
+                        >Добавить курс
+                        </Button>
+                    </Link>
+                    <Dropdown menu={{ items }} placement="bottomLeft">
+                        <Button className="ml-2" icon={ <MoreOutlined />}/>
+                    </Dropdown>
+
+                </div>
+
             </div>
+            <Divider />
+            <Table
+                rowKey={(record) => record.id}
+                loading={courseStore.loadingCourses}
+                dataSource={courseStore.userCourses}
+                columns={columns}
+                rowSelection={{type: "checkbox"}}
+                pagination={{ pageSize: paginationCount }}
+                locale={coursesTable}
+                bordered
+            />
         </div>
     );
 }

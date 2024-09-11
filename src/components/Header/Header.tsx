@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import Link from "next/link";
 import {Avatar, Badge, Modal, Spin} from "antd";
 import Image from "next/image"
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {Button, Dropdown, MenuProps} from "antd";
 import {UserOutlined} from "@ant-design/icons";
 import {useMobxStores} from "@/stores/stores";
@@ -24,6 +24,7 @@ const HeaderBlock = () => {
     const {userStore} = useMobxStores();
     const [loading,setLoading] = useState<boolean>(true)
     const pathName = usePathname();
+    const router = useRouter();
     const userRole: { role: string } | null = getUserRole();
     const [currentUser,setCurrentUser] = useState<UserType | null>(null);
 
@@ -40,9 +41,9 @@ const HeaderBlock = () => {
         {
             key: '2',
             label: (
-                <div className="flex items-center">
+                <div className="flex items-center" onClick={() => router.push("/control-panel")}>
                     <Image src="/static/control_panel_icon.svg" alt="Профиль" width={20} height={20}/>
-                    <Link href={"/control-panel"} className="ml-2 text-black hover:text-black">Панель учителя</Link>
+                    <span className="ml-2 text-black hover:text-black">Панель учителя</span>
                 </div>
             ),
         },

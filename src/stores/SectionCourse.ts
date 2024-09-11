@@ -3,6 +3,7 @@ import {Course} from "@/stores/CourseStore";
 import {CourseComponentTypeI} from "@/stores/CourseComponent";
 import {getUserToken} from "@/lib/users";
 import {GET, POST} from "@/lib/fetcher";
+import {StatusSectionEnum} from "@/enums/StatusSectionEnum";
 
 export type SectionCourseItem = {
     id: number;
@@ -12,6 +13,7 @@ export type SectionCourseItem = {
     course: Course;
     uploadFile: File[];
     components: CourseComponentTypeI[];
+    status: StatusSectionEnum
     created_at: Date
 }
 
@@ -41,7 +43,6 @@ class SectionCourse {
     addSection = action(async (values: SectionCourseItem) => {
         const token = getUserToken();
         return await POST(`/api/sections?token=${token}`, values).catch(e => {
-            debugger
         })
     })
 }
@@ -56,6 +57,7 @@ const sectionMapper = (section: SectionCourseItem) => {
         uploadFile: section.uploadFile,
         components: section.components,
         created_at: section.created_at,
+        status: section.status
     }
 
     return sectionItem;

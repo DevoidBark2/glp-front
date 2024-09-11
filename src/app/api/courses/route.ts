@@ -16,21 +16,18 @@ export async function GET(req: NextRequest) {
 
 
 export async function POST(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const token = searchParams.get('token');
-
+    const token = req.headers.get('authorization');
     const form = await req.formData();
 
     try {
-        const response = await axios.post(nextConfig.env?.API_URL + `api/course`,form,{
+        const {data} = await axios.post(nextConfig.env?.API_URL + `api/course`,form,{
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: token
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data,{status:error.response.status})
@@ -46,13 +43,31 @@ export async function PUT(req: NextRequest) {
     try {
         const response = await axios.put(nextConfig.env?.API_URL + `api/course`,data,{
             headers: {
-                'Content-Type': 'multipart/form-data',
                 Authorization: token
             }
         });
 
         const responseData = response.data;
         return NextResponse.json({ response: responseData });
+    } catch (error: any) {
+        console.error(error)
+        return NextResponse.json(error.response.data,{status:error.response.status})
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    const { searchParams } = new URL(req.url);
+    const courseId = searchParams.get('courseId');
+    const token = req.headers.get('authorization');
+
+    try {
+        const {data} = await axios.delete(nextConfig.env?.API_URL + `api/course/${courseId}`,{
+            headers: {
+                Authorization: token
+            }
+        });
+
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data,{status:error.response.status})

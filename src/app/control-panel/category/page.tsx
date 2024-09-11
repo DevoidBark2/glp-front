@@ -5,7 +5,7 @@ import React, {useEffect} from "react";
 import {useMobxStores} from "@/stores/stores";
 import {NomenclatureItem} from "@/stores/NomenclatureStore";
 import Image from "next/image";
-import {EditOutlined, DeleteOutlined, PlusCircleOutlined, WarningOutlined} from '@ant-design/icons';
+import {EditOutlined, DeleteOutlined, PlusCircleOutlined, MoreOutlined} from '@ant-design/icons';
 
 const CategoryPage = () => {
     const {nomenclatureStore} = useMobxStores();
@@ -27,16 +27,14 @@ const CategoryPage = () => {
             title: "Действия",
             width: "20%",
             render: (_: any, record) => (
-                <div className="flex items-center justify-start">
-                    <Tooltip title="Редактировать">
+                <div className="flex justify-end gap-2">
+                    <Tooltip title="Редактировать категорию">
                         <Button
-                            shape="circle"
                             icon={<EditOutlined />}
                             // onClick={() => nomenclatureStore.setEditCategoryModal(record)}
-                            style={{ marginRight: '10px' }}
                         />
                     </Tooltip>
-                    <Tooltip title="Удалить">
+                    <Tooltip title="Удалить категорию">
                         <Button
                             onClick={() => nomenclatureStore.isPossibleDeleteCategory(record.id)}
                             danger type="primary"
@@ -110,35 +108,37 @@ const CategoryPage = () => {
             </Modal>
 
             <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
-                <div className="bg-white h-full p-5">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-green-800 font-bold text-3xl">Доступные категории</h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-gray-800 font-bold text-3xl">Доступные категории</h1>
+                    <div>
                         <Button
+                            className="flex items-center justify-center transition-transform transform hover:scale-105"
                             type="primary"
                             icon={<PlusCircleOutlined />}
                             onClick={() => nomenclatureStore.setCreateCategoryModal(true)}
                         >
                             Добавить категорию
                         </Button>
+                        <Button className="ml-2" icon={ <MoreOutlined />}/>
                     </div>
-                    <Divider />
-                    <Table
-                        rowKey={(record) => record.id}
-                        rowSelection={{type: "checkbox"}}
-                        dataSource={nomenclatureStore.categories}
-                        columns={columns}
-                        loading={nomenclatureStore.loadingCategories}
-                        rowClassName={(record, index) => index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                        locale={{
-                            emptyText: (
-                                <Empty
-                                    description="Нет категорий"
-                                    imageStyle={{ height: 60 }}
-                                />
-                            ),
-                        }}
-                    />
                 </div>
+                <Divider />
+                <Table
+                    rowKey={(record) => record.id}
+                    rowSelection={{type: "checkbox"}}
+                    dataSource={nomenclatureStore.categories}
+                    columns={columns}
+                    loading={nomenclatureStore.loadingCategories}
+                    rowClassName={(record, index) => index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                    locale={{
+                        emptyText: (
+                            <Empty
+                                description="Нет категорий"
+                                imageStyle={{ height: 60 }}
+                            />
+                        ),
+                    }}
+                />
             </div>
         </>
     );

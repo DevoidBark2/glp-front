@@ -100,9 +100,9 @@ const EventPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto rounded" style={{height: 'calc(100vh - 60px)'}}>
             <div className="flex items-center justify-between">
-                <h1 className="text-green-800 font-bold text-3xl mb-2">Пользовательские события</h1>
+                <h1 className="text-gray-800 font-bold text-3xl mb-2">Пользовательские события</h1>
                 <Button icon={<ReloadOutlined/>} onClick={handleRefresh}>
                     Обновить
                 </Button>

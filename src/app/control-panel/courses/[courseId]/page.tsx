@@ -5,7 +5,7 @@ import {
     Button,
     Col,
     Collapse,
-    Divider,
+    Divider, Empty,
     Form, List, message, Modal,
     notification,
     Row,
@@ -21,7 +21,7 @@ import {Input} from "antd/lib";
 import {FORMAT_VIEW_DATE, LEVEL_COURSE} from "@/constants";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
-import {SettingOutlined} from "@ant-design/icons";
+import {PlusCircleOutlined, SettingOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
 
 const CoursePage = () => {
@@ -56,9 +56,9 @@ const CoursePage = () => {
     useEffect(() => {
         nomenclatureStore.getCategories();
         courseStore.getCourseDetails(Number(courseId)).then(response => {
-            form.setFieldsValue(response.response.data);
-            form.setFieldValue("category",response.response.data.category.id);
-            setCourseName(response.response.data.name)
+            form.setFieldsValue(response.data);
+            form.setFieldValue("category",response.data.category?.id);
+            setCourseName(response.data.name)
         }).catch(e => {
             router.push('/control-panel/courses')
             notification.warning({message: e.response.data.result})
@@ -119,7 +119,7 @@ const CoursePage = () => {
                                                     label="Категория"
                                                     rules={[{required: true,message:"Категория курса обязательно!"}]}
                                                 >
-                                                    <Select loading={nomenclatureStore.loadingCategories}>
+                                                    <Select loading={nomenclatureStore.loadingCategories} placeholder="Выберите категорию">
                                                         {
                                                             nomenclatureStore.categories.map(category => (
                                                                 <Select.Option key={category.id} value={category.id}>{category.name}</Select.Option>
@@ -193,38 +193,53 @@ const CoursePage = () => {
                             label: 'Разделы и компоненты',
                             key: '2',
                             children: <div className="p-2">
-                                <Collapse size="large" ghost items={courseStore.courseDetailsSections?.map(item => (
-                                    {
-                                        key: item.id,
-                                        label: item.name,
-                                        children: <div key={item.id} className="bg-gray-100 rounded p-4">
-                                            <div className="flex justify-between items-center">
-                                                <div className="flex flex-col">
-                                                    <div className="text-xl text-gray-800">
-                                                        <p>Описание</p>
+                                {
+                                    courseStore.courseDetailsSections?.length > 0
+                                        ? <Collapse size="large" ghost items={courseStore.courseDetailsSections?.map(item => (
+                                        {
+                                            key: item.id,
+                                            label: item.name,
+                                            children: <div key={item.id} className="bg-gray-100 rounded p-4">
+                                                <div className="flex justify-between items-center">
+                                                    <div className="flex flex-col">
+                                                        <div className="text-xl text-gray-800">
+                                                            <p>Описание</p>
+                                                        </div>
+                                                        <span className="ml-2">{item.description}</span>
                                                     </div>
-                                                    <span className="ml-2">{item.description}</span>
+                                                    <Tooltip title="Время создания">
+                                                        {dayjs(item.created_at).format(FORMAT_VIEW_DATE)}
+                                                    </Tooltip>
                                                 </div>
-                                                <Tooltip title="Время создания">
-                                                    {dayjs(item.created_at).format(FORMAT_VIEW_DATE)}
-                                                </Tooltip>
-                                            </div>
-                                            <Divider/>
-                                            <h1>Компоненты</h1>
-                                            <Divider/>
-                                            <Collapse items={item.components.map(component => ({
-                                                key: component.id,
-                                                label: component.title,
-                                                children: <div key={component.id}>
-                                                    <div>
-                                                        {component.description}
+                                                <Divider/>
+                                                <h1>Компоненты</h1>
+                                                <Divider/>
+                                                <Collapse items={item.components.map(component => ({
+                                                    key: component.id,
+                                                    label: component.title,
+                                                    children: <div key={component.id}>
+                                                        <div>
+                                                            {component.description}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            }))}/>
-                                        </div>,
-                                        extra: <SettingOutlined/>
-                                    }
-                                ))} />
+                                                }))}/>
+                                            </div>,
+                                            extra: <SettingOutlined/>
+                                        }
+                                    ))} />
+                                        : <Empty description={<div>
+                                            <p>Список пуст</p>
+                                            <Link href={"/control-panel/sections/add"}>
+                                                <Button
+                                                    className="mt-2 transition-transform transform hover:scale-105"
+                                                    type="primary"
+                                                    icon={<PlusCircleOutlined/>}
+                                                >Создать раздел
+                                                </Button>
+                                            </Link>
+
+                                        </div>}/>
+                                }
                             </div>,
                         },
                         {

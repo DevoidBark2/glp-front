@@ -22,7 +22,7 @@ import {
     CodeOutlined,
     DeleteOutlined,
     EditOutlined,
-    EyeOutlined,
+    EyeOutlined, MoreOutlined,
     PlusCircleOutlined,
     PlusOutlined,
     ProjectOutlined,
@@ -79,6 +79,7 @@ const TaskPage = () => {
         {
             title: 'Название',
             dataIndex: 'title',
+            width: "20%",
             render: (text, record) => (
                 <Tooltip title={text ? `Перейти к редактированию: ${text}` : 'Название не указано'}>
                     <p
@@ -98,18 +99,16 @@ const TaskPage = () => {
             onFilter: (value, record) => record.type.startsWith(value as string),
             filterSearch: true,
             render: (value, record) => (
-                <span style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                 {typeIcons[record.type]}
                     <span style={{ marginLeft: 8 }}>{value}</span>
-            </span>
+            </div>
             ),
         },
         {
             title: "Дата создания",
             dataIndex: "created_at",
-            sorter: (a, b) => {
-                return dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf();
-            },
+            sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
             render: (_,record) => dayjs(record.created_at).format(FORMAT_VIEW_DATE)
         },
         {
@@ -139,7 +138,6 @@ const TaskPage = () => {
                         <Button
                             type="default"
                             icon={<EditOutlined />}
-                            className="mr-2"
                             onClick={() => handleChangeComponentTask(record)}
                         />
                     </Tooltip>
@@ -196,19 +194,27 @@ const TaskPage = () => {
     return (
         <>
             <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
-                <div className="bg-white h-full p-5">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-green-800 font-bold text-3xl mb-2">Доступные компоненты</h1>
-                        <Button onClick={() => setIsModalVisible(true)} icon={<PlusCircleOutlined/>} type="primary">Добавить компонент</Button>
+                <div className="flex items-center justify-between">
+                    <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные компоненты</h1>
+                    <div>
+                        <Button
+                            className="flex items-center justify-center transition-transform transform hover:scale-105"
+                            onClick={() => setIsModalVisible(true)}
+                            icon={<PlusCircleOutlined/>}
+                            type="primary"
+                        >
+                            Добавить компонент
+                        </Button>
+                        <Button className="ml-2" icon={ <MoreOutlined />}/>
                     </div>
-                    <Divider/>
-                    <Table
-                        rowKey={(record) => record.id}
-                        dataSource={courseComponentStore.courseComponents}
-                        columns={columns}
-                        loading={courseComponentStore.loadingCourseComponent}
-                    />
                 </div>
+                <Divider />
+                <Table
+                    rowKey={(record) => record.id}
+                    dataSource={courseComponentStore.courseComponents}
+                    columns={columns}
+                    loading={courseComponentStore.loadingCourseComponent}
+                />
             </div>
 
             <Modal
