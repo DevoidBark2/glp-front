@@ -23,7 +23,7 @@ const ProfilePage = () => {
     };
 
     return (
-        <div className="w-full mx-auto bg-white shadow-lg rounded-lg p-8 overflow-y-scroll" style={{height: 'calc(100vh - 60px)'}}>
+        <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
             <div className="flex items-center mb-8">
                 <Upload
                     name="avatar"
@@ -53,7 +53,7 @@ const ProfilePage = () => {
             >
                 <Form.Item
                     label="Имя"
-                    name="firstName"
+                    name="first_name"
                     rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}
                 >
                     <Input placeholder="Введите ваше имя" />
@@ -61,10 +61,18 @@ const ProfilePage = () => {
 
                 <Form.Item
                     label="Фамилия"
-                    name="lastName"
+                    name="second_name"
                     rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
                 >
                     <Input placeholder="Введите вашу фамилию" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Отчество"
+                    name="last_name"
+                    rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
+                >
+                    <Input placeholder="Введите выше отчество" />
                 </Form.Item>
 
                 <Form.Item
@@ -73,14 +81,6 @@ const ProfilePage = () => {
                     rules={[{ required: true, message: "Пожалуйста, введите вашу электронную почту" }]}
                 >
                     <Input type="email" placeholder="Введите вашу электронную почту" />
-                </Form.Item>
-
-                <Form.Item label="Роль" name="role">
-                    <Select>
-                        <Select.Option value="Администратор">Администратор</Select.Option>
-                        <Select.Option value="Редактор">Редактор</Select.Option>
-                        <Select.Option value="Пользователь">Пользователь</Select.Option>
-                    </Select>
                 </Form.Item>
 
                 <Form.Item
@@ -107,26 +107,6 @@ const ProfilePage = () => {
                         placeholder="Введите новый пароль"
                         iconRender={(visible) => (visible ? <LockOutlined /> : <LockOutlined />)}
                     />
-                </Form.Item>
-
-                <Form.Item
-                    label="Тема интерфейса"
-                    name="theme"
-                    tooltip="Выберите тему оформления сайта"
-                >
-                    <Radio.Group>
-                        <Radio value="light">Светлая</Radio>
-                        <Radio value="dark">Тёмная</Radio>
-                    </Radio.Group>
-                </Form.Item>
-
-                <Form.Item
-                    label="Подписка на новости"
-                    name="newsletter"
-                    valuePropName="checked"
-                    tooltip="Подписаться на нашу рассылку новостей и обновлений"
-                >
-                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" className="dark:hover:bg-black" />
                 </Form.Item>
 
                 <Divider />

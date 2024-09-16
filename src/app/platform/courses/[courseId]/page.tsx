@@ -53,7 +53,7 @@ const CoursePage = () => {
     };
 
     return (
-        <Layout style={{height: '100vh'}}>
+        <Layout className="custom-height-screen overflow-y-auto">
             <Sider width={300} className="site-layout-background" style={{overflowY: 'auto'}}>
                 <Menu
                     mode="inline"

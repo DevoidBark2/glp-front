@@ -9,7 +9,6 @@ import {
     DatePicker,
     Divider,
     Empty,
-    Image,
     Input,
     Select,
     Spin,
@@ -75,17 +74,17 @@ const PlatformPage = () => {
                             <div key={post.id}
                                  className="p-5 relative flex mb-20 cursor-pointer rounded-md shadow-xl"
                             >
-                                {/*{!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>*/}
-                                {/*    <div style={{height: 300, width: 500}}/>*/}
-                                {/*</Watermark> : <Image*/}
-                                {/*    src={`http://localhost:5000${post.image}`}*/}
-                                {/*    width={500} height="auto" alt={post.name}*/}
-                                {/*/>}*/}
+                                {!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>
+                                <div style={{height: 300, width: 500}}/>
+                                </Watermark> : <img
+                                src={`http://localhost:4200${post.image}`}
+                                width={500} height="200" alt={post.name}
+                                />}
                                 <div className="ml-5 flex w-full">
                                     <div className="flex w-full justify-between">
                                         <div>
                                             <div className="text-3xl font-semibold">{post.name}</div>
-                                            <p className="">{post.content}</p>
+                                            <div dangerouslySetInnerHTML={{__html: post.content}}></div>
                                         </div>
                                         <p className="text-gray-400"
                                            title="Дата публикации">{dayjs(post.created_at).format(FORMAT_VIEW_DATE)}</p>

@@ -18,7 +18,7 @@ import "react-phone-input-2/lib/bootstrap.css";
 import {useMobxStores} from "@/stores/stores";
 import {useRouter} from "next/navigation";
 
-const UserCreatePage = () => {
+const UserDetailsPage = () => {
     const {userStore} = useMobxStores()
     const [form] = Form.useForm();
     const router = useRouter();
@@ -186,4 +186,4 @@ const UserCreatePage = () => {
     );
 };
 
-export default observer(UserCreatePage);
+export default observer(UserDetailsPage);
