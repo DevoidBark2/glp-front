@@ -1,5 +1,18 @@
 "use client"
-import {Breadcrumb, Button, Col, Divider, Form, Modal, notification, Result, Row, Select, UploadProps} from "antd";
+import {
+    Breadcrumb,
+    Button,
+    Col,
+    Divider,
+    Form,
+    Modal,
+    notification,
+    Result,
+    Row,
+    Select,
+    Tooltip,
+    UploadProps
+} from "antd";
 import {useMobxStores} from "@/stores/stores";
 import {Input} from "antd/lib";
 import {InboxOutlined, MoreOutlined} from "@ant-design/icons";
@@ -11,6 +24,7 @@ import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import Link from "next/link";
 import {LEVEL_COURSE} from "@/constants";
+import Image from "next/image"
 
 const CourseAddPage = () => {
 
@@ -36,9 +50,22 @@ const CourseAddPage = () => {
     };
 
     const [accessRight, setAccessRight] = useState<number | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleAccessRightChange = (value: number) => {
         setAccessRight(value);
+        if (value === 1) {
+            setIsModalVisible(true);
+        }
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+    const [code, setCode] = useState('');
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
     };
 
     useEffect(() => {
@@ -122,25 +149,50 @@ const CourseAddPage = () => {
                         <Col span={12}>
                             <Form.Item
                                 name="access_right"
-                                label="Права доступа"
-                                rules={[{required: true,message:"Права доступа курса обязательно!"}]}
+                                label={
+                                    accessRight === 1 ? (
+                                        <div className="flex items-center justify-between">
+                                            <span>Права доступа</span>
+                                            <Tooltip title="Изменить код доступа">
+                                                <Image className="ml-2" src="/static/password_code_icon.svg" width={20} height={20} onClick={() => setIsModalVisible(true)}/>
+                                            </Tooltip>
+
+                                        </div>
+                                    ) : (
+                                        'Права доступа'
+                                    )
+                                }
+                                rules={[{ required: true, message: "Права доступа курса обязательно!" }]}
                             >
                                 <Select onChange={handleAccessRightChange}>
                                     <Select.Option value={0}>Открытый</Select.Option>
                                     <Select.Option value={1}>Закрытый</Select.Option>
                                 </Select>
                             </Form.Item>
-                        </Col>
-                        {accessRight === 1 && (
-                            <Col span={12}>
+
+                            {/* Модальное окно для ввода кода доступа */}
+                            <Modal
+                                title="Введите код для закрытого доступа"
+                                open={isModalVisible}
+                                onOk={handleOk}
+                                onCancel={handleCancel}
+                                okText="Подтвердить"
+                                cancelText="Отмена"
+                            >
                                 <Form.Item
                                     name="restricted_access_detail"
-                                    label="Детали закрытого доступа"
+                                    label="Код доступа"
+                                    rules={[{ required: true, message: "Код доступа обязателен!" }]}
                                 >
-                                    <Input placeholder="Введите детали закрытого доступа" />
+                                    <Input.OTP
+                                        length={8}
+                                        placeholder="Введите код закрытого доступа"
+                                        value={code}
+                                        onChange={(e) => setCode(e)}
+                                    />
                                 </Form.Item>
-                            </Col>
-                        )}
+                            </Modal>
+                        </Col>
                     </Row>
 
                     <Form.Item

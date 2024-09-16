@@ -18,6 +18,7 @@ import {
     SolutionOutlined,
     ToolOutlined, UploadOutlined
 } from "@ant-design/icons";
+import {useMobxStores} from "@/stores/stores";
 
 const dark_color = "#e3d"
 const text1 = "#121212"
@@ -154,6 +155,7 @@ let dashboardMenuItems: MenuItem[] = [
 
 const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
     const { resolvedTheme } = useTheme()
+    const {avatarIconsStore} = useMobxStores()
 
     const [currentUser,setCurrentUser] = useState<UserType | null>(null);
     const pathName = usePathname();
@@ -221,7 +223,7 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
         setIsModalVisible(true);
     };
 
-    const handleOk = () => {
+    const handleOk = (color) => {
         setIsModalVisible(false);
         if (customImage) setSelectedAvatar(customImage); // Save the uploaded image
     };
@@ -230,57 +232,41 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
         setIsModalVisible(false);
     };
 
+    const [selectedColor, setSelectedColor] = useState<string>('#FF5733'); // Цвет по умолчанию
+
+    const handleColorSelect = (color: string) => {
+        setSelectedColor(color);
+        setCustomImage(null); // Очищаем предварительный просмотр при выборе цвета
+    };
+
+    useEffect(() => {
+        avatarIconsStore.getAllAvatarIcons();
+    },[])
+
     return (
         <div className="flex">
             <Modal
                 title="Выберите аватар"
                 open={isModalVisible}
-                onOk={handleOk}
+                onOk={() => handleOk(selectedColor)}
                 onCancel={handleCancel}
             >
-                <div className="grid grid-cols-4 gap-4">
-                    {avatarOptions.map((avatar, index) => (
-                        <div
+                <div className="grid grid-cols-4 gap-4 mb-4">
+                    {avatarIconsStore.avatarIcons?.map((color, index) => (
+                        <Image
+                            crossOrigin='anonymous' src={`http://localhost:5000${color.image}`}
                             key={index}
-                            className={`border-2 rounded-full p-1 cursor-pointer ${selectedAvatar === avatar ? 'border-blue-500' : 'border-transparent'}`}
-                            onClick={() => handleAvatarSelect(avatar)}
-                        >
-                            <Image
-                                src={avatar}
-                                alt={`Аватар ${index + 1}`}
-                                width={80}
-                                height={80}
-                                className="rounded-full"
-                            />
-                        </div>
+                            className={`border-2 rounded-full p-2 cursor-pointer ${selectedColor === color ? 'border-blue-500' : 'border-transparent'}`}
+                            width={90}
+                            height={90}
+                            onClick={() => handleColorSelect(color)}
+                        />
                     ))}
                 </div>
-                <div className="mt-4">
-                    <Upload
-                        showUploadList={false}
-                        beforeUpload={handleUpload}
-                        accept="image/*"
-                    >
-                        <Button icon={<PlusOutlined />}>Загрузить своё фото</Button>
-                    </Upload>
-                </div>
-                {customImage && (
-                    <div className="mt-4">
-                        <span>Предварительный просмотр:</span>
-                        <Image
-                            src={customImage}
-                            alt="Предварительный просмотр"
-                            width={100}
-                            height={100}
-                            className="rounded-full"
-                        />
-                    </div>
-                )}
             </Modal>
             <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
                 <div className="flex flex-col items-center justify-center mb-2">
                     <div className="relative mb-4">
-                        {/* Avatar Display */}
                         <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300 hover:rotate-6 hover:scale-105">
                             {/*<Image*/}
                             {/*    src={selectedAvatar}*/}
