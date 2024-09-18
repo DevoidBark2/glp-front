@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List} from "antd";
-import {UploadOutlined, EditOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
+import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin} from "antd";
+import {UploadOutlined, EditOutlined, ExclamationCircleOutlined,MessageOutlined,TrophyOutlined,SaveOutlined} from "@ant-design/icons";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
@@ -17,7 +17,9 @@ const ProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [loadingCourses, setLoadingCourses] = useState(false);
 
+    const [loadingProfile,setLoadingProfile] = useState(true)
     useEffect(() => {
+        setLoadingProfile(false)
         userStore.getUserProfile?.().then(() => {
             form.setFieldsValue(userStore.userProfileDetails);
         });
@@ -31,6 +33,11 @@ const ProfilePage = () => {
         reader.onload = () => setPreviewImage(reader.result);
         reader.readAsDataURL(file.file.originFileObj);
     };
+
+    const [userLevel, setUserLevel] = useState(3); // Уровень пользователя
+    const [userXP, setUserXP] = useState(150); // Очки опыта пользователя
+    const maxXP = 200; // Максимальное количество очков опыта для повышения уровня
+
 
     const confirmLeaveCourse = (courseId) => {
         Modal.confirm({
@@ -58,6 +65,28 @@ const ProfilePage = () => {
         {id: 1, name: "Основы Python", image: "https://example.com/python.png"},
         {id: 2, name: "React для начинающих", image: "https://example.com/react.png"},
     ];
+    const achievements = [
+        {title: "Завершил первый курс", icon: <TrophyOutlined />, description: "Поздравляем! Вы завершили свой первый курс."},
+        {title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс."},
+        {title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс."}
+    ];
+
+    const handleCalendarSelect = (date) => {
+        Modal.info({
+            title: "Планируйте своё обучение",
+            content: `Вы выбрали дату: ${date.format('YYYY-MM-DD')}. Вы можете запланировать учебную сессию на этот день.`,
+        });
+    };
+    const [loadingAvatar, setLoadingAvatar] = useState(false);
+
+    // Показывать спин при загрузке аватара
+    const onAvatarChange = (info) => {
+        setLoadingAvatar(true);
+        handleAvatarChange(info);
+        setTimeout(() => {
+            setLoadingAvatar(false);
+        }, 1500); // Симулируем время загрузки
+    };
 
     return (
         !userStore.loading ? (
@@ -78,33 +107,72 @@ const ProfilePage = () => {
                 <div className="flex gap-6">
                     {/* Левая часть - профиль */}
                     <div className="w-2/5 bg-white flex flex-col rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
-                        <div className="flex justify-center mb-4">
-                            <Image className="rounded-full" src={previewImage} alt="Картинка профиля" width={200} height={200} />
-                        </div>
-                        <div className="flex justify-center mb-4">
-                            <Upload onChange={handleAvatarChange} showUploadList={false}>
-                                <Button icon={<UploadOutlined />}>Загрузить аватар</Button>
-                            </Upload>
-                        </div>
+            <div className="flex justify-center mb-4">
+                {/* Спин вокруг изображения при загрузке */}
+                <Spin spinning={loadingAvatar} tip="Загрузка...">
+                    <Image className="rounded-full" src={previewImage} alt="Картинка профиля" width={200} height={200} />
+                </Spin>
+            </div>
 
-                        <Form form={form} layout="vertical">
-                            <Form.Item name="first_name" label="Имя">
-                                <Input className="h-12 rounded-md" placeholder="Введите имя" disabled={!isEditing} />
-                            </Form.Item>
-                            <Form.Item name="second_name" label="Фамилия">
-                                <Input className="h-12 rounded-md" placeholder="Введите фамилию" disabled={!isEditing} />
-                            </Form.Item>
+            <div className="flex justify-center mb-4">
+                <Upload onChange={onAvatarChange} showUploadList={false}>
+                    <Button icon={<UploadOutlined />}>Загрузить аватар</Button>
+                </Upload>
+            </div>
 
-                            <div className="flex flex-col items-center">
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit" disabled={!isEditing}>Сохранить</Button>
-                                </Form.Item>
-                                <Button icon={<EditOutlined />} onClick={() => setIsEditing(!isEditing)}>
-                                    {isEditing ? "Отменить" : "Редактировать профиль"}
-                                </Button>
-                            </div>
-                        </Form>
+            {/* Скелетон для полей формы пока профиль загружается */}
+            {loadingProfile ? (
+                <Skeleton active paragraph={{rows: 4}} />
+            ) : (
+                <Form form={form} layout="vertical">
+                    <Form.Item name="first_name" label="Имя">
+                        <Input
+                            className={`h-12 rounded-md transition-all duration-300 ${
+                                !isEditing ? "bg-gray-200 text-gray-500 cursor-not-allowed blur-sm" : ""
+                            }`}
+                            placeholder="Введите имя"
+                            disabled={!isEditing}
+                        />
+                    </Form.Item>
+
+                    <Form.Item name="second_name" label="Фамилия">
+                        <Input
+                            className={`h-12 rounded-md transition-all duration-300 ${
+                                !isEditing ? "bg-gray-200 text-gray-500 cursor-not-allowed blur-sm" : ""
+                            }`}
+                            placeholder="Введите фамилию"
+                            disabled={!isEditing}
+                        />
+                    </Form.Item>
+
+                    <div className="flex flex-col items-center">
+                        {/* Кнопка сохранения с анимацией */}
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                className={`transition-all duration-300 ease-in-out transform ${
+                                    isEditing ? "hover:scale-105" : "hover:scale-100"
+                                }`}
+                                disabled={!isEditing}
+                                icon={<SaveOutlined />}
+                            >
+                                Сохранить
+                            </Button>
+                        </Form.Item>
+
+                        {/* Кнопка редактирования с анимацией */}
+                        <Button
+                            icon={<EditOutlined />}
+                            className="transition-all duration-300 ease-in-out hover:bg-gray-50 hover:text-blue-500"
+                            onClick={() => setIsEditing(!isEditing)}
+                        >
+                            {isEditing ? "Отменить" : "Редактировать профиль"}
+                        </Button>
                     </div>
+                </Form>
+            )}
+        </div>
 
                     {/* Правая часть - курсы */}
                     <div className="w-3/5 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
@@ -210,6 +278,50 @@ const ProfilePage = () => {
                             <List.Item>{item}</List.Item>
                         )}
                     />
+                </div>
+
+                {/* Прогресс-бар с уровнем пользователя */}
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                    <h2 className="text-2xl font-bold mb-4">Ваш уровень</h2>
+                    <Divider />
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-lg">Уровень: {userLevel}</h3>
+                        <Progress percent={(userXP / maxXP) * 100} status="active" />
+                    </div>
+                    <p className="text-gray-600 mt-2">Опыт: {userXP}/{maxXP} XP</p>
+                </div>
+
+                {/* Блок с наградами */}
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                    <h2 className="text-2xl font-bold mb-4">Ваши достижения</h2>
+                    <Divider />
+                    <div className="grid grid-cols-2 gap-4">
+                        {achievements.map((achieve, index) => (
+                            <Badge.Ribbon key={index} text="Награда" color="gold">
+                                <div className="p-4 bg-gray-50 rounded-md shadow-md flex items-center">
+                                    {achieve.icon}
+                                    <div className="ml-4">
+                                        <h3 className="text-lg font-semibold">{achieve.title}</h3>
+                                        <p className="text-gray-600">{achieve.description}</p>
+                                    </div>
+                                </div>
+                            </Badge.Ribbon>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Календарь для планирования обучения */}
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                    <h2 className="text-2xl font-bold mb-4">Календарь обучения</h2>
+                    <Divider />
+                    <Calendar fullscreen={false} onSelect={handleCalendarSelect} />
+                </div>
+
+                {/* Чат с поддержкой */}
+                <div className="fixed bottom-6 right-6">
+                    <Tooltip title="Чат с поддержкой">
+                        <Button shape="circle" icon={<MessageOutlined />} size="large" />
+                    </Tooltip>
                 </div>
             </div>
         ) : <Skeleton active />
