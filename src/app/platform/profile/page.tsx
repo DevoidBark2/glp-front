@@ -1,18 +1,15 @@
 "use client";
 import Image from "next/image";
-import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin} from "antd";
+import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin, Avatar} from "antd";
 import {UploadOutlined, EditOutlined, ExclamationCircleOutlined,MessageOutlined,TrophyOutlined,SaveOutlined} from "@ant-design/icons";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 
 const ProfilePage = () => {
-    const {userStore} = useMobxStores();
+    const {userStore,userProfileStore} = useMobxStores();
     const [form] = Form.useForm();
-    const [userCourses, setUserCourses] = useState([
-        {id: 1, name: "Курс по HTTP", image: "https://cdn.stepik.net/media/cache/images/courses/194856/cover_Sl6ky3x/2023ab5a2b085ae4307c6d4e981c7a68.png", progress: 50, description: "Основы HTTP-протоколов."},
-        {id: 2, name: "Курс по Java", image: "https://cdn.stepik.net/media/cache/images/courses/194856/cover_Sl6ky3x/2023ab5a2b085ae4307c6d4e981c7a68.png", progress: 75, description: "Углубленный курс по Java."},
-    ]);
+    const [userCourses, setUserCourses] = useState([]);
     const [previewImage, setPreviewImage] = useState("/static/profile_photo.jpg");
     const [isEditing, setIsEditing] = useState(false);
     const [loadingCourses, setLoadingCourses] = useState(false);
@@ -20,8 +17,8 @@ const ProfilePage = () => {
     const [loadingProfile,setLoadingProfile] = useState(true)
     useEffect(() => {
         setLoadingProfile(false)
-        userStore.getUserProfile?.().then(() => {
-            form.setFieldsValue(userStore.userProfileDetails);
+        userProfileStore.getUserProfile?.().then(() => {
+            form.setFieldsValue(userProfileStore.userProfileDetails);
         });
     }, []);
 
@@ -51,15 +48,17 @@ const ProfilePage = () => {
         });
     };
 
-    const handleFeedbackSubmit = () => {
-        if (feedback) {
-            Modal.success({
-                title: 'Спасибо за ваш отзыв!',
-                content: 'Мы получили ваш отзыв и учтём его в будущем.',
-            });
-            setFeedback('');
-        }
-    };
+    // const handleFeedbackSubmit = (values: any) => {
+    //     debugger
+    //     userProfileStore.sendFeedback(values.message);
+    //     if (feedback) {
+    //         Modal.success({
+    //             title: 'Спасибо за ваш отзыв!',
+    //             content: 'Мы получили ваш отзыв и учтём его в будущем.',
+    //         });
+    //         setFeedback('');
+    //     }
+    // };
 
     const recommendedCourses = [
         {id: 1, name: "Основы Python", image: "https://example.com/python.png"},
@@ -88,9 +87,33 @@ const ProfilePage = () => {
         }, 1500); // Симулируем время загрузки
     };
 
+
+    // Пример данных для чата
+    const [messages, setMessages] = useState([
+        { id: 1, sender: "admin", content: "Здравствуйте! Как могу помочь?", timestamp: "10:30" },
+        { id: 2, sender: "user", content: "У меня есть вопрос по поводу заказа.", timestamp: "10:31" },
+        { id: 3, sender: "admin", content: "Конечно! Задавайте вопрос.", timestamp: "10:32" }
+    ]);
+
+    const handleFeedbackSubmit = (values) => {
+        userProfileStore.sendFeedback(values.message);
+        const newMessage = {
+            id: messages.length + 1,
+            sender: "user", // Сообщение от пользователя
+            content: values.message,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages([...messages, newMessage]);
+        form.resetFields();
+        Modal.success({
+            title: 'Спасибо за ваш отзыв!',
+            content: 'Мы получили ваш отзыв и учтём его в будущем.',
+        });
+    };
+
     return (
-        !userStore.loading ? (
-            <div className="container mx-auto">
+        !userProfileStore.loading ? (
+            <div className="container mx-auto mb-4">
                 {/* Модальное окно для покидания курса */}
                 <Modal
                     open={userStore.openLeaveCourseModal}
@@ -213,7 +236,7 @@ const ProfilePage = () => {
                 {/* Дополнительные интерактивные блоки */}
 
                 {/* Блок с рейтингом курсов */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Оцените ваши курсы</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -225,17 +248,15 @@ const ProfilePage = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Форма обратной связи */}
                 <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Обратная связь</h2>
                     <Divider />
-                    <Form onFinish={handleFeedbackSubmit}>
-                        <Form.Item>
+                    <Form form={form} onFinish={handleFeedbackSubmit}>
+                        <Form.Item name="message">
                             <Input.TextArea
-                                value={feedback}
-                                onChange={(e) => setFeedback(e.target.value)}
                                 rows={4}
                                 placeholder="Оставьте ваш отзыв или предложение"
                             />
@@ -246,8 +267,44 @@ const ProfilePage = () => {
                     </Form>
                 </div>
 
+                <div className="container mx-auto mt-12">
+            
+
+            {/* История переписки */}
+            <div className="bg-white rounded-md shadow-lg p-6 mb-6 transition-all duration-300 hover:shadow-2xl">
+                <h2 className="text-2xl font-bold mb-4">Переписка с администратором</h2>
+                <Divider />
+                <div className="chat-history max-h-96 overflow-y-auto">
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={messages}
+                        renderItem={(message) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    avatar={
+                                        message.sender === "admin" ? (
+                                            <Avatar style={{ backgroundColor: "#f56a00" }}>A</Avatar>
+                                        ) : (
+                                            <Avatar style={{ backgroundColor: "#87d068" }}>U</Avatar>
+                                        )
+                                    }
+                                    title={
+                                        <span className={message.sender === "admin" ? "text-blue-600" : "text-green-600"}>
+                                            {message.sender === "admin" ? "Админ" : "Вы"}{" "}
+                                            <span className="text-gray-500 text-sm">{message.timestamp}</span>
+                                        </span>
+                                    }
+                                    description={message.content}
+                                />
+                            </List.Item>
+                        )}
+                    />
+                </div>
+            </div>
+        </div>
+
                 {/* Рекомендуемые курсы */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Рекомендуемые курсы</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -261,10 +318,10 @@ const ProfilePage = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* История активности */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">История активности</h2>
                     <Divider />
                     <List
@@ -278,10 +335,10 @@ const ProfilePage = () => {
                             <List.Item>{item}</List.Item>
                         )}
                     />
-                </div>
+                </div> */}
 
                 {/* Прогресс-бар с уровнем пользователя */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Ваш уровень</h2>
                     <Divider />
                     <div className="flex items-center justify-between">
@@ -289,10 +346,10 @@ const ProfilePage = () => {
                         <Progress percent={(userXP / maxXP) * 100} status="active" />
                     </div>
                     <p className="text-gray-600 mt-2">Опыт: {userXP}/{maxXP} XP</p>
-                </div>
+                </div> */}
 
                 {/* Блок с наградами */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Ваши достижения</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -308,21 +365,21 @@ const ProfilePage = () => {
                             </Badge.Ribbon>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Календарь для планирования обучения */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Календарь обучения</h2>
                     <Divider />
                     <Calendar fullscreen={false} onSelect={handleCalendarSelect} />
-                </div>
+                </div> */}
 
                 {/* Чат с поддержкой */}
-                <div className="fixed bottom-6 right-6">
+                {/* <div className="fixed bottom-6 right-6">
                     <Tooltip title="Чат с поддержкой">
                         <Button shape="circle" icon={<MessageOutlined />} size="large" />
                     </Tooltip>
-                </div>
+                </div> */}
             </div>
         ) : <Skeleton active />
     );

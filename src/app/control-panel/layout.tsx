@@ -146,6 +146,11 @@ let dashboardMenuItems: MenuItem[] = [
         icon: <BarsOutlined />,
     },
     {
+        key: 'feedbacks',
+        label: <Link href={"/control-panel/feedbacks"}>Обратная связь</Link>,
+        icon: <BarsOutlined />,
+    },
+    {
         key: 'platform',
         label: <Link href={"/platform"}>Вернуться на платформу</Link>,
         icon: <LogoutOutlined />,
