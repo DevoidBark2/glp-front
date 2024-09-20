@@ -11,6 +11,7 @@ import CourseComponent from "@/stores/CourseComponent";
 import SectionCourse from "@/stores/SectionCourse";
 import StatisticsStore from "@/stores/statisticsStore";
 import UserProfileStore from "./UserProfileStore";
+import FeedBacksStore from "./FeedBacksStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -24,6 +25,7 @@ const courseComponentStore = new CourseComponent();
 const sectionCourseStore = new SectionCourse();
 const statisticsStore = new StatisticsStore();
 const userProfileStore = new UserProfileStore();
+const feedBacksStore = new FeedBacksStore();
 
 export const RootStore = {
     userStore,
@@ -37,7 +39,8 @@ export const RootStore = {
     courseComponentStore,
     sectionCourseStore,
     statisticsStore,
-    userProfileStore
+    userProfileStore,
+    feedBacksStore
 };
 const StoreContext = React.createContext(RootStore);
 

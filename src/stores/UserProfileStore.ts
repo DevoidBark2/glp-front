@@ -1,6 +1,5 @@
 import { GET,POST } from "@/lib/fetcher";
-import { getCookieUserDetails } from "@/lib/users";
-import { notification } from "antd";
+import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 
 type UserProfile = {
@@ -13,13 +12,22 @@ type UserProfile = {
     university: string
 }
 
+type FeedBackItem =  {
+
+}
+
 class UserProfileStore {
     constructor() {
         makeAutoObservable(this);
     }
 
+    fileListForFeedback: UploadFile[] = [];
     userProfileDetails: UserProfile | null = null
     loading: boolean = false;
+    
+    setFileForFeedBack = action((files: UploadFile[]) => {
+        this.fileListForFeedback = files;
+    });
 
     setLoading = action((value: boolean) => {
         this.loading = value
@@ -37,12 +45,7 @@ class UserProfileStore {
         })
     })
 
-    sendFeedback = action(async (message: string) => {
-        await POST("/api/send-feedback",{message: message}).then(response => {
-            debugger
-            notification.success({message: response.message})
-        })
-    })
+
 }
 
 export default UserProfileStore

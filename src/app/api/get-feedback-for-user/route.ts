@@ -1,16 +1,14 @@
+import axios from "axios";
+import nextConfig from "next.config.mjs";
 import { NextRequest, NextResponse } from "next/server";
-import axios from 'axios';
-import nextConfig from "../../../../next.config.mjs";
 
-export async function POST(req: NextRequest) {
-    const form = await req.formData();
+export async function GET(req: NextRequest) {
     const token = req.headers.get('authorization');
-
+    
     try {
-        const {data} = await axios.post(nextConfig.env?.API_URL + 'api/send-feedback', form, {
+        const {data} = await axios.get(nextConfig.env?.API_URL + 'api/get-feedback-user',{
             headers: {
-                Authorization: token,
-                'Content-Type': 'multipart/form-data',
+                Authorization: token
             }
         });
 

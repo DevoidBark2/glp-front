@@ -1,13 +1,13 @@
 "use client";
 import Image from "next/image";
-import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin, Avatar} from "antd";
+import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin, Avatar, UploadFile} from "antd";
 import {UploadOutlined, EditOutlined, ExclamationCircleOutlined,MessageOutlined,TrophyOutlined,SaveOutlined} from "@ant-design/icons";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import React, {useEffect, useState} from "react";
 
 const ProfilePage = () => {
-    const {userStore,userProfileStore} = useMobxStores();
+    const {userStore,userProfileStore,feedBacksStore} = useMobxStores();
     const [form] = Form.useForm();
     const [userCourses, setUserCourses] = useState([]);
     const [previewImage, setPreviewImage] = useState("/static/profile_photo.jpg");
@@ -20,6 +20,7 @@ const ProfilePage = () => {
         userProfileStore.getUserProfile?.().then(() => {
             form.setFieldsValue(userProfileStore.userProfileDetails);
         });
+        feedBacksStore.getFeedBackForUser();
     }, []);
 
     const [feedback, setFeedback] = useState('');
@@ -96,21 +97,25 @@ const ProfilePage = () => {
     ]);
 
     const handleFeedbackSubmit = (values) => {
-        userProfileStore.sendFeedback(values.message);
+        feedBacksStore.sendFeedback(values);
         const newMessage = {
             id: messages.length + 1,
-            sender: "user", // Сообщение от пользователя
+            sender: "user",
             content: values.message,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         setMessages([...messages, newMessage]);
         form.resetFields();
-        Modal.success({
-            title: 'Спасибо за ваш отзыв!',
-            content: 'Мы получили ваш отзыв и учтём его в будущем.',
-        });
+        // Modal.success({
+        //     title: 'Спасибо за ваш отзыв!',
+        //     content: 'Мы получили ваш отзыв и учтём его в будущем.',
+        // });
     };
 
+    const handleFileChange = ({ fileList }: { fileList: UploadFile[] }) => {
+        feedBacksStore.setFileForFeedBack(fileList);
+    };
+    
     return (
         !userProfileStore.loading ? (
             <div className="container mx-auto mb-4">
@@ -261,6 +266,19 @@ const ProfilePage = () => {
                                 placeholder="Оставьте ваш отзыв или предложение"
                             />
                         </Form.Item>
+
+                        {/* Компонент для загрузки файлов */}
+                        <Form.Item>
+                            <Upload
+                                name="files"
+                                fileList={feedBacksStore.fileListForFeedback}
+                                onChange={handleFileChange} // Обработка изменения списка файлов
+                                multiple
+                                beforeUpload={() => false} // Отключаем авто-загрузку, чтобы отправить вместе с формой
+                            >
+                                <Button icon={<UploadOutlined />}>Прикрепить файлы</Button>
+                            </Upload>
+                            </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">Отправить</Button>
                         </Form.Item>
@@ -277,24 +295,24 @@ const ProfilePage = () => {
                 <div className="chat-history max-h-96 overflow-y-auto">
                     <List
                         itemLayout="horizontal"
-                        dataSource={messages}
+                        dataSource={feedBacksStore.feedBackItems}
                         renderItem={(message) => (
                             <List.Item>
                                 <List.Item.Meta
-                                    avatar={
-                                        message.sender === "admin" ? (
-                                            <Avatar style={{ backgroundColor: "#f56a00" }}>A</Avatar>
-                                        ) : (
-                                            <Avatar style={{ backgroundColor: "#87d068" }}>U</Avatar>
-                                        )
-                                    }
-                                    title={
-                                        <span className={message.sender === "admin" ? "text-blue-600" : "text-green-600"}>
-                                            {message.sender === "admin" ? "Админ" : "Вы"}{" "}
-                                            <span className="text-gray-500 text-sm">{message.timestamp}</span>
-                                        </span>
-                                    }
-                                    description={message.content}
+                                    // avatar={
+                                    //     message.sender === "admin" ? (
+                                    //         <Avatar style={{ backgroundColor: "#f56a00" }}>A</Avatar>
+                                    //     ) : (
+                                    //         <Avatar style={{ backgroundColor: "#87d068" }}>U</Avatar>
+                                    //     )
+                                    // }
+                                    // title={
+                                    //     <span className={message.sender === "admin" ? "text-blue-600" : "text-green-600"}>
+                                    //         {message.sender === "admin" ? "Админ" : "Вы"}{" "}
+                                    //         <span className="text-gray-500 text-sm">{message.timestamp}</span>
+                                    //     </span>
+                                    // }
+                                    description={message.message}
                                 />
                             </List.Item>
                         )}
