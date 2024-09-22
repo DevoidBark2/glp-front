@@ -21,7 +21,7 @@ class FeedBacksStore {
 
     feedBackItems: FeedBackItem[] = [];
     fileListForFeedback: UploadFile[] = [];
-    
+
     setFileForFeedBack = action((files: UploadFile[]) => {
         this.fileListForFeedback = files;
     });
@@ -29,17 +29,17 @@ class FeedBacksStore {
     sendFeedback = action(async (data: any) => {
         const formData = new FormData();
         formData.append('message', data.message);
-        
+
         this.fileListForFeedback.forEach(file => {
             formData.append('files', file.originFileObj)
         })
-        await POST("/api/send-feedback",formData).then(response => {
-            debugger
+        await POST("/api/send-feedback", formData).then(response => {
             this.setFileForFeedBack([]);
-            notification.success({message: response.message})
+            this.feedBackItems = [...this.feedBackItems, feedBackMapper(response.data)]
+            notification.success({ message: response.message })
         }).catch(e => {
             debugger
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         })
     })
 
@@ -52,12 +52,16 @@ class FeedBacksStore {
 }
 
 const feedBackMapper = (feedBack: FeedBackItem) => {
-    debugger
-    return {
+    const feedBackItem: FeedBackItem = {
         id: feedBack.id,
         message: feedBack.message,
-        sent_at: dayjs(feedBack.sent_at,FORMAT_VIEW_DATE).toDate(),
+        sent_at: dayjs(feedBack.sent_at, FORMAT_VIEW_DATE).toDate(),
+        sender: feedBack.sender,
+        recipient: feedBack.recipient,
+        attachments: feedBack.attachments,
     }
+
+    return feedBackItem;
 }
 
 export default FeedBacksStore;

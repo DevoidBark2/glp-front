@@ -24,6 +24,9 @@ const eventStore = new EventStore();
 const generalSettingsStore = new GeneralSettings();
 const courseComponentStore = new CourseComponent();
 const sectionCourseStore = new SectionCourse();
+const avatarIconsStore = new AvatarIconsStore();
+const userProfileStore = new UserProfileStore();
+const feedBacksStore = new FeedBacksStore();
 const statisticsStore = new StatisticsStore();
 
 export const RootStore = {
@@ -37,7 +40,10 @@ export const RootStore = {
     generalSettingsStore,
     courseComponentStore,
     sectionCourseStore,
-    statisticsStore
+    statisticsStore,
+    avatarIconsStore,
+    userProfileStore,
+    feedBacksStore
 };
 const StoreContext = React.createContext(RootStore);
 

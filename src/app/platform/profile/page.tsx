@@ -1,30 +1,48 @@
 "use client";
 import Image from "next/image";
-import {Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin, Avatar, UploadFile} from "antd";
-import {UploadOutlined, EditOutlined, ExclamationCircleOutlined,MessageOutlined,TrophyOutlined,SaveOutlined} from "@ant-design/icons";
-import {observer} from "mobx-react";
-import {useMobxStores} from "@/stores/stores";
-import React, {useEffect, useState} from "react";
+import { Button, Divider, Form, Input, Modal, Progress, Skeleton, Upload, Tooltip, Rate, List, Badge, Calendar, Spin, Avatar, UploadFile, Empty } from "antd";
+import { UploadOutlined, EditOutlined, ExclamationCircleOutlined, MessageOutlined, TrophyOutlined, SaveOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { observer } from "mobx-react";
+import { useMobxStores } from "@/stores/stores";
+import React, { useEffect, useState } from "react";
+import { FeedBackItem } from "@/stores/FeedBacksStore";
+import { Course } from "@/stores/CourseStore";
+import { UploadChangeParam } from "antd/lib/upload";
+import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
-    const {userStore,userProfileStore,feedBacksStore} = useMobxStores();
+    const { userStore, userProfileStore, feedBacksStore } = useMobxStores();
     const [form] = Form.useForm();
-    const [userCourses, setUserCourses] = useState([]);
+    const [formProfile] = Form.useForm();
+    const [userCourses, setUserCourses] = useState<Course[]>([]);
     const [previewImage, setPreviewImage] = useState("/static/profile_photo.jpg");
     const [isEditing, setIsEditing] = useState(false);
     const [loadingCourses, setLoadingCourses] = useState(false);
+    const router = useRouter();
 
-    const [loadingProfile,setLoadingProfile] = useState(true)
-    useEffect(() => {
-        setLoadingProfile(false)
-        userProfileStore.getUserProfile?.().then(() => {
-            form.setFieldsValue(userProfileStore.userProfileDetails);
-        });
-        feedBacksStore.getFeedBackForUser();
-    }, []);
+    const [loadingProfile, setLoadingProfile] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const [feedback, setFeedback] = useState('');
-    const [rating, setRating] = useState(0);
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleModalOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    const onAvatarChange = (info) => {
+        setLoadingAvatar(true);
+        // Заглушка для загрузки аватара
+        setTimeout(() => {
+            setLoadingAvatar(false);
+            // Здесь обновите previewImage
+        }, 2000);
+    };
 
     const handleAvatarChange = (file) => {
         const reader = new FileReader();
@@ -37,7 +55,7 @@ const ProfilePage = () => {
     const maxXP = 200; // Максимальное количество очков опыта для повышения уровня
 
 
-    const confirmLeaveCourse = (courseId) => {
+    const confirmLeaveCourse = (courseId: number) => {
         Modal.confirm({
             title: "Вы уверены, что хотите покинуть курс?",
             icon: <ExclamationCircleOutlined />,
@@ -49,26 +67,14 @@ const ProfilePage = () => {
         });
     };
 
-    // const handleFeedbackSubmit = (values: any) => {
-    //     debugger
-    //     userProfileStore.sendFeedback(values.message);
-    //     if (feedback) {
-    //         Modal.success({
-    //             title: 'Спасибо за ваш отзыв!',
-    //             content: 'Мы получили ваш отзыв и учтём его в будущем.',
-    //         });
-    //         setFeedback('');
-    //     }
-    // };
-
     const recommendedCourses = [
-        {id: 1, name: "Основы Python", image: "https://example.com/python.png"},
-        {id: 2, name: "React для начинающих", image: "https://example.com/react.png"},
+        { id: 1, name: "Основы Python", image: "https://example.com/python.png" },
+        { id: 2, name: "React для начинающих", image: "https://example.com/react.png" },
     ];
     const achievements = [
-        {title: "Завершил первый курс", icon: <TrophyOutlined />, description: "Поздравляем! Вы завершили свой первый курс."},
-        {title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс."},
-        {title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс."}
+        { title: "Завершил первый курс", icon: <TrophyOutlined />, description: "Поздравляем! Вы завершили свой первый курс." },
+        { title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс." },
+        { title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс." }
     ];
 
     const handleCalendarSelect = (date) => {
@@ -79,43 +85,23 @@ const ProfilePage = () => {
     };
     const [loadingAvatar, setLoadingAvatar] = useState(false);
 
-    // Показывать спин при загрузке аватара
-    const onAvatarChange = (info) => {
-        setLoadingAvatar(true);
-        handleAvatarChange(info);
-        setTimeout(() => {
-            setLoadingAvatar(false);
-        }, 1500); // Симулируем время загрузки
-    };
+    // // Показывать спин при загрузке аватара
+    // const onAvatarChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    //     setLoadingAvatar(true);
+    //     handleAvatarChange(info);
+    //     setTimeout(() => {
+    //         setLoadingAvatar(false);
+    //     }, 1500); // Симулируем время загрузки
+    // };
 
+    useEffect(() => {
+        setLoadingProfile(false)
+        userProfileStore.getUserProfile?.().then(() => {
+            formProfile.setFieldsValue(userProfileStore.userProfileDetails);
+        });
+        feedBacksStore.getFeedBackForUser();
+    }, []);
 
-    // Пример данных для чата
-    const [messages, setMessages] = useState([
-        { id: 1, sender: "admin", content: "Здравствуйте! Как могу помочь?", timestamp: "10:30" },
-        { id: 2, sender: "user", content: "У меня есть вопрос по поводу заказа.", timestamp: "10:31" },
-        { id: 3, sender: "admin", content: "Конечно! Задавайте вопрос.", timestamp: "10:32" }
-    ]);
-
-    const handleFeedbackSubmit = (values) => {
-        feedBacksStore.sendFeedback(values);
-        const newMessage = {
-            id: messages.length + 1,
-            sender: "user",
-            content: values.message,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        setMessages([...messages, newMessage]);
-        form.resetFields();
-        // Modal.success({
-        //     title: 'Спасибо за ваш отзыв!',
-        //     content: 'Мы получили ваш отзыв и учтём его в будущем.',
-        // });
-    };
-
-    const handleFileChange = ({ fileList }: { fileList: UploadFile[] }) => {
-        feedBacksStore.setFileForFeedBack(fileList);
-    };
-    
     return (
         !userProfileStore.loading ? (
             <div className="container mx-auto mb-4">
@@ -130,77 +116,167 @@ const ProfilePage = () => {
                     Вы уверены, что хотите покинуть курс? Это действие нельзя отменить.
                 </Modal>
 
-                <h1 className="text-4xl my-5 text-center font-bold">Профиль пользователя</h1>
+                <h1 className="text-gray-800 text-4xl my-5 font-bold">Профиль пользователя</h1>
 
                 <div className="flex gap-6">
                     {/* Левая часть - профиль */}
                     <div className="w-2/5 bg-white flex flex-col rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
-            <div className="flex justify-center mb-4">
-                {/* Спин вокруг изображения при загрузке */}
-                <Spin spinning={loadingAvatar} tip="Загрузка...">
-                    <Image className="rounded-full" src={previewImage} alt="Картинка профиля" width={200} height={200} />
-                </Spin>
-            </div>
+                        <div className="flex justify-center mb-4">
+                            {/* Спин вокруг изображения при загрузке */}
+                            <Spin spinning={loadingAvatar} tip="Загрузка...">
+                                <Image className="rounded-full" src={previewImage} alt="Картинка профиля" width={200} height={200} />
+                            </Spin>
+                        </div>
 
-            <div className="flex justify-center mb-4">
-                <Upload onChange={onAvatarChange} showUploadList={false}>
-                    <Button icon={<UploadOutlined />}>Загрузить аватар</Button>
-                </Upload>
-            </div>
+                        <div className="flex justify-center mb-4">
+                            <Upload onChange={onAvatarChange} showUploadList={false}>
+                                <Button icon={<UploadOutlined />}>Загрузить аватар</Button>
+                            </Upload>
+                        </div>
 
-            {/* Скелетон для полей формы пока профиль загружается */}
-            {loadingProfile ? (
-                <Skeleton active paragraph={{rows: 4}} />
-            ) : (
-                <Form form={form} layout="vertical">
-                    <Form.Item name="first_name" label="Имя">
-                        <Input
-                            className={`h-12 rounded-md transition-all duration-300 ${
-                                !isEditing ? "bg-gray-200 text-gray-500 cursor-not-allowed blur-sm" : ""
-                            }`}
-                            placeholder="Введите имя"
-                            disabled={!isEditing}
-                        />
-                    </Form.Item>
+                        {/* Скелетон для полей формы пока профиль загружается */}
+                        {loadingProfile ? (
+                            <Skeleton active paragraph={{ rows: 6 }} />
+                        ) : (
+                            <Form form={formProfile} layout="vertical">
+                                <Form.Item name="first_name" label="Имя">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите имя"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
 
-                    <Form.Item name="second_name" label="Фамилия">
-                        <Input
-                            className={`h-12 rounded-md transition-all duration-300 ${
-                                !isEditing ? "bg-gray-200 text-gray-500 cursor-not-allowed blur-sm" : ""
-                            }`}
-                            placeholder="Введите фамилию"
-                            disabled={!isEditing}
-                        />
-                    </Form.Item>
+                                <Form.Item name="second_name" label="Фамилия">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите фамилию"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
 
-                    <div className="flex flex-col items-center">
-                        {/* Кнопка сохранения с анимацией */}
-                        <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className={`transition-all duration-300 ease-in-out transform ${
-                                    isEditing ? "hover:scale-105" : "hover:scale-100"
-                                }`}
-                                disabled={!isEditing}
-                                icon={<SaveOutlined />}
-                            >
-                                Сохранить
-                            </Button>
-                        </Form.Item>
+                                <Form.Item name="email" label="Email">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите email"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
 
-                        {/* Кнопка редактирования с анимацией */}
-                        <Button
-                            icon={<EditOutlined />}
-                            className="transition-all duration-300 ease-in-out hover:bg-gray-50 hover:text-blue-500"
-                            onClick={() => setIsEditing(!isEditing)}
+                                <Form.Item name="phone" label="Телефон">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите телефон"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
+
+                                <div className="flex justify-between items-center mt-4">
+                                    <div className="flex flex-col">
+                                        {/* Кнопка сохранения с анимацией */}
+                                        <Form.Item>
+                                            <Button
+                                                type="primary"
+                                                htmlType="submit"
+                                                className={`transition-all duration-300 ease-in-out transform ${isEditing ? "hover:scale-105" : "hover:scale-100"
+                                                    }`}
+                                                disabled={!isEditing}
+                                                icon={<SaveOutlined />}
+                                            >
+                                                Сохранить
+                                            </Button>
+                                        </Form.Item>
+
+                                        {/* Кнопка редактирования с анимацией */}
+                                        <Button
+                                            icon={<EditOutlined />}
+                                            className="transition-all duration-300 ease-in-out hover:bg-gray-50 hover:text-blue-500"
+                                            onClick={() => setIsEditing(!isEditing)}
+                                        >
+                                            {isEditing ? "Отменить" : "Редактировать профиль"}
+                                        </Button>
+                                    </div>
+
+                                    {/* Кнопка для открытия модального окна */}
+                                    <Button
+                                        icon={<InfoCircleOutlined />}
+                                        className="transition-all duration-300 ease-in-out hover:bg-gray-50 hover:text-blue-500"
+                                        onClick={showModal}
+                                    >
+                                        Подробнее
+                                    </Button>
+                                </div>
+                            </Form>
+                        )}
+
+                        {/* Модальное окно с подробной информацией */}
+                        <Modal
+                            title="Информация о пользователе"
+                            visible={isModalVisible}
+                            onOk={handleModalOk}
+                            onCancel={handleModalCancel}
+                            footer={[
+                                <Button key="back" onClick={handleModalCancel}>
+                                    Закрыть
+                                </Button>,
+                                <Button key="submit" type="primary" onClick={handleModalOk}>
+                                    Сохранить изменения
+                                </Button>,
+                            ]}
                         >
-                            {isEditing ? "Отменить" : "Редактировать профиль"}
-                        </Button>
+                            <Form form={formProfile} layout="vertical">
+                                <Form.Item name="first_name" label="Имя">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите имя"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item name="second_name" label="Фамилия">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите фамилию"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item name="email" label="Email">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите email"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item name="phone" label="Телефон">
+                                    <Input
+                                        className="h-12 rounded-md transition-all duration-300"
+                                        placeholder="Введите телефон"
+                                        disabled={!isEditing}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item name="address" label="Адрес">
+                                    <Input.TextArea
+                                        className="rounded-md transition-all duration-300"
+                                        placeholder="Введите адрес"
+                                        disabled={!isEditing}
+                                        rows={3}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item name="about" label="О себе">
+                                    <Input.TextArea
+                                        className="rounded-md transition-all duration-300"
+                                        placeholder="Введите информацию о себе"
+                                        disabled={!isEditing}
+                                        rows={3}
+                                    />
+                                </Form.Item>
+                            </Form>
+                        </Modal>
                     </div>
-                </Form>
-            )}
-        </div>
 
                     {/* Правая часть - курсы */}
                     <div className="w-3/5 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
@@ -210,14 +286,14 @@ const ProfilePage = () => {
                         {loadingCourses ? (
                             <Skeleton active />
                         ) : (
-                            userCourses.map(course => (
+                            1 > 5 ? userCourses.map(course => (
                                 <div key={course.id} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md hover:bg-white hover:shadow-lg transition-all duration-300">
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center">
                                             <img src={course.image} alt={course.name} width={50} height={50} className="rounded-lg mr-4" />
                                             <div>
                                                 <h3 className="text-xl font-semibold">{course.name}</h3>
-                                                <p className="text-gray-600">{course.description}</p>
+                                                <p className="text-gray-600">{course.small_description}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center">
@@ -231,9 +307,14 @@ const ProfilePage = () => {
                                             >Покинуть курс</Button>
                                         </div>
                                     </div>
-                                    <Progress percent={course.progress} strokeColor="#87d068" />
+                                    <Progress percent={course.level} strokeColor="#87d068" />
                                 </div>
-                            ))
+                            )) : <div className="flex items-center justify-center h-3/4">
+                                <Empty description={<div className="flex flex-col">
+                                    <span>Список пуст</span>
+                                    <Button type="primary" className="mt-2" onClick={() => router.push('/platform/courses')}>Перейти к списку</Button>
+                                </div>} />
+                            </div>
                         )}
                     </div>
                 </div>
@@ -248,8 +329,7 @@ const ProfilePage = () => {
                         {userCourses.map(course => (
                             <div key={course.id} className="flex flex-col items-center bg-gray-50 p-4 rounded-md shadow-md">
                                 <h3 className="text-xl font-semibold">{course.name}</h3>
-                                <Rate onChange={(value) => setRating(value)} value={rating} />
-                                <p className="text-gray-600 mt-2">Ваш рейтинг: {rating}/5</p>
+                                <p className="text-gray-600 mt-2">Ваш рейтинг: 2/5</p>
                             </div>
                         ))}
                     </div>
@@ -259,8 +339,13 @@ const ProfilePage = () => {
                 <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Обратная связь</h2>
                     <Divider />
-                    <Form form={form} onFinish={handleFeedbackSubmit}>
-                        <Form.Item name="message">
+                    <Form
+                        form={form}
+                        onFinish={(values) => feedBacksStore.sendFeedback(values).then(() => {
+                            form.resetFields();
+                        })}
+                    >
+                        <Form.Item name="message" rules={[{ required: true, message: "Сообщение не может быть пустым!" }]}>
                             <Input.TextArea
                                 rows={4}
                                 placeholder="Оставьте ваш отзыв или предложение"
@@ -272,13 +357,15 @@ const ProfilePage = () => {
                             <Upload
                                 name="files"
                                 fileList={feedBacksStore.fileListForFeedback}
-                                onChange={handleFileChange} // Обработка изменения списка файлов
+                                onChange={({ fileList }: { fileList: UploadFile[] }) => {
+                                    feedBacksStore.setFileForFeedBack(fileList);
+                                }}
                                 multiple
-                                beforeUpload={() => false} // Отключаем авто-загрузку, чтобы отправить вместе с формой
+                                beforeUpload={() => false}
                             >
                                 <Button icon={<UploadOutlined />}>Прикрепить файлы</Button>
                             </Upload>
-                            </Form.Item>
+                        </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">Отправить</Button>
                         </Form.Item>
@@ -286,40 +373,41 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="container mx-auto mt-12">
-            
 
-            {/* История переписки */}
-            <div className="bg-white rounded-md shadow-lg p-6 mb-6 transition-all duration-300 hover:shadow-2xl">
-                <h2 className="text-2xl font-bold mb-4">Переписка с администратором</h2>
-                <Divider />
-                <div className="chat-history max-h-96 overflow-y-auto">
-                    <List
-                        itemLayout="horizontal"
-                        dataSource={feedBacksStore.feedBackItems}
-                        renderItem={(message) => (
-                            <List.Item>
-                                <List.Item.Meta
-                                    // avatar={
-                                    //     message.sender === "admin" ? (
-                                    //         <Avatar style={{ backgroundColor: "#f56a00" }}>A</Avatar>
-                                    //     ) : (
-                                    //         <Avatar style={{ backgroundColor: "#87d068" }}>U</Avatar>
-                                    //     )
-                                    // }
-                                    // title={
-                                    //     <span className={message.sender === "admin" ? "text-blue-600" : "text-green-600"}>
-                                    //         {message.sender === "admin" ? "Админ" : "Вы"}{" "}
-                                    //         <span className="text-gray-500 text-sm">{message.timestamp}</span>
-                                    //     </span>
-                                    // }
-                                    description={message.message}
-                                />
-                            </List.Item>
-                        )}
-                    />
+
+                    {/* История переписки */}
+                    <div className="bg-white rounded-md shadow-lg p-6 mb-6 transition-all duration-300 hover:shadow-2xl">
+                        <h2 className="text-2xl font-bold mb-4">Переписка с администратором</h2>
+                        <Divider />
+                        <div className="chat-history max-h-96 overflow-y-auto">
+                            <List
+                                itemLayout="horizontal"
+                                dataSource={feedBacksStore.feedBackItems}
+                                renderItem={(message: FeedBackItem) => (
+                                    <List.Item>
+                                        <List.Item.Meta
+                                            // avatar={
+                                            //     message.sender === "admin" ? (
+                                            //         <Avatar style={{ backgroundColor: "#f56a00" }}>A</Avatar>
+                                            //     ) : (
+                                            //         <Avatar style={{ backgroundColor: "#87d068" }}>U</Avatar>
+                                            //     )
+                                            // }
+                                            // title={
+                                            //     <span className={message.sender === "admin" ? "text-blue-600" : "text-green-600"}>
+                                            //         {message.sender === "admin" ? "Админ" : "Вы"}{" "}
+                                            //         <span className="text-gray-500 text-sm">{message.timestamp}</span>
+                                            //     </span>
+                                            // }
+                                            description={message.message}
+                                            title={message.sender.first_name}
+                                        />
+                                    </List.Item>
+                                )}
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
                 {/* Рекомендуемые курсы */}
                 {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
