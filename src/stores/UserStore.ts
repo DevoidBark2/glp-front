@@ -7,16 +7,6 @@ import {UserRole} from "@/enums/UserRoleEnum";
 import {StatusUserEnum} from "@/enums/StatusUserEnum";
 import {message} from "antd";
 
-type userProfile = {
-    birth_day : Date
-    city: string
-    first_name: string
-    id: number
-    last_name: string
-    second_name:string
-    university: string
-}
-
 export type User = {
     id: number;
     first_name: string;
@@ -190,12 +180,6 @@ class UserStore {
 
     })
 
-    userProfileDetails: userProfile | null = null
-
-    setUserProfileDetails = action((value:any) => {
-        this.userProfileDetails = value
-    })
-
     setAllUsers = action((values: User[]) => {
         this.allUsers = values;
     })
@@ -206,16 +190,6 @@ class UserStore {
         await GET(`/api/users?token=${token}`).then(response => {
             this.setAllUsers(response.response.data.map(usersMapper))
         }).finally(() => this.setLoading(false))
-    })
-
-    getUserProfile = action(async () => {
-        const user = getCookieUserDetails()
-
-        return await GET(`/api/get-user?token=${user.user.token}`).then(response => {
-            this.setUserProfileDetails(response.response)
-        }).finally(() => {
-            this.setLoading(false)
-        })
     })
 
     createUser = action(async (values: any) => {

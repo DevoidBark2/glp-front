@@ -52,7 +52,7 @@ export const LEVEL_COURSE = [
 ]
 export const userRoleColors = {
     [UserRole.STUDENT] : "blue",
-    [UserRole.MODERATOR] : "gray",
+    [UserRole.MODERATOR] : "orange",
     [UserRole.TEACHER] : "green",
     [UserRole.SUPER_ADMIN] : "black",
 }

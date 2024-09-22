@@ -18,23 +18,6 @@ const GraphPage = () => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
-        for (let i = 5; i < 500; i = i + 6) {
-            context.moveTo(i, 5);
-            context.lineTo(i, 500);
-
-            context.moveTo(5, i);
-            context.lineTo(500, i);
-
-            context.strokeStyle = "#f0f0f0";
-            context.stroke();
-        }
-
-        context.beginPath();
-        context.moveTo(25, 25);
-        context.lineTo(105, 25);
-        context.lineTo(25, 105);
-        context.fill();
-
         canvas.addEventListener('click', (event: any) => {
             setCircleVisible(true);
             const rect = canvas.getBoundingClientRect();
@@ -46,7 +29,6 @@ const GraphPage = () => {
         canvas.addEventListener('contextmenu', handleRightClick);
 
         return () => {
-            // Clean up event listener on component unmount
             canvas.removeEventListener('contextmenu', handleRightClick);
         };
     }, []);
@@ -78,6 +60,7 @@ const GraphPage = () => {
         }
     };
 
+
     useEffect(() => {
         settingsStore.getUserSettings?.();
     }, []);
@@ -90,7 +73,14 @@ const GraphPage = () => {
                 <p>Some contents...</p>
                 <p>Some contents...</p>
             </Drawer>
-            <canvas className="canvas" ref={canvasRef} width={1000} height={800} onClick={drawCircle} />
+            <canvas
+                className="canvas"
+                ref={canvasRef}
+                onClick={drawCircle}
+                width={window.innerWidth}
+                height={window.innerHeight - 140}
+                style={{ display: 'block' }}
+            />
             {contextMenuVisible && (
                 <Menu
                     onClick={handleMenuClick}

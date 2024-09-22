@@ -26,7 +26,7 @@ const SettingsControlPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen rounded">
             <div className="bg-gray-50 p-5 rounded-lg shadow-md mb-5">
                 <div className="flex items-center">
                     <InfoCircleOutlined className="text-2xl text-blue-600 mr-3"/>
@@ -60,7 +60,7 @@ const SettingsControlPage = () => {
                                     <Input placeholder={GeneralSettingTooltips.PLATFORM_NAME.PLACEHOLDER}/>
                                 </Form.Item>
                                 <Form.Item label={GeneralSettingTooltips.PLATFORM_LOGO.LABEL} name="logo_url">
-                                    <Input placeholder={GeneralSettingTooltips.PLATFORM_LOGO.PLACEHOLDER}/>
+                                    <Input disabled placeholder={GeneralSettingTooltips.PLATFORM_LOGO.PLACEHOLDER}/>
                                 </Form.Item>
                                 <Form.Item
                                     name="service_mode"
@@ -70,49 +70,18 @@ const SettingsControlPage = () => {
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
                                 </Form.Item>
-                                {/*<Form.Item label="Язык по умолчанию">*/}
-                                {/*    <Select defaultValue="ru">*/}
-                                {/*        <Select.Option value="en">Английский</Select.Option>*/}
-                                {/*        <Select.Option value="ru">Русский</Select.Option>*/}
-                                {/*        <Select.Option value="es">Испанский</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Включить GDPR">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*</Form.Item>*/}
-                                {/* Новые настройки */}
-                                {/*<Form.Item label="Тема оформления">*/}
-                                {/*    <Select defaultValue="light">*/}
-                                {/*        <Select.Option value="light">Светлая</Select.Option>*/}
-                                {/*        <Select.Option value="dark">Тёмная</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Срок действия сессии">*/}
-                                {/*    <InputNumber min={5} max={120} defaultValue={30} /> минут*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Мультиязычность интерфейса">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Настройка часового пояса">*/}
-                                {/*    <Select defaultValue="UTC">*/}
-                                {/*        <Select.Option value="UTC">UTC</Select.Option>*/}
-                                {/*        <Select.Option value="GMT">GMT</Select.Option>*/}
-                                {/*        <Select.Option value="EST">EST</Select.Option>*/}
-                                {/*        <Select.Option value="PST">PST</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
                                 <Form.Item label={GeneralSettingTooltips.CACHE_ENABLED.LABEL} name="cache_enabled">
                                     <Select placeholder={GeneralSettingTooltips.CACHE_ENABLED.PLACEHOLDER}>
                                         <Select.Option value={true}>Включено</Select.Option>
                                         <Select.Option value={false}>Отключено</Select.Option>
                                     </Select>
                                 </Form.Item>
-                                {/*<Form.Item label="Тестовые данные">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Настройки для разработчиков">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*</Form.Item>*/}
+                                {/* <Form.Item label="Тестовые данные">
+                                   <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+                                <Form.Item label="Настройки для разработчиков">
+                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item> */}
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
@@ -163,31 +132,11 @@ const SettingsControlPage = () => {
                                 {/*        <InfoCircleOutlined className="ml-2 text-gray-500" />*/}
                                 {/*    </Tooltip>*/}
                                 {/*</Form.Item>*/}
-                                {/*<Form.Item label="Частота обновления данных на панели">*/}
-                                {/*    <Select defaultValue="5_minutes">*/}
-                                {/*        <Select.Option value="1_minute">1 минута</Select.Option>*/}
-                                {/*        <Select.Option value="5_minutes">5 минут</Select.Option>*/}
-                                {/*        <Select.Option value="15_minutes">15 минут</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
                                 {/*<Form.Item label="Уровень уведомлений для пользователей">*/}
                                 {/*    <Select defaultValue="all">*/}
                                 {/*        <Select.Option value="all">Все уведомления</Select.Option>*/}
                                 {/*        <Select.Option value="important">Только важные</Select.Option>*/}
                                 {/*        <Select.Option value="none">Без уведомлений</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Персонализация интерфейса для ролей">*/}
-                                {/*    <Select defaultValue="default">*/}
-                                {/*        <Select.Option value="default">Стандартный</Select.Option>*/}
-                                {/*        <Select.Option value="custom">Кастомизированный</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Блокировка пользователей по регионам">*/}
-                                {/*    <Select mode="multiple" placeholder="Выберите регионы для блокировки">*/}
-                                {/*        <Select.Option value="us">США</Select.Option>*/}
-                                {/*        <Select.Option value="eu">Европа</Select.Option>*/}
-                                {/*        <Select.Option value="asia">Азия</Select.Option>*/}
                                 {/*    </Select>*/}
                                 {/*</Form.Item>*/}
                                 <Form.Item>
@@ -358,12 +307,6 @@ const SettingsControlPage = () => {
                                 {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
                                 {/*    <div className="text-gray-500 mt-1">*/}
                                 {/*        Позволяет добавить дополнительный уровень безопасности через двухфакторную аутентификацию.*/}
-                                {/*    </div>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="IP Белый список" name="white_ips">*/}
-                                {/*    <Input placeholder="Введите IP-адреса через запятую" />*/}
-                                {/*    <div className="text-gray-500 mt-1">*/}
-                                {/*        Ограничивает доступ к админ-панели только для указанных IP-адресов.*/}
                                 {/*    </div>*/}
                                 {/*</Form.Item>*/}
                                 {/*<Form.Item label="Автоматические резервные копии" name="auto_backups">*/}

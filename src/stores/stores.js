@@ -6,11 +6,13 @@ import CourseStore from "@/stores/CourseStore";
 import GraphStore from "@/stores/GraphStore";
 import NomenclatureStore from "@/stores/NomenclatureStore";
 import EventStore from "@/stores/EventStore";
-import {GeneralSettings} from "@/stores/GeneralSettings";
+import { GeneralSettings } from "@/stores/GeneralSettings";
 import CourseComponent from "@/stores/CourseComponent";
 import SectionCourse from "@/stores/SectionCourse";
 import StatisticsStore from "@/stores/statisticsStore";
 import AvatarIconsStore from "@/stores/AvatarIconsStore";
+import UserProfileStore from "./UserProfileStore";
+import FeedBacksStore from "./FeedBacksStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -23,7 +25,6 @@ const generalSettingsStore = new GeneralSettings();
 const courseComponentStore = new CourseComponent();
 const sectionCourseStore = new SectionCourse();
 const statisticsStore = new StatisticsStore();
-const avatarIconsStore = new AvatarIconsStore();
 
 export const RootStore = {
     userStore,
@@ -36,8 +37,7 @@ export const RootStore = {
     generalSettingsStore,
     courseComponentStore,
     sectionCourseStore,
-    statisticsStore,
-    avatarIconsStore
+    statisticsStore
 };
 const StoreContext = React.createContext(RootStore);
 

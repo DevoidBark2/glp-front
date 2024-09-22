@@ -1,14 +1,15 @@
 "use client";
 import { observer } from "mobx-react";
-import {Button, Divider, Table, Tag, Tooltip, Space, message, Input, Select} from "antd";
-import type { TableColumnsType } from "antd";
+import {Button, Divider, Table, Tag, Tooltip, Space, message, Input, Select, Popconfirm, Dropdown} from "antd";
+import type { MenuProps, TableColumnsType } from "antd";
 import React, { Key, useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { User } from "@/stores/UserStore";
+import Image from "next/image";
 import {
     EditOutlined,
     DeleteOutlined,
-    PlusCircleOutlined,
+    PlusCircleOutlined,MoreOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -16,14 +17,12 @@ import GlobalActionComponent from "@/components/GlobalActionComponent/GlobalActi
 import {FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors} from "@/constants";
 import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 import {showUserStatus} from "@/utils/showUserStatus";
+import { usersTable } from "@/tableConfig/usersTable";
+import { useRouter } from "next/navigation";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
-
-    const handleSave = (record: User) => {
-        // Implement saving logic here
-        message.success(`User ${record.first_name} saved successfully!`);
-    };
+    const router = useRouter();
 
     const handleBulkStatusUpdate = (status: boolean) => {
         if (userStore.selectedRowsUser.length === 0) {
@@ -46,17 +45,15 @@ const UsersPage = () => {
         {
             dataIndex: "first_name",
             title: "Полное имя",
-            render: (_, record) => `${record.first_name} ${record.second_name} ${record.last_name}`,
             sorter: (a, b) => a.first_name.localeCompare(b.first_name),
+            render: (_, record) => `${record.first_name} ${record.second_name} ${record.last_name}`
         },
         {
             dataIndex: "role",
             title: "Роль",
             filters: FILTER_ROLE_USER,
             onFilter: (value, record) => record.role === value,
-            render: (_,record) => {
-                return <Tag color={userRoleColors[record.role]}>{record.role}</Tag>;
-            },
+            render: (_,record) => <Tag color={userRoleColors[record.role]}>{record.role}</Tag>
         },
         {
             dataIndex: "status",
@@ -90,19 +87,56 @@ const UsersPage = () => {
                             <Button
                                 shape="circle"
                                 icon={<EditOutlined />}
-                                onClick={() => handleSave(record)}
+                                onClick={() => router.push(`/control-panel/users/${record.id}`)}
                             />
                         </Tooltip>
                         <Tooltip title="Удалить">
+                            <Popconfirm
+                            title="Удалить пользователя?"
+                            placement="leftBottom"
+                            description="Вы уверены, что хотите удалить этого пользователя? Это действие нельзя будет отменить."
+                            okText="Да"
+                            cancelText="Нет"
+                        >
                             <Button
                                 className="ml-3"
                                 danger type="primary"
                                 icon={<DeleteOutlined />}
                             />
+                        </Popconfirm>
                         </Tooltip>
                     </div>
                 );
             },
+        },
+    ];
+
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: <div className="flex items-center">
+                <Image
+                    src="/static/delete_icon.svg"
+                    alt="Массовое удаление"
+                    width={20}
+                    height={20}
+                    className="cursor-pointer hover:scale-110 transition-transform duration-200"
+                />
+                <p className="ml-2">Массовое удаление</p>
+        </div>
+        },
+        {
+            key: '2',
+            label: <div className="flex items-center">
+            <Image
+                    src="/static/export_icon.svg"
+                    alt="Массовый экспорт"
+                    width={20}
+                    height={20}
+                    className="cursor-pointer hover:scale-110 transition-transform duration-200"
+                />
+                <p className="ml-2">Массовый экспорт</p>
+           </div>
         },
     ];
 
@@ -111,7 +145,7 @@ const UsersPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                 <div className="flex">
                     <h1 className="text-gray-800 font-bold text-3xl mb-4 md:mb-0 md:mr-4">
@@ -132,6 +166,9 @@ const UsersPage = () => {
                             <span className="hidden sm:inline">Новый пользователь</span>
                         </Button>
                     </Link>
+                    <Dropdown menu={{ items }} placement="bottomLeft">
+                        <Button className="ml-2" icon={ <MoreOutlined />}/>
+                    </Dropdown>
                 </div>
             </div>
             <Divider/>
@@ -150,15 +187,13 @@ const UsersPage = () => {
                 pagination={{pageSize: 10}}
                 loading={userStore.loading}
                 showSorterTooltip={false}
-                rowClassName={(_, index) =>
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                }
                 rowSelection={{
                     type: "checkbox",
                     onChange: (selectedRowKeys: Key[]) => {
                         userStore.setSelectedRowsUsers(selectedRowKeys.map(key => Number(key)));
                     },
                 }}
+                locale={usersTable}
             />
         </div>
     );
