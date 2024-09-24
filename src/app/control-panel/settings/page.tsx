@@ -1,5 +1,5 @@
 "use client"
-import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio} from "antd";
+import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio, Slider, InputNumber, TimePicker} from "antd";
 import React, {useEffect} from "react";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
@@ -95,55 +95,126 @@ const SettingsControlPage = () => {
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
                                 <Form.Item name="id" hidden></Form.Item>
-                                <Form.Item label={GeneralSettingTooltips.USER_ROLE_DEFAULT.LABEL}
-                                           name="default_user_role">
+                                
+                                {/* Существующие настройки */}
+                                <Form.Item label={GeneralSettingTooltips.USER_ROLE_DEFAULT.LABEL} name="default_user_role">
                                     <Select placeholder={GeneralSettingTooltips.USER_ROLE_DEFAULT.PLACEHOLDER}>
                                         <Select.Option value="student">Пользователь</Select.Option>
-                                        <Select.Option value="teacher">Создатель(учитель)</Select.Option>
+                                        <Select.Option value="teacher">Создатель (учитель)</Select.Option>
                                         <Select.Option value="moderator">Модератор</Select.Option>
                                     </Select>
                                 </Form.Item>
+
                                 <Form.Item
                                     label={GeneralSettingTooltips.AUTO_CONFIRM_REGISTER.LABEL}
                                     tooltip={GeneralSettingTooltips.AUTO_CONFIRM_REGISTER.TOOLTIP}
                                     name="auto_confirm_register"
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
+
                                 <Form.Item
                                     label={GeneralSettingTooltips.USER_COMPLAINT_NOTIFICATION.LABEL}
                                     tooltip={GeneralSettingTooltips.USER_COMPLAINT_NOTIFICATION.TOOLTIP}
                                     name="user_complaint_notification"
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
-                                <Form.Item label={GeneralSettingTooltips.PERIOD_USER_OF_INACTIVITY.LABEL}
-                                           name="period_of_inactive">
+
+                                <Form.Item label={GeneralSettingTooltips.PERIOD_USER_OF_INACTIVITY.LABEL} name="period_of_inactive">
                                     <Input
                                         type="number"
                                         placeholder={GeneralSettingTooltips.PERIOD_USER_OF_INACTIVITY.PLACEHOLDER}
                                     />
                                 </Form.Item>
-                                {/*<Form.Item label="Панель мониторинга активности пользователей">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*    <Tooltip title="Панель мониторинга активности пользователей: позволяет администратору отслеживать действия пользователей на сайте, что помогает обнаруживать потенциальные нарушения безопасности и обеспечивает более эффективное управление контентом">*/}
-                                {/*        <InfoCircleOutlined className="ml-2 text-gray-500" />*/}
-                                {/*    </Tooltip>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Уровень уведомлений для пользователей">*/}
-                                {/*    <Select defaultValue="all">*/}
-                                {/*        <Select.Option value="all">Все уведомления</Select.Option>*/}
-                                {/*        <Select.Option value="important">Только важные</Select.Option>*/}
-                                {/*        <Select.Option value="none">Без уведомлений</Select.Option>*/}
-                                {/*    </Select>*/}
-                                {/*</Form.Item>*/}
+
+                                {/* Новые, более интересные настройки */}
+                                
+                                {/* Настройки ограничений по возрасту */}
+                                <Form.Item
+                                    label="Ограничение доступа по возрасту"
+                                    tooltip="Укажите минимальный возраст для доступа к различным функциям и материалам."
+                                    name="age_restriction"
+                                >
+                                    <InputNumber min={1} max={100} placeholder="Введите минимальный возраст" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Настройки временной блокировки */}
+                                <Form.Item
+                                    label="Временная блокировка пользователей"
+                                    tooltip="Позволяет временно заблокировать пользователей на определенный период."
+                                    name="temp_user_block"
+                                >
+                                    <Select placeholder="Выберите период блокировки">
+                                        <Select.Option value="1_day">1 день</Select.Option>
+                                        <Select.Option value="7_days">1 неделя</Select.Option>
+                                        <Select.Option value="30_days">1 месяц</Select.Option>
+                                        <Select.Option value="permanent">Постоянная блокировка</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
+                                {/* Настройки пользовательского рейтинга */}
+                                <Form.Item
+                                    label="Система пользовательского рейтинга"
+                                    tooltip="Включите рейтинговую систему, чтобы пользователи могли оценивать друг друга."
+                                    name="user_rating_system"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Настройки массовой рассылки */}
+                                <Form.Item
+                                    label="Массовая рассылка уведомлений"
+                                    tooltip="Отправляйте массовые уведомления пользователям о важных обновлениях или новостях."
+                                    name="mass_notification"
+                                >
+                                    <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Выберите группы для рассылки">
+                                        <Select.Option value="all">Всем пользователям</Select.Option>
+                                        <Select.Option value="teachers">Только создателям (учителям)</Select.Option>
+                                        <Select.Option value="moderators">Модераторам</Select.Option>
+                                        <Select.Option value="inactive">Неактивным пользователям</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
+                                {/* Настройки разрешения смены имени пользователя */}
+                                <Form.Item
+                                    label="Разрешить смену имени пользователя"
+                                    tooltip="Настройка, позволяющая пользователям менять свои имена."
+                                    name="allow_username_change"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Настройки обязательного подтверждения профиля */}
+                                <Form.Item
+                                    label="Обязательное подтверждение профиля"
+                                    tooltip="Требуйте подтверждение профиля через электронную почту или телефон."
+                                    name="require_profile_verification"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Настройки ограничений на количество создаваемых курсов */}
+                                <Form.Item
+                                    label="Лимит на количество создаваемых курсов"
+                                    tooltip="Укажите максимальное количество курсов, которое может создать один пользователь."
+                                    name="course_creation_limit"
+                                >
+                                    <InputNumber min={1} max={50} placeholder="Введите лимит" style={{ width: '100%' }} />
+                                </Form.Item>
+
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
+
 
                         <TabPane tab="Управление курсами" key="3">
                             <Form
@@ -300,22 +371,9 @@ const SettingsControlPage = () => {
                                 layout="vertical"
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
-                                {/*<Form.Item*/}
-                                {/*    label="Двухфакторная аутентификация (2FA)"*/}
-                                {/*    valuePropName="2fa_value"*/}
-                                {/*>*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*    <div className="text-gray-500 mt-1">*/}
-                                {/*        Позволяет добавить дополнительный уровень безопасности через двухфакторную аутентификацию.*/}
-                                {/*    </div>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Автоматические резервные копии" name="auto_backups">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*    <div className="text-gray-500 mt-1">*/}
-                                {/*        Включение этой опции обеспечивает регулярное создание резервных копий данных.*/}
-                                {/*    </div>*/}
-                                {/*</Form.Item>*/}
                                 <Form.Item name="id" hidden></Form.Item>
+
+                                {/* Настройки безопасности */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.AUDIT_TRAIL.LABEL}
                                     tooltip={GeneralSettingTooltips.AUDIT_TRAIL.TOOLTIP}
@@ -324,14 +382,15 @@ const SettingsControlPage = () => {
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
                                 </Form.Item>
+
                                 <Form.Item
                                     label={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.LABEL}
                                     tooltip={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.TOOLTIP}
                                     name="min_password_length"
                                 >
-                                    <Input type="number"
-                                           placeholder={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.PLACEHOLDER}/>
+                                    <Input type="number" placeholder={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.PLACEHOLDER}/>
                                 </Form.Item>
+
                                 <Form.Item
                                     label={GeneralSettingTooltips.COMPLEXITY_PASSWORD.LABEL}
                                     tooltip={GeneralSettingTooltips.COMPLEXITY_PASSWORD.TOOLTIP}
@@ -341,32 +400,16 @@ const SettingsControlPage = () => {
                                         <Select.Option value="low">Низкая</Select.Option>
                                         <Select.Option value="medium">Средняя</Select.Option>
                                         <Select.Option value="high">Высокая</Select.Option>
-                                        <Select.Option value="high">Очень высокая</Select.Option>
+                                        <Select.Option value="very_high">Очень высокая</Select.Option>
                                     </Select>
                                 </Form.Item>
-                                {/*<Form.Item label="Ограничение по IP-адресам для попыток входа">*/}
-                                {/*    <InputNumber min={1} max={10} defaultValue={5} />*/}
-                                {/*    <div className="text-gray-500 mt-1">*/}
-                                {/*        Устанавливает максимальное количество неудачных попыток входа с одного IP-адреса.*/}
-                                {/*    </div>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Шифрование данных">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*    <div className="text-gray-500 mt-1">*/}
-                                {/*        Включает шифрование данных, хранящихся в базе данных, для повышения уровня безопасности.*/}
-                                {/*    </div>*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Время блокировки учетной записи после нескольких неудачных попыток входа">*/}
-                                {/*    <InputNumber min={1} max={60} defaultValue={15} /> минут*/}
-                                {/*    <div className="text-gray-500 mt-1">*/}
-                                {/*        Устанавливает время блокировки учетной записи после нескольких неудачных попыток входа.*/}
-                                {/*    </div>*/}
-                                {/*</Form.Item>*/}
+
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
 
 
                         {/* Communication Tools */}
@@ -608,106 +651,130 @@ const SettingsControlPage = () => {
                                 form={formForUserManagement}
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
-
+                                {/* Права доступа модераторов */}
                                 <Form.Item
-                                    name="postModeration"
-                                    label="Настройки модерации постов"
-                                    tooltip="Настройте параметры проверки и модерации постов."
+                                    name="moderationAccess"
+                                    label="Права доступа модераторов"
+                                    tooltip="Настройте права доступа модераторов к разным типам контента."
                                 >
                                     <Checkbox.Group
                                         options={[
-                                            { label: 'Требовать проверки перед публикацией', value: 'pre_publish' },
-                                            { label: 'Оповещать по электронной почте', value: 'email_notification' },
-                                            { label: 'Разрешить комментирование', value: 'allow_comments' },
+                                            { label: 'Модерация постов', value: 'moderate_posts' },
+                                            { label: 'Модерация курсов', value: 'moderate_courses' },
+                                            { label: 'Редактирование комментариев', value: 'edit_comments' },
+                                            { label: 'Блокировка пользователей', value: 'block_users' },
                                         ]}
                                     />
                                 </Form.Item>
 
+                                {/* Новые настройки */}
+
+                                {/* Мониторинг активности модераторов */}
                                 <Form.Item
-                                    name="notificationSettings"
-                                    label="Настройки уведомлений"
-                                    tooltip="Настройте, как и когда вы хотите получать уведомления."
+                                    name="activityMonitoring"
+                                    label="Мониторинг активности модераторов"
+                                    tooltip="Настройте параметры для отслеживания активности модераторов."
+                                >
+                                    <Checkbox.Group
+                                        options={[
+                                            { label: 'Отслеживать количество проверенных постов', value: 'track_reviewed_posts' },
+                                            { label: 'Отслеживать отклоненные/одобренные курсы', value: 'track_courses' },
+                                            { label: 'Отслеживать время, потраченное на модерацию', value: 'track_time' },
+                                            { label: 'Отслеживать количество предупреждений', value: 'track_warnings' },
+                                        ]}
+                                    />
+                                    <div className="text-gray-500 mt-1">
+                                        Включите нужные опции, чтобы получать статистику об активности модераторов.
+                                    </div>
+                                </Form.Item>
+
+                                {/* Автоматическое распределение задач */}
+                                <Form.Item
+                                    name="autoAssignment"
+                                    label="Автоматическое распределение задач"
+                                    tooltip="Настройте автоматическое распределение задач между модераторами."
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <div className="text-gray-500 mt-1">
+                                        При включении этой опции, система автоматически назначит посты и курсы для проверки модераторам в зависимости от их текущей нагрузки.
+                                    </div>
+                                </Form.Item>
+
+                                {/* Система мотивации модераторов */}
+                                <Form.Item
+                                    name="moderatorMotivation"
+                                    label="Система мотивации модераторов"
+                                    tooltip="Настройте систему мотивации для повышения активности модераторов."
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        allowClear
+                                        style={{ width: '100%' }}
+                                        placeholder="Выберите типы наград"
+                                        options={[
+                                            { label: 'Бейджи за активность', value: 'badges' },
+                                            { label: 'Премии за выполнение задач', value: 'bonuses' },
+                                            { label: 'Публикация в рейтинге модераторов', value: 'leaderboard' },
+                                            { label: 'Ежемесячный отчет о лучших модераторах', value: 'monthly_reports' },
+                                        ]}
+                                    />
+                                    <div className="text-gray-500 mt-1">
+                                        Выберите, каким образом вы хотите мотивировать модераторов для более активной работы.
+                                    </div>
+                                </Form.Item>
+
+                                {/* Установить индивидуальные лимиты для модераторов */}
+                                <Form.Item
+                                    name="individualLimits"
+                                    label="Установить индивидуальные лимиты"
+                                    tooltip="Настройте индивидуальные лимиты на количество постов/курсов, которые каждый модератор может проверить за день."
+                                >
+                                    <InputNumber min={1} max={100} placeholder="Лимит на проверку" style={{ width: '100%' }} />
+                                    <div className="text-gray-500 mt-1">
+                                        Установите максимальное количество проверок в день для каждого модератора.
+                                    </div>
+                                </Form.Item>
+
+                                {/* Автоматические напоминания модераторам */}
+                                <Form.Item
+                                    name="autoReminders"
+                                    label="Автоматические напоминания"
+                                    tooltip="Настройте автоматические напоминания модераторам о новых задачах или дедлайнах."
                                 >
                                     <Radio.Group>
-                                        <Radio value="immediate">Немедленно</Radio>
-                                        <Radio value="daily">Ежедневно</Radio>
-                                        <Radio value="weekly">Еженедельно</Radio>
+                                        <Radio value="none">Отключено</Radio>
+                                        <Radio value="daily">Ежедневные напоминания</Radio>
+                                        <Radio value="weekly">Еженедельные напоминания</Radio>
+                                        <Radio value="deadline">Напоминания о приближении дедлайна</Radio>
                                     </Radio.Group>
+                                    <div className="text-gray-500 mt-1">
+                                        Напоминания будут отправляться на указанный email или в чат модератора.
+                                    </div>
                                 </Form.Item>
 
+                                {/* Автоматическая блокировка при неактивности */}
                                 <Form.Item
-                                    name="userManagement"
-                                    label="Управление пользователями"
-                                    tooltip="Настройте права и роли пользователей."
+                                    name="autoBlockInactivity"
+                                    label="Автоматическая блокировка при неактивности"
+                                    tooltip="Настройте автоматическую блокировку модераторов при длительной неактивности."
                                 >
-                                    <Select
-                                        mode="multiple"
-                                        allowClear
-                                        style={{ width: '100%' }}
-                                        placeholder="Выберите роли"
-                                        options={[
-                                            { label: 'Администратор', value: 'admin' },
-                                            { label: 'Модератор', value: 'moderator' },
-                                            { label: 'Пользователь', value: 'user' },
-                                        ]}
-                                    />
+                                    <InputNumber min={1} max={30} placeholder="Дни неактивности" style={{ width: '100%' }} />
+                                    <div className="text-gray-500 mt-1">
+                                        Укажите количество дней неактивности, после которых модератор будет временно заблокирован.
+                                    </div>
                                 </Form.Item>
 
+                                {/* Разрешение на доступ к аналитике */}
                                 <Form.Item
-                                    name="postFilters"
-                                    label="Фильтры для постов"
-                                    tooltip="Настройте фильтры для поиска и отображения постов."
+                                    name="analyticsAccess"
+                                    label="Доступ к аналитике"
+                                    tooltip="Позволяет модераторам просматривать аналитику своих действий."
+                                    valuePropName="checked"
                                 >
-                                    <Select
-                                        mode="multiple"
-                                        allowClear
-                                        style={{ width: '100%' }}
-                                        placeholder="Выберите фильтры"
-                                        options={[
-                                            { label: 'По дате публикации', value: 'date' },
-                                            { label: 'По статусу', value: 'status' },
-                                            { label: 'По категории', value: 'category' },
-                                        ]}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    name="reportSettings"
-                                    label="Настройки отчетов"
-                                    tooltip="Настройте параметры для генерации отчетов о модерации и активности."
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        allowClear
-                                        style={{ width: '100%' }}
-                                        placeholder="Выберите типы отчетов"
-                                        options={[
-                                            { label: 'Отчеты по модерации', value: 'moderation_reports' },
-                                            { label: 'Отчеты по активности', value: 'activity_reports' },
-                                        ]}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    name="postAccessControl"
-                                    label="Контроль доступа к постам"
-                                    tooltip="Настройте правила и уровни доступа к постам."
-                                >
-                                    <Checkbox.Group
-                                        options={[
-                                            { label: 'Ограничить доступ по статусу', value: 'status_based' },
-                                            { label: 'Ограничить доступ по категории', value: 'category_based' },
-                                            { label: 'Ограничить доступ по роли', value: 'role_based' },
-                                        ]}
-                                    />
-                                </Form.Item>
-
-                                <Form.Item
-                                    name="additionalSettings"
-                                    label="Дополнительные настройки"
-                                    tooltip="Настройте дополнительные параметры для управления пользователями."
-                                >
-                                    <Input.TextArea placeholder="Введите дополнительные параметры..." rows={4} />
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <div className="text-gray-500 mt-1">
+                                        Включите, если хотите предоставить модераторам доступ к отчетам и аналитике их деятельности.
+                                    </div>
                                 </Form.Item>
 
                                 <Form.Item>
@@ -717,7 +784,8 @@ const SettingsControlPage = () => {
                         </TabPane>
 
 
-                    </Tabs>}
+                    </Tabs>
+                    }
             </div>
         </div>
     )

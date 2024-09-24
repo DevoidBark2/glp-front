@@ -22,21 +22,21 @@ import {useMobxStores} from "@/stores/stores";
 import {welcomeTextRender} from "@/utils/welcomeText";
 import dayjs from "dayjs";
 import {useRouter} from "next/navigation";
+import { getCookieUserDetails } from "@/lib/users";
+import { UserRole } from "@/enums/UserRoleEnum";
 
 const ControlPanel = () => {
+    const [currentUser,setCurrentUser] = useState(null);
     const [currentDate, setCurrentDate] = useState<string | null>(null);
     const {statisticsStore} = useMobxStores();
     const currentTime = dayjs().toDate();
     const currentHours = currentTime.getHours();
     useEffect(() => {
-        // Запускаем обновление времени каждую секунду
         const interval = setInterval(() => {
             setCurrentDate(dayjs().locale('ru').format('DD MMMM YYYY, HH:mm:ss'));
         }, 1000);
 
         statisticsStore.getAllStatisticsData();
-
-        // Очистка интервала при размонтировании компонента
         return () => clearInterval(interval);
 
     }, []);
@@ -51,7 +51,6 @@ const ControlPanel = () => {
     };
     const router = useRouter();
 
-    // Выбор иконки в зависимости от времени суток
     const renderIcon = () => {
         if (currentHours >= 6 && currentHours < 12) {
             return <SmileOutlined className="text-yellow-400 text-4xl" />; // Утро
@@ -61,6 +60,13 @@ const ControlPanel = () => {
             return <MoonOutlined className="text-blue-400 text-4xl" />; // Ночь
         }
     };
+
+    useEffect(() => {
+        const currentUser = getCookieUserDetails();
+        debugger
+        setCurrentUser(currentUser);
+    },[])
+    
 
     return (
         <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto rounded custom-height-screen">
@@ -103,7 +109,7 @@ const ControlPanel = () => {
             </div>
             <Divider />
             <Typography.Title className="text-gray-800">
-                Админ-панель
+                {currentUser?.user.role === UserRole.MODERATOR ? "Панель модератора" : "Админ-панель"}
             </Typography.Title>
 
             <Row gutter={16}>
