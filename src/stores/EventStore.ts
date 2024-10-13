@@ -1,10 +1,10 @@
-import {action, makeAutoObservable} from "mobx";
-import {Teacher} from "@/stores/CourseStore";
-import {GET} from "@/lib/fetcher";
-import {getUserToken} from "@/lib/users";
+import { action, makeAutoObservable } from "mobx";
+import { Teacher } from "@/stores/CourseStore";
+import { GET } from "@/lib/fetcher";
+import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
-import {ActionEvent} from "@/enums/ActionEventUser";
-import {FORMAT_VIEW_DATE} from "@/constants";
+import { ActionEvent } from "@/enums/ActionEventUser";
+import { FORMAT_VIEW_DATE } from "@/constants";
 
 export type EventUser = {
     id: number;
@@ -28,19 +28,18 @@ class EventStore {
 
     getAllEvents = action(async () => {
         this.setLoadingEvents(true)
-        const token = getUserToken();
-        return await GET(`/api/events?token=${token}`).then((response) => {
+        return await GET(`/api/events`).then((response) => {
             this.userEvents = response.response.data.map(eventMapper)
         });
     })
 }
 
-const eventMapper = (value:any) => {
+const eventMapper = (value: any) => {
     return {
         id: value.id,
         action: value.action,
         description: value.description,
-        createdAt: dayjs(value.created_at,FORMAT_VIEW_DATE).toDate(),
+        createdAt: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
         user: {
             id: value.user.id,
             name: value.user.first_name + " " + value.user.last_name,

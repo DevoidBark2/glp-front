@@ -1,10 +1,10 @@
-import {action, makeAutoObservable} from "mobx";
-import {CourseComponentType} from "@/enums/CourseComponentType";
-import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
-import {getUserToken} from "@/lib/users";
+import { action, makeAutoObservable } from "mobx";
+import { CourseComponentType } from "@/enums/CourseComponentType";
+import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
+import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
-import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
-import {notification} from "antd";
+import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
+import { notification } from "antd";
 
 export type QuestionsType = {
     question: string;
@@ -40,9 +40,9 @@ class CourseComponent {
         const token = getUserToken();
         await POST(`/api/component-task?token=${token}`, values).then(response => {
             this.courseComponents = [...this.courseComponents, componentTaskMapper(response.response.data.component)]
-            notification.success({message: response.response.data.message})
+            notification.success({ message: response.response.data.message })
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         })
     })
 
@@ -51,18 +51,20 @@ class CourseComponent {
         const token = getUserToken()
         await GET(`/api/component-task?token=${token}`).then(response => {
             this.courseComponents = response.response.data.map(componentTaskMapper)
+        }).finally(() => {
+            this.setLoadingCourseComponent(false)
         })
     })
 
-    changeComponent = action(async (values:CourseComponentTypeI) => {
+    changeComponent = action(async (values: CourseComponentTypeI) => {
         const token = getUserToken();
         await PUT(`/api/component-task?token=${token}`, values).then(response => {
-            notification.success({message: response.response.message})
+            notification.success({ message: response.response.message })
             const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
             this.courseComponents[changedComponentIndex] = values;
             this.courseComponents = [...this.courseComponents];
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         })
     })
 
@@ -70,7 +72,7 @@ class CourseComponent {
         const token = getUserToken();
         await DELETE(`/api/component-task?token=${token}&componentId=${componentId}`).then(response => {
             this.courseComponents = this.courseComponents.filter(component => component.id !== componentId);
-            notification.success({message: response.response.message})
+            notification.success({ message: response.response.message })
         });
     })
 
@@ -80,7 +82,7 @@ class CourseComponent {
         await GET(`/api/search-components?query=${query}&token=${token}`).then(response => {
             this.searchResults = response.response.data;
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         });
     })
 
@@ -89,7 +91,7 @@ class CourseComponent {
         // Проверяем, что компонент не был добавлен ранее
         const exists = this.selectedComponents.find(item => item.id === component.id);
         if (!exists) {
-            this.selectedComponents = [...this.selectedComponents,component];
+            this.selectedComponents = [...this.selectedComponents, component];
         }
     })
 
@@ -100,7 +102,7 @@ class CourseComponent {
 }
 
 const componentTaskMapper = (state: CourseComponentTypeI) => {
-   const component: CourseComponentTypeI = {
+    const component: CourseComponentTypeI = {
         id: state.id,
         description: state.description,
         questions: state.questions,

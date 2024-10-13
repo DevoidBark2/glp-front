@@ -1,11 +1,11 @@
-import {action, makeAutoObservable} from "mobx"
-import {DELETE, GET, POST} from "@/lib/fetcher";
-import {delete_cookie, getCookieUserDetails, getUserToken, signInUser} from "@/lib/users";
+import { action, makeAutoObservable } from "mobx"
+import { DELETE, GET, POST } from "@/lib/fetcher";
+import { delete_cookie, getCookieUserDetails, getUserToken, signInUser } from "@/lib/users";
 import dayjs from "dayjs";
-import {FORMAT_VIEW_DATE} from "@/constants";
-import {UserRole} from "@/enums/UserRoleEnum";
-import {StatusUserEnum} from "@/enums/StatusUserEnum";
-import {message} from "antd";
+import { FORMAT_VIEW_DATE } from "@/constants";
+import { UserRole } from "@/enums/UserRoleEnum";
+import { StatusUserEnum } from "@/enums/StatusUserEnum";
+import { message } from "antd";
 
 export type User = {
     id: number;
@@ -18,7 +18,7 @@ export type User = {
     created_at: Date;
 }
 class UserStore {
-    constructor(){
+    constructor() {
         makeAutoObservable(this, {});
     }
 
@@ -51,7 +51,7 @@ class UserStore {
         this.searchUsers();
     })
 
-    searchUsers = action(async() => {
+    searchUsers = action(async () => {
         this.setLoadingSearchUser(true)
         const token = getUserToken();
         await GET(`/api/search-users?query=${this.searchUserText}&token=${token}`).then(response => {
@@ -65,8 +65,8 @@ class UserStore {
         const token = getUserToken();
 
         if (this.selectedRowsUser.length < 1) {
-           message.warning("Выберите пользователей!")
-           return;
+            message.warning("Выберите пользователей!")
+            return;
         }
 
         if (!this.selectedGroupAction) {
@@ -76,25 +76,25 @@ class UserStore {
 
         await POST(`/api/global-action?token=${token}`,
             {
-                action:this.selectedGroupAction ,
+                action: this.selectedGroupAction,
                 usersIds: this.selectedRowsUser
             }).then(response => {
-            this.allUsers = this.allUsers.map((user) => {
-                if (this.selectedRowsUser.includes(user.id)) {
-                    return {
-                        ...user,
-                        status: this.getNewStatusBasedOnAction(this.selectedGroupAction!),
-                    };
-                }
-                return user;
-            });
-            this.selectedRowsUser = []
-            this.setSelectedGroupAction(null)
-        }).catch(e => {})
+                this.allUsers = this.allUsers.map((user) => {
+                    if (this.selectedRowsUser.includes(user.id)) {
+                        return {
+                            ...user,
+                            status: this.getNewStatusBasedOnAction(this.selectedGroupAction!),
+                        };
+                    }
+                    return user;
+                });
+                this.selectedRowsUser = []
+                this.setSelectedGroupAction(null)
+            }).catch(e => { })
     })
 
     getNewStatusBasedOnAction(action: string) {
-        switch(action) {
+        switch (action) {
             case 'activate':
                 return StatusUserEnum.ACTIVATED;
             case 'deactivated':
@@ -133,7 +133,7 @@ class UserStore {
     })
 
     userEditModal: boolean = false;
-    setUserEditModal = action((value:boolean) => {
+    setUserEditModal = action((value: boolean) => {
         this.userEditModal = value;
     })
 
@@ -165,7 +165,7 @@ class UserStore {
 
     registerUser = action(async (values: any) => {
         this.setLoading(true)
-        await POST("/api/register",{reqBody: values}).then(response => {
+        await POST("/api/register", { reqBody: values }).then(response => {
             this.setRegisterSuccess(true);
         }).finally(() => {
             this.setLoading(false)
@@ -176,7 +176,7 @@ class UserStore {
         delete_cookie()
     })
 
-    sendEmailForgotPassword = action(async (values:any) => {
+    sendEmailForgotPassword = action(async (values: any) => {
 
     })
 
@@ -186,21 +186,20 @@ class UserStore {
 
     getUsers = action(async () => {
         this.setLoading(true)
-        const token = getUserToken();
-        await GET(`/api/users?token=${token}`).then(response => {
+        await GET(`/api/users`).then(response => {
             this.setAllUsers(response.response.data.map(usersMapper))
         }).finally(() => this.setLoading(false))
     })
 
     createUser = action(async (values: any) => {
         this.setCreateUserLoading(true)
-        try{
+        try {
             const token = getUserToken();
-            const response = await POST(`/api/user?token=${token}`,values);
-            this.allUsers = [...this.allUsers,usersMapper(response.response.data)]
+            const response = await POST(`/api/user?token=${token}`, values);
+            this.allUsers = [...this.allUsers, usersMapper(response.response.data)]
 
             return response;
-        }catch (e){
+        } catch (e) {
             throw e
         }
         finally {
@@ -209,12 +208,12 @@ class UserStore {
     })
 
     deleteUsers = action(async (userIds: number[]) => {
-        try{
+        try {
             const response = await DELETE(`/api/users?userIds=${userIds}`)
             this.allUsers = this.allUsers.filter(user => !userIds.includes(user.id))
 
             return response;
-        }catch (e){
+        } catch (e) {
             throw e;
         }
     })

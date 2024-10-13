@@ -1,4 +1,4 @@
-import {NextRequest, NextResponse} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import nextConfig from "../../../../next.config.mjs";
 
@@ -7,15 +7,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     try {
-        const {data} = await axios.post(nextConfig.env?.API_URL + `api/publish-course`,body,{
+        const { data } = await axios.post(nextConfig.env?.API_URL + `api/publish-course`, body, {
             headers: {
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
         return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
-        return NextResponse.json(error.response.data,{status:error.response.status})
+        return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }

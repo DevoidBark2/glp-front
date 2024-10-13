@@ -1,13 +1,13 @@
-import {action, makeAutoObservable} from "mobx";
-import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
-import {getUserToken} from "@/lib/users";
-import {notification} from "antd"
-import dayjs, {Dayjs} from "dayjs";
-import {PostStatusEnum} from "@/enums/PostStatusEnum";
-import {FORMAT_VIEW_DATE} from "@/constants";
+import { action, makeAutoObservable, runInAction } from "mobx";
+import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
+import { getUserToken } from "@/lib/users";
+import { notification } from "antd"
+import dayjs, { Dayjs } from "dayjs";
+import { PostStatusEnum } from "@/enums/PostStatusEnum";
+import { FORMAT_VIEW_DATE } from "@/constants";
 
 export type Post = {
-    id: number;
+    id: string;
     name: string;
     image: string;
     description: string;
@@ -17,8 +17,8 @@ export type Post = {
     rejectReason?: string[];
     created_at: Date;
 }
-class PostStore{
-    constructor(){
+class PostStore {
+    constructor() {
         makeAutoObservable(this, {});
     }
 
@@ -26,20 +26,20 @@ class PostStore{
     userPosts: Post[] = [];
     loading: boolean = false;
 
-    setLoading = action((value:boolean) => {
+    setLoading = action((value: boolean) => {
         this.loading = value;
     })
 
     createPostModal: boolean = false;
 
-    setCreatePostModal = action((value:boolean) => {
+    setCreatePostModal = action((value: boolean) => {
         this.createPostModal = value;
     })
     getAllPosts = action(async () => {
         this.setLoading(true);
         await GET(`/api/posts`).then(response => {
             this.allPosts = response.response.data.map(postMapper)
-        }).catch(e => {}).finally(() => {
+        }).catch(e => { }).finally(() => {
             this.setLoading(false);
         })
     })
@@ -49,46 +49,51 @@ class PostStore{
         const token = getUserToken();
         await GET(`/api/posts-user?token=${token}`).then(response => {
             this.userPosts = response.response.data.map(postMapper)
-        }).catch(e => {}).finally(() => {
+        }).catch(e => { }).finally(() => {
             this.setLoading(false);
         })
     })
 
     createPost = action(async (values: any) => {
+        debugger
         this.setLoading(true)
         const token = getUserToken();
         const form = new FormData();
-        form.append('image',values.image.originFileObj)
-        form.append('name',values.name)
-        form.append('description',values.description);
-        form.append('content',values.content)
+        form.append('image', values.image && values.images.originFileObj)
+        form.append('name', values.name)
+        form.append('description', values.description);
+        form.append('content', values.content)
 
-        return await POST(`/api/posts?token=${token}`,form).then(response => {
-            this.userPosts = [...this.userPosts, postMapper(response.response.data)]
-            notification.success({message: response.response.message})
+        return await POST(`/api/posts?token=${token}`, form).then(response => {
+            runInAction(() => {
+                this.userPosts = [...this.userPosts, postMapper(response.response.data)];
+                notification.success({ message: response.response.message });
+            })
         }).finally(() => {
             this.setLoading(false)
             this.setCreatePostModal(false)
         })
     })
 
-    addReactionPost = action(async (emoji:string) => {
-        await PUT('/api/post',emoji).then(response => {
+    addReactionPost = action(async (emoji: string) => {
+        await PUT('/api/post', emoji).then(response => {
 
         })
     })
 
-    deletePost = action(async (postId: number) => {
+    deletePost = action(async (postId: string) => {
         const token = getUserToken();
         await DELETE(`/api/posts?postId=${postId}&token=${token}`).then((response) => {
-            this.allPosts = this.allPosts.filter(post => post.id !== postId);
-            notification.success({message: response.response.message})
+            runInAction(() => {
+                this.allPosts = this.allPosts.filter(post => post.id !== postId);
+                notification.success({ message: response.response.message })
+            })
         }).catch(e => {
 
         })
     })
 
-    submitReview = action(async (postId: number) => {
+    submitReview = action(async (postId: string) => {
         const token = getUserToken();
         await PUT(`/api/submit-preview?postId=${postId}&token=${token}`).then(response => {
             const changedPostIndex = this.allPosts.findIndex(post => post.id === postId);
@@ -100,7 +105,7 @@ class PostStore{
                     status: PostStatusEnum.IN_PROCESSING
                 };
                 this.allPosts = updatedPosts;
-                notification.success({message: response.response.message});
+                notification.success({ message: response.response.message });
             }
         }).catch()
     })

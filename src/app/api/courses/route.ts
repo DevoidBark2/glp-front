@@ -1,6 +1,6 @@
 import axios from "axios";
 import nextConfig from "../../../../next.config.mjs";
-import {NextRequest, NextResponse} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
     try {
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ response: responseData });
     } catch (error: any) {
         console.error(error)
-        return NextResponse.json(error.response.data,{status:error.response.status})
+        return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }
 
@@ -20,17 +20,17 @@ export async function POST(req: NextRequest) {
     const form = await req.formData();
 
     try {
-        const {data} = await axios.post(nextConfig.env?.API_URL + `api/course`,form,{
+        const { data } = await axios.post(nextConfig.env?.API_URL + `api/course`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
         return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
-        return NextResponse.json(error.response.data,{status:error.response.status})
+        return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }
 
@@ -38,20 +38,19 @@ export async function PUT(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const token = searchParams.get('token');
 
-    const data = await req.json();
+    const reqBody = await req.json();
 
     try {
-        const response = await axios.put(nextConfig.env?.API_URL + `api/course`,data,{
+        const { data } = await axios.put(nextConfig.env?.API_URL + `api/course`, reqBody, {
             headers: {
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
-        return NextResponse.json(error.response.data,{status:error.response.status})
+        return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }
 
@@ -61,15 +60,15 @@ export async function DELETE(req: NextRequest) {
     const token = req.headers.get('authorization');
 
     try {
-        const {data} = await axios.delete(nextConfig.env?.API_URL + `api/course/${courseId}`,{
+        const { data } = await axios.delete(nextConfig.env?.API_URL + `api/course/${courseId}`, {
             headers: {
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
         return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
-        return NextResponse.json(error.response.data,{status:error.response.status})
+        return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }

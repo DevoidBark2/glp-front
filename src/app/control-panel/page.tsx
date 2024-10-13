@@ -1,5 +1,5 @@
 "use client";
-import React, {useState, useEffect, Suspense} from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import {
     Card,
     Divider,
@@ -18,41 +18,27 @@ import {
     FileTextOutlined,
     BookOutlined, SmileOutlined, CloudOutlined, MoonOutlined, UnorderedListOutlined,
 } from "@ant-design/icons";
-import {useMobxStores} from "@/stores/stores";
-import {welcomeTextRender} from "@/utils/welcomeText";
+import { useMobxStores } from "@/stores/stores";
+import { welcomeTextRender } from "@/utils/welcomeText";
 import dayjs from "dayjs";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const ControlPanel = () => {
+    const { statisticsStore } = useMobxStores();
     const [currentDate, setCurrentDate] = useState<string | null>(null);
-    const {statisticsStore} = useMobxStores();
-    const currentTime = dayjs().toDate();
-    const currentHours = currentTime.getHours();
+    const router = useRouter();
     useEffect(() => {
-        // Запускаем обновление времени каждую секунду
         const interval = setInterval(() => {
             setCurrentDate(dayjs().locale('ru').format('DD MMMM YYYY, HH:mm:ss'));
         }, 1000);
 
         statisticsStore.getAllStatisticsData();
 
-        // Очистка интервала при размонтировании компонента
         return () => clearInterval(interval);
-
     }, []);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    // Открыть/закрыть модальное окно
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-    const router = useRouter();
-
-    // Выбор иконки в зависимости от времени суток
     const renderIcon = () => {
+        const currentHours = dayjs().hour();
         if (currentHours >= 6 && currentHours < 12) {
             return <SmileOutlined className="text-yellow-400 text-4xl" />; // Утро
         } else if (currentHours >= 12 && currentHours < 18) {
@@ -73,7 +59,7 @@ const ControlPanel = () => {
                             <p className="text-2xl font-bold text-white">{welcomeTextRender()}</p>
                             {currentDate ? (
                                 <p className="text-lg text-gray-100">{currentDate}</p>
-                            ) : <Skeleton.Input size="small"/>}
+                            ) : <Skeleton.Input size="small" />}
                         </div>
                     </div>
                 </div>
@@ -85,13 +71,13 @@ const ControlPanel = () => {
                         <QuestionCircleOutlined />
                     </Tooltip>
                     <Input placeholder="Поиск" allowClear
-                           onBlur={() => statisticsStore.setVisibleResultModal(false)}
-                           onFocus={() => statisticsStore.setVisibleResultModal(true)}
-                           onChange={(e) => statisticsStore.setSearchGlobalText(e.target.value)}
+                        onBlur={() => statisticsStore.setVisibleResultModal(false)}
+                        onFocus={() => statisticsStore.setVisibleResultModal(true)}
+                        onChange={(e) => statisticsStore.setSearchGlobalText(e.target.value)}
                     />
 
                     {statisticsStore.visibleResultModal && <div className="absolute bg-white border-2 top-8 z-20 left-8 w-11/12 h-80">
-                        {statisticsStore.resultGlobalSearch.map((item,index) => {
+                        {statisticsStore.resultGlobalSearch.map((item, index) => {
                             return <div key={index}>{item.courses.map(course => (
                                 <div key={course.id}>{course.name}</div>
                             ))}{item.posts.map(post => (
@@ -110,10 +96,10 @@ const ControlPanel = () => {
                 <Col span={8}>
                     <Card title="Активные пользователи" extra={
                         <Tooltip title="Перейти к пользователям">
-                            <UnorderedListOutlined onClick={() => router.push('/control-panel/users')}/>
+                            <UnorderedListOutlined onClick={() => router.push('/control-panel/users')} />
                         </Tooltip>
                     }>
-                        <Skeleton active paragraph={{rows: 1}} loading={statisticsStore.loadingStatisticsData}>
+                        <Skeleton active paragraph={{ rows: 1 }} loading={statisticsStore.loadingStatisticsData}>
                             <Statistic
                                 value={0}
                                 prefix={<UserOutlined />}
@@ -124,7 +110,7 @@ const ControlPanel = () => {
                 <Col span={8}>
                     <Card title="Всего постов" extra={
                         <Tooltip title="Перейти к постам">
-                            <UnorderedListOutlined onClick={() => router.push('/control-panel/posts')}/>
+                            <UnorderedListOutlined onClick={() => router.push('/control-panel/posts')} />
                         </Tooltip>
                     }>
                         <Skeleton active paragraph={{ rows: 1 }} loading={statisticsStore.loadingStatisticsData}>
@@ -140,7 +126,7 @@ const ControlPanel = () => {
                 <Col span={8}>
                     <Card title="Всего курсов" extra={
                         <Tooltip title="Перейти к курсам">
-                            <UnorderedListOutlined onClick={() => router.push('/control-panel/courses')}/>
+                            <UnorderedListOutlined onClick={() => router.push('/control-panel/courses')} />
                         </Tooltip>
                     }>
                         <Skeleton active paragraph={{ rows: 1 }} loading={statisticsStore.loadingStatisticsData}>
@@ -159,39 +145,39 @@ const ControlPanel = () => {
             <Row gutter={16}>
                 <Col span={12}>
                     <Card title="Статистика постов">
-                       <div className="flex justify-between">
-                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                               <Progress
-                                   type="circle"
-                                   strokeColor="green"
-                                   percent={statisticsStore.statisticsData?.postsCountPublish}
-                                   format={(percent) => <p className="text-sm leading-5">{`${percent}% опубликовано`}</p>}
-                               />
-                           </Skeleton>
-                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                               <Progress
-                                   type="circle"
-                                   percent={statisticsStore.statisticsData?.postsCountNew}
-                                   format={(percent) => <p className="text-sm leading-5">{`${percent}% новых`}</p>}
-                               />
-                           </Skeleton>
-                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                               <Progress
-                                   type="circle"
-                                   strokeColor="orange"
-                                   percent={statisticsStore.statisticsData?.postsCountIsProcessing}
-                                   format={(percent) => <p className="text-sm leading-5">{`${percent}% в обработке`}</p>}
-                               />
-                           </Skeleton>
-                           <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                               <Progress
-                                   type="circle"
-                                   strokeColor="red"
-                                   percent={statisticsStore.statisticsData?.postsCountReject}
-                                   format={(percent) => <p className="text-sm leading-5">{`${percent}% откланеных`}</p>}
-                               />
-                           </Skeleton>
-                       </div>
+                        <div className="flex justify-between">
+                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                                <Progress
+                                    type="circle"
+                                    strokeColor="green"
+                                    percent={statisticsStore.statisticsData?.postsCountPublish}
+                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% опубликовано`}</p>}
+                                />
+                            </Skeleton>
+                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                                <Progress
+                                    type="circle"
+                                    percent={statisticsStore.statisticsData?.postsCountNew}
+                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% новых`}</p>}
+                                />
+                            </Skeleton>
+                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                                <Progress
+                                    type="circle"
+                                    strokeColor="orange"
+                                    percent={statisticsStore.statisticsData?.postsCountIsProcessing}
+                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% в обработке`}</p>}
+                                />
+                            </Skeleton>
+                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                                <Progress
+                                    type="circle"
+                                    strokeColor="red"
+                                    percent={statisticsStore.statisticsData?.postsCountReject}
+                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% откланеных`}</p>}
+                                />
+                            </Skeleton>
+                        </div>
                     </Card>
                 </Col>
                 <Col span={12}>

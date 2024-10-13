@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Col,
@@ -28,13 +28,13 @@ import {
     ProjectOutlined,
     ReconciliationOutlined,
 } from "@ant-design/icons";
-import {CourseComponentType} from "@/enums/CourseComponentType";
-import {FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE} from "@/constants";
-import {useMobxStores} from "@/stores/stores";
+import { CourseComponentType } from "@/enums/CourseComponentType";
+import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE } from "@/constants";
+import { useMobxStores } from "@/stores/stores";
 import 'react-quill/dist/quill.snow.css';
-import {observer} from "mobx-react";
-import {CourseComponentTypeI} from "@/stores/CourseComponent";
-import {StatusComponentTaskEnum} from "@/enums/StatusComponentTaskEnum";
+import { observer } from "mobx-react";
+import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(
@@ -43,10 +43,10 @@ const ReactQuill = dynamic(
 )
 
 const TaskPage = () => {
-    const {courseComponentStore} = useMobxStores()
-
-    const [typeTask,setTypeTask] = useState<CourseComponentType | null>(null)
-    const [changedComponent,setChangedComponent] = useState<number | null>(null)
+    const { courseComponentStore } = useMobxStores()
+    const [form] = Form.useForm();
+    const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
+    const [changedComponent, setChangedComponent] = useState<number | null>(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewContent, setPreviewContent] = useState<CourseComponentTypeI | null>(null);
@@ -83,9 +83,9 @@ const TaskPage = () => {
             render: (text, record) => (
                 <Tooltip title={text ? `Перейти к редактированию: ${text}` : 'Название не указано'}>
                     <p
-                        className="hover:cursor-pointer"
+                        className="cursor-pointer"
                         onClick={() => handleChangeComponentTask(record)}
-                        style={{ color: text ? 'blue' : 'grey' }}
+                        style={{ color: !text ? 'grey' : "black" }}
                     >
                         {text ?? 'Название не указано'}
                     </p>
@@ -100,16 +100,16 @@ const TaskPage = () => {
             filterSearch: true,
             render: (value, record) => (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                {typeIcons[record.type]}
+                    {typeIcons[record.type]}
                     <span style={{ marginLeft: 8 }}>{value}</span>
-            </div>
+                </div>
             ),
         },
         {
             title: "Дата создания",
             dataIndex: "created_at",
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
-            render: (_,record) => dayjs(record.created_at).format(FORMAT_VIEW_DATE)
+            render: (_, record) => dayjs(record.created_at).format(FORMAT_VIEW_DATE)
         },
         {
             title: "Статус",
@@ -168,44 +168,42 @@ const TaskPage = () => {
 
     const onFinish = (values: CourseComponentTypeI) => {
         if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
-           message.warning("Вопрос должен быть хотя бы 1!")
-           return;
+            message.warning("Вопрос должен быть хотя бы 1!")
+            return;
         }
 
         changedComponent ? courseComponentStore.changeComponent(values).finally(() => {
-                setIsModalVisible(false)
-            }) :
-        courseComponentStore.addComponentCourse(values).finally(() => {
-            form.resetFields();
-            setTypeTask(null)
             setIsModalVisible(false)
-        });
+        }) :
+            courseComponentStore.addComponentCourse(values).finally(() => {
+                form.resetFields();
+                setTypeTask(null)
+                setIsModalVisible(false)
+            });
     }
 
-    const [form] = Form.useForm();
+
 
 
     useEffect(() => {
-        courseComponentStore.getAllComponent().finally(() => {
-            courseComponentStore.setLoadingCourseComponent(false)
-        });
+        courseComponentStore.getAllComponent();
     }, []);
 
     return (
         <>
-            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{ height: 'calc(100vh - 60px)' }}>
                 <div className="flex items-center justify-between">
                     <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные компоненты</h1>
                     <div>
                         <Button
                             className="flex items-center justify-center transition-transform transform hover:scale-105"
                             onClick={() => setIsModalVisible(true)}
-                            icon={<PlusCircleOutlined/>}
+                            icon={<PlusCircleOutlined />}
                             type="primary"
                         >
                             Добавить компонент
                         </Button>
-                        <Button className="ml-2" icon={ <MoreOutlined />}/>
+                        <Button className="ml-2" icon={<MoreOutlined />} />
                     </div>
                 </div>
                 <Divider />
@@ -238,7 +236,7 @@ const TaskPage = () => {
                     <Form.Item
                         label="Тип задания"
                         name="type"
-                        rules={[{required: true, message: "Выберите тип задания!"}]}
+                        rules={[{ required: true, message: "Выберите тип задания!" }]}
                     >
                         <Select
                             placeholder="Выберите тип задания"
@@ -278,7 +276,7 @@ const TaskPage = () => {
                                 name="title"
                                 label="Заголовок"
                             >
-                                <Input placeholder="Введите заголовок"/>
+                                <Input placeholder="Введите заголовок" />
                             </Form.Item>
                             <Form.Item
                                 name="tags"
@@ -301,7 +299,7 @@ const TaskPage = () => {
                                 name="content_description"
                                 label="Содержание"
                             >
-                                <ReactQuill theme="snow"/>
+                                <ReactQuill theme="snow" />
                             </Form.Item>
                         </>
                     )}
@@ -415,7 +413,7 @@ const TaskPage = () => {
                         <>
                             <Form.Item label="Выберите язык программирования" required>
                                 <Select
-                                    // onChange={handleLanguageChange}
+                                // onChange={handleLanguageChange}
                                 >
                                     {languages.map(lang => (
                                         <Select.Option key={lang.value} value={lang.value}>
