@@ -22,9 +22,12 @@ import { useMobxStores } from "@/stores/stores";
 import { welcomeTextRender } from "@/utils/welcomeText";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import { getCookieUserDetails } from "@/lib/users";
+import { UserRole } from "@/enums/UserRoleEnum";
 
 const ControlPanel = () => {
     const { statisticsStore } = useMobxStores();
+    const [currentUser, setCurrentUser] = useState(null);
     const [currentDate, setCurrentDate] = useState<string | null>(null);
     const router = useRouter();
     useEffect(() => {
@@ -34,9 +37,20 @@ const ControlPanel = () => {
 
         statisticsStore.getAllStatisticsData();
 
+        // Очистка интервала при размонтировании компонента
         return () => clearInterval(interval);
     }, []);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    // Открыть/закрыть модальное окно
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
 
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    // Выбор иконки в зависимости от времени суток
     const renderIcon = () => {
         const currentHours = dayjs().hour();
         if (currentHours >= 6 && currentHours < 12) {
@@ -47,6 +61,13 @@ const ControlPanel = () => {
             return <MoonOutlined className="text-blue-400 text-4xl" />; // Ночь
         }
     };
+
+    useEffect(() => {
+        const currentUser = getCookieUserDetails();
+        debugger
+        setCurrentUser(currentUser);
+    }, [])
+
 
     return (
         <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto rounded custom-height-screen">
@@ -89,7 +110,7 @@ const ControlPanel = () => {
             </div>
             <Divider />
             <Typography.Title className="text-gray-800">
-                Админ-панель
+                {currentUser?.user.role === UserRole.MODERATOR ? "Панель модератора" : "Админ-панель"}
             </Typography.Title>
 
             <Row gutter={16}>

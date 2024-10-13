@@ -14,9 +14,9 @@ import {
     AppstoreOutlined,
     BarsOutlined,
     BookOutlined, LogoutOutlined,
-    PartitionOutlined, PlusOutlined, SettingOutlined,
+    PartitionOutlined, SettingOutlined,
     SolutionOutlined,
-    ToolOutlined, UploadOutlined
+    ToolOutlined, UploadOutlined,UserOutlined
 } from "@ant-design/icons";
 import {useMobxStores} from "@/stores/stores";
 
@@ -152,6 +152,11 @@ let dashboardMenuItems: MenuItem[] = [
         icon: <BarsOutlined />,
     },
     {
+        key: 'profile',
+        label: <Link href={"/control-panel/profile"}>Профиль</Link>,
+        icon: <UserOutlined />,
+    },
+    {
         key: 'platform',
         label: <Link href={"/platform"}>Вернуться на платформу</Link>,
         icon: <LogoutOutlined />,
@@ -195,6 +200,7 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                 && menuItem?.key !== "users"
                 && menuItem?.key !== "courses-parent"
                 && menuItem?.key !== "posts"
+                && menuItem?.key !== "feedbacks"
             )
         }
         setLoading(false)
