@@ -1,23 +1,23 @@
 "use client";
 import { observer } from "mobx-react";
-import {Button, Divider, Table, Tag, Tooltip, Space, message, Input, Select, Popconfirm, Dropdown} from "antd";
+import { Button, Divider, Table, Tag, Tooltip, message, Popconfirm, Dropdown } from "antd";
 import type { MenuProps, TableColumnsType } from "antd";
-import React, { Key, useEffect, useState } from "react";
+import React, { Key, useEffect } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { User } from "@/stores/UserStore";
 import Image from "next/image";
 import {
     EditOutlined,
     DeleteOutlined,
-    PlusCircleOutlined,MoreOutlined
+    PlusCircleOutlined, MoreOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Link from "next/link";
 import GlobalActionComponent from "@/components/GlobalActionComponent/GlobalActionComponent";
-import {FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors} from "@/constants";
+import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/constants";
 import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
-import {showUserStatus} from "@/utils/showUserStatus";
-import { usersTable } from "@/tableConfig/usersTable";
+import { showUserStatus } from "@/utils/showUserStatus";
+import { paginationCount, usersTable } from "@/tableConfig/usersTable";
 import { useRouter } from "next/navigation";
 
 const UsersPage = () => {
@@ -53,7 +53,7 @@ const UsersPage = () => {
             title: "Роль",
             filters: FILTER_ROLE_USER,
             onFilter: (value, record) => record.role === value,
-            render: (_,record) => <Tag color={userRoleColors[record.role]}>{record.role}</Tag>
+            render: (_, record) => <Tag color={userRoleColors[record.role]}>{record.role}</Tag>
         },
         {
             dataIndex: "status",
@@ -92,18 +92,18 @@ const UsersPage = () => {
                         </Tooltip>
                         <Tooltip title="Удалить">
                             <Popconfirm
-                            title="Удалить пользователя?"
-                            placement="leftBottom"
-                            description="Вы уверены, что хотите удалить этого пользователя? Это действие нельзя будет отменить."
-                            okText="Да"
-                            cancelText="Нет"
-                        >
-                            <Button
-                                className="ml-3"
-                                danger type="primary"
-                                icon={<DeleteOutlined />}
-                            />
-                        </Popconfirm>
+                                title="Удалить пользователя?"
+                                placement="leftBottom"
+                                description="Вы уверены, что хотите удалить этого пользователя? Это действие нельзя будет отменить."
+                                okText="Да"
+                                cancelText="Нет"
+                            >
+                                <Button
+                                    className="ml-3"
+                                    danger type="primary"
+                                    icon={<DeleteOutlined />}
+                                />
+                            </Popconfirm>
                         </Tooltip>
                     </div>
                 );
@@ -123,12 +123,12 @@ const UsersPage = () => {
                     className="cursor-pointer hover:scale-110 transition-transform duration-200"
                 />
                 <p className="ml-2">Массовое удаление</p>
-        </div>
+            </div>
         },
         {
             key: '2',
             label: <div className="flex items-center">
-            <Image
+                <Image
                     src="/static/export_icon.svg"
                     alt="Массовый экспорт"
                     width={20}
@@ -136,7 +136,7 @@ const UsersPage = () => {
                     className="cursor-pointer hover:scale-110 transition-transform duration-200"
                 />
                 <p className="ml-2">Массовый экспорт</p>
-           </div>
+            </div>
         },
     ];
 
@@ -153,25 +153,25 @@ const UsersPage = () => {
                     </h1>
                     <GlobalActionComponent
                         handleDelete={handleBulkStatusUpdate}
-                        handleExport={handleBulkEmail}
+                        handleSendNotifications={handleBulkEmail}
                     />
                 </div>
                 <div className="flex items-center mt-4 md:mt-0">
                     <Link href={"users/add"}>
                         <Button
                             type="primary"
-                            icon={<PlusCircleOutlined/>}
+                            icon={<PlusCircleOutlined />}
                             className="flex items-center justify-center transition-transform transform hover:scale-105"
                         >
                             <span className="hidden sm:inline">Новый пользователь</span>
                         </Button>
                     </Link>
                     <Dropdown menu={{ items }} placement="bottomLeft">
-                        <Button className="ml-2" icon={ <MoreOutlined />}/>
+                        <Button className="ml-2" icon={<MoreOutlined />} />
                     </Dropdown>
                 </div>
             </div>
-            <Divider/>
+            <Divider />
             <GroupActionComponent
                 loading={userStore.loadingSearchUser}
                 searchText={userStore.searchUserText}
@@ -184,7 +184,7 @@ const UsersPage = () => {
                 rowKey={(record) => record.id}
                 dataSource={userStore.allUsers}
                 columns={columns}
-                pagination={{pageSize: 10}}
+                pagination={{ pageSize: paginationCount }}
                 loading={userStore.loading}
                 showSorterTooltip={false}
                 rowSelection={{

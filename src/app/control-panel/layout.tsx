@@ -1,24 +1,25 @@
 "use client"
-import React, {Suspense, useEffect, useState} from "react";
-import {Button, Divider, Menu, MenuProps, Modal, Skeleton, Upload} from "antd";
+import React, { Suspense, useEffect, useState } from "react";
+import { Button, Divider, Menu, MenuProps, Modal, Skeleton, Upload } from "antd";
 import Link from "next/link";
 import Image from "next/image"
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import ThemeSwitch from "@/components/ThemeSwitch";
-import {useTheme} from "next-themes";
-import {usePathname} from "next/navigation";
-import {UserType} from "@/components/Header/Header";
-import {getCookieUserDetails} from "@/lib/users";
-import {UserRole} from "@/enums/UserRoleEnum";
+import { useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
+import { UserType } from "@/components/Header/Header";
+import { getCookieUserDetails } from "@/lib/users";
+import { UserRole } from "@/enums/UserRoleEnum";
 import {
     AppstoreOutlined,
     BarsOutlined,
     BookOutlined, LogoutOutlined,
     PartitionOutlined, SettingOutlined,
     SolutionOutlined,
-    ToolOutlined, UploadOutlined,UserOutlined
+    ToolOutlined, UploadOutlined, UserOutlined
 } from "@ant-design/icons";
-import {useMobxStores} from "@/stores/stores";
+import { useMobxStores } from "@/stores/stores";
+import nextConfig from "next.config.mjs";
 
 const dark_color = "#e3d"
 const text1 = "#121212"
@@ -31,7 +32,7 @@ const findKeyByPathname = (pathName: string, items: any): string => {
             return it.key;
         }
     }
-    return findKeyByPathname(pathName, items.map((i:any) => i.children).flat().filter(Boolean))
+    return findKeyByPathname(pathName, items.map((i: any) => i.children).flat().filter(Boolean))
 
 }
 
@@ -163,15 +164,15 @@ let dashboardMenuItems: MenuItem[] = [
     },
 ];
 
-const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
+const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { resolvedTheme } = useTheme()
-    const {avatarIconsStore} = useMobxStores()
+    const { avatarIconsStore } = useMobxStores()
 
-    const [currentUser,setCurrentUser] = useState<UserType | null>(null);
+    const [currentUser, setCurrentUser] = useState<UserType | null>(null);
     const pathName = usePathname();
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
-    const [loading,setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
 
         const user = getCookieUserDetails();
@@ -180,7 +181,7 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
             dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
         }
 
-        if(user.user.role === UserRole.TEACHER) {
+        if (user.user.role === UserRole.TEACHER) {
             dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                 menuItem?.key !== "moderators_items"
                 && menuItem?.key !== "banners"
@@ -191,7 +192,7 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
             )
         }
 
-        if(user.user.role === UserRole.MODERATOR) {
+        if (user.user.role === UserRole.MODERATOR) {
             dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                 menuItem?.key !== "banners"
                 && menuItem?.key !== "settings"
@@ -252,7 +253,7 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
 
     useEffect(() => {
         avatarIconsStore.getAllAvatarIcons();
-    },[])
+    }, [])
 
     return (
         <div className="flex">
@@ -265,7 +266,7 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                 <div className="grid grid-cols-4 gap-4 mb-4">
                     {avatarIconsStore.avatarIcons?.map((color, index) => (
                         <Image
-                            crossOrigin='anonymous' src={`http://localhost:5000${color.image}`}
+                            crossOrigin='anonymous' src={`${nextConfig.env?.API_URL}${color.image}`}
                             key={index}
                             className={`border-2 rounded-full p-2 cursor-pointer ${selectedColor === color ? 'border-blue-500' : 'border-transparent'}`}
                             width={90}
@@ -290,13 +291,13 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                                 className="absolute bottom-0 right-0 bg-red-600 rounded-full p-2 transform transition-transform hover:scale-110 cursor-pointer shadow-lg"
                                 onClick={showUploadModal}
                             >
-                                <Button type="text" icon={<UploadOutlined/>} size="small"/>
+                                <Button type="text" icon={<UploadOutlined />} size="small" />
                             </div>
                         </div>
                     </div>
 
                     <Skeleton loading={loading} active>
-                        <div className="flex flex-col items-center justify-center" style={{width: 250}}>
+                        <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
                             <h1 className={`text-[${text1}] dark:text-[${text2}] text-lg font-bold mb-1`}>{currentUser?.user?.user_name}</h1>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="text-gray-300 text-sm">{currentUser?.user.role}</span>
@@ -306,12 +307,12 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                     </Skeleton>
                     <div className="flex items-center gap-6 mt-4">
                         <div className="group relative cursor-pointer transform transition-transform hover:scale-110">
-                            <ThemeSwitch/>
+                            <ThemeSwitch />
                             <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white
                             text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity delay-150">
-                                    <Suspense>
-                                        {resolvedTheme === "light" ? "Темная тема" : "Светлая тема"}
-                                    </Suspense>
+                                <Suspense>
+                                    {resolvedTheme === "light" ? "Темная тема" : "Светлая тема"}
+                                </Suspense>
                             </span>
                         </div>
                         {/*<div className="group relative cursor-pointer transform transition-transform hover:scale-110">*/}
@@ -364,21 +365,21 @@ const ControlPanelLayout = ({ children } : { children: React.ReactNode}) => {
                 </div>
 
 
-                <Divider className="bg-gray-600 dark:bg-white"/>
+                <Divider className="bg-gray-600 dark:bg-white" />
                 {
                     !loading ? <Menu
-                        style={{width: 240}}
+                        style={{ width: 240 }}
                         defaultSelectedKeys={[selectedKey]}
                         mode="vertical"
                         items={dashboardMenuItems}
                         theme={resolvedTheme === "light" ? "light" : "dark"}
 
                     /> : <>
-                    {
-                        [1,2,3,4,5,6,7,8].map(it => (
-                            <Skeleton.Input key={it} active block style={{width: 250, marginTop: 10}}/>
-                        ))
-                    }
+                        {
+                            [1, 2, 3, 4, 5, 6, 7, 8].map(it => (
+                                <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
+                            ))
+                        }
                     </>
                 }
             </div>

@@ -29,7 +29,7 @@ class EventStore {
     getAllEvents = action(async () => {
         this.setLoadingEvents(true)
         return await GET(`/api/events`).then((response) => {
-            this.userEvents = response.response.data.map(eventMapper)
+            this.userEvents = response.data.map(eventMapper)
         });
     })
 }

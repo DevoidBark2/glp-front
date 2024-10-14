@@ -12,7 +12,9 @@ import {
     Table,
     TableColumnsType,
     Tag,
-    Tooltip, UploadProps
+    Tooltip, UploadProps,
+    Image,
+    Upload
 } from "antd";
 import {
     DeleteOutlined,
@@ -22,17 +24,19 @@ import {
     PlusOutlined,
     UploadOutlined
 } from "@ant-design/icons";
-import Image from "next/image";
-import React, {useEffect} from "react";
-import {observer} from "mobx-react";
+import React, { useEffect } from "react";
+import { observer } from "mobx-react";
 import dayjs from "dayjs";
-import {FILTER_STATUS_POST, FORMAT_VIEW_DATE} from "@/constants";
+import { FILTER_STATUS_POST, FORMAT_VIEW_DATE } from "@/constants";
 import Dragger from "antd/es/upload/Dragger";
-import {useMobxStores} from "@/stores/stores";
-import {AvatarIcon} from "@/stores/AvatarIconsStore";
+import { useMobxStores } from "@/stores/stores";
+import { AvatarIcon } from "@/stores/AvatarIconsStore";
+import nextConfig from "next.config.mjs";
 
 const AvatarIconsPage = () => {
-    const {avatarIconsStore} = useMobxStores();
+    const { avatarIconsStore } = useMobxStores();
+    const [form] = Form.useForm();
+
     const columns: TableColumnsType<AvatarIcon> = [
         {
             title: 'Иконка',
@@ -40,7 +44,7 @@ const AvatarIconsPage = () => {
             width: '20%',
             render: (text) => (
                 <Tooltip title="Изображение аватарки">
-                    <Image crossOrigin="anonymous" src={`http://localhost:5000${text}`} width={50} height={50} alt="text" />
+                    <Image src={`${nextConfig.env?.API_URL}${text}`} width={50} height={50} alt="text" />
                 </Tooltip>
             ),
         },
@@ -96,23 +100,16 @@ const AvatarIconsPage = () => {
             },
         },
         {
+            title: 'Использованы',
+            width: '20%',
+            align: 'center',
+        },
+        {
             title: 'Действия',
             width: '20%',
             align: 'center',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    <Tooltip title="Отправить на проверку">
-                        <Button
-                            type="default"
-                            icon={<UploadOutlined />}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Редактировать пост">
-                        <Button
-                            type="default"
-                            icon={<EditOutlined />}
-                        />
-                    </Tooltip>
                     <Tooltip title="Удалить пост">
                         <Popconfirm
                             title="Удалить пост?"
@@ -132,76 +129,111 @@ const AvatarIconsPage = () => {
         },
     ];
 
-
-    const [form] = Form.useForm();
-
     const props: UploadProps = {
         name: 'file',
-        multiple: true,
-        onChange(info: any) {
-            const {status} = info.file;
-            if (status === 'done') {
-                notification.success({message: `${info.file.name} загружен успешно.`});
-                form.setFieldValue("image", info.file);
-            } else if (status === 'error') {
-                notification.error({message: `${info.file.name} ошибка загрузки.`});
+        multiple: false,
+        beforeUpload: (file) => {
+            const isImage = file.type.startsWith('image/');
+            const isLessThan5MB = file.size / 1024 / 1024 < 1; // Ограничение по размеру - 5 МБ
+
+            if (!isImage) {
+                notification.error({ message: 'Можно загружать только изображения (JPEG, PNG и т.д.).' });
+                return Upload.LIST_IGNORE;
             }
+
+            if (!isLessThan5MB) {
+                notification.error({ message: 'Размер файла не должен превышать 5 МБ.' });
+                return Upload.LIST_IGNORE;
+            }
+
+            return true;
         },
-        onDrop(e) {
-            console.log('Файлы перетащены', e.dataTransfer.files);
+        onChange(info: any) {
+            const { status } = info.file;
+            if (status === 'done') {
+                notification.success({ message: `${info.file.name} загружен успешно.` });
+                form.setFieldValue("image", info.file); // Сохраняем файл в форме
+            } else if (status === 'error') {
+                notification.error({ message: `${info.file.name} ошибка загрузки.` });
+            }
         },
     };
 
+    const hanleSubmit = (values: any) => {
+        debugger
+        if (!values.image || (!values.image && values.fileList.length === 0)) {
+            notification.error({ message: 'Пожалуйста, загрузите изображение перед отправкой.' });
+            return;
+        }
+
+        avatarIconsStore.createAvatarIcon(values).then(() => {
+            form.resetFields();
+        });
+    }
+
     useEffect(() => {
         avatarIconsStore.getAllAvatarIcons();
-    },[])
+    }, [])
 
     return (
         <>
             <Modal
                 open={avatarIconsStore.showCreateModal}
-                onCancel={() => avatarIconsStore.setShowCreateModal(false)}
+                onCancel={() => {
+                    avatarIconsStore.setShowCreateModal(false)
+                    form.resetFields();
+                }}
                 footer={null}
+                centered
             >
                 <Form
                     form={form}
-                    onFinish={(values) => avatarIconsStore.createAvatarIcon(values)}
+                    layout="vertical"
+                    onFinish={hanleSubmit}
                 >
                     <Form.Item
                         name="image"
-                        label="Изображение"
+                        label={<span>Изображение</span>}
+                        rules={[{ required: true, message: "Пожалуйста, выберите изображение!" }]}
                     >
-                        <Dragger {...props}>
+                        <Dragger {...props} style={{ backgroundColor: '#fff', borderRadius: '10px', padding: '10px' }}>
                             <p className="ant-upload-drag-icon">
-                                <InboxOutlined/>
+                                <InboxOutlined style={{ fontSize: '48px', color: '#1890ff' }} />
                             </p>
-                            <p className="ant-upload-text">Нажмите или перетащите файл в эту область для загрузки</p>
-                            <p className="ant-upload-hint">
-                                Поддержка одиночной или массовой загрузки. Запрещено загружать конфиденциальные данные.
+                            <p className="ant-upload-text" style={{ fontWeight: 'bold' }}>Нажмите или перетащите файл в эту область</p>
+                            <p className="ant-upload-hint" style={{ color: '#8c8c8c' }}>
+                                Запрещено загружать конфиденциальные данные.
                             </p>
                         </Dragger>
                     </Form.Item>
 
-                    <div className="flex flex-col items-center">
-                        <Form.Item style={{marginTop: '10px'}}>
-                            <Button type="primary" htmlType="submit" loading={avatarIconsStore.loadingAvatars}>Создать</Button>
+                    <div className="flex justify-center mt-4">
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                loading={avatarIconsStore.loadingAvatars}
+                                style={{ padding: '0 24px', borderRadius: '5px' }}
+                            >
+                                Создать иконку
+                            </Button>
                         </Form.Item>
                     </div>
                 </Form>
             </Modal>
-            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
+            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{ height: 'calc(100vh - 60px)' }}>
                 <div className="flex items-center justify-between">
                     <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные иконки</h1>
                     <div>
                         <Button
                             className="flex items-center justify-center transition-transform transform hover:scale-105"
-                            icon={<PlusCircleOutlined/>}
+                            icon={<PlusCircleOutlined />}
                             type="primary"
                             onClick={() => avatarIconsStore.setShowCreateModal(true)}
                         >
                             Добавить аватар
                         </Button>
-                        <Button className="ml-2" icon={ <MoreOutlined />}/>
+                        <Button className="ml-2" icon={<MoreOutlined />} />
                     </div>
                 </div>
                 <Divider />

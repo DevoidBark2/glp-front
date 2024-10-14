@@ -1,9 +1,9 @@
-import {action, makeAutoObservable} from "mobx";
-import {ComplexityPasswordEnum} from "@/enums/ComplexityPasswordEnum";
-import {UserRole} from "@/enums/UserRoleEnum";
-import {GET, POST} from "@/lib/fetcher";
-import {getUserToken} from "@/lib/users";
-import {notification} from "antd";
+import { action, makeAutoObservable } from "mobx";
+import { ComplexityPasswordEnum } from "@/enums/ComplexityPasswordEnum";
+import { UserRole } from "@/enums/UserRoleEnum";
+import { GET, POST } from "@/lib/fetcher";
+import { getUserToken } from "@/lib/users";
+import { notification } from "antd";
 
 type GeneralSettingsType = {
     id: number;
@@ -28,22 +28,20 @@ export class GeneralSettings {
         makeAutoObservable(this)
     }
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     setLoading = action((value: boolean) => {
         this.loading = value;
     })
 
     getGeneralSettings = action(async () => {
-        this.setLoading(true)
-        const token = getUserToken();
-        return await GET(`/api/general-settings?token=${token}`);
+        return await GET(`/api/general-settings`);
     })
 
-    saveGeneralSetting = action(async (settings: GeneralSettingsType) => {
-        const token = getUserToken();
-        await POST(`/api/general-settings?token=${token}`, settings).then(response => {
-            notification.success({message:response.response.data.message})
-        })
-    })
+    saveGeneralSetting = action(async (formData: FormData) => {
+        debugger
+        await POST(`/api/general-settings`, formData).then(response => {
+            notification.success({ message: response.data.message });
+        });
+    });
 }

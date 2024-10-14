@@ -53,9 +53,8 @@ class UserStore {
 
     searchUsers = action(async () => {
         this.setLoadingSearchUser(true)
-        const token = getUserToken();
-        await GET(`/api/search-users?query=${this.searchUserText}&token=${token}`).then(response => {
-            this.allUsers = response.response.data.map(usersMapper);
+        await GET(`/api/search-users?query=${this.searchUserText}`).then(response => {
+            this.allUsers = response.data.map(usersMapper);
         }).finally(() => {
             this.setLoadingSearchUser(false)
         })
@@ -194,9 +193,8 @@ class UserStore {
     createUser = action(async (values: any) => {
         this.setCreateUserLoading(true)
         try {
-            const token = getUserToken();
-            const response = await POST(`/api/user?token=${token}`, values);
-            this.allUsers = [...this.allUsers, usersMapper(response.response.data)]
+            const response = await POST(`/api/user`, values);
+            this.allUsers = [...this.allUsers, usersMapper(response)]
 
             return response;
         } catch (e) {

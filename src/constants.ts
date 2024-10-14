@@ -148,7 +148,7 @@ export const GeneralSettingTooltips = {
         LABEL: "Режим обслуживания",
     },
     PLATFORM_LOGO: {
-        LABEL: "Логотип URL",
+        LABEL: "Логотип платформы",
         PLACEHOLDER: "Введите URL логотипа"
     },
     CACHE_ENABLED: {

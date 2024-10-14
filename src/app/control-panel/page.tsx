@@ -64,7 +64,6 @@ const ControlPanel = () => {
 
     useEffect(() => {
         const currentUser = getCookieUserDetails();
-        debugger
         setCurrentUser(currentUser);
     }, [])
 

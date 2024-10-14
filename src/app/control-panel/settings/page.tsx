@@ -1,25 +1,32 @@
 "use client"
-import {Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio, Slider, InputNumber, TimePicker} from "antd";
-import React, {useEffect} from "react";
-import {observer} from "mobx-react";
-import {useMobxStores} from "@/stores/stores";
-import {GeneralSettingTooltips} from "@/constants";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import { Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio, Slider, InputNumber, TimePicker } from "antd";
+import React, { useEffect } from "react";
+import { observer } from "mobx-react";
+import { useMobxStores } from "@/stores/stores";
+import { GeneralSettingTooltips } from "@/constants";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { Upload, message } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import Image from "next/image"
 
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
-    const {generalSettingsStore} = useMobxStores()
-    const [ formForGeneral] = Form.useForm()
-    const [ formForUserManagement] = Form.useForm()
-    const [ formForCourseManagement] = Form.useForm()
+    const { generalSettingsStore } = useMobxStores()
+    const [formForGeneral] = Form.useForm()
+    const [formForUserManagement] = Form.useForm()
+    const [formForCourseManagement] = Form.useForm()
     const [formForSec] = Form.useForm()
+    const [uploadedLogo, setUploadedLogo] = useState<string | null>(null)
+    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         generalSettingsStore.getGeneralSettings().then((response) => {
-            formForSec.setFieldsValue(response.response.data[0])
-            formForGeneral.setFieldsValue(response.response.data[0])
-            formForUserManagement.setFieldsValue(response.response.data[0])
-            formForCourseManagement.setFieldsValue(response.response.data[0])
+            formForSec.setFieldsValue(response.data[0])
+            formForGeneral.setFieldsValue(response.data[0])
+            setUploadedLogo(`http://localhost:5000${response.data[0].logo_url}`)
+            formForUserManagement.setFieldsValue(response.data[0])
+            formForCourseManagement.setFieldsValue(response.data[0])
         }).finally(() => {
             generalSettingsStore.setLoading(false)
         });
@@ -29,13 +36,13 @@ const SettingsControlPage = () => {
         <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen rounded">
             <div className="bg-gray-50 p-5 rounded-lg shadow-md mb-5">
                 <div className="flex items-center">
-                    <InfoCircleOutlined className="text-2xl text-blue-600 mr-3"/>
+                    <InfoCircleOutlined className="text-2xl text-blue-600 mr-3" />
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">Информация о настройках</h2>
                         <p className="text-gray-600 mt-1">
                             Здесь вы можете управлять основными параметрами вашего приложения, включая безопасность,
                             настройки доступа и другие важные параметры. Обратите внимание на значок <Tooltip
-                            title="Информация"><InfoCircleOutlined/></Tooltip>, чтобы получить подробную информацию о
+                                title="Информация"><InfoCircleOutlined /></Tooltip>, чтобы получить подробную информацию о
                             каждом параметре.
                         </p>
                     </div>
@@ -45,43 +52,94 @@ const SettingsControlPage = () => {
                 <div className="flex items-center justify-between">
                     <h1 className="text-gray-800 font-bold text-3xl mb-2">Настройки</h1>
                 </div>
-                <Divider/>
+                <Divider />
 
                 {generalSettingsStore.loading
-                    ? <div className="flex justify-center items-center"><Spin size="large"/></div>
+                    ? <div className="flex justify-center items-center"><Spin size="large" /></div>
                     : <Tabs defaultActiveKey="1">
                         <TabPane tab="Общие настройки" key="1">
-                            <Form layout="vertical"
-                                  form={formForGeneral}
-                                  onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
+                            <Form
+                                layout="vertical"
+                                form={formForGeneral}
+                                onFinish={(values) => {
+                                    const formData = new FormData();
+                                    formData.append("platform_name", values.platform_name);
+                                    formData.append("service_mode", values.service_mode);
+                                    formData.append("cache_enabled", values.cache_enabled);
+                                    formData.append("id", values.id)
+
+                                    // Добавляем файл, если он есть
+                                    if (file) {
+                                        formData.append("logo_url", file);
+                                    }
+                                    debugger
+
+                                    generalSettingsStore.saveGeneralSetting(formData);
+                                }}
                             >
                                 <Form.Item name="id" hidden></Form.Item>
+
                                 <Form.Item label={GeneralSettingTooltips.PLATFORM_NAME.LABEL} name="platform_name">
-                                    <Input placeholder={GeneralSettingTooltips.PLATFORM_NAME.PLACEHOLDER}/>
+                                    <Input placeholder={GeneralSettingTooltips.PLATFORM_NAME.PLACEHOLDER} />
                                 </Form.Item>
+
+                                {/* Поле для загрузки и отображения логотипа */}
                                 <Form.Item label={GeneralSettingTooltips.PLATFORM_LOGO.LABEL} name="logo_url">
-                                    <Input disabled placeholder={GeneralSettingTooltips.PLATFORM_LOGO.PLACEHOLDER}/>
+                                    <Upload
+                                        name="logo_url"
+                                        listType="picture-card"
+                                        showUploadList={false}
+                                        beforeUpload={(file) => {
+                                            const isImage = file.type.startsWith("image/");
+                                            if (!isImage) {
+                                                message.error("Можно загрузить только изображения.");
+                                                return Upload.LIST_IGNORE;
+                                            }
+                                            const reader = new FileReader();
+                                            reader.onload = () => {
+                                                const imageUrl = reader.result as string;
+                                                setUploadedLogo(imageUrl);
+                                            };
+                                            reader.readAsDataURL(file);
+
+                                            setFile(file); // сохраняем файл в состоянии для отправки
+                                            return false;
+                                        }}
+                                    >
+                                        {uploadedLogo ? (
+                                            <Image
+                                                src={uploadedLogo}
+                                                alt="Логотип"
+                                                width={200}
+                                                height={200}
+                                            />
+                                        ) : (
+                                            <div>
+                                                <UploadOutlined /> Загрузить логотип
+                                            </div>
+                                        )}
+                                    </Upload>
                                 </Form.Item>
+
+                                {/* Режим обслуживания */}
                                 <Form.Item
                                     name="service_mode"
                                     valuePropName="checked"
                                     label={GeneralSettingTooltips.SERVICE_MODE.LABEL}
                                     tooltip={GeneralSettingTooltips.SERVICE_MODE.TOOLTIP}
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
+
+                                {/* Настройки кэширования */}
                                 <Form.Item label={GeneralSettingTooltips.CACHE_ENABLED.LABEL} name="cache_enabled">
                                     <Select placeholder={GeneralSettingTooltips.CACHE_ENABLED.PLACEHOLDER}>
                                         <Select.Option value={true}>Включено</Select.Option>
                                         <Select.Option value={false}>Отключено</Select.Option>
                                     </Select>
                                 </Form.Item>
-                                {/* <Form.Item label="Тестовые данные">
-                                   <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-                                <Form.Item label="Настройки для разработчиков">
-                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item> */}
+
+                                {/* Кнопка сохранения */}
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
@@ -95,7 +153,7 @@ const SettingsControlPage = () => {
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
                                 <Form.Item name="id" hidden></Form.Item>
-                                
+
                                 {/* Существующие настройки */}
                                 <Form.Item label={GeneralSettingTooltips.USER_ROLE_DEFAULT.LABEL} name="default_user_role">
                                     <Select placeholder={GeneralSettingTooltips.USER_ROLE_DEFAULT.PLACEHOLDER}>
@@ -131,7 +189,7 @@ const SettingsControlPage = () => {
                                 </Form.Item>
 
                                 {/* Новые, более интересные настройки */}
-                                
+
                                 {/* Настройки ограничений по возрасту */}
                                 <Form.Item
                                     label="Ограничение доступа по возрасту"
@@ -229,7 +287,7 @@ const SettingsControlPage = () => {
                                     name="auto_publish_course"
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
                                 <Form.Item
                                     label={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.LABEL}
@@ -247,7 +305,7 @@ const SettingsControlPage = () => {
                                     name="moderation_review_course"
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
                                 {/*<Form.Item label="Выдача сертификатов по завершению курса">*/}
                                 {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
@@ -261,7 +319,7 @@ const SettingsControlPage = () => {
                                     name="moderation_new_course"
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
@@ -380,7 +438,7 @@ const SettingsControlPage = () => {
                                     name="audit_enabled"
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
                                 <Form.Item
@@ -388,7 +446,7 @@ const SettingsControlPage = () => {
                                     tooltip={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.TOOLTIP}
                                     name="min_password_length"
                                 >
-                                    <Input type="number" placeholder={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.PLACEHOLDER}/>
+                                    <Input type="number" placeholder={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.PLACEHOLDER} />
                                 </Form.Item>
 
                                 <Form.Item
@@ -694,7 +752,7 @@ const SettingsControlPage = () => {
                                     label="Автоматическое распределение задач"
                                     tooltip="Настройте автоматическое распределение задач между модераторами."
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                     <div className="text-gray-500 mt-1">
                                         При включении этой опции, система автоматически назначит посты и курсы для проверки модераторам в зависимости от их текущей нагрузки.
                                     </div>
@@ -771,7 +829,7 @@ const SettingsControlPage = () => {
                                     tooltip="Позволяет модераторам просматривать аналитику своих действий."
                                     valuePropName="checked"
                                 >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл"/>
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                     <div className="text-gray-500 mt-1">
                                         Включите, если хотите предоставить модераторам доступ к отчетам и аналитике их деятельности.
                                     </div>
@@ -785,7 +843,7 @@ const SettingsControlPage = () => {
 
 
                     </Tabs>
-                    }
+                }
             </div>
         </div>
     )
