@@ -118,7 +118,9 @@ const ProfilePage = () => {
 
                 <h1 className="text-gray-800 text-4xl my-5 font-bold">Профиль пользователя</h1>
 
-                <div className="flex gap-6">
+                <Divider/>
+
+                <div className="flex gap-6 mt-2">
                     {/* Левая часть - профиль */}
                     <div className="w-2/5 bg-white flex flex-col rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                         <div className="flex justify-center mb-4">
@@ -322,7 +324,7 @@ const ProfilePage = () => {
                 {/* Дополнительные интерактивные блоки */}
 
                 {/* Блок с рейтингом курсов */}
-                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Оцените ваши курсы</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -333,7 +335,7 @@ const ProfilePage = () => {
                             </div>
                         ))}
                     </div>
-                </div> */}
+                </div>
 
                 {/* Форма обратной связи */}
                 <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
@@ -410,7 +412,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Рекомендуемые курсы */}
-                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Рекомендуемые курсы</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -424,10 +426,10 @@ const ProfilePage = () => {
                             </div>
                         ))}
                     </div>
-                </div> */}
+                </div>
 
                 {/* История активности */}
-                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">История активности</h2>
                     <Divider />
                     <List
@@ -441,10 +443,10 @@ const ProfilePage = () => {
                             <List.Item>{item}</List.Item>
                         )}
                     />
-                </div> */}
+                </div>
 
                 {/* Прогресс-бар с уровнем пользователя */}
-                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Ваш уровень</h2>
                     <Divider />
                     <div className="flex items-center justify-between">
@@ -452,10 +454,10 @@ const ProfilePage = () => {
                         <Progress percent={(userXP / maxXP) * 100} status="active" />
                     </div>
                     <p className="text-gray-600 mt-2">Опыт: {userXP}/{maxXP} XP</p>
-                </div> */}
+                </div>
 
                 {/* Блок с наградами */}
-                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Ваши достижения</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -471,7 +473,7 @@ const ProfilePage = () => {
                             </Badge.Ribbon>
                         ))}
                     </div>
-                </div> */}
+                </div>
 
                 {/* Календарь для планирования обучения */}
                 {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
@@ -487,7 +489,9 @@ const ProfilePage = () => {
                     </Tooltip>
                 </div> */}
             </div>
-        ) : <Skeleton active />
+        ) : <div className="flex justify-center">
+            <Spin size="large" />
+        </div>
     );
 };
 

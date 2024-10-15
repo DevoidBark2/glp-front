@@ -6,6 +6,7 @@ import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import { UserRole } from "@/enums/UserRoleEnum";
 import { StatusUserEnum } from "@/enums/StatusUserEnum";
 import { PlatformMenu } from "@/types/platformMenu";
+import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "./stores/AchievementsStore";
 
 export const MAIN_COLOR = "#00b96b"
 export const UNAUTHORIZED_STATUS_CODE = 401
@@ -205,3 +206,49 @@ export const GeneralSettingTooltips = {
 }
 
 export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"
+
+
+export const conditionForAchievements: Condition[] = [
+    { id: 1, condition: ConditionTypeEnum.COMPLETE_COURSES, title: "Пройди N курсов", type: AchievementTypeEnum.LEARNING },
+    { id: 2, condition: ConditionTypeEnum.COMPLETE_MODULE, title: "Заверши N модулей в курсе.", type: AchievementTypeEnum.LEARNING },
+    { id: 3, condition: ConditionTypeEnum.EARN_POINTS, title: "Заработай N баллов на платформе", type: AchievementTypeEnum.POINTS },
+    { id: 4, condition: ConditionTypeEnum.ATTEND_EVENT, title: "Прими участие в N вебинарах или событиях", type: AchievementTypeEnum.PARTICIPATION },
+    { id: 5, condition: ConditionTypeEnum.LOGIN_STREAK, title: "Заходи на платформу каждый день в течение N дней", type: AchievementTypeEnum.ACTIVITY },
+    { id: 6, condition: ConditionTypeEnum.COMPLETE_ASSESSMENT, title: "Пройди N тестов с результатом выше 80%", type: AchievementTypeEnum.LEARNING },
+    { id: 7, condition: ConditionTypeEnum.SUBMIT_ASSIGNMENTS, title: "Отправь N домашних заданий", type: AchievementTypeEnum.LEARNING },
+    { id: 8, condition: ConditionTypeEnum.MENTOR_STUDENTS, title: "Наставляй N других студентов", type: AchievementTypeEnum.INTERACTION },
+    { id: 9, condition: ConditionTypeEnum.GIVE_FEEDBACK, title: "Оставь N отзывов о пройденных курсах", type: AchievementTypeEnum.INTERACTION },
+    { id: 10, condition: ConditionTypeEnum.PARTICIPATE_DISCUSSIONS, title: "Участвуй в N обсуждениях на форуме", type: AchievementTypeEnum.INTERACTION },
+    { id: 11, condition: ConditionTypeEnum.WATCH_VIDEOS, title: "Просмотри N видеоуроков", type: AchievementTypeEnum.LEARNING },
+    { id: 12, condition: ConditionTypeEnum.COMPLETE_QUIZ, title: "Заверши N коротких квизов по курсу", type: AchievementTypeEnum.LEARNING },
+    { id: 13, condition: ConditionTypeEnum.EARN_CERTIFICATES, title: "Получи N сертификатов за завершенные курсы", type: AchievementTypeEnum.ACHIEVEMENTS },
+    { id: 14, condition: ConditionTypeEnum.SHARE_COURSE, title: "Поделись курсом с N друзьями", type: AchievementTypeEnum.INTERACTION },
+    { id: 15, condition: ConditionTypeEnum.CREATE_COURSE_CONTENT, title: "Создай N курсов или уроков", type: AchievementTypeEnum.CONTENT_CREATION },
+    { id: 16, condition: ConditionTypeEnum.RECEIVE_UPVOTES, title: "Получи N лайков/оценок на свои ответы в обсуждениях", type: AchievementTypeEnum.INTERACTION },
+    { id: 17, condition: ConditionTypeEnum.ACHIEVE_HIGH_SCORE, title: "Получи максимальный балл в N тестах", type: AchievementTypeEnum.POINTS },
+    { id: 18, condition: ConditionTypeEnum.REFER_FRIENDS, title: "Приведи N новых пользователей на платформу", type: AchievementTypeEnum.REFERRALS },
+    { id: 19, condition: ConditionTypeEnum.STUDY_HOURS, title: "Проведи N часов на платформе, изучая материалы", type: AchievementTypeEnum.ACTIVITY },
+    { id: 20, condition: ConditionTypeEnum.EARN_BADGES, title: "Получи N различных бейджей", type: AchievementTypeEnum.ACHIEVEMENTS },
+    { id: 21, condition: ConditionTypeEnum.COMPLETE_CHALLENGES, title: "Заверши N учебных вызовов", type: AchievementTypeEnum.LEARNING },
+    { id: 22, condition: ConditionTypeEnum.COLLABORATE_PROJECT, title: "Прими участие в N командных проектах", type: AchievementTypeEnum.PARTICIPATION },
+    { id: 23, condition: ConditionTypeEnum.COURSE_COMPLETION_STREAK, title: "Заверши по курсу каждую неделю в течение N недель", type: AchievementTypeEnum.ACTIVITY },
+    { id: 24, condition: ConditionTypeEnum.TOP_LEARNER, title: "Войди в топ-10 активных учеников в течение месяца", type: AchievementTypeEnum.ACHIEVEMENTS },
+    { id: 25, condition: ConditionTypeEnum.ATTEND_WORKSHOPS, title: "Пройди N мастер-классов", type: AchievementTypeEnum.PARTICIPATION },
+    { id: 26, condition: ConditionTypeEnum.CREATE_DISCUSSION_TOPICS, title: "Создай N новых тем для обсуждения", type: AchievementTypeEnum.CONTENT_CREATION },
+    { id: 27, condition: ConditionTypeEnum.SOLVE_PRACTICE_PROBLEMS, title: "Реши N практических задач", type: AchievementTypeEnum.LEARNING },
+    { id: 28, condition: ConditionTypeEnum.REVIEW_MATERIALS, title: "Просмотри N дополнительных материалов или ресурсов", type: AchievementTypeEnum.LEARNING },
+    { id: 29, condition: ConditionTypeEnum.GET_FEEDBACK_FROM_INSTRUCTOR, title: "Получи N положительных отзывов от преподавателя", type: AchievementTypeEnum.INTERACTION },
+    { id: 30, condition: ConditionTypeEnum.EARLY_BIRD, title: "Запишись на курс в течение 24 часов с момента его анонса", type: AchievementTypeEnum.ACTIVITY },
+];
+
+// Массив типов достижений
+export const typesConsitions = [
+    "Обучение",
+    "Баллы",
+    "Участие",
+    "Активность",
+    "Взаимодействие",
+    "Достижения",
+    "Создание контента",
+    "Рефералы"
+];

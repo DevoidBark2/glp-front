@@ -13,6 +13,7 @@ import StatisticsStore from "@/stores/statisticsStore";
 import AvatarIconsStore from "@/stores/AvatarIconsStore";
 import UserProfileStore from "./UserProfileStore";
 import FeedBacksStore from "./FeedBacksStore";
+import AchievementsStore from "./AchievementsStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -28,6 +29,7 @@ const avatarIconsStore = new AvatarIconsStore();
 const userProfileStore = new UserProfileStore();
 const feedBacksStore = new FeedBacksStore();
 const statisticsStore = new StatisticsStore();
+const achievementsStore = new AchievementsStore();
 
 export const RootStore = {
     userStore,
@@ -43,7 +45,8 @@ export const RootStore = {
     statisticsStore,
     avatarIconsStore,
     userProfileStore,
-    feedBacksStore
+    feedBacksStore,
+    achievementsStore
 };
 const StoreContext = React.createContext(RootStore);
 

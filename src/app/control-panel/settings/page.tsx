@@ -9,6 +9,7 @@ import { Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import Image from "next/image"
+import nextConfig from "next.config.mjs";
 
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
@@ -24,7 +25,7 @@ const SettingsControlPage = () => {
         generalSettingsStore.getGeneralSettings().then((response) => {
             formForSec.setFieldsValue(response.data[0])
             formForGeneral.setFieldsValue(response.data[0])
-            setUploadedLogo(`http://localhost:5000${response.data[0].logo_url}`)
+            setUploadedLogo(response.data[0].logo_url ? `${nextConfig.env?.API_URL}${response.data[0].logo_url}`: null)
             formForUserManagement.setFieldsValue(response.data[0])
             formForCourseManagement.setFieldsValue(response.data[0])
         }).finally(() => {

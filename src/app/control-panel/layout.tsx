@@ -16,7 +16,7 @@ import {
     BookOutlined, LogoutOutlined,
     PartitionOutlined, SettingOutlined,
     SolutionOutlined,
-    ToolOutlined, UploadOutlined, UserOutlined
+    ToolOutlined, UploadOutlined, UserOutlined,StarOutlined
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import nextConfig from "next.config.mjs";
@@ -156,6 +156,14 @@ let dashboardMenuItems: MenuItem[] = [
         key: 'profile',
         label: <Link href={"/control-panel/profile"}>Профиль</Link>,
         icon: <UserOutlined />,
+    },
+    {
+        type: 'divider',
+    },
+    {
+        key: 'achievements',
+        label: <Link href={"/control-panel/achievements"}>Достижения</Link>,
+        icon: <StarOutlined />,
     },
     {
         key: 'platform',

@@ -42,6 +42,8 @@ export class GeneralSettings {
         debugger
         await POST(`/api/general-settings`, formData).then(response => {
             notification.success({ message: response.data.message });
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
         });
     });
 }

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     try {
         const {data} = await axios.get(nextConfig.env?.API_URL + 'api/get-feedback-user',{
             headers: {
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
