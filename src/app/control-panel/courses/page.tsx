@@ -4,7 +4,6 @@ import {
     Button,
     Divider,
     Dropdown,
-    Empty,
     MenuProps,
     Modal,
     Popconfirm, Result,
@@ -17,7 +16,7 @@ import React, {useEffect} from "react";
 import {useMobxStores} from "@/stores/stores";
 import Link from "next/link";
 import {Course} from "@/stores/CourseStore";
-import {FORMAT_VIEW_DATE, statusCourses} from "@/constants";
+import {FORMAT_VIEW_DATE, statusCourseLabels, statusCourses} from "@/constants";
 import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
 import {DeleteOutlined, EditOutlined, MoreOutlined, PlusCircleOutlined, UploadOutlined} from "@ant-design/icons";
@@ -44,12 +43,12 @@ const CoursesPage = () => {
             ),
         },
         {
-            title: 'Дата публикации',
+            title: 'Дата  создания',
             dataIndex: 'publish_date',
             sorter: (a, b) => dayjs(a.publish_date).valueOf() - dayjs(b.publish_date).valueOf(),
             showSorterTooltip: false,
             render: (value) => (
-                <Tooltip title="Дата публикации курса">
+                <Tooltip title="Дата создания курса">
                     {dayjs(value).format(FORMAT_VIEW_DATE)}
                 </Tooltip>
             ),
@@ -58,7 +57,7 @@ const CoursesPage = () => {
             title: "Статус",
             dataIndex: "status",
             filters: Object.keys(statusCourses).map((key) => ({
-                text: <Tag color={statusCourses[key as StatusCourseEnum]}>{key}</Tag>,
+                text: <Tag color={statusCourses[key as StatusCourseEnum]}>{statusCourseLabels[key as StatusCourseEnum]}</Tag>,
                 value: key,
             })),
             onFilter: (value, record) => record.status === value,
@@ -153,10 +152,14 @@ const CoursesPage = () => {
 
     useEffect(() => {
         courseStore.getCoursesForCreator()
+
+        return () => {
+            courseStore.setSuccessCreateCourseModal(false)
+        }
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
+        <>
             <Modal
                 open={courseStore.successCreateCourseModal}
                 onCancel={() => courseStore.setSuccessCreateCourseModal(false)}
@@ -167,41 +170,42 @@ const CoursesPage = () => {
                     title="Курс успешно создан!"
                     subTitle="Для успешного публикования курса необходимо создать, как минимум 1 раздел."
                     extra={[
-                        <Button type="primary" onClick={() => router.push('/control-panel/sections')}> Перейти к разделам</Button>,
+                        <Button type="primary" onClick={() => router.push('/control-panel/sections/add')}> Перейти к созданию</Button>,
                         <Button onClick={() => courseStore.setSuccessCreateCourseModal(false)}>Закрыть</Button>,
                     ]}
                 />
             </Modal>
-            <div className="flex items-center justify-between">
-                <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные курсы</h1>
-                <div>
-                    <Link href={"courses/add"}>
-                        <Button
-                            className="flex items-center justify-center transition-transform transform hover:scale-105"
-                            type="primary"
-                            icon={<PlusCircleOutlined/>}
-                        >Добавить курс
-                        </Button>
-                    </Link>
-                    <Dropdown menu={{ items }} placement="bottomLeft">
-                        <Button className="ml-2" icon={ <MoreOutlined />}/>
-                    </Dropdown>
-
+            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные курсы</h1>
+                    <div>
+                        <Link href={"courses/add"}>
+                            <Button
+                                className="flex items-center justify-center transition-transform transform hover:scale-105"
+                                type="primary"
+                                icon={<PlusCircleOutlined/>}
+                            >
+                                Добавить курс
+                            </Button>
+                        </Link>
+                        <Dropdown menu={{ items }} placement="bottomLeft">
+                            <Button className="ml-2" icon={ <MoreOutlined />}/>
+                        </Dropdown>
+                    </div>
                 </div>
-
+                <Divider />
+                <Table
+                    rowKey={(record) => record.id}
+                    loading={courseStore.loadingCourses}
+                    dataSource={courseStore.userCourses}
+                    columns={columns}
+                    rowSelection={{type: "checkbox"}}
+                    pagination={{ pageSize: paginationCount }}
+                    locale={coursesTable}
+                    bordered
+                />
             </div>
-            <Divider />
-            <Table
-                rowKey={(record) => record.id}
-                loading={courseStore.loadingCourses}
-                dataSource={courseStore.userCourses}
-                columns={columns}
-                rowSelection={{type: "checkbox"}}
-                pagination={{ pageSize: paginationCount }}
-                locale={coursesTable}
-                bordered
-            />
-        </div>
+        </>
     );
 }
 

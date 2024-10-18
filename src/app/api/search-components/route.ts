@@ -4,18 +4,17 @@ import nextConfig from "../../../../next.config.mjs";
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
-    const token = searchParams.get('token');
     const query = searchParams.get('query');
+    const token = req.headers.get('authorization');
 
     try {
-        const response = await axios.get(nextConfig.env?.API_URL + `api/search-components?query=${query}`,{
+        const {data} = await axios.get(nextConfig.env?.API_URL + `api/search-components?query=${query}`,{
             headers: {
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data,{status:error.response.status})

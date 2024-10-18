@@ -72,6 +72,15 @@ export const statusCourses = {
     [StatusCourseEnum.IN_PROCESSING]: "yellow",
     [StatusCourseEnum.REJECTED]: "red",
 }
+
+export const statusCourseLabels = {
+    [StatusCourseEnum.NEW]: 'Новый',
+    [StatusCourseEnum.ACTIVE]: 'Активный',
+    [StatusCourseEnum.CLOSED]: 'Закрытый',
+    [StatusCourseEnum.IN_PROCESSING]: 'В обработке',
+    [StatusCourseEnum.REJECTED]: 'Отклонен',
+};
+
 export const eventColors = {
     [ActionEvent.CREATE_COURSE]: "green",
     [ActionEvent.UPDATE_COURSE]: "blue",

@@ -32,17 +32,15 @@ class SectionCourse {
 
     getAllSectionCourse = action(async () => {
         this.setLoadingSectionsCourse(true)
-        const token = getUserToken();
-        await GET(`/api/sections?token=${token}`).then(response => {
-            this.sectionCourse = response.response.data.map(sectionMapper);
+        await GET(`/api/sections`).then(response => {
+            this.sectionCourse = response.data.map(sectionMapper);
         }).finally(() => {
             this.setLoadingSectionsCourse(false)
         })
     })
 
     addSection = action(async (values: SectionCourseItem) => {
-        const token = getUserToken();
-        return await POST(`/api/sections?token=${token}`, values).catch(e => {
+        return await POST(`/api/sections`, values).catch(e => {
         })
     })
 }

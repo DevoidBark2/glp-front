@@ -210,6 +210,7 @@ const TaskPage = () => {
                 <Table
                     rowKey={(record) => record.id}
                     dataSource={courseComponentStore.courseComponents}
+                    rowSelection={{type: "checkbox"}}
                     columns={columns}
                     loading={courseComponentStore.loadingCourseComponent}
                 />

@@ -8,6 +8,7 @@ import {
     message,
     Steps,
     Upload, List, Badge, Table, AutoComplete, Tag, TableColumnsType, Tooltip, notification,
+    Empty,
 } from "antd";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
@@ -22,7 +23,7 @@ import {
     CheckCircleOutlined,
     CodeOutlined,
     ProjectOutlined,
-    ReconciliationOutlined, EditOutlined
+    ReconciliationOutlined, EditOutlined,PlusCircleOutlined,ExportOutlined
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {CourseComponentType} from "@/enums/CourseComponentType";
@@ -126,6 +127,19 @@ const SectionAddPage = () => {
         }
     };
 
+    const renderLevelCourse = (levelCourse: number) => {
+        switch (levelCourse) {
+            case 0:
+                return "Легкий";
+            case 1:
+                return "Средний";
+            case 2:
+                return "Сложный";
+            default:
+                return <Tag color="default">Неизвестно</Tag>;
+        }
+    }
+
     const steps = [
         {
             title: "Выбор курса",
@@ -134,7 +148,18 @@ const SectionAddPage = () => {
                     name="courseId"
                 >
                     <List
-                        grid={{ gutter: 16, column: 6 }}
+                        locale={{emptyText: <Empty description="Список пуст">
+                                <Button
+                                    className="flex items-center justify-center transition-transform transform hover:scale-105"
+                                    type="primary"
+                                    icon={<PlusCircleOutlined />}
+                                    onClick={() => router.push('/control-panel/courses/add')}
+                                >
+                                    Создать курс
+                                </Button>
+                            </Empty>
+                        }}
+                        grid={{ gutter: 16, column: 5 }}
                         loading={courseStore.loadingCourses}
                         dataSource={courseStore.userCourses}
                         renderItem={(item) => (
@@ -142,7 +167,17 @@ const SectionAddPage = () => {
                                 <Badge text={item.status}>
                                     <Card
                                         key={item.id}
-                                        title={item.name}
+                                        title={<div className="flex justify-between">
+                                            <p>{item.name}</p>
+                                            <Button 
+                                                icon={<ExportOutlined />} 
+                                                title="Перейти к курсу" 
+                                                onClick={(event) => {
+                                                    event.preventDefault();
+                                                    router.push(`/control-panel/courses/${item.id}`)
+                                                }}
+                                            />
+                                        </div>}
                                         hoverable
                                         onClick={() => handleSelectCourse(item)}
                                         style={{
@@ -158,7 +193,7 @@ const SectionAddPage = () => {
                                                 <div>
                                                     <p><ClockCircleOutlined /> {item.duration} ч.</p>
                                                     <p>Категория: {item.category?.name ?? "Категория отсутствует"}</p>
-                                                    <p>Уровень: {item.level}</p>
+                                                    <p>Уровень: {renderLevelCourse(item.level)}</p>
                                                     <p>Дата публикации: {new Date(item.publish_date).toLocaleDateString()}</p>
                                                 </div>
                                             }
@@ -179,7 +214,7 @@ const SectionAddPage = () => {
                     <Form.Item
                         name="name"
                         label="Название раздела"
-                        rules={[{required: true, message: "Введите название раздела"}]}
+                        rules={[{required: true, message: "Введите название раздела!"}]}
                     >
                         <Input placeholder="Введите название раздела..."/>
                     </Form.Item>
@@ -187,7 +222,6 @@ const SectionAddPage = () => {
                     <Form.Item
                         name="description"
                         label="Описание раздела"
-                        rules={[{required: true, message: "Введите описание раздела"}]}
                     >
                         <TextArea
                             placeholder="Введите описание раздела..."
@@ -252,27 +286,40 @@ const SectionAddPage = () => {
             content: (
                 <div className="flex">
                    <div className="w-1/4">
-                       <AutoComplete
-                           style={{ width: '100%' }}
-                           onSearch={handleSearch}
-                           onSelect={handleSelect}
-                           options={courseComponentStore.searchResults.map(component => ({
-                               value: component.title,
-                               label: <div className="flex items-center p-2 border-b-2">
-                                   <div style={{flex: 1}}>
-                                       <strong>{component.title}</strong>
-                                       <div style={{color: 'grey', fontSize: '12px'}}>{component.description}</div>
-                                   </div>
-                                   <div style={{marginLeft: '8px'}}>
-                                       {renderType(component.type)}
-                                   </div>
-                               </div>,
-                               key: component.id.toString(),
-                           }))}
-                           placeholder="Введите название или тег..."
-                       >
-                           <Input.Search/>
-                       </AutoComplete>
+                   <AutoComplete
+                        style={{ width: '100%' }}
+                        onSearch={handleSearch}
+                        onSelect={handleSelect}
+                        options={
+                            courseComponentStore.searchResults.length > 0
+                            ? courseComponentStore.searchResults.map(component => ({
+                                value: component.title,
+                                label: (
+                                    <div className="flex items-center p-2 border-b-2">
+                                    <div style={{ flex: 1 }}>
+                                        <strong>{component.title}</strong>
+                                        <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
+                                    </div>
+                                    <div style={{ marginLeft: '8px' }}>
+                                        {renderType(component.type)}
+                                    </div>
+                                    </div>
+                                ),
+                                key: component.id.toString(),
+                                }))
+                            : [
+                                {
+                                    value: 'empty',
+                                    label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
+                                    disabled: true,
+                                },
+                                ]
+                        }
+                        placeholder="Введите название или тег..."
+                        >
+                        <Input.Search />
+                    </AutoComplete>
+
                    </div>
                     <div className="w-3/4 ml-5">
                         <Form.Item
@@ -322,7 +369,7 @@ const SectionAddPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 overflow-y-auto">
+        <div className="bg-white h-full p-5 overflow-x-hidden shadow-2xl overflow-y-auto custom-height-screen">
             <Breadcrumb
                 items={[
                     {

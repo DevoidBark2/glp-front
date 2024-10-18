@@ -3,7 +3,6 @@ import axios from "axios";
 import nextConfig from "../../../../next.config.mjs";
 
 export async function GET(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
     const token = req.headers.get('authorization');
 
     try {

@@ -162,74 +162,198 @@ const ControlPanel = () => {
             </Row>
 
             <Divider />
-            <Row gutter={16}>
-                <Col span={12}>
-                    <Card title="Статистика постов">
-                        <div className="flex justify-between">
-                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                                <Progress
-                                    type="circle"
-                                    strokeColor="green"
-                                    percent={statisticsStore.statisticsData?.postsCountPublish}
-                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% опубликовано`}</p>}
-                                />
-                            </Skeleton>
-                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                                <Progress
-                                    type="circle"
-                                    percent={statisticsStore.statisticsData?.postsCountNew}
-                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% новых`}</p>}
-                                />
-                            </Skeleton>
-                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                                <Progress
-                                    type="circle"
-                                    strokeColor="orange"
-                                    percent={statisticsStore.statisticsData?.postsCountIsProcessing}
-                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% в обработке`}</p>}
-                                />
-                            </Skeleton>
-                            <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-                                <Progress
-                                    type="circle"
-                                    strokeColor="red"
-                                    percent={statisticsStore.statisticsData?.postsCountReject}
-                                    format={(percent) => <p className="text-sm leading-5">{`${percent}% откланеных`}</p>}
-                                />
-                            </Skeleton>
-                        </div>
-                    </Card>
-                </Col>
-                <Col span={12}>
-                    <Card title="Статистика постов">
-                        <div className="flex justify-between">
-                            <Progress
-                                type="circle"
-                                percent={60}
-                                strokeColor="green"
-                                format={(percent) => <p className="text-lg leading-5">{`${percent}% завершено`}</p>}
-                            />
-                            <Progress
-                                type="circle"
-                                percent={60}
-                                format={(percent) => <p className="text-lg leading-5">{`${percent}% завершено`}</p>}
-                            />
-                            <Progress
-                                type="circle"
-                                percent={60}
-                                strokeColor="orange"
-                                format={(percent) => <p className="text-lg leading-5">{`${percent}% завершено`}</p>}
-                            />
-                            <Progress
-                                type="circle"
-                                percent={60}
-                                strokeColor="red"
-                                format={(percent) => <p className="text-lg leading-5">{`${percent}% завершено`}</p>}
-                            />
-                        </div>
-                    </Card>
-                </Col>
-            </Row>
+<Row gutter={16}>
+  <Col span={12}>
+    <Card title="Статистика постов (Администратор)">
+      <div className="flex justify-between">
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="green"
+            percent={statisticsStore.statisticsData?.postsCountPublish}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% опубликовано`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            percent={statisticsStore.statisticsData?.postsCountNew}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% новых`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="orange"
+            percent={statisticsStore.statisticsData?.postsCountIsProcessing}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% в обработке`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="red"
+            percent={statisticsStore.statisticsData?.postsCountReject}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% отклонено`}</p>}
+          />
+        </Skeleton>
+      </div>
+    </Card>
+  </Col>
+
+  <Col span={12}>
+    <Card title="Статистика постов (Учитель)">
+      <div className="flex justify-between">
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="blue"
+            percent={statisticsStore.statisticsData?.lessonsCompleted}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% уроков завершено`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            percent={statisticsStore.statisticsData?.assignmentsPending}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% заданий в ожидании`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="green"
+            percent={statisticsStore.statisticsData?.studentsPassed}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% учеников прошли`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="red"
+            percent={statisticsStore.statisticsData?.studentsFailed}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% учеников не прошли`}</p>}
+          />
+        </Skeleton>
+      </div>
+    </Card>
+  </Col>
+
+  <Col span={12}>
+    <Card title="Статистика постов (Модератор)">
+      <div className="flex justify-between">
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="purple"
+            percent={statisticsStore.statisticsData?.postsReviewed}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% постов проверено`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            percent={statisticsStore.statisticsData?.commentsModerated}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% комментариев модерировано`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="orange"
+            percent={statisticsStore.statisticsData?.reportsResolved}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% жалоб решено`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="red"
+            percent={statisticsStore.statisticsData?.postsRejected}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% постов отклонено`}</p>}
+          />
+        </Skeleton>
+      </div>
+    </Card>
+  </Col>
+
+  <Col span={12}>
+    <Card title="Статистика курсов">
+      <div className="flex justify-between">
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="blue"
+            percent={statisticsStore.statisticsData?.coursesCompleted}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% курсов завершено`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            percent={statisticsStore.statisticsData?.coursesInProgress}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% курсов в процессе`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="green"
+            percent={statisticsStore.statisticsData?.studentsEnrolled}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% студентов записано`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="red"
+            percent={statisticsStore.statisticsData?.coursesDropped}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% курсов отменено`}</p>}
+          />
+        </Skeleton>
+      </div>
+    </Card>
+  </Col>
+
+  <Col span={12}>
+    <Card title="Статистика компонентов курсов">
+      <div className="flex justify-between">
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="purple"
+            percent={statisticsStore.statisticsData?.componentsCompleted}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% компонентов завершено`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            percent={statisticsStore.statisticsData?.componentsPending}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% компонентов в ожидании`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="orange"
+            percent={statisticsStore.statisticsData?.componentsInProgress}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% компонентов в процессе`}</p>}
+          />
+        </Skeleton>
+        <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+          <Progress
+            type="circle"
+            strokeColor="red"
+            percent={statisticsStore.statisticsData?.componentsFailed}
+            format={(percent) => <p className="text-sm leading-5">{`${percent}% компонентов не выполнено`}</p>}
+          />
+        </Skeleton>
+      </div>
+    </Card>
+  </Col>
+</Row>
+
         </div>
     );
 };

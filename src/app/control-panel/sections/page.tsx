@@ -1,49 +1,22 @@
 "use client"
-import {Button, Divider, Popconfirm, Table, TableColumnsType, Tag, Tooltip} from "antd";
-import React, {useEffect, useState} from "react";
+import {Button, Divider, Popconfirm, Table, TableColumnsType, Tooltip} from "antd";
+import React, {useEffect} from "react";
 import Link from "next/link";
 import {SectionCourseItem} from "@/stores/SectionCourse";
 import {observer} from "mobx-react";
 import dayjs, {Dayjs} from "dayjs";
 import {useMobxStores} from "@/stores/stores";
 import {FORMAT_VIEW_DATE, statusCourses} from "@/constants";
-import {isEditedCourse} from "@/selectors/courseSelectors";
 import {
     DeleteOutlined,
-    EditOutlined, MinusCircleOutlined,
+    EditOutlined,
     MoreOutlined,
-    OrderedListOutlined,
-    PlusCircleOutlined, UnorderedListOutlined,
+    PlusCircleOutlined,
     UploadOutlined
 } from "@ant-design/icons";
-import {useRouter} from "next/navigation";
-import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
-import {showCourseStatus} from "@/utils/showCourseStatusInTable";
 
 const SectionPage = () => {
     const {sectionCourseStore} = useMobxStores();
-    const router = useRouter();
-
-    // Функция для группировки по курсу
-    const groupSectionsByCourse = () => {
-        const groupedData = sectionCourseStore.sectionCourse.reduce((acc, section) => {
-            const course = section.course;
-            if (!acc[course.id]) {
-                acc[course.id] = {
-                    course,
-                    sections: [],
-                };
-            }
-            acc[course.id].sections.push(section);
-            return acc;
-        }, {});
-        return Object.values(groupedData);
-    };
-
-    const [groupedByCourse, setGroupedByCourse] = useState(false);
-    // Группированные данные
-    const groupedData = groupSectionsByCourse();
-    const [isGrouped, setIsGrouped] = useState(false);
     const columns: TableColumnsType<SectionCourseItem> = [
         {
             title: 'Заголовок',
@@ -120,15 +93,6 @@ const SectionPage = () => {
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные разделы</h1>
-                    <Tooltip title={groupedByCourse ? "Разгруппировать" : "Сгруппировать по курсам"} className="ml-2">
-                        <Button
-                            type="primary"
-                            icon={groupedByCourse ? <MinusCircleOutlined /> : <PlusCircleOutlined />}
-                            onClick={() => setGroupedByCourse(!groupedByCourse)}
-                        >
-                            {groupedByCourse ? "Разгруппировать" : "Сгруппировать"}
-                        </Button>
-                    </Tooltip>
                 </div>
                 <div>
                     <Link href={"sections/add"}>
@@ -148,29 +112,8 @@ const SectionPage = () => {
                 rowKey={(record) => record.course?.id || record.id}
                 loading={sectionCourseStore.loadingSectionsCourse}
                 columns={columns}
-                dataSource={groupedByCourse ? groupedData : sectionCourseStore.sectionCourse}
-                expandable={
-                    groupedByCourse
-                        ? {
-                            expandedRowRender: (courseRecord) => (
-                                <Table
-                                    rowKey="id"
-                                    dataSource={courseRecord.sections}
-                                    columns={columns.filter(col => col.dataIndex !== 'course')}
-                                    pagination={false}
-                                />
-                            ),
-                            expandIcon: ({ expanded, onExpand, record }) =>
-                                expanded ? (
-                                    <MinusCircleOutlined onClick={(e) => onExpand(record, e)} />
-                                ) : (
-                                    <PlusCircleOutlined onClick={(e) => onExpand(record, e)} />
-                                ),
-                            rowExpandable: (record) => record.sections && record.sections.length > 0,
-                        }
-                        : undefined
-                }
-                pagination={false}
+                dataSource={sectionCourseStore.sectionCourse}
+                pagination={{pageSize: 10}}
             />
         </div>
     )

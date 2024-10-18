@@ -74,7 +74,7 @@ const CourseAddPage = () => {
 
     return(
         <>
-            <div className="bg-white h-full p-5 overflow-y-auto overflow-x-hidden shadow-2xl overflow-y-auto custom-height-screen">
+            <div className="bg-white h-full p-5 overflow-x-hidden shadow-2xl overflow-y-auto custom-height-screen">
                 <Breadcrumb
                     items={[
                         {
@@ -154,7 +154,7 @@ const CourseAddPage = () => {
                                         <div className="flex items-center justify-between">
                                             <span>Права доступа</span>
                                             <Tooltip title="Изменить код доступа">
-                                                <Image className="ml-2" src="/static/password_code_icon.svg" width={20} height={20} onClick={() => setIsModalVisible(true)}/>
+                                                <Image className="ml-2" src="/static/password_code_icon.svg" width={20} height={20} alt="Изменить код доступа" onClick={() => setIsModalVisible(true)}/>
                                             </Tooltip>
 
                                         </div>
@@ -186,7 +186,6 @@ const CourseAddPage = () => {
                                 >
                                     <Input.OTP
                                         length={8}
-                                        placeholder="Введите код закрытого доступа"
                                         value={code}
                                         onChange={(e) => setCode(e)}
                                     />

@@ -123,9 +123,7 @@ class CourseStore{
     publishCourse = action(async(courseId: number) =>{
         await POST(`/api/courses-publish`,{courseId: courseId}).then(response => {
             notification.success({message: response.message})
-            this.userCourses = this.userCourses.map(course =>
-                course.id === courseId ? { ...course, status: StatusCourseEnum.IN_PROCESSING } : course
-            );
+            this.userCourses = this.userCourses.map(course => course.id === courseId ? { ...course, status: StatusCourseEnum.IN_PROCESSING } : course)
         }).catch(e => {
             notification.warning({message: e.response.data.message})
         })

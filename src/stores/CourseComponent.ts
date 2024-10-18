@@ -78,9 +78,8 @@ class CourseComponent {
 
     // Метод для выполнения поиска к
     searchComponents = action(async (query: string) => {
-        const token = getUserToken();
-        await GET(`/api/search-components?query=${query}&token=${token}`).then(response => {
-            this.searchResults = response.response.data;
+        await GET(`/api/search-components?query=${query}`).then(response => {
+            this.searchResults = response.data;
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         });

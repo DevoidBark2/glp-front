@@ -46,9 +46,8 @@ class PostStore {
 
     getUserPosts = action(async () => {
         this.setLoading(true);
-        const token = getUserToken();
-        await GET(`/api/posts-user?token=${token}`).then(response => {
-            this.userPosts = response.response.data.map(postMapper)
+        await GET(`/api/posts-user`).then(response => {
+            this.userPosts = response.data.map(postMapper)
         }).catch(e => { }).finally(() => {
             this.setLoading(false);
         })
