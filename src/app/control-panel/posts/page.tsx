@@ -1,6 +1,6 @@
 "use client";
 import {
-    Button, Empty,
+    Button,
     Form,
     Input,
     Modal,
@@ -15,15 +15,14 @@ import {
 } from "antd";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Post } from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
     ClockCircleOutlined, CloseOutlined,
     DeleteOutlined,
     EditOutlined,
-    InboxOutlined, MoreOutlined,
-    PlusCircleOutlined,
+    InboxOutlined,
     SyncOutlined,
     UploadOutlined
 } from "@ant-design/icons";
@@ -34,6 +33,8 @@ import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import 'react-quill/dist/quill.snow.css';
 import { FILTER_STATUS_POST, FORMAT_VIEW_DATE } from "@/constants";
 import { useTheme } from "next-themes";
+import PageHeader from "@/components/PageHeader/PageHeader";
+import { postTable } from "@/tableConfig/postTable";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
@@ -42,7 +43,6 @@ const ReactQuill = dynamic(
 const PostPage = () => {
     const { postStore } = useMobxStores();
     const [form] = Form.useForm();
-    const [modalVisible, setModalVisible] = useState(false);
 
     const props: UploadProps = {
         name: 'file',
@@ -195,15 +195,15 @@ const PostPage = () => {
     }, []);
 
     return (
-        <div className="bg-white dark:bg-[#001529] dark:shadow-cyan-500/50 rounded-md h-full p-5 shadow-2xl  overflow-y-auto" style={{ height: 'calc(100vh - 60px)' }}>
+        <div className="bg-white dark:bg-[#001529] dark:shadow-cyan-500/50 rounded-md h-full p-5 shadow-2xl  overflow-y-auto custom-height-screen">
             <Modal
                 styles={{
                     content: { backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" },
                     header: { backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" },
                 }}
                 title={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Создать новый пост</label>}
-                open={modalVisible}
-                onCancel={() => setModalVisible(false)}
+                open={postStore.createPostModal}
+                onCancel={() => postStore.setCreatePostModal(false)}
                 footer={null}
                 closeIcon={<CloseOutlined style={{ color: resolvedTheme === "light" ? "#000" : "#fff" }} />}
                 afterClose={() => form.resetFields()}
@@ -215,7 +215,7 @@ const PostPage = () => {
                     layout="vertical"
                     onFinish={(values) => {
                         postStore.createPost(values);
-                        setModalVisible(false);
+                        postStore.setCreatePostModal(false)
                     }}
                 >
                     <Form.Item
@@ -263,48 +263,18 @@ const PostPage = () => {
                     </div>
                 </Form>
             </Modal>
-
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-gray-800 dark:text-white font-bold text-3xl">Доступные посты</h1>
-                <div>
-                    <Button
-                        className="flex items-center justify-center transition-transform transform hover:scale-105"
-                        type="primary"
-                        icon={<PlusCircleOutlined />}
-                        onClick={() => setModalVisible(true)}
-                    >
-                        Добавить пост
-                    </Button>
-                    <Button className="ml-2" icon={<MoreOutlined />} />
-                </div>
-            </div>
+            <PageHeader
+                title="Доступные посты"
+                buttonTitle="Добавить пост"
+                onClickButton={() => postStore.setCreatePostModal(true)}
+                showBottomDivider
+            />
             <Table
                 loading={postStore.loading}
                 dataSource={postStore.userPosts}
                 columns={columns}
                 rowKey={(record) => record.id}
-                rowClassName={(_, index) =>
-                    resolvedTheme === "light" ? "bg-gray-50" : "bg-[#001529]"
-                }
-                locale={{
-                    emptyText: <Empty description="Список пуст">
-                        <Button
-                            className="flex items-center justify-center transition-transform transform hover:scale-105"
-                            type="primary"
-                            icon={<PlusCircleOutlined />}
-                            onClick={() => setModalVisible(true)}
-                        >
-                            Добавить пост
-                        </Button>
-                    </Empty>
-                }}
-                rowHoverable={false}
-                rowSelection={{
-                    type: "checkbox",
-                    // onChange: (selectedRowKeys: Key[]) => {
-                    //     userStore.setSelectedRowsUsers(selectedRowKeys.map(key => Number(key)));
-                    // },
-                }}
+                locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
             />
         </div>
     );

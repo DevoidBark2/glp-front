@@ -1,22 +1,23 @@
 "use client"
-import {Button, Divider, Popconfirm, Table, TableColumnsType, Tooltip} from "antd";
-import React, {useEffect} from "react";
+import { Button, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
+import React, { useEffect } from "react";
 import Link from "next/link";
-import {SectionCourseItem} from "@/stores/SectionCourse";
-import {observer} from "mobx-react";
-import dayjs, {Dayjs} from "dayjs";
-import {useMobxStores} from "@/stores/stores";
-import {FORMAT_VIEW_DATE, statusCourses} from "@/constants";
+import { SectionCourseItem } from "@/stores/SectionCourse";
+import { observer } from "mobx-react";
+import dayjs, { Dayjs } from "dayjs";
+import { useMobxStores } from "@/stores/stores";
+import { FORMAT_VIEW_DATE } from "@/constants";
 import {
     DeleteOutlined,
     EditOutlined,
-    MoreOutlined,
-    PlusCircleOutlined,
     UploadOutlined
 } from "@ant-design/icons";
+import PageHeader from "@/components/PageHeader/PageHeader";
+import { useRouter } from "next/navigation";
 
 const SectionPage = () => {
-    const {sectionCourseStore} = useMobxStores();
+    const { sectionCourseStore } = useMobxStores();
+    const router = useRouter();
     const columns: TableColumnsType<SectionCourseItem> = [
         {
             title: 'Заголовок',
@@ -89,31 +90,19 @@ const SectionPage = () => {
         sectionCourseStore.getAllSectionCourse();
     }, []);
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
-            <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                    <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные разделы</h1>
-                </div>
-                <div>
-                    <Link href={"sections/add"}>
-                        <Button
-                            className="flex items-center justify-center transition-transform transform hover:scale-105"
-                            type="primary"
-                            icon={<PlusCircleOutlined/>}
-                        >
-                            Добавить раздел
-                        </Button>
-                    </Link>
-                    <Button className="ml-2" icon={ <MoreOutlined />}/>
-                </div>
-            </div>
-            <Divider/>
+        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
+            <PageHeader
+                title="Доступные разделы"
+                buttonTitle=" Добавить раздел"
+                onClickButton={() => router.push('sections/add')}
+                showBottomDivider
+            />
             <Table
                 rowKey={(record) => record.course?.id || record.id}
                 loading={sectionCourseStore.loadingSectionsCourse}
                 columns={columns}
                 dataSource={sectionCourseStore.sectionCourse}
-                pagination={{pageSize: 10}}
+                pagination={{ pageSize: 10 }}
             />
         </div>
     )

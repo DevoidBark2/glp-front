@@ -25,7 +25,7 @@ const SettingsControlPage = () => {
         generalSettingsStore.getGeneralSettings().then((response) => {
             formForSec.setFieldsValue(response.data[0])
             formForGeneral.setFieldsValue(response.data[0])
-            setUploadedLogo(response.data[0].logo_url ? `${nextConfig.env?.API_URL}${response.data[0].logo_url}`: null)
+            setUploadedLogo(response.data[0].logo_url ? `${nextConfig.env?.API_URL}${response.data[0].logo_url}` : null)
             formForUserManagement.setFieldsValue(response.data[0])
             formForCourseManagement.setFieldsValue(response.data[0])
         }).finally(() => {
@@ -67,25 +67,27 @@ const SettingsControlPage = () => {
                                     formData.append("platform_name", values.platform_name);
                                     formData.append("service_mode", values.service_mode);
                                     formData.append("cache_enabled", values.cache_enabled);
-                                    formData.append("id", values.id)
+                                    formData.append("support_email", values.support_email);
+                                    formData.append("contact_phone", values.contact_phone);
+                                    formData.append("default_language", values.default_language);
+                                    formData.append("timezone", values.timezone);
+                                    formData.append("analytics_id", values.analytics_id);
+                                    formData.append("maintenance_message", values.maintenance_message);
 
                                     // Добавляем файл, если он есть
                                     if (file) {
                                         formData.append("logo_url", file);
                                     }
-                                    debugger
 
                                     generalSettingsStore.saveGeneralSetting(formData);
                                 }}
                             >
-                                <Form.Item name="id" hidden></Form.Item>
-
-                                <Form.Item label={GeneralSettingTooltips.PLATFORM_NAME.LABEL} name="platform_name">
-                                    <Input placeholder={GeneralSettingTooltips.PLATFORM_NAME.PLACEHOLDER} />
+                                <Form.Item label="Название платформы" name="platform_name">
+                                    <Input placeholder="Введите название вашей платформы" />
                                 </Form.Item>
 
                                 {/* Поле для загрузки и отображения логотипа */}
-                                <Form.Item label={GeneralSettingTooltips.PLATFORM_LOGO.LABEL} name="logo_url">
+                                <Form.Item label="Логотип платформы" name="logo_url">
                                     <Upload
                                         name="logo_url"
                                         listType="picture-card"
@@ -103,17 +105,12 @@ const SettingsControlPage = () => {
                                             };
                                             reader.readAsDataURL(file);
 
-                                            setFile(file); // сохраняем файл в состоянии для отправки
+                                            setFile(file);
                                             return false;
                                         }}
                                     >
                                         {uploadedLogo ? (
-                                            <Image
-                                                src={uploadedLogo}
-                                                alt="Логотип"
-                                                width={200}
-                                                height={200}
-                                            />
+                                            <Image src={uploadedLogo} alt="Логотип" width={200} height={200} />
                                         ) : (
                                             <div>
                                                 <UploadOutlined /> Загрузить логотип
@@ -122,30 +119,69 @@ const SettingsControlPage = () => {
                                     </Upload>
                                 </Form.Item>
 
+                                <Form.Item label="Email для поддержки" name="support_email">
+                                    <Input placeholder="Введите email для связи с поддержкой" />
+                                </Form.Item>
+
+                                <Form.Item label="Контактный телефон" name="contact_phone">
+                                    <Input placeholder="+7 (___) ___-__-__" />
+                                </Form.Item>
+
+                                <Form.Item label="Язык по умолчанию" name="default_language">
+                                    <Select placeholder="Выберите язык по умолчанию">
+                                        <Select.Option value="ru">Русский</Select.Option>
+                                        <Select.Option value="en">Английский</Select.Option>
+                                        <Select.Option value="es">Испанский</Select.Option>
+                                        <Select.Option value="de">Немецкий</Select.Option>
+                                        {/* Добавьте другие языки по мере необходимости */}
+                                    </Select>
+                                </Form.Item>
+
+                                <Form.Item label="Часовой пояс" name="timezone">
+                                    <Select placeholder="Выберите часовой пояс">
+                                        <Select.Option value="Europe/Moscow">Europe/Moscow</Select.Option>
+                                        <Select.Option value="Europe/London">Europe/London</Select.Option>
+                                        <Select.Option value="America/New_York">America/New_York</Select.Option>
+                                        {/* Добавьте другие часовые пояса */}
+                                    </Select>
+                                </Form.Item>
+
                                 {/* Режим обслуживания */}
                                 <Form.Item
                                     name="service_mode"
                                     valuePropName="checked"
-                                    label={GeneralSettingTooltips.SERVICE_MODE.LABEL}
-                                    tooltip={GeneralSettingTooltips.SERVICE_MODE.TOOLTIP}
+                                    label="Режим обслуживания"
+                                    tooltip="Включите, чтобы временно отключить сайт для технического обслуживания."
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
+                                <Form.Item label="Сообщение для режима обслуживания" name="maintenance_message">
+                                    <Input.TextArea rows={3} placeholder="Введите сообщение, которое будет отображаться на сайте в режиме обслуживания" />
+                                </Form.Item>
+
                                 {/* Настройки кэширования */}
-                                <Form.Item label={GeneralSettingTooltips.CACHE_ENABLED.LABEL} name="cache_enabled">
-                                    <Select placeholder={GeneralSettingTooltips.CACHE_ENABLED.PLACEHOLDER}>
+                                <Form.Item label="Кэширование" name="cache_enabled">
+                                    <Select placeholder="Выберите режим кэширования">
                                         <Select.Option value={true}>Включено</Select.Option>
                                         <Select.Option value={false}>Отключено</Select.Option>
                                     </Select>
                                 </Form.Item>
 
+                                {/* Google Analytics ID */}
+                                <Form.Item label="Google Analytics ID" name="analytics_id">
+                                    <Input placeholder="Введите ваш Google Analytics ID" />
+                                </Form.Item>
+
                                 {/* Кнопка сохранения */}
                                 <Form.Item>
-                                    <Button type="primary" htmlType="submit">Сохранить изменения</Button>
+                                    <Button type="primary" htmlType="submit">
+                                        Сохранить изменения
+                                    </Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
 
                         <TabPane tab="Управление пользователями" key="2">
                             <Form
@@ -155,110 +191,91 @@ const SettingsControlPage = () => {
                             >
                                 <Form.Item name="id" hidden></Form.Item>
 
-                                {/* Существующие настройки */}
-                                <Form.Item label={GeneralSettingTooltips.USER_ROLE_DEFAULT.LABEL} name="default_user_role">
-                                    <Select placeholder={GeneralSettingTooltips.USER_ROLE_DEFAULT.PLACEHOLDER}>
+                                {/* Роль пользователя по умолчанию */}
+                                <Form.Item label="Роль пользователя по умолчанию" name="default_user_role">
+                                    <Select placeholder="Выберите роль по умолчанию">
                                         <Select.Option value="student">Пользователь</Select.Option>
                                         <Select.Option value="teacher">Создатель (учитель)</Select.Option>
                                         <Select.Option value="moderator">Модератор</Select.Option>
                                     </Select>
                                 </Form.Item>
 
+                                {/* Автоматическое подтверждение регистрации */}
                                 <Form.Item
-                                    label={GeneralSettingTooltips.AUTO_CONFIRM_REGISTER.LABEL}
-                                    tooltip={GeneralSettingTooltips.AUTO_CONFIRM_REGISTER.TOOLTIP}
+                                    label="Автоматическое подтверждение регистрации"
+                                    tooltip="Если включено, пользователи будут автоматически подтверждены после регистрации."
                                     name="auto_confirm_register"
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
+                                {/* Уведомления о жалобах пользователей */}
                                 <Form.Item
-                                    label={GeneralSettingTooltips.USER_COMPLAINT_NOTIFICATION.LABEL}
-                                    tooltip={GeneralSettingTooltips.USER_COMPLAINT_NOTIFICATION.TOOLTIP}
+                                    label="Уведомления о жалобах пользователей"
+                                    tooltip="Получайте уведомления о жалобах от пользователей."
                                     name="user_complaint_notification"
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                <Form.Item label={GeneralSettingTooltips.PERIOD_USER_OF_INACTIVITY.LABEL} name="period_of_inactive">
-                                    <Input
-                                        type="number"
-                                        placeholder={GeneralSettingTooltips.PERIOD_USER_OF_INACTIVITY.PLACEHOLDER}
-                                    />
-                                </Form.Item>
-
-                                {/* Новые, более интересные настройки */}
-
-                                {/* Настройки ограничений по возрасту */}
+                                {/* Политика по удалению пользователей */}
                                 <Form.Item
-                                    label="Ограничение доступа по возрасту"
-                                    tooltip="Укажите минимальный возраст для доступа к различным функциям и материалам."
-                                    name="age_restriction"
+                                    label="Политика удаления пользователей"
+                                    tooltip="Выберите, когда неактивные пользователи должны быть удалены."
+                                    name="user_deletion_policy"
                                 >
-                                    <InputNumber min={1} max={100} placeholder="Введите минимальный возраст" style={{ width: '100%' }} />
-                                </Form.Item>
-
-                                {/* Настройки временной блокировки */}
-                                <Form.Item
-                                    label="Временная блокировка пользователей"
-                                    tooltip="Позволяет временно заблокировать пользователей на определенный период."
-                                    name="temp_user_block"
-                                >
-                                    <Select placeholder="Выберите период блокировки">
-                                        <Select.Option value="1_day">1 день</Select.Option>
-                                        <Select.Option value="7_days">1 неделя</Select.Option>
-                                        <Select.Option value="30_days">1 месяц</Select.Option>
-                                        <Select.Option value="permanent">Постоянная блокировка</Select.Option>
+                                    <Select placeholder="Выберите политику удаления">
+                                        <Select.Option value="30_days">Удаление через 30 дней неактивности</Select.Option>
+                                        <Select.Option value="90_days">Удаление через 90 дней неактивности</Select.Option>
+                                        <Select.Option value="no_auto_delete">Не удалять автоматически</Select.Option>
                                     </Select>
                                 </Form.Item>
 
-                                {/* Настройки пользовательского рейтинга */}
+                                {/* Политика паролей */}
                                 <Form.Item
-                                    label="Система пользовательского рейтинга"
-                                    tooltip="Включите рейтинговую систему, чтобы пользователи могли оценивать друг друга."
-                                    name="user_rating_system"
+                                    label="Политика паролей"
+                                    tooltip="Настройте минимальную длину пароля для повышения безопасности."
+                                    name="password_policy"
+                                >
+                                    <InputNumber min={6} max={20} placeholder="Минимальная длина пароля" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Двухфакторная аутентификация */}
+                                <Form.Item
+                                    label="Двухфакторная аутентификация"
+                                    tooltip="Включите, чтобы требовать двухфакторную аутентификацию при входе."
+                                    name="two_factor_auth"
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                {/* Настройки массовой рассылки */}
+                                {/* Настройки максимального количества попыток входа */}
                                 <Form.Item
-                                    label="Массовая рассылка уведомлений"
-                                    tooltip="Отправляйте массовые уведомления пользователям о важных обновлениях или новостях."
-                                    name="mass_notification"
+                                    label="Максимальное количество попыток входа"
+                                    tooltip="Задайте количество попыток входа перед временной блокировкой пользователя."
+                                    name="max_login_attempts"
                                 >
-                                    <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Выберите группы для рассылки">
-                                        <Select.Option value="all">Всем пользователям</Select.Option>
-                                        <Select.Option value="teachers">Только создателям (учителям)</Select.Option>
-                                        <Select.Option value="moderators">Модераторам</Select.Option>
-                                        <Select.Option value="inactive">Неактивным пользователям</Select.Option>
+                                    <InputNumber min={1} max={10} placeholder="Введите количество попыток" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Время окончания сессии */}
+                                <Form.Item
+                                    label="Время окончания сессии"
+                                    tooltip="Задайте время, после которого неактивные пользователи будут автоматически выходить из системы."
+                                    name="session_timeout"
+                                >
+                                    <Select placeholder="Выберите время окончания сессии">
+                                        <Select.Option value="15_minutes">15 минут</Select.Option>
+                                        <Select.Option value="30_minutes">30 минут</Select.Option>
+                                        <Select.Option value="60_minutes">1 час</Select.Option>
+                                        <Select.Option value="never">Не завершать автоматически</Select.Option>
                                     </Select>
                                 </Form.Item>
 
-                                {/* Настройки разрешения смены имени пользователя */}
-                                <Form.Item
-                                    label="Разрешить смену имени пользователя"
-                                    tooltip="Настройка, позволяющая пользователям менять свои имена."
-                                    name="allow_username_change"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Настройки обязательного подтверждения профиля */}
-                                <Form.Item
-                                    label="Обязательное подтверждение профиля"
-                                    tooltip="Требуйте подтверждение профиля через электронную почту или телефон."
-                                    name="require_profile_verification"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Настройки ограничений на количество создаваемых курсов */}
+                                {/* Лимит на количество создаваемых курсов */}
                                 <Form.Item
                                     label="Лимит на количество создаваемых курсов"
                                     tooltip="Укажите максимальное количество курсов, которое может создать один пользователь."
@@ -267,11 +284,110 @@ const SettingsControlPage = () => {
                                     <InputNumber min={1} max={50} placeholder="Введите лимит" style={{ width: '100%' }} />
                                 </Form.Item>
 
+                                {/* Новые настройки */}
+
+                                {/* Ограничение на загрузку файлов */}
+                                <Form.Item
+                                    label="Максимальный размер загружаемого файла"
+                                    tooltip="Задайте максимальный размер загружаемых пользователями файлов (в мегабайтах)."
+                                    name="max_file_upload_size"
+                                >
+                                    <InputNumber min={1} max={1000} placeholder="Введите размер в МБ" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Запрет на загрузку определенных типов файлов */}
+                                <Form.Item
+                                    label="Запрещенные типы файлов"
+                                    tooltip="Укажите типы файлов, которые пользователи не могут загружать."
+                                    name="restricted_file_types"
+                                >
+                                    <Select mode="tags" placeholder="Добавьте типы файлов, например: .exe, .bat">
+                                        <Select.Option value=".exe">.exe</Select.Option>
+                                        <Select.Option value=".bat">.bat</Select.Option>
+                                        <Select.Option value=".js">.js</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
+                                {/* Настройка лимита на количество сообщений в чате */}
+                                <Form.Item
+                                    label="Лимит сообщений в чате"
+                                    tooltip="Укажите максимальное количество сообщений, которые пользователь может отправить в день."
+                                    name="chat_message_limit"
+                                >
+                                    <InputNumber min={1} max={1000} placeholder="Введите лимит" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Настройка лимита на количество жалоб от одного пользователя */}
+                                <Form.Item
+                                    label="Лимит жалоб"
+                                    tooltip="Установите лимит на количество жалоб, которые пользователь может подать в течение дня."
+                                    name="complaint_limit_per_day"
+                                >
+                                    <InputNumber min={1} max={50} placeholder="Введите лимит жалоб" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Настройка отправки уведомлений через Email */}
+                                <Form.Item
+                                    label="Уведомления через Email"
+                                    tooltip="Включите, чтобы пользователи могли получать уведомления по электронной почте."
+                                    name="email_notifications"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Ограничение на количество устройств */}
+                                <Form.Item
+                                    label="Ограничение на количество устройств"
+                                    tooltip="Задайте, на скольких устройствах одновременно пользователь может быть авторизован."
+                                    name="max_devices"
+                                >
+                                    <InputNumber min={1} max={5} placeholder="Введите количество устройств" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Запрет на использование определенных слов в имени пользователя */}
+                                <Form.Item
+                                    label="Запрещенные слова в имени пользователя"
+                                    tooltip="Укажите слова, которые не должны использоваться в именах пользователей."
+                                    name="restricted_username_words"
+                                >
+                                    <Select mode="tags" placeholder="Введите запрещенные слова">
+                                        <Select.Option value="admin">admin</Select.Option>
+                                        <Select.Option value="moderator">moderator</Select.Option>
+                                        <Select.Option value="support">support</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
+                                {/* Автоматическая деактивация аккаунтов */}
+                                <Form.Item
+                                    label="Автоматическая деактивация неактивных аккаунтов"
+                                    tooltip="Укажите период неактивности, после которого аккаунт будет автоматически деактивирован."
+                                    name="auto_deactivate_period"
+                                >
+                                    <Select placeholder="Выберите период">
+                                        <Select.Option value="60_days">60 дней</Select.Option>
+                                        <Select.Option value="180_days">180 дней</Select.Option>
+                                        <Select.Option value="365_days">365 дней</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
+                                {/* Контроль за обновлением профиля */}
+                                <Form.Item
+                                    label="Уведомления об изменении профиля"
+                                    tooltip="Получайте уведомления, когда пользователь вносит изменения в свой профиль."
+                                    name="profile_update_notification"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
+
 
 
 

@@ -2,19 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import nextConfig from "../../../../next.config.mjs";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
+    const { searchParams } = new URL(req.url);
     const token = req.headers.get('authorization');
-    const data = await req.json();
+    const postId = searchParams.get('postId');
 
     try {
-        const response = await axios.post(nextConfig.env?.API_URL + 'api/possible-delete-category', data, {
+        const { data } = await axios.get(nextConfig.env?.API_URL + `api/getPostById?postId=${postId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data, { status: error.response.status })

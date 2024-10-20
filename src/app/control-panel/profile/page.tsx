@@ -16,6 +16,8 @@ import {
   Dropdown,
   message,
   Spin,
+  Row,
+  Col,
 } from "antd";
 import {
   UploadOutlined,
@@ -41,11 +43,9 @@ const ProfilePage = () => {
   const [formProfile] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState(null);
-  const [backgroundImage, setBackgroundImage] = useState(null);
-  const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
-  const [passwordForm] = Form.useForm();
-  const { userProfileStore } = useMobxStores();
+  const { userProfileStore, avatarIconsStore } = useMobxStores();
   const [currentUser, setCurrentUser] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState(null);
 
   const handleUploadChange = (info: any) => {
     if (info.file.status === "uploading") {
@@ -57,18 +57,17 @@ const ProfilePage = () => {
     }
   };
 
-  const handlePasswordChange = () => {
-    passwordForm
-      .validateFields()
-      .then((values) => {
-        console.log("Updated Password:", values);
-        setIsPasswordModalVisible(false);
-        passwordForm.resetFields();
-      })
-      .catch((errorInfo) => {
-        console.error("Failed:", errorInfo);
-      });
-  };
+  useEffect(() => {
+    const currentUser = getCookieUserDetails();
+    setCurrentUser(currentUser);
+
+    userProfileStore.getUserProfile().then((response) => {
+      formProfile.setFieldsValue(response.data);
+    });
+
+    avatarIconsStore.getAllAvatarIcons();
+
+  }, []);
 
   const handleResetChanges = () => {
     formProfile.resetFields();
@@ -76,22 +75,6 @@ const ProfilePage = () => {
     setBackgroundImage(null);
     message.info("Изменения сброшены.");
   };
-
-  const handleViewActivityHistory = () => {
-    // Здесь может быть вызов для просмотра истории активности
-    message.info("Просмотр истории активности.");
-  };
-
-  useEffect(() => {
-    const currentUser = getCookieUserDetails();
-    setCurrentUser(currentUser);
-
-    userProfileStore.getUserProfile().then(() => {
-      formProfile.setFieldsValue(userProfileStore.userProfileDetails);
-    });
-
-
-  }, []);
 
   const profileTitle = (role: UserRole) => {
     switch (role) {
@@ -107,7 +90,6 @@ const ProfilePage = () => {
   return (
     <>
       {userProfileStore.loading ? <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
-
         {/* Profile Form */}
         <div className="flex items-center mb-8">
           <Upload
@@ -129,22 +111,6 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Background Image Upload */}
-        <Form.Item label="Фоновое изображение">
-          <Upload
-            name="backgroundImage"
-            showUploadList={false}
-            beforeUpload={() => false}
-            onChange={(info) => {
-              if (info.file.status === "done") {
-                //setBackgroundImage(URL.createObjectURL(info.file.originFileObj));
-              }
-            }}
-          >
-            <Button icon={<CloudUploadOutlined />}>Загрузить фон</Button>
-          </Upload>
-        </Form.Item>
-
         <Form
           form={formProfile}
           layout="vertical"
@@ -152,34 +118,63 @@ const ProfilePage = () => {
             console.log("Updated Profile:", values);
           }}
         >
-          {/* Basic Info Fields */}
-          <Form.Item label="Имя" name="first_name" rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}>
-            <Input placeholder="Введите ваше имя" />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Имя"
+                name="first_name"
+                rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}
+              >
+                <Input placeholder="Введите ваше имя" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Фамилия"
+                name="second_name"
+                rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
+              >
+                <Input placeholder="Введите вашу фамилию" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Отчество"
+                name="last_name"
+                rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
+              >
+                <Input placeholder="Введите ваше отчество" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Телефон"
+                name="phone"
+                rules={[{ required: true, message: "Пожалуйста, введите ваш номер телефона" }]}
+              >
+                <Input placeholder="+7 (___) ___-__-__" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Дата рождения" name="birthdate">
+                <DatePicker placeholder="Выберите дату" style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Город" name="city">
+                <Select placeholder="Выберите ваш город">
+                  <Select.Option value="moscow">Москва</Select.Option>
+                  <Select.Option value="saint-petersburg">Санкт-Петербург</Select.Option>
+                  <Select.Option value="novosibirsk">Новосибирск</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
 
-          <Form.Item label="Фамилия" name="second_name" rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}>
-            <Input placeholder="Введите вашу фамилию" />
-          </Form.Item>
-
-          <Form.Item label="Отчество" name="last_name" rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}>
-            <Input placeholder="Введите ваше отчество" />
-          </Form.Item>
-
-          {/* Bio Field */}
           <Form.Item label="О себе" name="bio">
             <Input.TextArea rows={4} placeholder="Расскажите немного о себе..." />
           </Form.Item>
 
-          {/* City Selection */}
-          <Form.Item label="Город" name="city">
-            <Select placeholder="Выберите ваш город">
-              <Select.Option value="moscow">Москва</Select.Option>
-              <Select.Option value="saint-petersburg">Санкт-Петербург</Select.Option>
-              <Select.Option value="novosibirsk">Новосибирск</Select.Option>
-            </Select>
-          </Form.Item>
-
-          {/* Theme Selection */}
           <Form.Item label="Цветовая схема" name="theme">
             <Radio.Group>
               <Radio value="light">Светлая</Radio>
@@ -187,7 +182,6 @@ const ProfilePage = () => {
             </Radio.Group>
           </Form.Item>
 
-          {/* Social Media Links */}
           <Form.Item label="Профиль в социальных сетях">
             <Input
               prefix={<FacebookOutlined />}
@@ -210,30 +204,33 @@ const ProfilePage = () => {
             />
           </Form.Item>
 
-          {/* Notifications Switch */}
-          <Form.Item label="Уведомления" name="notifications" valuePropName="checked" tooltip="Включите, чтобы получать уведомления о событиях в системе.">
+          <Form.Item
+            label="Уведомления"
+            name="notifications"
+            valuePropName="checked"
+            tooltip="Включите, чтобы получать уведомления о событиях в системе."
+          >
             <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-          </Form.Item>
-
-          {/* Password Change Modal Trigger */}
-          <Form.Item>
-            <Button type="default" onClick={() => setIsPasswordModalVisible(true)}>
-              Изменить пароль
-            </Button>
           </Form.Item>
 
           <Divider />
 
-          {/* Save Button */}
           <Form.Item>
             <Button type="primary" htmlType="submit" className="mt-4 dark:hover:bg-black">
               Сохранить изменения
+            </Button>
+            <Button
+              type="default"
+              onClick={handleResetChanges}
+              className="ml-4"
+            >
+              Сбросить изменения
             </Button>
           </Form.Item>
         </Form>
 
         {/* Password Change Modal */}
-        <Modal
+        {/* <Modal
           title="Смена пароля"
           open={isPasswordModalVisible}
           onCancel={() => setIsPasswordModalVisible(false)}
@@ -260,7 +257,7 @@ const ProfilePage = () => {
               <Input.Password placeholder="Подтвердите новый пароль" iconRender={(visible) => visible ? <LockOutlined /> : <LockOutlined />} />
             </Form.Item>
           </Form>
-        </Modal>
+        </Modal> */}
       </div> : <Spin size="large" />}
     </>
   );

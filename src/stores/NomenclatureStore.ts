@@ -1,9 +1,8 @@
 import { action, makeAutoObservable } from "mobx";
-import { GET, POST, PUT } from "@/lib/fetcher";
+import { GET, POST, PUT, DELETE } from "@/lib/fetcher";
 import { getUserToken } from "@/lib/users";
 import { notification } from "antd";
 import { Course, courseMapper } from "@/stores/CourseStore";
-
 export type NomenclatureItem = {
     id: number;
     name: string;
@@ -18,8 +17,16 @@ class NomenclatureStore {
     loadingCategories: boolean = false;
     createCategoryModal: boolean = false;
     preDeleteCategoryModal: boolean = false;
-    preDeleteCourseList: Course[] = [];
+    changeCategoryModal: boolean = false;
+    selectedCategory: NomenclatureItem | null = null;
 
+    setSelectedCategory = action((item: NomenclatureItem | null) => {
+        this.setChangeCategoryModal(true)
+        this.selectedCategory = item;
+    })
+    setChangeCategoryModal = action((value: boolean) => {
+        this.changeCategoryModal = value
+    })
     setPreDeleteCategoryModal = action((value: boolean) => {
         this.preDeleteCategoryModal = value;
     })
@@ -41,33 +48,34 @@ class NomenclatureStore {
         })
     })
 
-    isPossibleDeleteCategory = action(async (id: number) => {
-        this.preDeleteCourseList = [];
-        await POST(`/api/possible-delete-category`, { id }).then(response => {
-            this.preDeleteCourseList = response.response.data.data.map(courseMapper)
-            this.setPreDeleteCategoryModal(true)
-        }).catch(e => {
-            notification.error({ message: e.response.data.message })
-        }).finally(() => { })
-    })
-
     createCategory = action(async (values: NomenclatureItem) => {
         return await POST(`/api/categories`, values).then(response => {
             this.categories = [...this.categories, response.data.category]
             notification.success({ message: response.data.message })
+            this.setCreateCategoryModal(false)
         }).catch(e => {
             notification.error({ message: e.response.data.message })
-        }).finally(() => {
-            this.setCreateCategoryModal(false)
         })
     })
 
-    handleChangeCategoryName = action(async (newName: string, values: NomenclatureItem) => {
-        if (newName === values.name) return;
-        await PUT(`/api/categories`, { ...values, ...{ name: newName } }).then(response => {
+    handleChangeCategoryName = action(async (values: NomenclatureItem) => {
+        debugger
+        await PUT(`/api/categories`, { ...values }).then(response => {
             notification.success({ message: response.data.message })
+            this.categories = this.categories.map((category) =>
+                category.id === values.id ? { ...category, name: values.name } : category
+            );
         }).catch(e => {
-            notification.warning({ message: e.response.data.result.response.message[0] })
+            notification.error({ message: e.response.data.message })
+        })
+    })
+
+    deleteCategory = action(async (id: number) => {
+        await DELETE(`/api/categories?id=${id}`).then(response => {
+            notification.success({ message: response.data.message })
+            this.categories = this.categories.filter(category => category.id !== id);
+        }).catch(e => {
+            notification.error({ message: e.response.data.message })
         })
     })
 

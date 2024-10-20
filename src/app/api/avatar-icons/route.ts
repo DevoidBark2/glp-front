@@ -35,3 +35,23 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }
+
+
+export async function DELETE(req: NextRequest) {
+    const token = req.headers.get('authorization');
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    try {
+        const { data } = await axios.delete(nextConfig.env?.API_URL + `api/avatar-icons?id=${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return NextResponse.json({ ...data });
+    } catch (error: any) {
+        console.error(error)
+        return NextResponse.json(error.response.data, { status: error.response.status })
+    }
+}

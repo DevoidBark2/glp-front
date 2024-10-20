@@ -22,7 +22,6 @@ class UserProfileStore {
     }
 
     fileListForFeedback: UploadFile[] = [];
-    userProfileDetails: UserProfile | null = null
     loading: boolean = false;
 
     setFileForFeedBack = action((files: UploadFile[]) => {
@@ -33,17 +32,12 @@ class UserProfileStore {
         this.loading = value
     })
 
-    setUserProfileDetails = action((value: any) => {
-        this.userProfileDetails = value
-    })
-
     getUserProfile = action(async () => {
         this.setLoading(true)
-        await GET(`/api/get-user`).then(response => {
-            this.setUserProfileDetails(response.data)
-        }).finally(() => {
-            this.setLoading(false)
-        })
+        return await GET(`/api/get-user`)  // this.setUserProfileDetails()
+            .finally(() => {
+                this.setLoading(false)
+            })
     })
 
 

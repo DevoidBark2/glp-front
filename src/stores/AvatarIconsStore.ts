@@ -1,12 +1,12 @@
-import {action, makeAutoObservable} from "mobx";
-import {GET, POST} from "@/lib/fetcher";
-import {StatusAvatarIconEnum} from "@/enums/StatusAvatarIconEnum";
+import { action, makeAutoObservable } from "mobx";
+import { DELETE, GET, POST } from "@/lib/fetcher";
+import { StatusAvatarIconEnum } from "@/enums/StatusAvatarIconEnum";
 import dayjs from "dayjs";
-import {FORMAT_VIEW_DATE} from "@/constants";
-import {notification} from "antd";
+import { FORMAT_VIEW_DATE } from "@/constants";
+import { notification } from "antd";
 
 export type AvatarIcon = {
-    id: string
+    id: number
     image: string,
     status: StatusAvatarIconEnum,
     created_at: Date
@@ -17,7 +17,7 @@ class AvatarIconsStore {
     }
 
     avatarIcons: AvatarIcon[] = []
-    loadingAvatars : boolean = false;
+    loadingAvatars: boolean = false;
     showCreateModal: boolean = false;
 
     setShowCreateModal = action((value: boolean) => {
@@ -27,27 +27,33 @@ class AvatarIconsStore {
         this.loadingAvatars = value;
     })
 
-    getAllAvatarIcons = action(async() => {
+    getAllAvatarIcons = action(async () => {
         await GET('/api/avatar-icons').then(response => {
             this.avatarIcons = response.data.map(avatarIconsMapper)
         })
     })
-    createAvatarIcon = action(async (values) => {
+    createAvatarIcon = action(async (values: any) => {
         this.setLoading(true)
         const form = new FormData();
-        form.append('image',values.image.originFileObj)
+        form.append('image', values.image.originFileObj)
 
-        return await POST('/api/avatar-icons',form).then(response => {
-            this.avatarIcons = [...this.avatarIcons,avatarIconsMapper(response.data)]
-            notification.success({message: response.message})
+        return await POST('/api/avatar-icons', form).then(response => {
+            this.avatarIcons = [...this.avatarIcons, avatarIconsMapper(response.data)]
+            notification.success({ message: response.message })
         }).finally(() => {
             this.setLoading(false)
             this.setShowCreateModal(false)
         })
     })
 
-    deleteAvatarIcon = action(async () => {
-
+    deleteAvatarIcon = action(async (id: number) => {
+        return await DELETE(`/api/avatar-icons?id=${id}`).then(response => {
+            this.avatarIcons = this.avatarIcons.filter(icon => icon.id !== id);
+            notification.success({ message: response.message })
+        }).finally(() => {
+            this.setLoading(false)
+            this.setShowCreateModal(false)
+        })
     })
 }
 
@@ -56,7 +62,7 @@ const avatarIconsMapper = (icon: AvatarIcon) => {
         id: icon.id,
         image: icon.image,
         status: icon.status,
-        created_at: dayjs(icon.created_at,FORMAT_VIEW_DATE).toDate()
+        created_at: dayjs(icon.created_at, FORMAT_VIEW_DATE).toDate()
     }
 
     return avatarIcon;

@@ -18,21 +18,18 @@ export async function GET(req: NextRequest) {
 
 
 export async function POST(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const token = searchParams.get('token');
-
+    const token = req.headers.get('authorization');
     const form = await req.formData();
 
     try {
-        const response = await axios.post(nextConfig.env?.API_URL + `api/posts`, form, {
+        const { data } = await axios.post(nextConfig.env?.API_URL + `api/posts`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                Authorization: token
+                Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data, { status: error.response.status })

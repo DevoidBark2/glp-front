@@ -37,6 +37,7 @@ import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
+import PageHeader from "@/components/PageHeader/PageHeader";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
@@ -191,26 +192,17 @@ const TaskPage = () => {
 
     return (
         <>
-            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{ height: 'calc(100vh - 60px)' }}>
-                <div className="flex items-center justify-between">
-                    <h1 className="text-gray-800 font-bold text-3xl mb-2">Доступные компоненты</h1>
-                    <div>
-                        <Button
-                            className="flex items-center justify-center transition-transform transform hover:scale-105"
-                            onClick={() => setIsModalVisible(true)}
-                            icon={<PlusCircleOutlined />}
-                            type="primary"
-                        >
-                            Добавить компонент
-                        </Button>
-                        <Button className="ml-2" icon={<MoreOutlined />} />
-                    </div>
-                </div>
-                <Divider />
+            <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
+                <PageHeader
+                    title="Доступные компоненты"
+                    buttonTitle="Добавить компонент"
+                    onClickButton={() => setIsModalVisible(true)}
+                    showBottomDivider
+                />
                 <Table
                     rowKey={(record) => record.id}
                     dataSource={courseComponentStore.courseComponents}
-                    rowSelection={{type: "checkbox"}}
+                    rowSelection={{ type: "checkbox" }}
                     columns={columns}
                     loading={courseComponentStore.loadingCourseComponent}
                 />

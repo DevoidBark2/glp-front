@@ -7,6 +7,7 @@ import { UserRole } from "@/enums/UserRoleEnum";
 import { StatusUserEnum } from "@/enums/StatusUserEnum";
 import { PlatformMenu } from "@/types/platformMenu";
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "./stores/AchievementsStore";
+import { StatusAvatarIconEnum } from "./enums/StatusAvatarIconEnum";
 
 export const MAIN_COLOR = "#00b96b"
 export const UNAUTHORIZED_STATUS_CODE = 401
@@ -22,6 +23,12 @@ export const FILTER_STATUS_POST = [
     { id: 3, text: 'Активный', value: PostStatusEnum.ACTIVE },
     { id: 4, text: 'Отклонен', value: PostStatusEnum.REJECT },
 ]
+
+export const FILTER_STATUS_AVATAR_ICONS = [
+    { id: 1, text: 'Активный', value: StatusAvatarIconEnum.ACTIVE },
+    { id: 2, text: 'Не активный', value: StatusAvatarIconEnum.DISABLED },
+]
+
 
 export const FILTER_ROLE_USER = [
     { id: 1, text: 'Пользователь', value: UserRole.STUDENT },

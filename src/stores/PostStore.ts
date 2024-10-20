@@ -54,19 +54,17 @@ class PostStore {
     })
 
     createPost = action(async (values: any) => {
-        debugger
         this.setLoading(true)
-        const token = getUserToken();
         const form = new FormData();
-        form.append('image', values.image && values.images.originFileObj)
+        form.append('image', values.image && values.image.originFileObj)
         form.append('name', values.name)
         form.append('description', values.description);
         form.append('content', values.content)
 
-        return await POST(`/api/posts?token=${token}`, form).then(response => {
+        return await POST(`/api/posts`, form).then(response => {
             runInAction(() => {
-                this.userPosts = [...this.userPosts, postMapper(response.response.data)];
-                notification.success({ message: response.response.message });
+                this.userPosts = [...this.userPosts, postMapper(response.data)];
+                notification.success({ message: response.message });
             })
         }).finally(() => {
             this.setLoading(false)
@@ -93,8 +91,7 @@ class PostStore {
     })
 
     submitReview = action(async (postId: string) => {
-        const token = getUserToken();
-        await PUT(`/api/submit-preview?postId=${postId}&token=${token}`).then(response => {
+        await PUT(`/api/submit-preview?postId=${postId}`).then(response => {
             const changedPostIndex = this.allPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
@@ -104,9 +101,18 @@ class PostStore {
                     status: PostStatusEnum.IN_PROCESSING
                 };
                 this.allPosts = updatedPosts;
-                notification.success({ message: response.response.message });
+                notification.success({ message: response.message });
             }
         }).catch()
+    })
+
+
+    getPostById = action(async (postId: string) => {
+        return await GET(`/api/post?postId=${postId}`).then(response => {
+            return response.data
+        }).catch(e => {
+
+        })
     })
 }
 

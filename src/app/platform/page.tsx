@@ -15,29 +15,15 @@ import {
     Tooltip,
     Watermark
 } from "antd"
-import EmojiPicker from "emoji-picker-react";
-import { CloseCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined, SearchOutlined, CheckOutlined } from "@ant-design/icons";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import dayjs from "dayjs";
-
-function CheckOutlined() {
-    return null;
-}
+import nextConfig from "next.config.mjs";
+import { useRouter } from "next/navigation";
 
 const PlatformPage = () => {
-
+    const router = useRouter();
     const { postStore } = useMobxStores()
-    const [emojiItem, setEmojiItem] = useState<string | null>(null)
-
-    const contentStyle: React.CSSProperties = {
-        margin: 0,
-        height: '160px',
-        color: '#fff',
-        lineHeight: '160px',
-        textAlign: 'center',
-        background: '#364d79',
-    };
-
     const { RangePicker } = DatePicker;
 
     useEffect(() => {
@@ -47,66 +33,66 @@ const PlatformPage = () => {
     return (
         <div className="container mx-auto">
             <div className="px-6">
-                {/*<Carousel*/}
-                {/*    className="mt-6"*/}
-                {/*    arrows*/}
-                {/*    infinite={true}*/}
-                {/*    autoplay={true}*/}
-                {/*    autoplaySpeed={5000}*/}
-                {/*>*/}
-                {/*    <div>*/}
-                {/*        <h3 style={contentStyle}>1</h3>*/}
-                {/*    </div>*/}
-                {/*    <div>*/}
-                {/*        <h3 style={contentStyle}>2</h3>*/}
-                {/*    </div>*/}
-                {/*    <div>*/}
-                {/*        <h3 style={contentStyle}>3</h3>*/}
-                {/*    </div>*/}
-                {/*    <div>*/}
-                {/*        <h3 style={contentStyle}>4</h3>*/}
-                {/*    </div>*/}
-                {/*</Carousel>*/}
                 <p className="mt-6 text-gray-800 text-4xl mb-6">Новости</p>
                 <div className="flex items-start">
-                    <div className="flex flex-col w-3/4">
-                        {!postStore.loading ? postStore.allPosts.length > 0 ? postStore.allPosts?.map(post => (
-                            <div key={post.id}
-                                className="p-5 relative flex mb-20 cursor-pointer rounded-md shadow-xl"
-                            >
-                                {!post.image ? <Watermark content={["GLP", "Graph Learning Platform"]}>
-                                    <div style={{ height: 300, width: 500 }} />
-                                </Watermark> : <img
-                                    src={`http://localhost:4200${post.image}`}
-                                    width={500} height="200" alt={post.name}
-                                />}
-                                <div className="ml-5 flex w-full">
-                                    <div className="flex w-full justify-between">
-                                        <div>
-                                            <div className="text-3xl font-semibold">{post.name}</div>
-                                            <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                    <div className="flex flex-col w-full lg:w-3/4 mx-auto">
+                        {!postStore.loading ? postStore.allPosts.length > 0 ? (
+                            postStore.allPosts.map(post => (
+                                <div
+                                    key={post.id}
+                                    onClick={() => router.push(`/platform/post/${post.id}`)}
+                                    className="p-6 mb-12 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer relative group"
+                                >
+                                    <div className="relative flex">
+                                        <div className="relative overflow-hidden rounded-lg shadow-sm">
+                                            {!post.image ? (
+                                                <div className="flex items-center justify-center w-64 h-40 bg-gray-100 rounded-lg">
+                                                    <span className="text-gray-400">Изображение отсутствует</span>
+                                                </div>
+                                            ) : (
+                                                <img
+                                                    src={`${nextConfig.env?.API_URL}${post.image}`}
+                                                    alt={post.name}
+                                                    className="w-64 h-40 object-cover rounded-lg transition-transform duration-300 transform group-hover:scale-105"
+                                                />
+                                            )}
                                         </div>
-                                        <p className="text-gray-400"
-                                            title="Дата публикации">{dayjs(post.created_at).format(FORMAT_VIEW_DATE)}</p>
+                                        <div className="ml-6 flex flex-col justify-between w-full">
+                                            <div>
+                                                <h2 className="text-2xl font-semibold text-gray-800 mb-2 transition-colors duration-300 group-hover:text-gray-900">
+                                                    {post.name}
+                                                </h2>
+                                                <p className="text-gray-600 line-clamp-2 group-hover:text-gray-700">
+                                                    {post.description || "Описание недоступно"}
+                                                </p>
+                                            </div>
+                                            <p className="text-sm text-gray-500 mt-4"
+                                                title="Дата публикации">
+                                                Опубликовано: {dayjs(post.created_at).format(FORMAT_VIEW_DATE)}
+                                            </p>
+                                        </div>
                                     </div>
-
-                                    <div className="absolute bottom-5 right-5">
-                                        <div className="flex flex-col">
-                                            {/* <EmojiPicker
-                                                reactionsDefaultOpen={true}
-                                                allowExpandReactions={false}
-                                                onReactionClick={(emoji, event) => {
-                                                    setEmojiItem(emoji.emoji)
-                                                    postStore.addReactionPost(emoji.emoji)
-                                                }}
-                                            /> */}
-                                            <span className="text-2xl text-center">{emojiItem && emojiItem}</span>
-                                        </div>
+                                    <div className="absolute bottom-4 right-4">
+                                        <button
+                                            onClick={() => router.push(`/platform/post/${post.id}`)}
+                                            className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition-colors duration-300"
+                                        >
+                                            Читать далее
+                                        </button>
                                     </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="text-center py-10">
+                                <Empty description="Список пуст" />
                             </div>
-                        )) : <Empty description="Список пуст" /> : <Spin />}
+                        ) : (
+                            <div className="text-center py-10">
+                                <Spin size="large" />
+                            </div>
+                        )}
                     </div>
+
                     <div className="w-1/4 bg-white ml-5 rounded-lg shadow-lg flex flex-col gap-4 p-6">
                         <h2 className="text-lg font-semibold text-gray-700">Поиск и фильтры</h2>
 
@@ -177,7 +163,6 @@ const PlatformPage = () => {
                             </Tooltip>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

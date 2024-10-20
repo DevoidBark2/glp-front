@@ -1,17 +1,17 @@
-import {action, makeAutoObservable} from "mobx";
-import {DELETE, GET, POST, PUT} from "@/lib/fetcher";
-import {notification} from "antd";
-import {getUserToken} from "@/lib/users";
+import { action, makeAutoObservable } from "mobx";
+import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
+import { notification } from "antd";
+import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
-import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
-import {FORMAT_VIEW_DATE} from "@/constants";
-import {SectionCourseItem} from "@/stores/SectionCourse";
-import {CourseComponentTypeI} from "@/stores/CourseComponent";
+import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
+import { FORMAT_VIEW_DATE } from "@/constants";
+import { SectionCourseItem } from "@/stores/SectionCourse";
+import { CourseComponentTypeI } from "@/stores/CourseComponent";
 
 export type Teacher = {
     id: number;
     name: string;
-    email:string;
+    email: string;
 }
 
 type Category = {
@@ -40,7 +40,7 @@ export type TeacherCourse = {
     image: string;
     publish_date: Date
 }
-class CourseStore{
+class CourseStore {
     constructor() {
         makeAutoObservable(this)
     }
@@ -85,27 +85,29 @@ class CourseStore{
         await GET('/api/courses').then(response => {
             this.courses = response.response.data.map(courseMapper)
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         }).finally(() => {
             this.setLoadingCourses(false);
         })
     })
 
-    createCourse = action(async (values:any) => {
+    createCourse = action(async (values: any) => {
         this.setLoadingCreateCourse(true)
         const form = new FormData();
-        form.append('name',values.name_course)
-        form.append('small_description',values.description)
+        form.append('name', values.name_course)
+        form.append('small_description', values.description)
         // form.append('image',values.image.originFileObj)
-        form.append('category',values.category)
-        form.append('access_right',values.access_right)
-        form.append('duration',values.duration)
-        form.append('level',values.level)
-        form.append('publish_date',dayjs().format(FORMAT_VIEW_DATE))
-        form.append("content_description",values.content_description)
+        if (values.category) {
+            form.append('category', values.category.toString());
+        }
+        form.append('access_right', values.access_right)
+        form.append('duration', values.duration)
+        form.append('level', values.level)
+        form.append('publish_date', dayjs().format(FORMAT_VIEW_DATE))
+        form.append("content_description", values.content_description)
 
-        return await POST(`/api/courses`,form).catch(e => {
-            notification.error({message: e.response.data.message})
+        return await POST(`/api/courses`, form).catch(e => {
+            notification.error({ message: e.response.data.message })
         }).finally(() => this.setLoadingCreateCourse(false))
     })
 
@@ -114,46 +116,46 @@ class CourseStore{
         await GET(`/api/get-user-courses`).then((response) => {
             this.userCourses = response.data.courses.map(courseMapper)
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         }).finally(() => {
             this.setLoadingCourses(false)
         })
     })
 
-    publishCourse = action(async(courseId: number) =>{
-        await POST(`/api/courses-publish`,{courseId: courseId}).then(response => {
-            notification.success({message: response.message})
+    publishCourse = action(async (courseId: number) => {
+        await POST(`/api/courses-publish`, { courseId: courseId }).then(response => {
+            notification.success({ message: response.message })
             this.userCourses = this.userCourses.map(course => course.id === courseId ? { ...course, status: StatusCourseEnum.IN_PROCESSING } : course)
         }).catch(e => {
-            notification.warning({message: e.response.data.message})
+            notification.warning({ message: e.response.data.message })
         })
     })
 
-    getCourseDetails = action(async(courseId: number) => {
+    getCourseDetails = action(async (courseId: number) => {
         this.setLoadingCourseDetails(true);
         const response = await GET(`/api/course-details?courseId=${courseId}`)
-        this.courseDetailsSections =  response.data.sections;
+        this.courseDetailsSections = response.data.sections;
         return response;
     })
 
     changeCourse = action(async (values: Course) => {
         const token = getUserToken();
-        await PUT(`/api/courses?token=${token}`,values).then(response => {
-            notification.success({message: response.response.message})
+        await PUT(`/api/courses?token=${token}`, values).then(response => {
+            notification.success({ message: response.response.message })
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         })
     })
 
     deleteCourse = action(async (courseId: number) => {
         await DELETE(`/api/courses?courseId=${courseId}`).then(response => {
             debugger
-            notification.success({message: response.message})
+            notification.success({ message: response.message })
             this.userCourses = this.userCourses.filter(course => courseId !== course.id)
 
         }).catch(e => {
             debugger
-            notification.warning({message: e.response.data.message})
+            notification.warning({ message: e.response.data.message })
         })
     })
 }
@@ -165,7 +167,7 @@ export const courseMapper = (course: Course) => {
         image: course.image,
         category: course.category,
         access_right: course.access_right,
-        level:course.level,
+        level: course.level,
         small_description: course.small_description,
         content_description: course.content_description,
         duration: course.duration,

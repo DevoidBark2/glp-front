@@ -1,9 +1,10 @@
 "use client"
-import {observer} from "mobx-react";
+import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import { observer } from "mobx-react";
 
 const BannersPage = () => {
     return (
-        <div>Banners page</div>
+        <PageContainerControlPanel>Banners Page</PageContainerControlPanel>
     )
 }
 
