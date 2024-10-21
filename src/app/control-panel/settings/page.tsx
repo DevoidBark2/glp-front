@@ -10,6 +10,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import Image from "next/image"
 import nextConfig from "next.config.mjs";
+import InputMask from 'react-input-mask';
 
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
@@ -64,30 +65,29 @@ const SettingsControlPage = () => {
                                 form={formForGeneral}
                                 onFinish={(values) => {
                                     const formData = new FormData();
+                                    formData.append("id", values.id);
                                     formData.append("platform_name", values.platform_name);
                                     formData.append("service_mode", values.service_mode);
-                                    formData.append("cache_enabled", values.cache_enabled);
                                     formData.append("support_email", values.support_email);
                                     formData.append("contact_phone", values.contact_phone);
-                                    formData.append("default_language", values.default_language);
-                                    formData.append("timezone", values.timezone);
-                                    formData.append("analytics_id", values.analytics_id);
-                                    formData.append("maintenance_message", values.maintenance_message);
-
+                                    formData.append("subscription_platform", values.subscription_platform);
+                                    formData.append("service_mode_text", values.service_mode_text);
                                     // Добавляем файл, если он есть
                                     if (file) {
-                                        formData.append("logo_url", file);
+                                        formData.append("logo", file);
                                     }
 
                                     generalSettingsStore.saveGeneralSetting(formData);
                                 }}
                             >
+
+                                <Form.Item name="id" hidden></Form.Item>
                                 <Form.Item label="Название платформы" name="platform_name">
                                     <Input placeholder="Введите название вашей платформы" />
                                 </Form.Item>
 
                                 {/* Поле для загрузки и отображения логотипа */}
-                                <Form.Item label="Логотип платформы" name="logo_url">
+                                <Form.Item label="Логотип платформы" name="logo">
                                     <Upload
                                         name="logo_url"
                                         listType="picture-card"
@@ -119,31 +119,31 @@ const SettingsControlPage = () => {
                                     </Upload>
                                 </Form.Item>
 
+                                <Form.Item label="Описание платформы" name="subscription_platform">
+                                    <Input.TextArea rows={3} placeholder="Введите описание, которое будет отображаться на сайте в нижнем колонтикуле" />
+                                </Form.Item>
+
                                 <Form.Item label="Email для поддержки" name="support_email">
                                     <Input placeholder="Введите email для связи с поддержкой" />
                                 </Form.Item>
 
-                                <Form.Item label="Контактный телефон" name="contact_phone">
-                                    <Input placeholder="+7 (___) ___-__-__" />
-                                </Form.Item>
-
-                                <Form.Item label="Язык по умолчанию" name="default_language">
-                                    <Select placeholder="Выберите язык по умолчанию">
-                                        <Select.Option value="ru">Русский</Select.Option>
-                                        <Select.Option value="en">Английский</Select.Option>
-                                        <Select.Option value="es">Испанский</Select.Option>
-                                        <Select.Option value="de">Немецкий</Select.Option>
-                                        {/* Добавьте другие языки по мере необходимости */}
-                                    </Select>
-                                </Form.Item>
-
-                                <Form.Item label="Часовой пояс" name="timezone">
-                                    <Select placeholder="Выберите часовой пояс">
-                                        <Select.Option value="Europe/Moscow">Europe/Moscow</Select.Option>
-                                        <Select.Option value="Europe/London">Europe/London</Select.Option>
-                                        <Select.Option value="America/New_York">America/New_York</Select.Option>
-                                        {/* Добавьте другие часовые пояса */}
-                                    </Select>
+                                <Form.Item
+                                    label="Контактный телефон"
+                                    name="contact_phone"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Пожалуйста, введите ваш телефон',
+                                        },
+                                        {
+                                            pattern: /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
+                                            message: 'Введите номер в формате +7 (123) 456-78-90',
+                                        },
+                                    ]}
+                                >
+                                    <InputMask mask="+7 (999) 999-99-99" maskChar=" ">
+                                        {(inputProps) => <Input {...inputProps} placeholder="+7 (___) ___-__-__" />}
+                                    </InputMask>
                                 </Form.Item>
 
                                 {/* Режим обслуживания */}
@@ -156,22 +156,22 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                <Form.Item label="Сообщение для режима обслуживания" name="maintenance_message">
+                                <Form.Item label="Сообщение для режима обслуживания" name="service_mode_text">
                                     <Input.TextArea rows={3} placeholder="Введите сообщение, которое будет отображаться на сайте в режиме обслуживания" />
                                 </Form.Item>
 
                                 {/* Настройки кэширования */}
-                                <Form.Item label="Кэширование" name="cache_enabled">
+                                {/* <Form.Item label="Кэширование" name="cache_enabled">
                                     <Select placeholder="Выберите режим кэширования">
                                         <Select.Option value={true}>Включено</Select.Option>
                                         <Select.Option value={false}>Отключено</Select.Option>
                                     </Select>
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 {/* Google Analytics ID */}
-                                <Form.Item label="Google Analytics ID" name="analytics_id">
+                                {/* <Form.Item label="Google Analytics ID" name="analytics_id">
                                     <Input placeholder="Введите ваш Google Analytics ID" />
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 {/* Кнопка сохранения */}
                                 <Form.Item>
@@ -210,71 +210,6 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                {/* Уведомления о жалобах пользователей */}
-                                <Form.Item
-                                    label="Уведомления о жалобах пользователей"
-                                    tooltip="Получайте уведомления о жалобах от пользователей."
-                                    name="user_complaint_notification"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Политика по удалению пользователей */}
-                                <Form.Item
-                                    label="Политика удаления пользователей"
-                                    tooltip="Выберите, когда неактивные пользователи должны быть удалены."
-                                    name="user_deletion_policy"
-                                >
-                                    <Select placeholder="Выберите политику удаления">
-                                        <Select.Option value="30_days">Удаление через 30 дней неактивности</Select.Option>
-                                        <Select.Option value="90_days">Удаление через 90 дней неактивности</Select.Option>
-                                        <Select.Option value="no_auto_delete">Не удалять автоматически</Select.Option>
-                                    </Select>
-                                </Form.Item>
-
-                                {/* Политика паролей */}
-                                <Form.Item
-                                    label="Политика паролей"
-                                    tooltip="Настройте минимальную длину пароля для повышения безопасности."
-                                    name="password_policy"
-                                >
-                                    <InputNumber min={6} max={20} placeholder="Минимальная длина пароля" style={{ width: '100%' }} />
-                                </Form.Item>
-
-                                {/* Двухфакторная аутентификация */}
-                                <Form.Item
-                                    label="Двухфакторная аутентификация"
-                                    tooltip="Включите, чтобы требовать двухфакторную аутентификацию при входе."
-                                    name="two_factor_auth"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Настройки максимального количества попыток входа */}
-                                <Form.Item
-                                    label="Максимальное количество попыток входа"
-                                    tooltip="Задайте количество попыток входа перед временной блокировкой пользователя."
-                                    name="max_login_attempts"
-                                >
-                                    <InputNumber min={1} max={10} placeholder="Введите количество попыток" style={{ width: '100%' }} />
-                                </Form.Item>
-
-                                {/* Время окончания сессии */}
-                                <Form.Item
-                                    label="Время окончания сессии"
-                                    tooltip="Задайте время, после которого неактивные пользователи будут автоматически выходить из системы."
-                                    name="session_timeout"
-                                >
-                                    <Select placeholder="Выберите время окончания сессии">
-                                        <Select.Option value="15_minutes">15 минут</Select.Option>
-                                        <Select.Option value="30_minutes">30 минут</Select.Option>
-                                        <Select.Option value="60_minutes">1 час</Select.Option>
-                                        <Select.Option value="never">Не завершать автоматически</Select.Option>
-                                    </Select>
-                                </Form.Item>
-
                                 {/* Лимит на количество создаваемых курсов */}
                                 <Form.Item
                                     label="Лимит на количество создаваемых курсов"
@@ -286,27 +221,7 @@ const SettingsControlPage = () => {
 
                                 {/* Новые настройки */}
 
-                                {/* Ограничение на загрузку файлов */}
-                                <Form.Item
-                                    label="Максимальный размер загружаемого файла"
-                                    tooltip="Задайте максимальный размер загружаемых пользователями файлов (в мегабайтах)."
-                                    name="max_file_upload_size"
-                                >
-                                    <InputNumber min={1} max={1000} placeholder="Введите размер в МБ" style={{ width: '100%' }} />
-                                </Form.Item>
 
-                                {/* Запрет на загрузку определенных типов файлов */}
-                                <Form.Item
-                                    label="Запрещенные типы файлов"
-                                    tooltip="Укажите типы файлов, которые пользователи не могут загружать."
-                                    name="restricted_file_types"
-                                >
-                                    <Select mode="tags" placeholder="Добавьте типы файлов, например: .exe, .bat">
-                                        <Select.Option value=".exe">.exe</Select.Option>
-                                        <Select.Option value=".bat">.bat</Select.Option>
-                                        <Select.Option value=".js">.js</Select.Option>
-                                    </Select>
-                                </Form.Item>
 
                                 {/* Настройка лимита на количество сообщений в чате */}
                                 <Form.Item
@@ -326,61 +241,6 @@ const SettingsControlPage = () => {
                                     <InputNumber min={1} max={50} placeholder="Введите лимит жалоб" style={{ width: '100%' }} />
                                 </Form.Item>
 
-                                {/* Настройка отправки уведомлений через Email */}
-                                <Form.Item
-                                    label="Уведомления через Email"
-                                    tooltip="Включите, чтобы пользователи могли получать уведомления по электронной почте."
-                                    name="email_notifications"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Ограничение на количество устройств */}
-                                <Form.Item
-                                    label="Ограничение на количество устройств"
-                                    tooltip="Задайте, на скольких устройствах одновременно пользователь может быть авторизован."
-                                    name="max_devices"
-                                >
-                                    <InputNumber min={1} max={5} placeholder="Введите количество устройств" style={{ width: '100%' }} />
-                                </Form.Item>
-
-                                {/* Запрет на использование определенных слов в имени пользователя */}
-                                <Form.Item
-                                    label="Запрещенные слова в имени пользователя"
-                                    tooltip="Укажите слова, которые не должны использоваться в именах пользователей."
-                                    name="restricted_username_words"
-                                >
-                                    <Select mode="tags" placeholder="Введите запрещенные слова">
-                                        <Select.Option value="admin">admin</Select.Option>
-                                        <Select.Option value="moderator">moderator</Select.Option>
-                                        <Select.Option value="support">support</Select.Option>
-                                    </Select>
-                                </Form.Item>
-
-                                {/* Автоматическая деактивация аккаунтов */}
-                                <Form.Item
-                                    label="Автоматическая деактивация неактивных аккаунтов"
-                                    tooltip="Укажите период неактивности, после которого аккаунт будет автоматически деактивирован."
-                                    name="auto_deactivate_period"
-                                >
-                                    <Select placeholder="Выберите период">
-                                        <Select.Option value="60_days">60 дней</Select.Option>
-                                        <Select.Option value="180_days">180 дней</Select.Option>
-                                        <Select.Option value="365_days">365 дней</Select.Option>
-                                    </Select>
-                                </Form.Item>
-
-                                {/* Контроль за обновлением профиля */}
-                                <Form.Item
-                                    label="Уведомления об изменении профиля"
-                                    tooltip="Получайте уведомления, когда пользователь вносит изменения в свой профиль."
-                                    name="profile_update_notification"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
@@ -398,6 +258,8 @@ const SettingsControlPage = () => {
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
                                 <Form.Item name="id" hidden></Form.Item>
+
+                                {/* Автоматическая публикация курсов */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.LABEL}
                                     tooltip={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.TOOLTIP}
@@ -406,6 +268,8 @@ const SettingsControlPage = () => {
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
+
+                                {/* Максимальный размер загружаемых файлов */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.LABEL}
                                     tooltip={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.TOOLTIP}
@@ -416,6 +280,8 @@ const SettingsControlPage = () => {
                                         placeholder={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.PLACEHOLDER}
                                     />
                                 </Form.Item>
+
+                                {/* Модерация отзывов к курсам */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.MODERATION_REVIEWS_COURSE.LABEL}
                                     tooltip={GeneralSettingTooltips.MODERATION_REVIEWS_COURSE.TOOLTIP}
@@ -424,12 +290,8 @@ const SettingsControlPage = () => {
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
-                                {/*<Form.Item label="Выдача сертификатов по завершению курса">*/}
-                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                                {/*</Form.Item>*/}
-                                {/*<Form.Item label="Шаблон сертификата">*/}
-                                {/*    <Input.TextArea rows={4} placeholder="Введите шаблон сертификата" />*/}
-                                {/*</Form.Item>*/}
+
+                                {/* Модерация новых курсов */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.MODERATION_COURSE.LABEL}
                                     tooltip={GeneralSettingTooltips.MODERATION_COURSE.TOOLTIP}
@@ -438,11 +300,96 @@ const SettingsControlPage = () => {
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
+
+                                {/* Лимит на количество курсов для каждого пользователя */}
+                                <Form.Item
+                                    label="Лимит курсов на одного пользователя"
+                                    tooltip="Установите максимальное количество курсов, которые может создать один пользователь."
+                                    name="course_creation_limit"
+                                >
+                                    <InputNumber min={1} max={100} placeholder="Введите лимит" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Включить превью курса перед покупкой */}
+                                <Form.Item
+                                    label="Включить превью курсов"
+                                    tooltip="Разрешить пользователям просматривать превью курсов перед их покупкой."
+                                    name="enable_course_preview"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Ограничение по времени доступа к курсу */}
+                                <Form.Item
+                                    label="Срок доступа к курсу"
+                                    tooltip="Установите количество дней, в течение которых пользователи имеют доступ к курсу после покупки."
+                                    name="course_access_duration"
+                                >
+                                    <InputNumber min={1} max={365} placeholder="Введите количество дней" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Настройка рейтинговой системы курсов */}
+                                <Form.Item
+                                    label="Рейтинговая система курсов"
+                                    tooltip="Включите возможность оценки курсов пользователями."
+                                    name="course_rating_system"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Включить возможность добавления дополнительных материалов */}
+                                <Form.Item
+                                    label="Дополнительные материалы к курсам"
+                                    tooltip="Разрешить создателям курсов загружать дополнительные материалы, такие как PDF-файлы или презентации."
+                                    name="allow_extra_materials"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Настройка видимости курсов */}
+                                <Form.Item
+                                    label="Настройка видимости курсов"
+                                    tooltip="Определите, должны ли курсы быть видимы для всех или только для зарегистрированных пользователей."
+                                    name="course_visibility"
+                                >
+                                    <Select placeholder="Выберите видимость курса">
+                                        <Select.Option value="public">Публичные</Select.Option>
+                                        <Select.Option value="registered_only">Только для зарегистрированных</Select.Option>
+                                        <Select.Option value="private">Приватные (по приглашению)</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
+                                {/* Разрешить комментарии к курсам */}
+                                <Form.Item
+                                    label="Комментарии к курсам"
+                                    tooltip="Разрешить пользователям оставлять комментарии под курсами."
+                                    name="allow_course_comments"
+                                    valuePropName="checked"
+                                >
+                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                {/* Возможность загружать видео напрямую или через ссылки */}
+                                <Form.Item
+                                    label="Метод загрузки видео"
+                                    tooltip="Позволяет выбрать метод загрузки видео: напрямую на сервер или через ссылки на внешние платформы."
+                                    name="video_upload_method"
+                                >
+                                    <Select placeholder="Выберите метод загрузки">
+                                        <Select.Option value="direct">Прямой загрузка</Select.Option>
+                                        <Select.Option value="external_link">Ссылки на видео</Select.Option>
+                                    </Select>
+                                </Form.Item>
+
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
 
 
                         {/* Financial Settings */}
@@ -546,9 +493,25 @@ const SettingsControlPage = () => {
                                 layout="vertical"
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
-                                <Form.Item name="id" hidden></Form.Item>
+                                {/* Максимальное количество попыток входа */}
+                                <Form.Item
+                                    label="Максимальное количество попыток входа"
+                                    tooltip="Задайте количество попыток входа перед временной блокировкой пользователя."
+                                    name="max_login_attempts"
+                                >
+                                    <InputNumber min={1} max={10} placeholder="Введите количество попыток" style={{ width: '100%' }} />
+                                </Form.Item>
 
-                                {/* Настройки безопасности */}
+                                {/* Время блокировки после неудачных попыток */}
+                                <Form.Item
+                                    label="Время блокировки после неудачных попыток"
+                                    tooltip="Укажите время, на которое пользователь будет заблокирован после превышения лимита попыток входа."
+                                    name="lockout_duration"
+                                >
+                                    <InputNumber min={1} max={60} placeholder="Введите время в минутах" style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                {/* Аудит действий */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.AUDIT_TRAIL.LABEL}
                                     tooltip={GeneralSettingTooltips.AUDIT_TRAIL.TOOLTIP}
@@ -558,6 +521,7 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
+                                {/* Минимальная длина пароля */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.LABEL}
                                     tooltip={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.TOOLTIP}
@@ -566,6 +530,7 @@ const SettingsControlPage = () => {
                                     <Input type="number" placeholder={GeneralSettingTooltips.MIN_PASSWORD_LENGTH.PLACEHOLDER} />
                                 </Form.Item>
 
+                                {/* Сложность пароля */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.COMPLEXITY_PASSWORD.LABEL}
                                     tooltip={GeneralSettingTooltips.COMPLEXITY_PASSWORD.TOOLTIP}
@@ -584,6 +549,7 @@ const SettingsControlPage = () => {
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
 
 
 

@@ -39,11 +39,10 @@ export class GeneralSettings {
     })
 
     saveGeneralSetting = action(async (formData: FormData) => {
-        debugger
         await POST(`/api/general-settings`, formData).then(response => {
             notification.success({ message: response.data.message });
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         });
     });
 }
