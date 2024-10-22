@@ -38,7 +38,17 @@ export class GeneralSettings {
         return await GET(`/api/general-settings`);
     })
 
-    saveGeneralSetting = action(async (formData: FormData) => {
+    saveGeneralSetting = action(async (values:any) => {
+        const formData = new FormData();
+        debugger
+        Object.entries(values).forEach(([key,value]) => {
+            debugger
+            if(key === "logo_url"){
+                debugger
+                formData.append(key,value.file);
+            }
+            formData.append(key,value);
+        })
         await POST(`/api/general-settings`, formData).then(response => {
             notification.success({ message: response.data.message });
         }).catch(e => {

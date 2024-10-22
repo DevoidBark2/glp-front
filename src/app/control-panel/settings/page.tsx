@@ -63,22 +63,7 @@ const SettingsControlPage = () => {
                             <Form
                                 layout="vertical"
                                 form={formForGeneral}
-                                onFinish={(values) => {
-                                    const formData = new FormData();
-                                    formData.append("id", values.id);
-                                    formData.append("platform_name", values.platform_name);
-                                    formData.append("service_mode", values.service_mode);
-                                    formData.append("support_email", values.support_email);
-                                    formData.append("contact_phone", values.contact_phone);
-                                    formData.append("subscription_platform", values.subscription_platform);
-                                    formData.append("service_mode_text", values.service_mode_text);
-                                    // Добавляем файл, если он есть
-                                    if (file) {
-                                        formData.append("logo", file);
-                                    }
-
-                                    generalSettingsStore.saveGeneralSetting(formData);
-                                }}
+                                onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
 
                                 <Form.Item name="id" hidden></Form.Item>
@@ -86,8 +71,7 @@ const SettingsControlPage = () => {
                                     <Input placeholder="Введите название вашей платформы" />
                                 </Form.Item>
 
-                                {/* Поле для загрузки и отображения логотипа */}
-                                <Form.Item label="Логотип платформы" name="logo">
+                                <Form.Item label="Логотип платформы" name="logo_url">
                                     <Upload
                                         name="logo_url"
                                         listType="picture-card"
@@ -105,6 +89,7 @@ const SettingsControlPage = () => {
                                             };
                                             reader.readAsDataURL(file);
 
+                                            formForGeneral.setFieldValue("logo_url", file)
                                             setFile(file);
                                             return false;
                                         }}
@@ -132,10 +117,6 @@ const SettingsControlPage = () => {
                                     name="contact_phone"
                                     rules={[
                                         {
-                                            required: true,
-                                            message: 'Пожалуйста, введите ваш телефон',
-                                        },
-                                        {
                                             pattern: /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
                                             message: 'Введите номер в формате +7 (123) 456-78-90',
                                         },
@@ -146,7 +127,6 @@ const SettingsControlPage = () => {
                                     </InputMask>
                                 </Form.Item>
 
-                                {/* Режим обслуживания */}
                                 <Form.Item
                                     name="service_mode"
                                     valuePropName="checked"
@@ -160,20 +140,6 @@ const SettingsControlPage = () => {
                                     <Input.TextArea rows={3} placeholder="Введите сообщение, которое будет отображаться на сайте в режиме обслуживания" />
                                 </Form.Item>
 
-                                {/* Настройки кэширования */}
-                                {/* <Form.Item label="Кэширование" name="cache_enabled">
-                                    <Select placeholder="Выберите режим кэширования">
-                                        <Select.Option value={true}>Включено</Select.Option>
-                                        <Select.Option value={false}>Отключено</Select.Option>
-                                    </Select>
-                                </Form.Item> */}
-
-                                {/* Google Analytics ID */}
-                                {/* <Form.Item label="Google Analytics ID" name="analytics_id">
-                                    <Input placeholder="Введите ваш Google Analytics ID" />
-                                </Form.Item> */}
-
-                                {/* Кнопка сохранения */}
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">
                                         Сохранить изменения
@@ -181,7 +147,6 @@ const SettingsControlPage = () => {
                                 </Form.Item>
                             </Form>
                         </TabPane>
-
 
                         <TabPane tab="Управление пользователями" key="2">
                             <Form
@@ -191,7 +156,6 @@ const SettingsControlPage = () => {
                             >
                                 <Form.Item name="id" hidden></Form.Item>
 
-                                {/* Роль пользователя по умолчанию */}
                                 <Form.Item label="Роль пользователя по умолчанию" name="default_user_role">
                                     <Select placeholder="Выберите роль по умолчанию">
                                         <Select.Option value="student">Пользователь</Select.Option>
@@ -200,7 +164,6 @@ const SettingsControlPage = () => {
                                     </Select>
                                 </Form.Item>
 
-                                {/* Автоматическое подтверждение регистрации */}
                                 <Form.Item
                                     label="Автоматическое подтверждение регистрации"
                                     tooltip="Если включено, пользователи будут автоматически подтверждены после регистрации."
@@ -210,7 +173,6 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                {/* Лимит на количество создаваемых курсов */}
                                 <Form.Item
                                     label="Лимит на количество создаваемых курсов"
                                     tooltip="Укажите максимальное количество курсов, которое может создать один пользователь."
@@ -219,37 +181,11 @@ const SettingsControlPage = () => {
                                     <InputNumber min={1} max={50} placeholder="Введите лимит" style={{ width: '100%' }} />
                                 </Form.Item>
 
-                                {/* Новые настройки */}
-
-
-
-                                {/* Настройка лимита на количество сообщений в чате */}
-                                <Form.Item
-                                    label="Лимит сообщений в чате"
-                                    tooltip="Укажите максимальное количество сообщений, которые пользователь может отправить в день."
-                                    name="chat_message_limit"
-                                >
-                                    <InputNumber min={1} max={1000} placeholder="Введите лимит" style={{ width: '100%' }} />
-                                </Form.Item>
-
-                                {/* Настройка лимита на количество жалоб от одного пользователя */}
-                                <Form.Item
-                                    label="Лимит жалоб"
-                                    tooltip="Установите лимит на количество жалоб, которые пользователь может подать в течение дня."
-                                    name="complaint_limit_per_day"
-                                >
-                                    <InputNumber min={1} max={50} placeholder="Введите лимит жалоб" style={{ width: '100%' }} />
-                                </Form.Item>
-
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
-
-
-
-
 
                         <TabPane tab="Управление курсами" key="3">
                             <Form
@@ -259,7 +195,6 @@ const SettingsControlPage = () => {
                             >
                                 <Form.Item name="id" hidden></Form.Item>
 
-                                {/* Автоматическая публикация курсов */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.LABEL}
                                     tooltip={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.TOOLTIP}
@@ -269,7 +204,6 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                {/* Максимальный размер загружаемых файлов */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.LABEL}
                                     tooltip={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.TOOLTIP}
@@ -281,7 +215,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Модерация отзывов к курсам */}
                                 <Form.Item
                                     label={GeneralSettingTooltips.MODERATION_REVIEWS_COURSE.LABEL}
                                     tooltip={GeneralSettingTooltips.MODERATION_REVIEWS_COURSE.TOOLTIP}
@@ -299,34 +232,6 @@ const SettingsControlPage = () => {
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Лимит на количество курсов для каждого пользователя */}
-                                <Form.Item
-                                    label="Лимит курсов на одного пользователя"
-                                    tooltip="Установите максимальное количество курсов, которые может создать один пользователь."
-                                    name="course_creation_limit"
-                                >
-                                    <InputNumber min={1} max={100} placeholder="Введите лимит" style={{ width: '100%' }} />
-                                </Form.Item>
-
-                                {/* Включить превью курса перед покупкой */}
-                                <Form.Item
-                                    label="Включить превью курсов"
-                                    tooltip="Разрешить пользователям просматривать превью курсов перед их покупкой."
-                                    name="enable_course_preview"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
-
-                                {/* Ограничение по времени доступа к курсу */}
-                                <Form.Item
-                                    label="Срок доступа к курсу"
-                                    tooltip="Установите количество дней, в течение которых пользователи имеют доступ к курсу после покупки."
-                                    name="course_access_duration"
-                                >
-                                    <InputNumber min={1} max={365} placeholder="Введите количество дней" style={{ width: '100%' }} />
                                 </Form.Item>
 
                                 {/* Настройка рейтинговой системы курсов */}
@@ -349,19 +254,6 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                {/* Настройка видимости курсов */}
-                                <Form.Item
-                                    label="Настройка видимости курсов"
-                                    tooltip="Определите, должны ли курсы быть видимы для всех или только для зарегистрированных пользователей."
-                                    name="course_visibility"
-                                >
-                                    <Select placeholder="Выберите видимость курса">
-                                        <Select.Option value="public">Публичные</Select.Option>
-                                        <Select.Option value="registered_only">Только для зарегистрированных</Select.Option>
-                                        <Select.Option value="private">Приватные (по приглашению)</Select.Option>
-                                    </Select>
-                                </Form.Item>
-
                                 {/* Разрешить комментарии к курсам */}
                                 <Form.Item
                                     label="Комментарии к курсам"
@@ -372,119 +264,11 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                {/* Возможность загружать видео напрямую или через ссылки */}
-                                <Form.Item
-                                    label="Метод загрузки видео"
-                                    tooltip="Позволяет выбрать метод загрузки видео: напрямую на сервер или через ссылки на внешние платформы."
-                                    name="video_upload_method"
-                                >
-                                    <Select placeholder="Выберите метод загрузки">
-                                        <Select.Option value="direct">Прямой загрузка</Select.Option>
-                                        <Select.Option value="external_link">Ссылки на видео</Select.Option>
-                                    </Select>
-                                </Form.Item>
-
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
                             </Form>
                         </TabPane>
-
-
-
-                        {/* Financial Settings */}
-                        {/*<TabPane tab="Финансовые настройки" key="4">*/}
-                        {/*    <Form layout="vertical">*/}
-                        {/*        <Form.Item label="Платежный шлюз по умолчанию">*/}
-                        {/*            <Select defaultValue="stripe">*/}
-                        {/*                <Select.Option value="stripe">Stripe</Select.Option>*/}
-                        {/*                <Select.Option value="paypal">PayPal</Select.Option>*/}
-                        {/*                <Select.Option value="bank">Банковский перевод</Select.Option>*/}
-                        {/*                <Select.Option value="crypto">Криптовалюты</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Выберите платежный шлюз, который будет использоваться по умолчанию.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Минимальная сумма для вывода средств">*/}
-                        {/*            <InputNumber min={10} max={10000} defaultValue={100} />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Установите минимальную сумму, необходимую для вывода средств.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Комиссия за транзакцию (%)">*/}
-                        {/*            <InputNumber min={0} max={100} defaultValue={2.5} />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Установите процент комиссии за транзакции.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Периодичность выплат инструкторам">*/}
-                        {/*            <Select defaultValue="monthly">*/}
-                        {/*                <Select.Option value="weekly">Еженедельно</Select.Option>*/}
-                        {/*                <Select.Option value="biweekly">Каждые две недели</Select.Option>*/}
-                        {/*                <Select.Option value="monthly">Ежемесячно</Select.Option>*/}
-                        {/*                <Select.Option value="quarterly">Ежеквартально</Select.Option>*/}
-                        {/*                <Select.Option value="yearly">Ежегодно</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Выберите, как часто вы будете выплачивать гонорары инструкторам.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Настройка автоматических счетов">*/}
-                        {/*            <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Включите автоматическую генерацию счетов для транзакций и выплат.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Настройки налоговых ставок">*/}
-                        {/*            <Form.Item label="Налоговая ставка (%)">*/}
-                        {/*                <InputNumber min={0} max={100} defaultValue={20} />*/}
-                        {/*                <div className="text-gray-500 mt-1">*/}
-                        {/*                    Установите налоговую ставку, которая будет применяться к транзакциям.*/}
-                        {/*                </div>*/}
-                        {/*            </Form.Item>*/}
-                        {/*            <Form.Item label="Налоговые категории">*/}
-                        {/*                <Select mode="multiple" placeholder="Выберите категории налога">*/}
-                        {/*                    <Select.Option value="vat">НДС</Select.Option>*/}
-                        {/*                    <Select.Option value="sales">Налог с продаж</Select.Option>*/}
-                        {/*                    <Select.Option value="income">Подоходный налог</Select.Option>*/}
-                        {/*                </Select>*/}
-                        {/*                <div className="text-gray-500 mt-1">*/}
-                        {/*                    Выберите налоговые категории, которые будут применяться к транзакциям.*/}
-                        {/*                </div>*/}
-                        {/*            </Form.Item>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Настройки кэшбэка">*/}
-                        {/*            <Form.Item label="Процент кэшбэка">*/}
-                        {/*                <InputNumber min={0} max={100} defaultValue={5} />*/}
-                        {/*                <div className="text-gray-500 mt-1">*/}
-                        {/*                    Установите процент кэшбэка для покупателей, который будет начисляться на их аккаунт.*/}
-                        {/*                </div>*/}
-                        {/*            </Form.Item>*/}
-                        {/*            <Form.Item label="Минимальная сумма для использования кэшбэка">*/}
-                        {/*                <InputNumber min={0} max={10000} defaultValue={10} />*/}
-                        {/*                <div className="text-gray-500 mt-1">*/}
-                        {/*                    Установите минимальную сумму, которую необходимо потратить, чтобы использовать кэшбэк.*/}
-                        {/*                </div>*/}
-                        {/*            </Form.Item>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Интеграция с бухгалтерскими системами">*/}
-                        {/*            <Select defaultValue="quickbooks">*/}
-                        {/*                <Select.Option value="quickbooks">QuickBooks</Select.Option>*/}
-                        {/*                <Select.Option value="xero">Xero</Select.Option>*/}
-                        {/*                <Select.Option value="freshbooks">FreshBooks</Select.Option>*/}
-                        {/*                <Select.Option value="wave">Wave</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Выберите бухгалтерскую систему для интеграции с вашей платформой.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item>*/}
-                        {/*            <Button type="primary">Сохранить изменения</Button>*/}
-                        {/*        </Form.Item>*/}
-                        {/*    </Form>*/}
-                        {/*</TabPane>*/}
-
 
                         {/* Security Settings */}
                         <TabPane tab="Настройки безопасности" key="5">
@@ -493,6 +277,7 @@ const SettingsControlPage = () => {
                                 layout="vertical"
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
+                                <Form.Item name="id" hidden></Form.Item>
                                 {/* Максимальное количество попыток входа */}
                                 <Form.Item
                                     label="Максимальное количество попыток входа"
@@ -549,242 +334,6 @@ const SettingsControlPage = () => {
                                 </Form.Item>
                             </Form>
                         </TabPane>
-
-
-
-
-                        {/* Communication Tools */}
-                        {/*<TabPane tab="Инструменты связи" key="6">*/}
-                        {/*    <Form layout="vertical">*/}
-                        {/*        <Form.Item label="Шаблон email уведомлений">*/}
-                        {/*            <Input.TextArea rows={4} placeholder="Введите шаблон email уведомлений" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Определите шаблоны для различных типов уведомлений, таких как подтверждение регистрации, сброс пароля и т.д.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Настройки SMS уведомлений">*/}
-                        {/*            <Input placeholder="Введите API ключ для SMS сервиса" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Введите API ключ для интеграции с вашим SMS сервисом.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Поддержка в реальном времени">*/}
-                        {/*            <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Включите поддержку чата в реальном времени для общения с пользователями.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Настройки веб-пуш уведомлений">*/}
-                        {/*            <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Включите веб-пуш уведомления для обновлений и важных оповещений на платформе.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        /!*<Form.Item label="Интеграция с мессенджерами">*!/*/}
-                        {/*        /!*    <Select mode="multiple" placeholder="Выберите мессенджеры для интеграции">*!/*/}
-                        {/*        /!*        <Select.Option value="whatsapp">WhatsApp</Select.Option>*!/*/}
-                        {/*        /!*        <Select.Option value="telegram">Telegram</Select.Option>*!/*/}
-                        {/*        /!*        <Select.Option value="facebook">Facebook Messenger</Select.Option>*!/*/}
-                        {/*        /!*        <Select.Option value="slack">Slack</Select.Option>*!/*/}
-                        {/*        /!*    </Select>*!/*/}
-                        {/*        /!*    <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*        Выберите мессенджеры, с которыми будет интегрирована ваша платформа.*!/*/}
-                        {/*        /!*    </div>*!/*/}
-                        {/*        /!*</Form.Item>*!/*/}
-                        {/*        /!*<Form.Item label="Настройка автоматических ответов">*!/*/}
-                        {/*        /!*    <Form.Item label="Время ответа (в часах)">*!/*/}
-                        {/*        /!*        <InputNumber min={0} max={24} defaultValue={1} />*!/*/}
-                        {/*        /!*        <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*            Установите время в часах для автоматического ответа на запросы пользователей.*!/*/}
-                        {/*        /!*        </div>*!/*/}
-                        {/*        /!*    </Form.Item>*!/*/}
-                        {/*        /!*    <Form.Item label="Шаблон автоматического ответа">*!/*/}
-                        {/*        /!*        <Input.TextArea rows={4} placeholder="Введите шаблон автоматического ответа" />*!/*/}
-                        {/*        /!*        <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*            Определите текст автоматического ответа, который будет отправляться пользователям.*!/*/}
-                        {/*        /!*        </div>*!/*/}
-                        {/*        /!*    </Form.Item>*!/*/}
-                        {/*        /!*</Form.Item>*!/*/}
-                        {/*        /!*<Form.Item label="Статистика коммуникаций">*!/*/}
-                        {/*        /!*    <Form.Item label="Период статистики">*!/*/}
-                        {/*        /!*        <Select defaultValue="monthly">*!/*/}
-                        {/*        /!*            <Select.Option value="daily">Ежедневно</Select.Option>*!/*/}
-                        {/*        /!*            <Select.Option value="weekly">Еженедельно</Select.Option>*!/*/}
-                        {/*        /!*            <Select.Option value="monthly">Ежемесячно</Select.Option>*!/*/}
-                        {/*        /!*            <Select.Option value="quarterly">Ежеквартально</Select.Option>*!/*/}
-                        {/*        /!*        </Select>*!/*/}
-                        {/*        /!*        <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*            Выберите период, за который будет генерироваться статистика коммуникаций.*!/*/}
-                        {/*        /!*        </div>*!/*/}
-                        {/*        /!*    </Form.Item>*!/*/}
-                        {/*        /!*    <Form.Item label="Включить графики и отчеты">*!/*/}
-                        {/*        /!*        <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*!/*/}
-                        {/*        /!*        <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*            Включите отображение графиков и отчетов по коммуникациям для анализа.*!/*/}
-                        {/*        /!*        </div>*!/*/}
-                        {/*        /!*    </Form.Item>*!/*/}
-                        {/*        /!*</Form.Item>*!/*/}
-                        {/*        <Form.Item>*/}
-                        {/*            <Button type="primary">Сохранить изменения</Button>*/}
-                        {/*        </Form.Item>*/}
-                        {/*    </Form>*/}
-                        {/*</TabPane>*/}
-
-
-                        {/* Custom Branding */}
-                        {/*<TabPane tab="Кастомизация и брендинг" key="7">*/}
-                        {/*    <Form layout="vertical">*/}
-                        {/*        <Form.Item label="Тема по умолчанию">*/}
-                        {/*            <Select defaultValue="light">*/}
-                        {/*                <Select.Option value="light">Светлая</Select.Option>*/}
-                        {/*                <Select.Option value="dark">Тёмная</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Цветовая схема">*/}
-                        {/*            <Input placeholder="Введите цветовой код (например, #1890ff)" />*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Фоновое изображение">*/}
-                        {/*            <Input placeholder="Введите URL фонового изображения" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Загрузите фоновое изображение для страницы входа или основного экрана.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Шрифт по умолчанию">*/}
-                        {/*            <Select defaultValue="arial">*/}
-                        {/*                <Select.Option value="arial">Arial</Select.Option>*/}
-                        {/*                <Select.Option value="times">Times New Roman</Select.Option>*/}
-                        {/*                <Select.Option value="courier">Courier New</Select.Option>*/}
-                        {/*                <Select.Option value="roboto">Roboto</Select.Option>*/}
-                        {/*                <Select.Option value="open-sans">Open Sans</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Выберите шрифт по умолчанию для заголовков и текста на платформе.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Иконки и эмодзи">*/}
-                        {/*            <Select mode="multiple" placeholder="Выберите иконки">*/}
-                        {/*                <Select.Option value="home">Дом</Select.Option>*/}
-                        {/*                <Select.Option value="settings">Настройки</Select.Option>*/}
-                        {/*                <Select.Option value="user">Пользователь</Select.Option>*/}
-                        {/*                <Select.Option value="notification">Уведомление</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Выберите иконки для различных функций и разделов платформы.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Анимации и переходы">*/}
-                        {/*            <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Включите анимации и переходы для улучшения пользовательского опыта.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Кастомизация кнопок">*/}
-                        {/*            <Form.Item label="Форма кнопок">*/}
-                        {/*                <Select defaultValue="rounded">*/}
-                        {/*                    <Select.Option value="rounded">Закругленные углы</Select.Option>*/}
-                        {/*                    <Select.Option value="square">Прямоугольные</Select.Option>*/}
-                        {/*                </Select>*/}
-                        {/*            </Form.Item>*/}
-                        {/*            <Form.Item label="Цвет кнопок">*/}
-                        {/*                <Input placeholder="Введите цветовой код (например, #ff5733)" />*/}
-                        {/*            </Form.Item>*/}
-                        {/*            <Form.Item label="Иконки на кнопках">*/}
-                        {/*                <Select mode="multiple" placeholder="Выберите иконки для кнопок">*/}
-                        {/*                    <Select.Option value="save">Сохранить</Select.Option>*/}
-                        {/*                    <Select.Option value="edit">Редактировать</Select.Option>*/}
-                        {/*                    <Select.Option value="delete">Удалить</Select.Option>*/}
-                        {/*                </Select>*/}
-                        {/*            </Form.Item>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Предпросмотр изменений">*/}
-                        {/*            <Button type="default">Посмотреть изменения</Button>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Нажмите, чтобы просмотреть изменения в реальном времени.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item>*/}
-                        {/*            <Button type="primary">Сохранить изменения</Button>*/}
-                        {/*        </Form.Item>*/}
-                        {/*    </Form>*/}
-                        {/*</TabPane>*/}
-
-
-                        {/* Advanced Reporting */}
-                        {/*<TabPane tab="Расширенная аналитика" key="8">*/}
-                        {/*    <Form layout="vertical">*/}
-                        {/*        <Form.Item label="Настройка отчетов">*/}
-                        {/*            <Select mode="multiple" placeholder="Выберите типы отчетов">*/}
-                        {/*                <Select.Option value="user_activity">Активность пользователей</Select.Option>*/}
-                        {/*                /!*<Select.Option value="financial">Финансовые отчеты</Select.Option>*!/*/}
-                        {/*                <Select.Option value="course_performance">Эффективность курсов</Select.Option>*/}
-                        {/*                <Select.Option value="engagement">Уровень вовлеченности</Select.Option>*/}
-                        {/*                <Select.Option value="content_quality">Качество контента</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Выберите типы отчетов, которые вы хотите настраивать и просматривать.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item label="Частота отчетов">*/}
-                        {/*            <Select defaultValue="monthly">*/}
-                        {/*                <Select.Option value="daily">Ежедневно</Select.Option>*/}
-                        {/*                <Select.Option value="weekly">Еженедельно</Select.Option>*/}
-                        {/*                <Select.Option value="monthly">Ежемесячно</Select.Option>*/}
-                        {/*                <Select.Option value="quarterly">Ежеквартально</Select.Option>*/}
-                        {/*                <Select.Option value="yearly">Ежегодно</Select.Option>*/}
-                        {/*            </Select>*/}
-                        {/*            <div className="text-gray-500 mt-1">*/}
-                        {/*                Установите частоту, с которой будут генерироваться отчеты.*/}
-                        {/*            </div>*/}
-                        {/*        </Form.Item>*/}
-                        {/*        /!*<Form.Item label="Включить тепловые карты">*!/*/}
-                        {/*        /!*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*!/*/}
-                        {/*        /!*    <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*        Включение тепловых карт для визуализации активности пользователей на сайте.*!/*/}
-                        {/*        /!*    </div>*!/*/}
-                        {/*        /!*</Form.Item>*!/*/}
-                        {/*        /!*<Form.Item label="Настройка пороговых значений для уведомлений">*!/*/}
-                        {/*        /!*    <Form.Item label="Минимальный порог активности пользователей">*!/*/}
-                        {/*        /!*        <InputNumber min={0} defaultValue={100} />*!/*/}
-                        {/*        /!*        <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*            Установите минимальный порог для активности пользователей, при котором будут отправляться уведомления.*!/*/}
-                        {/*        /!*        </div>*!/*/}
-                        {/*        /!*    </Form.Item>*!/*/}
-                        {/*        /!*    <Form.Item label="Минимальный порог для финансовых показателей">*!/*/}
-                        {/*        /!*        <InputNumber min={0} defaultValue={5000} />*!/*/}
-                        {/*        /!*        <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*            Установите порог для финансовых показателей, при котором будут отправляться уведомления.*!/*/}
-                        {/*        /!*        </div>*!/*/}
-                        {/*        /!*    </Form.Item>*!/*/}
-                        {/*        /!*</Form.Item>*!/*/}
-                        {/*        /!*<Form.Item label="Включить прогнозные аналитические отчеты">*!/*/}
-                        {/*        /!*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*!/*/}
-                        {/*        /!*    <div className="text-gray-500 mt-1">*!/*/}
-                        {/*        /!*        Позволяет включить прогнозные отчеты для анализа будущих тенденций на основе исторических данных.*!/*/}
-                        {/*        /!*    </div>*!/*/}
-                        {/*        /!* </Form.Item> *!/*/}
-                        {/*        <Form.Item label="Параметры фильтрации данных">*/}
-                        {/*            <Form.Item label="Фильтр по дате">*/}
-                        {/*                <DatePicker.RangePicker />*/}
-                        {/*                <div className="text-gray-500 mt-1">*/}
-                        {/*                    Установите диапазон дат для фильтрации данных в отчетах.*/}
-                        {/*                </div>*/}
-                        {/*            </Form.Item>*/}
-                        {/*            /!*<Form.Item label="Фильтр по пользователям">*!/*/}
-                        {/*            /!*    <Select mode="multiple" placeholder="Выберите пользователей">*!/*/}
-                        {/*            /!*        <Select.Option value="user1">Пользователь 1</Select.Option>*!/*/}
-                        {/*            /!*        <Select.Option value="user2">Пользователь 2</Select.Option>*!/*/}
-                        {/*            /!*        <Select.Option value="user3">Пользователь 3</Select.Option>*!/*/}
-                        {/*            /!*    </Select>*!/*/}
-                        {/*            /!*    <div className="text-gray-500 mt-1">*!/*/}
-                        {/*            /!*        Выберите пользователей для фильтрации данных в отчетах.*!/*/}
-                        {/*            /!*    </div>*!/*/}
-                        {/*            /!*</Form.Item>*!/*/}
-                        {/*        </Form.Item>*/}
-                        {/*        <Form.Item>*/}
-                        {/*            <Button type="primary">Сохранить изменения</Button>*/}
-                        {/*        </Form.Item>*/}
-                        {/*    </Form>*/}
-                        {/*</TabPane>*/}
 
                         <TabPane tab="Управление модераторами" key="6">
                             <Form
@@ -923,8 +472,6 @@ const SettingsControlPage = () => {
                                 </Form.Item>
                             </Form>
                         </TabPane>
-
-
                     </Tabs>
                 }
             </div>
