@@ -18,6 +18,8 @@ import {
   Spin,
   Row,
   Col,
+  Checkbox,
+  InputNumber,
 } from "antd";
 import {
   UploadOutlined,
@@ -119,6 +121,7 @@ const ProfilePage = () => {
           }}
         >
           <Row gutter={16}>
+            {/* Поля для всех пользователей */}
             <Col xs={24} md={12}>
               <Form.Item
                 label="Имя"
@@ -169,48 +172,143 @@ const ProfilePage = () => {
                 </Select>
               </Form.Item>
             </Col>
+
+            {/* Настройки для всех пользователей */}
+            <Divider>Настройки аккаунта</Divider>
+            <Col xs={24} md={12}>
+              <Form.Item label="Смена пароля" name="password_change">
+                <Input.Password placeholder="Введите текущий пароль" />
+              </Form.Item>
+              <Form.Item name="new_password" rules={[{ required: true, message: "Введите новый пароль" }]}>
+                <Input.Password placeholder="Введите новый пароль" />
+              </Form.Item>
+              <Form.Item name="confirm_password" dependencies={['new_password']} rules={[{ required: true, message: "Подтвердите новый пароль" }]}>
+                <Input.Password placeholder="Подтвердите новый пароль" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Настройки уведомлений" name="notifications">
+                <Checkbox.Group
+                  options={[
+                    { label: 'E-mail уведомления', value: 'email_notifications' },
+                    { label: 'Push-уведомления', value: 'push_notifications' },
+                    { label: 'SMS уведомления', value: 'sms_notifications' },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Двухфакторная аутентификация (2FA)" name="two_factor_auth">
+                <Switch defaultChecked />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* Дополнительные поля для Администратора */}
+          <Divider>Администратор</Divider>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Управление доступом"
+                name="admin_access"
+                tooltip="Уровень или тип доступа администратора"
+              >
+                <Select placeholder="Выберите роль">
+                  <Select.Option value="super_admin">Супер-администратор</Select.Option>
+                  <Select.Option value="tech_admin">Технический администратор</Select.Option>
+                  <Select.Option value="content_admin">Контент-администратор</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Настройки аналитики"
+                name="analytics_settings"
+                tooltip="Разрешить или запретить доступ к аналитике"
+              >
+                <Switch defaultChecked />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Просмотр лога действий"
+                name="admin_log"
+              >
+                <Button>Открыть лог</Button>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* Дополнительные поля для Модератора */}
+          <Divider>Модератор</Divider>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Отчеты о нарушениях"
+                name="moderator_reports"
+              >
+                <Button>Просмотр отчетов</Button>
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Настройки работы с пользователями"
+                name="moderator_user_settings"
+              >
+                <Checkbox.Group
+                  options={[
+                    { label: 'Заблокировать пользователя', value: 'block_users' },
+                    { label: 'Выдать предупреждение', value: 'issue_warnings' },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Уведомления о контенте"
+                name="moderator_content_notifications"
+              >
+                <Checkbox.Group
+                  options={[
+                    { label: 'Новые курсы для проверки', value: 'new_courses' },
+                    { label: 'Новые комментарии для модерации', value: 'new_comments' },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          {/* Дополнительные поля для Создателя курсов */}
+          <Divider>Создатель курсов</Divider>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Управление курсами"
+                name="course_management"
+              >
+                <Button>Настроить курсы</Button>
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Настройки монетизации"
+                name="monetization_settings"
+              >
+                <Switch defaultChecked />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Поддержка студентов"
+                name="student_support"
+              >
+                <Switch defaultChecked />
+              </Form.Item>
+            </Col>
           </Row>
 
           <Form.Item label="О себе" name="bio">
             <Input.TextArea rows={4} placeholder="Расскажите немного о себе..." />
-          </Form.Item>
-
-          <Form.Item label="Цветовая схема" name="theme">
-            <Radio.Group>
-              <Radio value="light">Светлая</Radio>
-              <Radio value="dark">Тёмная</Radio>
-            </Radio.Group>
-          </Form.Item>
-
-          <Form.Item label="Профиль в социальных сетях">
-            <Input
-              prefix={<FacebookOutlined />}
-              placeholder="Ссылка на ваш профиль в Facebook"
-              className="mb-2"
-            />
-            <Input
-              prefix={<TwitterOutlined />}
-              placeholder="Ссылка на ваш профиль в Twitter"
-              className="mb-2"
-            />
-            <Input
-              prefix={<LinkedinOutlined />}
-              placeholder="Ссылка на ваш профиль в LinkedIn"
-              className="mb-2"
-            />
-            <Input
-              prefix={<InstagramOutlined />}
-              placeholder="Ссылка на ваш профиль в Instagram"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Уведомления"
-            name="notifications"
-            valuePropName="checked"
-            tooltip="Включите, чтобы получать уведомления о событиях в системе."
-          >
-            <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
           </Form.Item>
 
           <Divider />
@@ -228,6 +326,8 @@ const ProfilePage = () => {
             </Button>
           </Form.Item>
         </Form>
+
+
 
         {/* Password Change Modal */}
         {/* <Modal

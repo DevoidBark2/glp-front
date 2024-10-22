@@ -44,38 +44,38 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel"}>Главная</Link>,
         icon: <AppstoreOutlined />,
     },
-    // {
-    //     key: 'moderators_items',
-    //     type: "submenu",
-    //     label: 'Панель модератора',
-    //     icon: <ToolOutlined />,
-    //     children: [
-    //         {
-    //             key: 'manage-courses',
-    //             label: <Link href={"/control-panel/manage-courses"}>Управление курсами</Link>,
-    //             title: "Управление курсами",
-    //             icon: <BookOutlined />,
-    //         },
-    //         {
-    //             key: 'manage-sections',
-    //             label: <Link href={"/control-panel/manage-sections"}>Управление разделами</Link>,
-    //             title: "Управление разделами",
-    //             icon: <PartitionOutlined />,
-    //         },
-    //         {
-    //             key: 'manage-components',
-    //             label: <Link href={"/control-panel/manage-component"}>Управление компонентами</Link>,
-    //             title: "Управление компонентами",
-    //             icon: <SolutionOutlined />
-    //         },
-    //         {
-    //             key: 'manage-posts',
-    //             label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
-    //             title: "Управление компонентами",
-    //             icon: <SolutionOutlined />
-    //         },
-    //     ]
-    // },
+    {
+        key: 'moderators_items',
+        type: "submenu",
+        label: 'Панель модератора',
+        icon: <ToolOutlined />,
+        children: [
+            {
+                key: 'manage-courses',
+                label: <Link href={"/control-panel/manage-courses"}>Управление курсами</Link>,
+                title: "Управление курсами",
+                icon: <BookOutlined />,
+            },
+            {
+                key: 'manage-sections',
+                label: <Link href={"/control-panel/manage-sections"}>Управление разделами</Link>,
+                title: "Управление разделами",
+                icon: <PartitionOutlined />,
+            },
+            {
+                key: 'manage-components',
+                label: <Link href={"/control-panel/manage-component"}>Управление компонентами</Link>,
+                title: "Управление компонентами",
+                icon: <SolutionOutlined />
+            },
+            {
+                key: 'manage-posts',
+                label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
+                title: "Управление постами",
+                icon: <SolutionOutlined />
+            },
+        ]
+    },
     {
         key: 'courses-parent',
         label: 'Курсы',

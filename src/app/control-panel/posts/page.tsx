@@ -1,48 +1,79 @@
 "use client";
 import {
     Button,
+    Col,
     Form,
     Input,
     Modal,
     notification,
     Popconfirm,
+    Popover,
+    Row,
+    Select,
     Switch,
     Table,
     TableColumnsType,
     Tag,
     Tooltip,
+    Typography,
     UploadProps
 } from "antd";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Post } from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
     ClockCircleOutlined, CloseOutlined,
+    CrownOutlined,
     DeleteOutlined,
     EditOutlined,
     InboxOutlined,
     SyncOutlined,
-    UploadOutlined
+    UploadOutlined,
+    UserOutlined
 } from "@ant-design/icons";
 import dynamic from 'next/dynamic'
 import Dragger from "antd/es/upload/Dragger";
 import dayjs from "dayjs";
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import 'react-quill/dist/quill.snow.css';
-import { FILTER_STATUS_POST, FORMAT_VIEW_DATE } from "@/constants";
+import { FILTER_STATUS_POST, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/constants";
 import { useTheme } from "next-themes";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { postTable } from "@/tableConfig/postTable";
+import { getCookieUserDetails } from "@/lib/users";
+import { UserRole } from "@/enums/UserRoleEnum";
+import Link from "next/link";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
 )
 
+const UserCard = ({ user }) => (
+    <div className="p-4">
+        <Typography.Title level={5}>
+            {`${user.second_name} ${user.first_name} ${user.last_name}`}
+        </Typography.Title>
+        <Typography.Paragraph>
+            <strong>Email:</strong> {user.email}
+        </Typography.Paragraph>
+        <Typography.Paragraph>
+            <strong>Телефон:</strong> {user.phone}
+        </Typography.Paragraph>
+        <Link href={`/control-panel/users/${user.id}`}>
+            <Button type="link" style={{ paddingLeft: 0 }}>
+                Посмотреть профиль
+            </Button>
+        </Link>
+    </div>
+);
+
 const PostPage = () => {
     const { postStore } = useMobxStores();
+    const [currentUser, setCurrentUser] = useState(null);
     const [form] = Form.useForm();
+    const [modalVisible, setModalVisible] = useState(false)
 
     const props: UploadProps = {
         name: 'file',
@@ -104,6 +135,19 @@ const PostPage = () => {
         }
     };
 
+    const renderTooltipTitle = (record: Post) => {
+        switch (record.status) {
+            case PostStatusEnum.NEW:
+                return "Отправьте сначала на проверку и ожидайте подтверждения перед публикацией поста.";
+            case PostStatusEnum.IN_PROCESSING:
+                return "Ожидайте подтверждения модератором."
+            case PostStatusEnum.REJECT:
+                return "Пост был отклонен модератором,больше информации находится в форме редактирования поста."
+            case PostStatusEnum.APPROVED:
+                return "Пост успешно прошел проверку, Вы можете опубликовать данные пост."
+        }
+    }
+
     const columns: TableColumnsType<Post> = [
         {
             title: 'Название',
@@ -135,10 +179,49 @@ const PostPage = () => {
             dataIndex: "is_publish",
             render: (_, record) => (
                 <Tooltip
-                    title={record.status !== PostStatusEnum.ACTIVE ? "Отправьте сначала на проверку перед публикацией поста." : "Включите, чтобы опубликовать пост."}
+                    title={renderTooltipTitle(record)}
                 >
-                    <Switch disabled={record.status !== PostStatusEnum.ACTIVE} defaultChecked={record.is_publish} onChange={(checked) => console.log('Switch to:', checked)} />
+                    <Switch disabled={record.status !== PostStatusEnum.APPROVED} defaultChecked={record.is_publish} onChange={(checked) => console.log('Switch to:', checked)} />
                 </Tooltip>
+            ),
+        },
+        {
+            title: "Создатель",
+            dataIndex: "user",
+            hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
+            render: (_, record) => (
+                record.user.role === UserRole.SUPER_ADMIN ?
+                    <div> <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
+                        <Tooltip title="Перейти в профиль">
+                            <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
+                                Администратор
+                            </Tag>
+                        </Tooltip>
+                    </Link>
+                    </div> : <div>
+                        <Popover
+                            content={<UserCard user={record.user} />}
+                            title="Краткая информация"
+                            trigger="hover"
+                        >
+                            {/* Условие для отображения разных стилей для super_admin */}
+                            <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
+
+                            {record.user.role === UserRole.SUPER_ADMIN ? (
+                                // Специальное оформление для super_admin
+                                <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
+                                    <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
+                                        Super Admin
+                                    </Tag>
+                                </Link>
+                            ) : (
+                                // Обычный пользователь
+                                <Link href={`/control-panel/users/${record.user.id}`} className="hover:text-blue-500">
+                                    {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`}
+                                </Link>
+                            )}
+                        </Popover>
+                    </div>
             ),
         },
         {
@@ -190,7 +273,13 @@ const PostPage = () => {
     ];
     const { resolvedTheme } = useTheme()
 
+    useLayoutEffect(() => {
+        const user = getCookieUserDetails();
+        setCurrentUser(user);
+    }, [])
+
     useEffect(() => {
+
         postStore.getUserPosts();
     }, []);
 
@@ -241,6 +330,64 @@ const PostPage = () => {
                         <ReactQuill theme="snow" />
                     </Form.Item>
 
+                    {
+                        currentUser?.user.role === UserRole.SUPER_ADMIN && <Row gutter={16}>
+                            <Col span={8}>
+                                <Form.Item
+                                    label="Статус"
+                                    name="status"
+                                >
+                                    <Select
+                                        placeholder="Выберите статус"
+                                        style={{ width: '100%' }}
+                                    >
+                                        <Select.Option value={PostStatusEnum.NEW}>
+                                            <Tooltip title="Новый">
+                                                <Tag icon={<ClockCircleOutlined />} color="blue">
+                                                    Новый
+                                                </Tag>
+                                            </Tooltip>
+                                        </Select.Option>
+                                        <Select.Option value={PostStatusEnum.ACTIVE}>
+                                            <Tooltip title="Активный">
+                                                <Tag icon={<CheckCircleOutlined />} color="green">
+                                                    Активный
+                                                </Tag>
+                                            </Tooltip>
+                                        </Select.Option>
+                                        <Select.Option value={PostStatusEnum.REJECT}>
+                                            <Tooltip color="red">
+                                                <Tag color="red">Отклонен</Tag>
+                                            </Tooltip>
+                                        </Select.Option>
+
+                                        <Select.Option value={PostStatusEnum.IN_PROCESSING}>
+                                            <Tooltip title="В обработке">
+                                                <Tag icon={<SyncOutlined spin />} color="yellow">
+                                                    В обработке
+                                                </Tag>
+                                            </Tooltip>
+                                        </Select.Option>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                                <Form.Item
+                                    name="is_publish"
+                                    label="Опубликовать пост"
+                                    valuePropName="checked" // Это необходимо для корректного связывания с Switch
+                                >
+                                    <Switch
+                                        checkedChildren="Опубликован"
+                                        unCheckedChildren="Не опубликован"
+                                        defaultChecked={false}
+                                    />
+                                </Form.Item>
+                            </Col>
+
+                        </Row>
+
+                    }
                     <Form.Item
                         name="image"
                         label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Изображение поста</label>}

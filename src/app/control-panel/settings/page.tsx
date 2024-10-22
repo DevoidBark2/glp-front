@@ -173,14 +173,6 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                <Form.Item
-                                    label="Лимит на количество создаваемых курсов"
-                                    tooltip="Укажите максимальное количество курсов, которое может создать один пользователь."
-                                    name="course_creation_limit"
-                                >
-                                    <InputNumber min={1} max={50} placeholder="Введите лимит" style={{ width: '100%' }} />
-                                </Form.Item>
-
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
                                 </Form.Item>
@@ -202,6 +194,14 @@ const SettingsControlPage = () => {
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Лимит на количество создаваемых курсов"
+                                    tooltip="Укажите максимальное количество курсов, которое может создать один пользователь."
+                                    name="course_creation_limit"
+                                >
+                                    <InputNumber min={1} max={50} placeholder="Введите лимит" style={{ width: '100%' }} />
                                 </Form.Item>
 
                                 <Form.Item
@@ -341,7 +341,6 @@ const SettingsControlPage = () => {
                                 form={formForUserManagement}
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
-                                {/* Права доступа модераторов */}
                                 <Form.Item
                                     name="moderationAccess"
                                     label="Права доступа модераторов"
@@ -357,9 +356,6 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                {/* Новые настройки */}
-
-                                {/* Мониторинг активности модераторов */}
                                 <Form.Item
                                     name="activityMonitoring"
                                     label="Мониторинг активности модераторов"
@@ -369,88 +365,11 @@ const SettingsControlPage = () => {
                                         options={[
                                             { label: 'Отслеживать количество проверенных постов', value: 'track_reviewed_posts' },
                                             { label: 'Отслеживать отклоненные/одобренные курсы', value: 'track_courses' },
-                                            { label: 'Отслеживать время, потраченное на модерацию', value: 'track_time' },
-                                            { label: 'Отслеживать количество предупреждений', value: 'track_warnings' },
+                                            { label: 'Отслеживать количество выданных предупреждений пользователям', value: 'track_warnings_issued' },
                                         ]}
                                     />
                                     <div className="text-gray-500 mt-1">
                                         Включите нужные опции, чтобы получать статистику об активности модераторов.
-                                    </div>
-                                </Form.Item>
-
-                                {/* Автоматическое распределение задач */}
-                                <Form.Item
-                                    name="autoAssignment"
-                                    label="Автоматическое распределение задач"
-                                    tooltip="Настройте автоматическое распределение задач между модераторами."
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                    <div className="text-gray-500 mt-1">
-                                        При включении этой опции, система автоматически назначит посты и курсы для проверки модераторам в зависимости от их текущей нагрузки.
-                                    </div>
-                                </Form.Item>
-
-                                {/* Система мотивации модераторов */}
-                                <Form.Item
-                                    name="moderatorMotivation"
-                                    label="Система мотивации модераторов"
-                                    tooltip="Настройте систему мотивации для повышения активности модераторов."
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        allowClear
-                                        style={{ width: '100%' }}
-                                        placeholder="Выберите типы наград"
-                                        options={[
-                                            { label: 'Бейджи за активность', value: 'badges' },
-                                            { label: 'Премии за выполнение задач', value: 'bonuses' },
-                                            { label: 'Публикация в рейтинге модераторов', value: 'leaderboard' },
-                                            { label: 'Ежемесячный отчет о лучших модераторах', value: 'monthly_reports' },
-                                        ]}
-                                    />
-                                    <div className="text-gray-500 mt-1">
-                                        Выберите, каким образом вы хотите мотивировать модераторов для более активной работы.
-                                    </div>
-                                </Form.Item>
-
-                                {/* Установить индивидуальные лимиты для модераторов */}
-                                <Form.Item
-                                    name="individualLimits"
-                                    label="Установить индивидуальные лимиты"
-                                    tooltip="Настройте индивидуальные лимиты на количество постов/курсов, которые каждый модератор может проверить за день."
-                                >
-                                    <InputNumber min={1} max={100} placeholder="Лимит на проверку" style={{ width: '100%' }} />
-                                    <div className="text-gray-500 mt-1">
-                                        Установите максимальное количество проверок в день для каждого модератора.
-                                    </div>
-                                </Form.Item>
-
-                                {/* Автоматические напоминания модераторам */}
-                                <Form.Item
-                                    name="autoReminders"
-                                    label="Автоматические напоминания"
-                                    tooltip="Настройте автоматические напоминания модераторам о новых задачах или дедлайнах."
-                                >
-                                    <Radio.Group>
-                                        <Radio value="none">Отключено</Radio>
-                                        <Radio value="daily">Ежедневные напоминания</Radio>
-                                        <Radio value="weekly">Еженедельные напоминания</Radio>
-                                        <Radio value="deadline">Напоминания о приближении дедлайна</Radio>
-                                    </Radio.Group>
-                                    <div className="text-gray-500 mt-1">
-                                        Напоминания будут отправляться на указанный email или в чат модератора.
-                                    </div>
-                                </Form.Item>
-
-                                {/* Автоматическая блокировка при неактивности */}
-                                <Form.Item
-                                    name="autoBlockInactivity"
-                                    label="Автоматическая блокировка при неактивности"
-                                    tooltip="Настройте автоматическую блокировку модераторов при длительной неактивности."
-                                >
-                                    <InputNumber min={1} max={30} placeholder="Дни неактивности" style={{ width: '100%' }} />
-                                    <div className="text-gray-500 mt-1">
-                                        Укажите количество дней неактивности, после которых модератор будет временно заблокирован.
                                     </div>
                                 </Form.Item>
 
@@ -472,6 +391,7 @@ const SettingsControlPage = () => {
                                 </Form.Item>
                             </Form>
                         </TabPane>
+
                     </Tabs>
                 }
             </div>

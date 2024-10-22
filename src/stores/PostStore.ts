@@ -5,6 +5,7 @@ import { notification } from "antd"
 import dayjs, { Dayjs } from "dayjs";
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import { FORMAT_VIEW_DATE } from "@/constants";
+import { User } from "./UserStore";
 
 export type Post = {
     id: string;
@@ -16,6 +17,7 @@ export type Post = {
     is_publish: boolean;
     rejectReason?: string[];
     created_at: Date;
+    user: User
 }
 class PostStore {
     constructor() {
@@ -60,6 +62,13 @@ class PostStore {
         form.append('name', values.name)
         form.append('description', values.description);
         form.append('content', values.content)
+        if (values.status) {
+            form.append('status', values.status)
+        }
+
+        if (values.is_publish) {
+            form.append('is_publish', values.is_publish)
+        }
 
         return await POST(`/api/posts`, form).then(response => {
             runInAction(() => {
@@ -116,7 +125,7 @@ class PostStore {
     })
 }
 
-const postMapper = (post: Post) => {
+export const postMapper = (post: Post) => {
     return {
         id: post.id,
         name: post.name,
@@ -125,7 +134,8 @@ const postMapper = (post: Post) => {
         content: post.content,
         status: post.status,
         is_publish: post.is_publish,
-        created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate()
+        created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
+        user: post.user
     };
 }
 

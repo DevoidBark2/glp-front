@@ -14,6 +14,7 @@ import AvatarIconsStore from "@/stores/AvatarIconsStore";
 import UserProfileStore from "./UserProfileStore";
 import FeedBacksStore from "./FeedBacksStore";
 import AchievementsStore from "./AchievementsStore";
+import ModeratorStore from "./ModeratorStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -30,6 +31,7 @@ const userProfileStore = new UserProfileStore();
 const feedBacksStore = new FeedBacksStore();
 const statisticsStore = new StatisticsStore();
 const achievementsStore = new AchievementsStore();
+const moderatorStore = new ModeratorStore();
 
 export const RootStore = {
     userStore,
@@ -46,7 +48,8 @@ export const RootStore = {
     avatarIconsStore,
     userProfileStore,
     feedBacksStore,
-    achievementsStore
+    achievementsStore,
+    moderatorStore,
 };
 const StoreContext = React.createContext(RootStore);
 
