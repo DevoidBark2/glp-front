@@ -32,6 +32,7 @@ export type Course = {
     publish_date: Date
     user: Teacher
     status: StatusCourseEnum
+    sections: SectionCourseItem[]
 }
 
 export type TeacherCourse = {
@@ -47,11 +48,16 @@ class CourseStore {
 
     loadingCourses: boolean = false;
 
+    fullDetailCourse: Course | null = null
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
     loadingCourseDetails: boolean = true;
     successCreateCourseModal: boolean = false;
     courseDetailsSections: SectionCourseItem[] = [];
+
+    setFullDetailCourse = action((value: Course) => {
+        this.fullDetailCourse = value;
+    })
 
     setSuccessCreateCourseModal = action((value: boolean) => {
         this.successCreateCourseModal = value
@@ -156,6 +162,13 @@ class CourseStore {
         }).catch(e => {
             debugger
             notification.warning({ message: e.response.data.message })
+        })
+    })
+
+    getFullCourseById = action(async (id: number) => {
+        return await GET(`/api/full-course?courseId=${id}`).then(response => {
+            this.setFullDetailCourse(response.data);
+            return response.data;
         })
     })
 }

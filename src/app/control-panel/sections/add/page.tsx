@@ -23,16 +23,16 @@ import {
     CheckCircleOutlined,
     CodeOutlined,
     ProjectOutlined,
-    ReconciliationOutlined, EditOutlined,PlusCircleOutlined,ExportOutlined
+    ReconciliationOutlined, EditOutlined, PlusCircleOutlined, ExportOutlined
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
-import {CourseComponentType} from "@/enums/CourseComponentType";
-import {Course} from "@/stores/CourseStore";
-import {CourseComponentTypeI} from "@/stores/CourseComponent";
-import {useRouter} from "next/navigation";
+import { CourseComponentType } from "@/enums/CourseComponentType";
+import { Course } from "@/stores/CourseStore";
+import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import { useRouter } from "next/navigation";
 
 const SectionAddPage = () => {
-    const { courseStore,courseComponentStore,sectionCourseStore } = useMobxStores();
+    const { courseStore, courseComponentStore, sectionCourseStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
     const [current, setCurrent] = useState(0);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
@@ -49,7 +49,7 @@ const SectionAddPage = () => {
             dataIndex: 'title',
             key: 'title',
             ellipsis: true,
-            render: (text: string,record) => (
+            render: (text: string, record) => (
                 <Tooltip title={`Перейти к компоненту: ${text}`}>
                     <Link href={`/control-panel/tasks/${record.id}`} target="_blank">
                         {text}
@@ -63,9 +63,9 @@ const SectionAddPage = () => {
             key: 'type',
             render: (value, record) => (
                 <span style={{ display: 'flex', alignItems: 'center' }}>
-                {typeIcons[record.type]}
+                    {typeIcons[record.type]}
                     <span style={{ marginLeft: 8 }}>{value}</span>
-            </span>
+                </span>
             ),
         },
         {
@@ -94,13 +94,13 @@ const SectionAddPage = () => {
         [CourseComponentType.Matching]: <ReconciliationOutlined style={{ color: '#2f54eb' }} />,
         [CourseComponentType.Sequencing]: <EditOutlined style={{ color: '#13c2c2' }} />,
     };
-    const handleSearch = (value:string) => {
+    const handleSearch = (value: string) => {
         if (value && value.length > 2) {
-             courseComponentStore.searchComponents(value);
+            courseComponentStore.searchComponents(value);
         }
     };
 
-    const handleSelect = (value:string,option:any) => {
+    const handleSelect = (value: string, option: any) => {
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
         if (selectedComponent) {
             courseComponentStore.addComponentToTable(selectedComponent);
@@ -148,7 +148,8 @@ const SectionAddPage = () => {
                     name="courseId"
                 >
                     <List
-                        locale={{emptyText: <Empty description="Список пуст">
+                        locale={{
+                            emptyText: <Empty description="Список пуст">
                                 <Button
                                     className="flex items-center justify-center transition-transform transform hover:scale-105"
                                     type="primary"
@@ -169,9 +170,9 @@ const SectionAddPage = () => {
                                         key={item.id}
                                         title={<div className="flex justify-between">
                                             <p>{item.name}</p>
-                                            <Button 
-                                                icon={<ExportOutlined />} 
-                                                title="Перейти к курсу" 
+                                            <Button
+                                                icon={<ExportOutlined />}
+                                                title="Перейти к курсу"
                                                 onClick={(event) => {
                                                     event.preventDefault();
                                                     router.push(`/control-panel/courses/${item.id}`)
@@ -214,9 +215,9 @@ const SectionAddPage = () => {
                     <Form.Item
                         name="name"
                         label="Название раздела"
-                        rules={[{required: true, message: "Введите название раздела!"}]}
+                        rules={[{ required: true, message: "Введите название раздела!" }]}
                     >
-                        <Input placeholder="Введите название раздела..."/>
+                        <Input placeholder="Введите название раздела..." />
                     </Form.Item>
 
                     <Form.Item
@@ -225,7 +226,7 @@ const SectionAddPage = () => {
                     >
                         <TextArea
                             placeholder="Введите описание раздела..."
-                            autoSize={{minRows: 3, maxRows: 6}}
+                            autoSize={{ minRows: 3, maxRows: 6 }}
                         />
                     </Form.Item>
 
@@ -235,7 +236,7 @@ const SectionAddPage = () => {
                         tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
                     >
                         <Upload beforeUpload={() => false}>
-                            <Button icon={<UploadOutlined/>}>Загрузить файл</Button>
+                            <Button icon={<UploadOutlined />}>Загрузить файл</Button>
                         </Upload>
                     </Form.Item>
 
@@ -285,42 +286,42 @@ const SectionAddPage = () => {
             title: "Содержимое раздела",
             content: (
                 <div className="flex">
-                   <div className="w-1/4">
-                   <AutoComplete
-                        style={{ width: '100%' }}
-                        onSearch={handleSearch}
-                        onSelect={handleSelect}
-                        options={
-                            courseComponentStore.searchResults.length > 0
-                            ? courseComponentStore.searchResults.map(component => ({
-                                value: component.title,
-                                label: (
-                                    <div className="flex items-center p-2 border-b-2">
-                                    <div style={{ flex: 1 }}>
-                                        <strong>{component.title}</strong>
-                                        <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
-                                    </div>
-                                    <div style={{ marginLeft: '8px' }}>
-                                        {renderType(component.type)}
-                                    </div>
-                                    </div>
-                                ),
-                                key: component.id.toString(),
-                                }))
-                            : [
-                                {
-                                    value: 'empty',
-                                    label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
-                                    disabled: true,
-                                },
-                                ]
-                        }
-                        placeholder="Введите название или тег..."
+                    <div className="w-1/4">
+                        <AutoComplete
+                            style={{ width: '100%' }}
+                            onSearch={handleSearch}
+                            onSelect={handleSelect}
+                            options={
+                                courseComponentStore.searchResults.length > 0
+                                    ? courseComponentStore.searchResults.map(component => ({
+                                        value: component.title,
+                                        label: (
+                                            <div className="flex items-center p-2 border-b-2">
+                                                <div style={{ flex: 1 }}>
+                                                    <strong>{component.title}</strong>
+                                                    <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
+                                                </div>
+                                                <div style={{ marginLeft: '8px' }}>
+                                                    {renderType(component.type)}
+                                                </div>
+                                            </div>
+                                        ),
+                                        key: component.id.toString(),
+                                    }))
+                                    : [
+                                        {
+                                            value: 'empty',
+                                            label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
+                                            disabled: true,
+                                        },
+                                    ]
+                            }
+                            placeholder="Введите название или тег..."
                         >
-                        <Input.Search />
-                    </AutoComplete>
+                            <Input.Search />
+                        </AutoComplete>
 
-                   </div>
+                    </div>
                     <div className="w-3/4 ml-5">
                         <Form.Item
                             name="components"
@@ -332,14 +333,14 @@ const SectionAddPage = () => {
                                 columns={columns}
                             />
                         </Form.Item>
-                  </div>
+                    </div>
                 </div>
             ),
         }
     ];
 
     const next = async () => {
-        if(current === 0 && !selectedCourseId) {
+        if (current === 0 && !selectedCourseId) {
             message.warning("Выберите курс!")
             return;
         }
@@ -354,12 +355,12 @@ const SectionAddPage = () => {
     const prev = () => setCurrent(current - 1);
 
     const onFinish = () => {
-        const values =createSectionForm.getFieldsValue(true)
+        const values = createSectionForm.getFieldsValue(true)
         if (!values.components || values.components.length === 0) {
             message.warning("добавь что нибудь")
         }
         sectionCourseStore.addSection(values).then((response) => {
-            notification.success({message: response.response.message})
+            notification.success({ message: response.message })
             router.push("/control-panel/sections");
         })
     };

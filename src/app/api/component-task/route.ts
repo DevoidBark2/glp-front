@@ -22,20 +22,17 @@ export async function GET(req: NextRequest) {
 
 
 export async function POST(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const token = searchParams.get('token');
-
-    const data = await req.json();
+    const token = req.headers.get('authorization');
+    const body = await req.json();
 
     try {
-        const response = await axios.post(nextConfig.env?.API_URL + `api/component-task`, data, {
+        const { data } = await axios.post(nextConfig.env?.API_URL + `api/component-task`, body, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data, { status: error.response.status })
@@ -43,20 +40,17 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    const { searchParams } = new URL(req.url);
-    const token = searchParams.get('token');
-
-    const data = await req.json();
+    const token = req.headers.get('authorization');
+    const body = await req.json();
 
     try {
-        const response = await axios.put(nextConfig.env?.API_URL + `api/component-task`, data, {
+        const { data } = await axios.put(nextConfig.env?.API_URL + `api/component-task`, body, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data, { status: error.response.status })

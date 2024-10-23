@@ -37,10 +37,9 @@ class CourseComponent {
     })
 
     addComponentCourse = action(async (values: CourseComponentTypeI) => {
-        const token = getUserToken();
-        await POST(`/api/component-task?token=${token}`, values).then(response => {
-            this.courseComponents = [...this.courseComponents, componentTaskMapper(response.response.data.component)]
-            notification.success({ message: response.response.data.message })
+        await POST(`/api/component-task`, values).then(response => {
+            this.courseComponents = [...this.courseComponents, componentTaskMapper(response.data.component)]
+            notification.success({ message: response.data.message })
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         })
@@ -57,9 +56,8 @@ class CourseComponent {
     })
 
     changeComponent = action(async (values: CourseComponentTypeI) => {
-        const token = getUserToken();
-        await PUT(`/api/component-task?token=${token}`, values).then(response => {
-            notification.success({ message: response.response.message })
+        await PUT(`/api/component-task`, values).then(response => {
+            notification.success({ message: response.message })
             const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
             this.courseComponents[changedComponentIndex] = values;
             this.courseComponents = [...this.courseComponents];

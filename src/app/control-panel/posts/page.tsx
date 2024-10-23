@@ -163,6 +163,7 @@ const PostPage = () => {
             dataIndex: 'created_at',
             width: '20%',
             title: 'Дата публикации',
+            showSorterTooltip: false,
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
             render: (value) => <p className="dark:text-white">{dayjs(value).format(FORMAT_VIEW_DATE)}</p>
         },

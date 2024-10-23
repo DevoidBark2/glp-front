@@ -146,10 +146,28 @@ const TaskPage = () => {
         },
     ];
 
+    const [options, setOptions] = useState<Record<number, string[]>>({}); // Состояние для хранения вариантов ответов для каждого вопроса
+
+    const handleValuesChange = (_, allValues) => {
+        const updatedOptions = allValues.questions?.reduce((acc, question, index) => {
+            acc[index] = question?.options || [];
+            return acc;
+        }, {});
+
+        setOptions(updatedOptions || {});
+    };
+
     const handleChangeComponentTask = (record: CourseComponentTypeI) => {
         setChangedComponent(record.id)
         setTypeTask(record.type);
         form.setFieldsValue(record);
+        const extractedOptions = record.questions?.reduce((acc, question, index) => {
+            acc[index] = question?.options || [];  // Проверка на существование options
+            return acc;
+        }, {});
+
+        // Устанавливаем options в state
+        setOptions(extractedOptions || {})
         setIsModalVisible(true)
     }
 
@@ -234,9 +252,7 @@ const TaskPage = () => {
                     layout="vertical"
                     form={form}
                     onFinish={onFinish}
-                    onValuesChange={() => {
-                        form.validateFields();
-                    }}
+                    onValuesChange={handleValuesChange}
                 >
                     <Form.Item name="id" hidden></Form.Item>
                     <Form.Item
@@ -398,19 +414,15 @@ const TaskPage = () => {
                                                     )}
                                                 </Form.List>
 
-                                                <Form.Item
-                                                    label="Правильный ответ"
-                                                    name={[name, 'correctOption']}
-                                                >
+                                                <Form.Item label="Правильный ответ" name={[name, 'correctOption']}>
                                                     <Select placeholder="Выберите правильный ответ">
-                                                        {form.getFieldValue(['questions', qIndex, 'options'])?.map((option: string, index: number) => (
+                                                        {options[qIndex]?.map((option: string, index: number) => (
                                                             <Select.Option key={index} value={index}>
                                                                 {option}
                                                             </Select.Option>
                                                         ))}
                                                     </Select>
                                                 </Form.Item>
-
 
                                                 <Button
                                                     type="link"
