@@ -43,29 +43,22 @@ const ReactQuill = dynamic(
     { ssr: false }
 )
 
+interface WarningModalType {
+    data: CourseComponentTypeI;
+    message: string;
+}
 const TaskPage = () => {
     const { courseComponentStore } = useMobxStores()
     const [form] = Form.useForm();
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
     const [changedComponent, setChangedComponent] = useState<number | null>(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [previewVisible, setPreviewVisible] = useState(false);
-    const [previewContent, setPreviewContent] = useState<CourseComponentTypeI | null>(null);
-
-    const handlePreview = (record: CourseComponentTypeI) => {
-        setPreviewContent(record);
-        setPreviewVisible(true);
-    };
 
     const handleTypeChange = (value: CourseComponentType) => {
         setTypeTask(value);
     };
 
-    const languages = [
-        { value: 'javascript', label: 'JavaScript' },
-        { value: 'python', label: 'Python' },
-        { value: 'java', label: 'Java' }
-    ];
+    const [warningModal, setWarningModal] = useState<WarningModalType | null>(null);
 
     const typeIcons = {
         [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
@@ -128,13 +121,6 @@ const TaskPage = () => {
             align: 'start',
             render: (_, record) => (
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                    <Tooltip title="Предварительный просмотр">
-                        <Button
-                            type="default"
-                            icon={<EyeOutlined />}
-                            onClick={() => handlePreview(record)}
-                        />
-                    </Tooltip>
                     <Tooltip title="Редактировать компонент">
                         <Button
                             type="default"
@@ -173,6 +159,14 @@ const TaskPage = () => {
             return;
         }
 
+        if (values.type === CourseComponentType.Text && !values.content_description) {
+            setWarningModal({
+                data: values, // передаем данные
+                message: "Для текстового типа контент должен содержать описание!" // сообщение
+            });
+            return;
+        }
+        debugger
         changedComponent ? courseComponentStore.changeComponent(values).finally(() => {
             setIsModalVisible(false)
         }) :
@@ -182,9 +176,6 @@ const TaskPage = () => {
                 setIsModalVisible(false)
             });
     }
-
-
-
 
     useEffect(() => {
         courseComponentStore.getAllComponent();
@@ -209,6 +200,25 @@ const TaskPage = () => {
             </div>
 
             <Modal
+                open={!!warningModal}
+                onCancel={() => setWarningModal(null)}
+                onOk={() => {
+                    courseComponentStore.addComponentCourse(warningModal!.data).finally(() => {
+                        setWarningModal(null)
+                        form.resetFields();
+                        setTypeTask(null)
+                        setIsModalVisible(false)
+                    });
+                }}
+                centered
+            >
+                <div className="text-center">
+                    <h2 className="text-lg font-bold mb-2">Предупреждение</h2>
+                    <p>{warningModal?.message}</p>
+                </div>
+            </Modal>
+
+            <Modal
                 title="Новый компонент"
                 open={isModalVisible}
                 onCancel={() => {
@@ -224,6 +234,9 @@ const TaskPage = () => {
                     layout="vertical"
                     form={form}
                     onFinish={onFinish}
+                    onValuesChange={() => {
+                        form.validateFields();
+                    }}
                 >
                     <Form.Item name="id" hidden></Form.Item>
                     <Form.Item
@@ -237,8 +250,8 @@ const TaskPage = () => {
                         >
                             <Select.Option value={CourseComponentType.Text}>Текст</Select.Option>
                             <Select.Option value={CourseComponentType.Quiz}>Квиз</Select.Option>
-                            <Select.Option value={CourseComponentType.Coding}>Программирование</Select.Option>
-                            {/*<Select.Option value={CourseComponentType.MultiPlayChoice}>Выбор ответа</Select.Option>*/}
+                            {/* <Select.Option value={CourseComponentType.Coding}>Программирование</Select.Option> */}
+                            <Select.Option value={CourseComponentType.MultiPlayChoice}>Выбор ответа</Select.Option>
                             {/*<Select.Option value={CourseComponentType.Matching}>Соответствие</Select.Option>*/}
                             {/*<Select.Option value={CourseComponentType.Sequencing}>Последовательность</Select.Option>*/}
                         </Select>
@@ -271,6 +284,7 @@ const TaskPage = () => {
                             >
                                 <Input placeholder="Введите заголовок" />
                             </Form.Item>
+
                             <Form.Item
                                 name="tags"
                                 label="Теги"
@@ -288,6 +302,7 @@ const TaskPage = () => {
                                     options={[]}
                                 />
                             </Form.Item>
+
                             <Form.Item
                                 name="content_description"
                                 label="Содержание"
@@ -299,15 +314,33 @@ const TaskPage = () => {
                     {typeTask === CourseComponentType.Quiz && (
                         <>
                             <Form.Item
-                                label="Заголовок компонента"
-                                name={['title']}
+                                label="Заголовок"
+                                name="title"
                             >
-                                <Input placeholder="Введите заголовок компонента" />
+                                <Input placeholder="Введите заголовок" />
+                            </Form.Item>
+
+                            <Form.Item
+                                name="tags"
+                                label="Теги"
+                                rules={[{ required: true, message: 'Пожалуйста, добавьте хотя бы один тег!' }]}
+                            >
+                                <Select
+                                    mode="tags"
+                                    style={{ width: '100%' }}
+                                    placeholder="Введите тег и нажмите Enter"
+                                    tagRender={({ label, closable, onClose }) => (
+                                        <Tag closable={closable} onClose={onClose} style={{ margin: 2 }}>
+                                            {label}
+                                        </Tag>
+                                    )}
+                                    options={[]}
+                                />
                             </Form.Item>
 
                             <Form.Item
                                 label="Описание компонента"
-                                name={['description']}
+                                name="description"
                             >
                                 <Input.TextArea placeholder="Введите описание компонента" />
                             </Form.Item>
@@ -369,14 +402,15 @@ const TaskPage = () => {
                                                     label="Правильный ответ"
                                                     name={[name, 'correctOption']}
                                                 >
-                                                    {/*<Select placeholder="Выберите правильный ответ">*/}
-                                                    {/*    {form.getFieldValue(['questions', qIndex, 'options'])?.map((option, index) => (*/}
-                                                    {/*        <Select.Option key={index} value={index}>*/}
-                                                    {/*            {option}*/}
-                                                    {/*        </Select.Option>*/}
-                                                    {/*    ))}*/}
-                                                    {/*</Select>*/}
+                                                    <Select placeholder="Выберите правильный ответ">
+                                                        {form.getFieldValue(['questions', qIndex, 'options'])?.map((option: string, index: number) => (
+                                                            <Select.Option key={index} value={index}>
+                                                                {option}
+                                                            </Select.Option>
+                                                        ))}
+                                                    </Select>
                                                 </Form.Item>
+
 
                                                 <Button
                                                     type="link"
@@ -401,75 +435,6 @@ const TaskPage = () => {
                             </Form.List>
                         </>
                     )}
-
-                    {typeTask === CourseComponentType.Coding && (
-                        <>
-                            <Form.Item label="Выберите язык программирования" required>
-                                <Select
-                                // onChange={handleLanguageChange}
-                                >
-                                    {languages.map(lang => (
-                                        <Select.Option key={lang.value} value={lang.value}>
-                                            {lang.label}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                            {/*<Form.Item label="Код задания">*/}
-                            {/*    <CodeMirror*/}
-                            {/*        value={newTask.code}*/}
-                            {/*        options={{*/}
-                            {/*            mode: newTask.languages,*/}
-                            {/*            lineNumbers: true,*/}
-                            {/*            theme: 'material',*/}
-                            {/*        }}*/}
-                            {/*        onBeforeChange={(editor, data, value) => {*/}
-                            {/*            setNewTask({ ...newTask, code: value });*/}
-                            {/*        }}*/}
-                            {/*    />*/}
-                            {/*</Form.Item>*/}
-                        </>
-                    )}
-
-                    {/*{newTask.type === 'multiple-choice' && (*/}
-                    {/*    <Form.Item label="Варианты ответов">*/}
-                    {/*        /!* Implement multiple-choice form elements here *!/*/}
-                    {/*        <Input.TextArea*/}
-                    {/*            placeholder="Введите варианты ответов"*/}
-                    {/*            value={newTask.options.join('\n')}*/}
-                    {/*            onChange={(e) => setNewTask({...newTask, options: e.target.value.split('\n')})}*/}
-                    {/*        />*/}
-                    {/*        <Form.Item label="Правильные ответы">*/}
-                    {/*            <Input.TextArea*/}
-                    {/*                placeholder="Введите правильные ответы (по одному на строку)"*/}
-                    {/*                value={newTask.correctAnswers.join('\n')}*/}
-                    {/*                onChange={(e) => setNewTask({...newTask, correctAnswers: e.target.value.split('\n')})}*/}
-                    {/*            />*/}
-                    {/*        </Form.Item>*/}
-                    {/*    </Form.Item>*/}
-                    {/*)}*/}
-
-                    {/*{newTask.type === 'matching' && (*/}
-                    {/*    <Form.Item label="Соответствия">*/}
-                    {/*        /!* Implement matching form elements here *!/*/}
-                    {/*        <Input.TextArea*/}
-                    {/*            placeholder="Введите пары соответствий"*/}
-                    {/*            value={newTask.matching.join('\n')}*/}
-                    {/*            onChange={(e) => setNewTask({...newTask, matching: e.target.value.split('\n')})}*/}
-                    {/*        />*/}
-                    {/*    </Form.Item>*/}
-                    {/*)}*/}
-
-                    {/*{newTask.type === 'sequencing' && (*/}
-                    {/*    <Form.Item label="Последовательность">*/}
-                    {/*        /!* Implement sequencing form elements here *!/*/}
-                    {/*        <Input.TextArea*/}
-                    {/*            placeholder="Введите элементы последовательности"*/}
-                    {/*            value={newTask.sequence.join('\n')}*/}
-                    {/*            onChange={(e) => setNewTask({...newTask, sequence: e.target.value.split('\n')})}*/}
-                    {/*        />*/}
-                    {/*    </Form.Item>*/}
-                    {/*)}*/}
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit">{changedComponent ? "Изменить" : "Добавить"}</Button>
