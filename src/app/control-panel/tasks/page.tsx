@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import {
     Button,
+    Checkbox,
     Col,
-    Divider,
     Form,
     Input,
     message,
@@ -22,8 +22,6 @@ import {
     CodeOutlined,
     DeleteOutlined,
     EditOutlined,
-    EyeOutlined, MoreOutlined,
-    PlusCircleOutlined,
     PlusOutlined,
     ProjectOutlined,
     ReconciliationOutlined,
@@ -53,12 +51,8 @@ const TaskPage = () => {
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
     const [changedComponent, setChangedComponent] = useState<number | null>(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
-
-    const handleTypeChange = (value: CourseComponentType) => {
-        setTypeTask(value);
-    };
-
     const [warningModal, setWarningModal] = useState<WarningModalType | null>(null);
+    const [options, setOptions] = useState<Record<number, string[]>>({});
 
     const typeIcons = {
         [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
@@ -146,8 +140,6 @@ const TaskPage = () => {
         },
     ];
 
-    const [options, setOptions] = useState<Record<number, string[]>>({}); // Состояние для хранения вариантов ответов для каждого вопроса
-
     const handleValuesChange = (_, allValues) => {
         const updatedOptions = allValues.questions?.reduce((acc, question, index) => {
             acc[index] = question?.options || [];
@@ -162,7 +154,7 @@ const TaskPage = () => {
         setTypeTask(record.type);
         form.setFieldsValue(record);
         const extractedOptions = record.questions?.reduce((acc, question, index) => {
-            acc[index] = question?.options || [];  // Проверка на существование options
+            acc[index] = question?.options || [];
             return acc;
         }, {});
 
@@ -179,8 +171,8 @@ const TaskPage = () => {
 
         if (values.type === CourseComponentType.Text && !values.content_description) {
             setWarningModal({
-                data: values, // передаем данные
-                message: "Для текстового типа контент должен содержать описание!" // сообщение
+                data: values,
+                message: "Для текстового типа контент должен содержать описание!"
             });
             return;
         }
@@ -262,12 +254,12 @@ const TaskPage = () => {
                     >
                         <Select
                             placeholder="Выберите тип задания"
-                            onChange={handleTypeChange}
+                            onChange={(value: CourseComponentType) => setTypeTask(value)}
                         >
                             <Select.Option value={CourseComponentType.Text}>Текст</Select.Option>
                             <Select.Option value={CourseComponentType.Quiz}>Квиз</Select.Option>
                             {/* <Select.Option value={CourseComponentType.Coding}>Программирование</Select.Option> */}
-                            <Select.Option value={CourseComponentType.MultiPlayChoice}>Выбор ответа</Select.Option>
+                            <Select.Option value={CourseComponentType.MultiPlayChoice}>Множестенный выбор</Select.Option>
                             {/*<Select.Option value={CourseComponentType.Matching}>Соответствие</Select.Option>*/}
                             {/*<Select.Option value={CourseComponentType.Sequencing}>Последовательность</Select.Option>*/}
                         </Select>
@@ -447,6 +439,145 @@ const TaskPage = () => {
                             </Form.List>
                         </>
                     )}
+
+                    {typeTask === CourseComponentType.MultiPlayChoice && (
+                        <div className="multi-choice-container">
+
+                            <Form.Item
+                                label="Заголовок"
+                                name="title"
+                            >
+                                <Input placeholder="Введите заголовок" />
+                            </Form.Item>
+
+                            <Form.Item
+                                name="tags"
+                                label="Теги"
+                                rules={[{ required: true, message: 'Пожалуйста, добавьте хотя бы один тег!' }]}
+                            >
+                                <Select
+                                    mode="tags"
+                                    style={{ width: '100%' }}
+                                    placeholder="Введите тег и нажмите Enter"
+                                    tagRender={({ label, closable, onClose }) => (
+                                        <Tag closable={closable} onClose={onClose} style={{ margin: 2 }}>
+                                            {label}
+                                        </Tag>
+                                    )}
+                                    options={[]}
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Описание компонента"
+                                name="description"
+                            >
+                                <Input.TextArea placeholder="Введите описание компонента" />
+                            </Form.Item>
+
+                            <h3>Вопрос с множественным выбором</h3>
+
+                            <Form.List name={['questions']}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map(({ key, name, ...restField }, qIndex) => (
+                                            <div
+                                                key={key}
+                                                style={{ marginBottom: 16, padding: 10, border: '1px solid #d9d9d9', borderRadius: 4 }}
+                                            >
+                                                {/* Вопрос */}
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name, 'question']}
+                                                    label={`Вопрос ${qIndex + 1}`}
+                                                    rules={[{ required: true, message: 'Введите вопрос' }]}
+                                                >
+                                                    <Input placeholder="Введите вопрос" />
+                                                </Form.Item>
+
+                                                {/* Варианты ответов */}
+                                                <Form.List name={[name, 'options']}>
+                                                    {(optionFields, { add: addOption, remove: removeOption }) => (
+                                                        <>
+                                                            {optionFields.map((optionField, oIndex) => (
+                                                                <Row gutter={8} align="stretch" key={optionField.key}>
+                                                                    <Col flex="auto">
+                                                                        <Form.Item
+                                                                            {...optionField}
+                                                                            name={[optionField.name]}
+                                                                            rules={[{ required: true, message: 'Введите вариант ответа' }]}
+                                                                        >
+                                                                            <Input placeholder={`Вариант ${oIndex + 1}`} />
+                                                                        </Form.Item>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <Button
+                                                                            type="text"
+                                                                            icon={<DeleteOutlined />}
+                                                                            onClick={() => removeOption(optionField.name)}
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                            ))}
+                                                            <Button
+                                                                type="dashed"
+                                                                className="mb-4"
+                                                                icon={<PlusOutlined />}
+                                                                onClick={() => addOption()}
+                                                                style={{ marginTop: 8 }}
+                                                            >
+                                                                Добавить вариант ответа
+                                                            </Button>
+                                                        </>
+                                                    )}
+                                                </Form.List>
+
+                                               {/* Выбор правильного ответа */}
+                                                <Form.Item
+                                                    label="Правильный ответ(ы)"
+                                                    name={[name, 'correctOptions']}
+                                                    rules={[{ required: true, message: 'Пожалуйста, выберите правильный ответ(ы)' }]}
+                                                >
+                                                    <Checkbox.Group>
+                                                        <div className="flex flex-col">
+                                                            {form.getFieldValue(['questions', qIndex, 'options'])?.map((option, index) => (
+                                                                <Checkbox key={index} value={index}>
+                                                                    <div className="option-box">
+                                                                        <span className="option-text">{option}</span>
+                                                                    </div>
+                                                                </Checkbox>
+                                                            ))}
+                                                        </div>
+                                                    </Checkbox.Group>
+                                                </Form.Item>
+
+
+                                                {/* Удаление вопроса */}
+                                                <Button
+                                                    type="link"
+                                                    icon={<DeleteOutlined />}
+                                                    onClick={() => remove(name)}
+                                                    style={{ marginTop: 8 }}
+                                                >
+                                                    Удалить вопрос
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        {/* Кнопка для добавления нового вопроса */}
+                                        <Button
+                                            className="mb-4"
+                                            type="dashed"
+                                            icon={<PlusOutlined />}
+                                            onClick={() => add()}
+                                        >
+                                            Добавить вопрос
+                                        </Button>
+                                    </>
+                                )}
+                            </Form.List>
+                        </div>
+                    )}
+
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit">{changedComponent ? "Изменить" : "Добавить"}</Button>

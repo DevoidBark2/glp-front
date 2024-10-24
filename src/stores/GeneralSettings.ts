@@ -21,6 +21,7 @@ type GeneralSettingsType = {
     max_upload_file_size: number;
     moderation_review_course: boolean;
     moderation_new_course: boolean;
+    allow_extra_materials: boolean
 }
 
 export class GeneralSettings {
@@ -29,13 +30,21 @@ export class GeneralSettings {
     }
 
     loading: boolean = true;
+    generalSettings: GeneralSettingsType | null = null;
 
+    setGeneralSetting = action((value: GeneralSettingsType) => {
+        this.generalSettings = value;
+    })
     setLoading = action((value: boolean) => {
         this.loading = value;
     })
 
     getGeneralSettings = action(async () => {
-        return await GET(`/api/general-settings`);
+     
+        const response = await GET(`/api/general-settings`)
+        debugger
+        this.setGeneralSetting(response.data[0])
+        return response;
     })
 
     saveGeneralSetting = action(async (values:any) => {

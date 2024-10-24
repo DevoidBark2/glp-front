@@ -7,6 +7,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined, BookOutlined, CheckOutlined, Dow
 import { useMobxStores } from "@/stores/stores";
 import { CourseComponentType } from "@/enums/CourseComponentType";
 import { Header } from "antd/es/layout/layout";
+import { CourseComponentTypeI } from "@/stores/CourseComponent";
 
 const { Sider, Content } = Layout;
 const { TextArea } = Input;
@@ -119,6 +120,102 @@ const QuizComponent = ({ quiz }) => {
     );
 };
 
+type Question = {
+    question: string;
+    options: string[];
+    correctOptions: number[];
+};
+
+type QuizProps = {
+    quiz: CourseComponentTypeI
+};
+
+const QuizMultiComponent: React.FC<QuizProps> = ({ quiz }) => {
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]); // Храним выбранные ответы
+    const [showResults, setShowResults] = useState<boolean>(false);
+
+    const handleOptionChange = (index: number) => {
+        setSelectedAnswers((prevAnswers) => {
+            if (prevAnswers.includes(index)) {
+                return prevAnswers.filter((answer) => answer !== index);
+            }
+            return [...prevAnswers, index];
+        });
+    };
+
+    const checkAnswers = () => {
+        setShowResults(true);
+    };
+
+    return (
+        <div className="quiz-component bg-white p-6 rounded-lg shadow-md">
+            {quiz.title && <h2 className="text-2xl font-bold mb-4 text-gray-800">{quiz.title}</h2>}
+            {quiz.description && <p className="text-gray-600 mb-4">{quiz.description}</p>}
+
+            {quiz.questions.map((questionItem, questionIndex) => (
+                <div key={questionIndex} className="mb-6">
+                    <h3 className="text-lg font-medium text-gray-700 mb-2">{questionItem.question}</h3>
+
+                    <div className="options">
+                        {questionItem.options.map((option, optionIndex) => (
+                            <label
+                                key={optionIndex}
+                                className={`block cursor-pointer mb-2 p-4 border rounded-lg transition-all ${
+                                    selectedAnswers.includes(optionIndex)
+                                        ? 'bg-blue-100 border-blue-500'
+                                        : 'bg-white border-gray-300'
+                                }`}
+                            >
+                                <input
+                                    type="checkbox"
+                                    value={optionIndex}
+                                    checked={selectedAnswers.includes(optionIndex)}
+                                    onChange={() => handleOptionChange(optionIndex)}
+                                    className="mr-2"
+                                />
+                                {option}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
+            <button
+                onClick={checkAnswers}
+                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
+            >
+                Check Answers
+            </button>
+
+            {showResults && (
+                <div className="mt-6">
+                    {quiz.questions.map((questionItem, questionIndex) => (
+                        <div key={questionIndex} className="mb-4">
+                            <h4 className="text-lg font-medium text-gray-800">{questionItem.question}</h4>
+                            {questionItem.options.map((option, optionIndex) => {
+                                const isCorrect = questionItem.correctOptions.includes(optionIndex);
+                                const isSelected = selectedAnswers.includes(optionIndex);
+                                const className = isCorrect
+                                    ? 'text-green-600'
+                                    : isSelected && !isCorrect
+                                    ? 'text-red-600'
+                                    : 'text-gray-800';
+
+                                return (
+                                    <p key={optionIndex} className={`mt-2 ${className}`}>
+                                        {option} {isCorrect && '(Correct)'}
+                                        {isSelected && !isCorrect && '(Your answer)'}
+                                    </p>
+                                );
+                            })}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const CoursePage = () => {
     const { courseId } = useParams();
     const { courseStore } = useMobxStores();
@@ -127,33 +224,10 @@ const CoursePage = () => {
     const [isQuizVisible, setQuizVisible] = useState(false);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
-    const [completedSections, setCompletedSections] = useState([]);
-    const [bookmarkedSections, setBookmarkedSections] = useState([]);
-
-    // Тестовые данные для курса
-    const sections = [
-        { key: "1", title: "Введение", content: "Добро пожаловать в курс! Здесь вы узнаете основы." },
-        { key: "2", title: "Тема 1: Основы", content: "В этой теме вы изучите основы программирования." },
-        { key: "3", title: "Тема 2: Продвинутые концепции", content: "Здесь мы рассмотрим более сложные концепции." },
-        { key: "4", title: "Заключение", content: "Поздравляем, вы прошли курс!" },
-    ];
 
     const handleMenuClick = ({ key }) => {
         debugger
         setSelectedSection(key);
-    };
-
-    const handleCompleteSection = () => {
-        if (!completedSections.includes(selectedSection)) {
-            setCompletedSections([...completedSections, selectedSection]);
-            setProgress((completedSections.length + 1) / sections.length * 100);
-        }
-    };
-
-    const handleBookmark = () => {
-        if (!bookmarkedSections.includes(selectedSection)) {
-            setBookmarkedSections([...bookmarkedSections, selectedSection]);
-        }
     };
 
     const handleAddComment = () => {
@@ -170,10 +244,6 @@ const CoursePage = () => {
             </Menu.Item>
         </Menu>
     );
-
-    const handleQuiz = () => {
-        setQuizVisible(true);
-    };
 
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
@@ -268,11 +338,6 @@ const CoursePage = () => {
                                     )?.name || 'Section Name'}
                                 </h2>
                             }
-                            extra={
-                                <Tooltip title="Добавить в закладки">
-                                    <Button icon={<BookOutlined />} onClick={handleBookmark} />
-                                </Tooltip>
-                            }
                             style={{
                                 flex: 1,
                                 marginBottom: 24,
@@ -306,6 +371,9 @@ const CoursePage = () => {
                                     }
                                     if (component.type === CourseComponentType.Quiz) {
                                         return <QuizComponent key={component.id} quiz={component} />;
+                                    }
+                                    if (component.type === CourseComponentType.MultiPlayChoice) {
+                                        return <QuizMultiComponent key={component.id} quiz={component} />;
                                     }
                                 })}
                         </Card>

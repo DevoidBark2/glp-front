@@ -32,7 +32,7 @@ import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { useRouter } from "next/navigation";
 
 const SectionAddPage = () => {
-    const { courseStore, courseComponentStore, sectionCourseStore } = useMobxStores();
+    const { courseStore, courseComponentStore, sectionCourseStore,generalSettingsStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
     const [current, setCurrent] = useState(0);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
@@ -230,7 +230,8 @@ const SectionAddPage = () => {
                         />
                     </Form.Item>
 
-                    <Form.Item
+                    {generalSettingsStore.generalSettings?.allow_extra_materials && <>
+                        <Form.Item
                         name="uploadFile"
                         label="Дополнительные материалы"
                         tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
@@ -279,6 +280,7 @@ const SectionAddPage = () => {
                             )}
                         </Form.List>
                     </Form.Item>
+                    </>}
                 </>
             ),
         },
@@ -366,6 +368,7 @@ const SectionAddPage = () => {
     };
 
     useEffect(() => {
+        generalSettingsStore.getGeneralSettings();
         courseStore.getCoursesForCreator();
     }, []);
 

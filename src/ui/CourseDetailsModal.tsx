@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { getCookieUserDetails } from "@/lib/users";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
+import nextConfig from "next.config.mjs";
 
 const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({ course, openModal, setOpenModal }) => {
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState<boolean>(false)
@@ -58,7 +59,7 @@ const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({ course, openMod
                 </div>
                 <div className="w-1/4 ml-6 flex justify-center">
                     <img
-                        src="https://cdn.stepik.net/media/cache/images/courses/194856/cover_Sl6ky3x/2023ab5a2b085ae4307c6d4e981c7a68.png"
+                        src={`${nextConfig.env!.API_URL}${course?.image}`}
                         alt="image" width={130} height={130} />
                 </div>
             </div>

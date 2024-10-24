@@ -37,10 +37,10 @@ const CourseAddPage = () => {
         onChange(info: any) {
             const { status } = info.file;
             if (status === 'done') {
-                notification.success({ message: `${info.file.name} file uploaded successfully.` });
-                createCourseForm.setFieldValue("image", info.file)
+                notification.success({ message: `${info.file.name} загружен успешно.` });
+                createCourseForm.setFieldValue("image", info.file);
             } else if (status === 'error') {
-                notification.error({ message: `${info.file.name} file upload failed.` });
+                notification.error({ message: `${info.file.name} ошибка загрузки.` });
             }
         },
         onDrop(e) {
@@ -120,7 +120,7 @@ const CourseAddPage = () => {
                         name="image"
                         label="Картинка"
                     >
-                        <Dragger {...props} disabled>
+                        <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>

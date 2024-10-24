@@ -7,6 +7,7 @@ import CourseDetailsModal from "@/ui/CourseDetailsModal";
 import { SearchOutlined, ReloadOutlined , DownOutlined,AppstoreOutlined,BarsOutlined} from "@ant-design/icons";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import nextConfig from "next.config.mjs";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores();
@@ -130,7 +131,7 @@ const CoursesPage = () => {
                                 >
                                     <div className="relative group">
                                         <img
-                                            src="http://localhost:4200/uploads/Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° Ð¾Ñ 2024-08-01 13-25-49_1724154915044.png"
+                                            src={`${nextConfig.env!.API_URL}${course.image}`}
                                             alt={course.name}
                                             className="w-full h-40 object-cover rounded-t-lg transition-transform duration-300 group-hover:scale-105"
                                         />
@@ -171,7 +172,7 @@ const CoursesPage = () => {
                                 >
                                     <div className="flex items-center">
                                         <img
-                                            src="http://localhost:4200/uploads/Ð¡Ð½Ð¸Ð¼Ð¾Ðº ÑÐºÑÐ°Ð½Ð° Ð¾Ñ 2024-08-01 13-25-49_1724154915044.png"
+                                            src={`${nextConfig.env!.API_URL}${course.image}`}
                                             alt={course.name}
                                             className="w-20 h-20 object-cover rounded-lg mr-4"
                                         />
