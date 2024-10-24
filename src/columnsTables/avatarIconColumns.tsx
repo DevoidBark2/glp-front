@@ -55,8 +55,6 @@ export const avatarIconColumns = ({ handleDeleteAvatar }: avatarIconColumnsProps
                     <Switch
                         checked={isActive}
                         onChange={(checked) => {
-                            // Здесь вызов функции для изменения статуса на сервере
-                            // Например, вызов метода updateStatus(record.id, checked ? 'active' : 'disabled');
                             console.log(`Изменение статуса для ${record.id} на ${checked ? 'active' : 'disabled'}`);
                         }}
                         checkedChildren="Активный"

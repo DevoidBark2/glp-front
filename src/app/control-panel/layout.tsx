@@ -302,7 +302,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
 
                         <Skeleton loading={loading} active>
                             <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
-                                <h1 className={`text-[${text1}] dark:text-[${text2}] text-lg font-bold mb-1`}>{currentUser?.user?.user_name}</h1>
+                                <h1 className={`text-[${text1}] dark:text-[${text2}] text-lg font-bold mb-1 text-center`}>{currentUser?.user?.user_name}</h1>
                                 <div className="flex items-center gap-2 mb-4">
                                     <span className="text-gray-300 text-sm">{currentUser?.user.role}</span>
                                     <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>

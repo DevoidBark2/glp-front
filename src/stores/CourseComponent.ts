@@ -47,9 +47,8 @@ class CourseComponent {
 
     getAllComponent = action(async () => {
         this.setLoadingCourseComponent(true)
-        const token = getUserToken()
-        await GET(`/api/component-task?token=${token}`).then(response => {
-            this.courseComponents = response.response.data.map(componentTaskMapper)
+        await GET(`/api/component-task`).then(response => {
+            this.courseComponents = response.data.map(componentTaskMapper)
         }).finally(() => {
             this.setLoadingCourseComponent(false)
         })

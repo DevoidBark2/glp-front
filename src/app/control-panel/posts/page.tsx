@@ -39,7 +39,6 @@ import dayjs from "dayjs";
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import 'react-quill/dist/quill.snow.css';
 import { FILTER_STATUS_POST, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/constants";
-import { useTheme } from "next-themes";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { postTable } from "@/tableConfig/postTable";
 import { getCookieUserDetails } from "@/lib/users";
@@ -126,6 +125,14 @@ const PostPage = () => {
                         <Tag color="red">Отклонен</Tag>
                     </Tooltip>
                 );
+            case PostStatusEnum.APPROVED:
+                return (
+                    <Tooltip title="Подтвержден">
+                        <Tag icon={<CheckCircleOutlined />} color="green">
+                            Подтвержден
+                        </Tag>
+                    </Tooltip>
+                );
             default:
                 return (
                     <Tooltip title="Неизвестный статус">
@@ -154,7 +161,7 @@ const PostPage = () => {
             dataIndex: 'name',
             width: '20%',
             render: (text) => (
-                <Tooltip color={resolvedTheme === "light" ? "black" : "white"} title={<label style={{ color: resolvedTheme === "light" ? "white" : "black" }}>{text}</label>}>
+                <Tooltip title={text}>
                     <span className="dark:text-white">{text}</span>
                 </Tooltip>
             ),
@@ -180,9 +187,11 @@ const PostPage = () => {
             dataIndex: "is_publish",
             render: (_, record) => (
                 <Tooltip
-                    title={renderTooltipTitle(record)}
+                    title={currentUser?.user.role !== UserRole.SUPER_ADMIN
+                        ? renderTooltipTitle(record)
+                        : undefined}
                 >
-                    <Switch disabled={record.status !== PostStatusEnum.APPROVED} defaultChecked={record.is_publish} onChange={(checked) => console.log('Switch to:', checked)} />
+                    <Switch disabled={record.status !== PostStatusEnum.APPROVED && currentUser?.user.role !== UserRole.SUPER_ADMIN} defaultChecked={record.is_publish} onChange={(checked) => console.log('Switch to:', checked)} />
                 </Tooltip>
             ),
         },
@@ -209,7 +218,6 @@ const PostPage = () => {
                             <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
 
                             {record.user.role === UserRole.SUPER_ADMIN ? (
-                                // Специальное оформление для super_admin
                                 <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                                     <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
                                         Super Admin
@@ -231,7 +239,7 @@ const PostPage = () => {
             align: 'center',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    {record.status === PostStatusEnum.NEW && (
+                    {(record.status === PostStatusEnum.NEW && currentUser?.user.role !== UserRole.SUPER_ADMIN) && (
                         <Tooltip title="Отправить на проверку">
                             <Button
                                 type="default"
@@ -272,30 +280,20 @@ const PostPage = () => {
         },
 
     ];
-    const { resolvedTheme } = useTheme()
-
-    useLayoutEffect(() => {
-        const user = getCookieUserDetails();
-        setCurrentUser(user);
-    }, [])
 
     useEffect(() => {
-
+        const user = getCookieUserDetails();
+        setCurrentUser(user);
         postStore.getUserPosts();
     }, []);
 
     return (
         <div className="bg-white dark:bg-[#001529] dark:shadow-cyan-500/50 rounded-md h-full p-5 shadow-2xl  overflow-y-auto custom-height-screen">
             <Modal
-                styles={{
-                    content: { backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" },
-                    header: { backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" },
-                }}
-                title={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Создать новый пост</label>}
+                title={modalVisible ? "Редактировать пост" : "Создать новый пост"}
                 open={postStore.createPostModal}
                 onCancel={() => postStore.setCreatePostModal(false)}
                 footer={null}
-                closeIcon={<CloseOutlined style={{ color: resolvedTheme === "light" ? "#000" : "#fff" }} />}
                 afterClose={() => form.resetFields()}
                 centered
                 width="60%"
@@ -307,18 +305,21 @@ const PostPage = () => {
                         postStore.createPost(values);
                         postStore.setCreatePostModal(false)
                     }}
+                    initialValues={{ status: PostStatusEnum.ACTIVE }}
                 >
+
+                    <Form.Item name="id" hidden></Form.Item>
                     <Form.Item
                         name="name"
-                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Заголовок</label>}
+                        label="Заголовок"
                         rules={[{ required: true, message: 'Введите заголовок поста!' }]}
                     >
-                        <Input style={{ backgroundColor: resolvedTheme === "dark" ? "#001529" : "white" }} placeholder="Введите название поста" />
+                        <Input placeholder="Введите название поста" />
                     </Form.Item>
 
                     <Form.Item
                         name="description"
-                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Описание</label>}
+                        label="Описание"
                         rules={[{ required: true, message: 'Введите описание поста!' }]}
                     >
                         <Input placeholder="Введите описание поста" />
@@ -326,72 +327,55 @@ const PostPage = () => {
 
                     <Form.Item
                         name="content"
-                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Контент поста</label>}
+                        label="Контент поста"
                     >
                         <ReactQuill theme="snow" />
                     </Form.Item>
 
                     {
-                        currentUser?.user.role === UserRole.SUPER_ADMIN && <Row gutter={16}>
-                            <Col span={8}>
-                                <Form.Item
-                                    label="Статус"
-                                    name="status"
-                                >
-                                    <Select
-                                        placeholder="Выберите статус"
-                                        style={{ width: '100%' }}
-                                    >
-                                        <Select.Option value={PostStatusEnum.NEW}>
-                                            <Tooltip title="Новый">
-                                                <Tag icon={<ClockCircleOutlined />} color="blue">
-                                                    Новый
-                                                </Tag>
-                                            </Tooltip>
-                                        </Select.Option>
-                                        <Select.Option value={PostStatusEnum.ACTIVE}>
-                                            <Tooltip title="Активный">
-                                                <Tag icon={<CheckCircleOutlined />} color="green">
-                                                    Активный
-                                                </Tag>
-                                            </Tooltip>
-                                        </Select.Option>
-                                        <Select.Option value={PostStatusEnum.REJECT}>
-                                            <Tooltip color="red">
-                                                <Tag color="red">Отклонен</Tag>
-                                            </Tooltip>
-                                        </Select.Option>
+                        currentUser?.user.role === UserRole.SUPER_ADMIN && <Form.Item
+                            label="Статус"
+                            name="status"
+                        >
+                            <Select
+                                placeholder="Выберите статус"
+                                style={{ width: '100%' }}
 
-                                        <Select.Option value={PostStatusEnum.IN_PROCESSING}>
-                                            <Tooltip title="В обработке">
-                                                <Tag icon={<SyncOutlined spin />} color="yellow">
-                                                    В обработке
-                                                </Tag>
-                                            </Tooltip>
-                                        </Select.Option>
-                                    </Select>
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item
-                                    name="is_publish"
-                                    label="Опубликовать пост"
-                                    valuePropName="checked" // Это необходимо для корректного связывания с Switch
-                                >
-                                    <Switch
-                                        checkedChildren="Опубликован"
-                                        unCheckedChildren="Не опубликован"
-                                        defaultChecked={false}
-                                    />
-                                </Form.Item>
-                            </Col>
+                            >
+                                <Select.Option value={PostStatusEnum.NEW}>
+                                    <Tooltip title="Новый">
+                                        <Tag icon={<ClockCircleOutlined />} color="blue">
+                                            Новый
+                                        </Tag>
+                                    </Tooltip>
+                                </Select.Option>
+                                <Select.Option value={PostStatusEnum.ACTIVE}>
+                                    <Tooltip title="Активный">
+                                        <Tag icon={<CheckCircleOutlined />} color="green">
+                                            Активный
+                                        </Tag>
+                                    </Tooltip>
+                                </Select.Option>
+                                <Select.Option value={PostStatusEnum.REJECT}>
+                                    <Tooltip color="red">
+                                        <Tag color="red">Отклонен</Tag>
+                                    </Tooltip>
+                                </Select.Option>
 
-                        </Row>
+                                <Select.Option value={PostStatusEnum.IN_PROCESSING}>
+                                    <Tooltip title="В обработке">
+                                        <Tag icon={<SyncOutlined spin />} color="yellow">
+                                            В обработке
+                                        </Tag>
+                                    </Tooltip>
+                                </Select.Option>
+                            </Select>
+                        </Form.Item>
 
                     }
                     <Form.Item
                         name="image"
-                        label={<label style={{ color: resolvedTheme === "light" ? "black" : "white" }}>Изображение поста</label>}
+                        label="Изображение поста"
                     >
                         <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
@@ -422,6 +406,12 @@ const PostPage = () => {
                 dataSource={postStore.userPosts}
                 columns={columns}
                 rowKey={(record) => record.id}
+                rowClassName={(record) => {
+                    if (record.status !== PostStatusEnum.APPROVED && record.user.role !== UserRole.SUPER_ADMIN) {
+                        return 'row-disabled';
+                    }
+                    return '';
+                }}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
             />
         </div>

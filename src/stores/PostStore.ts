@@ -8,7 +8,7 @@ import { FORMAT_VIEW_DATE } from "@/constants";
 import { User } from "./UserStore";
 
 export type Post = {
-    id: string;
+    id: number;
     name: string;
     image: string;
     description: string;
@@ -87,19 +87,16 @@ class PostStore {
         })
     })
 
-    deletePost = action(async (postId: string) => {
-        const token = getUserToken();
-        await DELETE(`/api/posts?postId=${postId}&token=${token}`).then((response) => {
-            runInAction(() => {
-                this.allPosts = this.allPosts.filter(post => post.id !== postId);
-                notification.success({ message: response.response.message })
-            })
+    deletePost = action(async (postId: number) => {
+        await DELETE(`/api/posts?postId=${postId}`).then((response) => {
+            debugger
+            this.userPosts = this.userPosts.filter(post => post.id !== postId);
+            notification.success({ message: response.message })
         }).catch(e => {
-
         })
     })
 
-    submitReview = action(async (postId: string) => {
+    submitReview = action(async (postId: number) => {
         await PUT(`/api/submit-preview?postId=${postId}`).then(response => {
             const changedPostIndex = this.allPosts.findIndex(post => post.id === postId);
 

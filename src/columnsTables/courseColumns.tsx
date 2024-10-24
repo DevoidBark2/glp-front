@@ -3,14 +3,14 @@ import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
 import { isEditedCourse } from "@/selectors/courseSelectors";
 import { Course } from "@/stores/CourseStore";
 import { showCourseStatus } from "@/utils/showCourseStatusInTable";
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined, UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, TableColumnsType, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import Link from "next/link";
 
 interface getCourseColumnsProps {
     publishCourse: (id: number) => void;
-    forwardCourse: (id: number) => void;  // Измените на (id: number) для forwardCourse
+    forwardCourse: (id: number) => void;
     deleteCourse: (id: number) => void;
 }
 
@@ -72,7 +72,7 @@ export const getCourseColumns = ({ publishCourse, forwardCourse, deleteCourse }:
                         : "В данный момент курс не может быть опубликован, попробуйте позже"
                 }>
                     <Button
-                        onClick={() => publishCourse(record.id)}  // Передаем record.id
+                        onClick={() => publishCourse(record.id)}
                         disabled={isEditedCourse(record)}
                         type="default"
                         icon={<UploadOutlined />}
@@ -83,7 +83,7 @@ export const getCourseColumns = ({ publishCourse, forwardCourse, deleteCourse }:
                         type="default"
                         shape="circle"
                         disabled={isEditedCourse(record)}
-                        onClick={() => forwardCourse(record.id)}  // Передаем record.id
+                        onClick={() => forwardCourse(record.id)}
                         icon={<EditOutlined />}
                     />
                 </Tooltip>
@@ -92,7 +92,7 @@ export const getCourseColumns = ({ publishCourse, forwardCourse, deleteCourse }:
                         title="Удалить курс?"
                         placement="leftBottom"
                         description="Вы уверены, что хотите удалить этот курс? Это действие нельзя будет отменить."
-                        onConfirm={() => deleteCourse(record.id)}  // Передаем record.id
+                        onConfirm={() => deleteCourse(record.id)}
                         okText="Да"
                         cancelText="Нет"
                     >

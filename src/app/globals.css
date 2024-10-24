@@ -2,11 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-.canvas{
+.canvas {
     background-color: #efefef;
     border: 1px solid black;
 }
 
 .custom-height-screen {
     height: calc(100vh - 50px);
+}
+
+.row-disabled {
+    background-color: #f5f5f5;
+    /* Серый фон */
+    opacity: 0.5;
+    /* Полупрозрачность */
+    pointer-events: none;
+    /* Отключить все клики */
 }
