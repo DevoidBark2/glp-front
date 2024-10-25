@@ -20,3 +20,21 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(error.response.data, { status: error.response.status })
     }
 }
+
+export async function PUT(req: NextRequest) {
+    const token = req.headers.get('authorization');
+    const body = await req.json();
+
+    try {
+        const { data } = await axios.put(nextConfig.env?.API_URL + `api/post`, body, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return NextResponse.json({ ...data });
+    } catch (error: any) {
+        console.error(error)
+        return NextResponse.json(error.response.data, { status: error.response.status })
+    }
+}

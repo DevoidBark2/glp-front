@@ -1,139 +1,100 @@
 "use client";
 import { observer } from "mobx-react";
-import { Button, Divider, Input, Table, Tooltip, Modal, Form, Select, message, Popover } from "antd";
+import { Button, Divider, Input, Table, Modal, Form, Select, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { CommentOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Post } from "@/stores/PostStore";
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
 
-const ManagePostModal = ({ selectedPost, setSelectedPost, comment, handleCommentChange, status, handleStatusChange, handleSubmit, form }) => {
-    const [fieldComments, setFieldComments] = useState({
-        name: "",
-        description: "",
-        content: "",
-    });
-
-    const handleFieldCommentChange = (field: string, value: string) => {
-        setFieldComments((prevComments) => ({ ...prevComments, [field]: value }));
-    };
-
+const ManagePostModal = ({
+    selectedPost,
+    setSelectedPost,
+    comment,
+    handleCommentChange,
+    status,
+    handleStatusChange,
+    handleSubmit,
+    form,
+    fieldComments,
+    handleFieldCommentChange
+}) => {
     return (
-        selectedPost && (
-            <Modal
-                title={
-                    <div className="flex items-center">
-                        <InfoCircleOutlined className="mr-2 text-blue-500" />
-                        <span>Проверка поста: {selectedPost.name}</span>
-                    </div>
-                }
-                open={!!selectedPost}
-                onCancel={() => setSelectedPost(null)}
-                footer={null}
-                centered
-                width="70%"
-                className="custom-moderation-modal"
-            >
-                <Form form={form} layout="vertical">
-                    {/* Название поля с возможностью добавить комментарий */}
-                    <Form.Item label="Название" name="name">
-                        <div className="flex items-center justify-between">
-                            <Input disabled />
-                            <Popover
-                                content={
-                                    <Input.TextArea
-                                        rows={2}
-                                        value={fieldComments.name}
-                                        onChange={(e) => handleFieldCommentChange("name", e.target.value)}
-                                        placeholder="Введите комментарий"
-                                    />
-                                }
-                                title="Комментарий для поля Название"
-                                trigger="click"
-                            >
-                                <Tooltip title="Добавить комментарий к названию">
-                                    <Button icon={<CommentOutlined />} className="ml-2" />
-                                </Tooltip>
-                            </Popover>
-                        </div>
-                    </Form.Item>
+        <Modal
+            title={
+                <div className="flex items-center">
+                    <InfoCircleOutlined className="mr-2 text-blue-500" />
+                    <span>Проверка поста: {selectedPost?.name}</span>
+                </div>
+            }
+            open={!!selectedPost}
+            onCancel={() => setSelectedPost(null)}
+            footer={null}
+            width="70%"
+        >
+            <Form form={form} layout="vertical">
+                <Form.Item label="Название" name="name">
+                    <Input disabled />
+                </Form.Item>
 
-                    {/* Описание поля с комментарием */}
-                    <Form.Item label="Описание" name="description">
-                        <div className="flex items-center justify-between">
-                            <Input.TextArea rows={3} disabled />
-                            <Popover
-                                content={
-                                    <Input.TextArea
-                                        rows={2}
-                                        value={fieldComments.description}
-                                        onChange={(e) => handleFieldCommentChange("description", e.target.value)}
-                                        placeholder="Введите комментарий"
-                                    />
-                                }
-                                title="Комментарий для поля Описание"
-                                trigger="click"
-                            >
-                                <Tooltip title="Добавить комментарий к описанию">
-                                    <Button icon={<CommentOutlined />} className="ml-2" />
-                                </Tooltip>
-                            </Popover>
-                        </div>
-                    </Form.Item>
+                <Input.TextArea
+                    title="Комментарий для Названия"
+                    rows={2}
+                    value={fieldComments.name}
+                    onChange={(e) => handleFieldCommentChange("name", e.target.value)}
+                    placeholder="Введите комментарий"
+                />
 
-                    {/* Контент поля с комментарием */}
-                    <Form.Item label="Контент" name="content">
-                        <div className="flex items-center justify-between">
-                            <Input.TextArea rows={6} disabled />
-                            <Popover
-                                content={
-                                    <Input.TextArea
-                                        rows={2}
-                                        value={fieldComments.content}
-                                        onChange={(e) => handleFieldCommentChange("content", e.target.value)}
-                                        placeholder="Введите комментарий"
-                                    />
-                                }
-                                title="Комментарий для поля Контент"
-                                trigger="click"
-                            >
-                                <Tooltip title="Добавить комментарий к контенту">
-                                    <Button icon={<CommentOutlined />} className="ml-2" />
-                                </Tooltip>
-                            </Popover>
-                        </div>
-                    </Form.Item>
+                <Form.Item label="Описание" name="description">
+                    <Input.TextArea rows={3} disabled />
+                </Form.Item>
 
-                    {/* Общий комментарий для автора */}
-                    <Form.Item label="Общий комментарий для автора">
-                        <Input.TextArea
-                            rows={4}
-                            value={comment}
-                            onChange={handleCommentChange}
-                            placeholder="Введите комментарий, если есть замечания"
-                        />
-                    </Form.Item>
+                <Input.TextArea
+                    title="Комментарий для Описания"
+                    rows={2}
+                    value={fieldComments.description}
+                    onChange={(e) => handleFieldCommentChange("description", e.target.value)}
+                    placeholder="Введите комментарий"
+                />
 
-                    {/* Статус поста */}
-                    <Form.Item label="Статус">
-                        <Select value={status} onChange={handleStatusChange}>
-                            <Select.Option value={PostStatusEnum.APPROVED}>Approved</Select.Option>
-                            <Select.Option value={PostStatusEnum.REJECTED}>Rejected</Select.Option>
-                        </Select>
-                    </Form.Item>
+                <Form.Item label="Контент" name="content">
+                    <Input.TextArea rows={6} disabled />
+                </Form.Item>
 
-                    <Divider />
+                <Input.TextArea
+                    title="Комментарий для Контента"
+                    rows={2}
+                    value={fieldComments.content}
+                    onChange={(e) => handleFieldCommentChange("content", e.target.value)}
+                    placeholder="Введите комментарий"
+                />
 
-                    {/* Кнопки действия */}
-                    <div className="flex justify-end gap-4">
-                        <Button onClick={() => setSelectedPost(null)}>Отменить</Button>
-                        <Button type="primary" onClick={handleSubmit}>
-                            Отправить
-                        </Button>
-                    </div>
-                </Form>
-            </Modal>
-        )
+                <Form.Item label="Общий комментарий для автора">
+                    <Input.TextArea
+                        rows={4}
+                        value={comment}
+                        onChange={handleCommentChange}
+                        placeholder="Введите комментарий, если есть замечания"
+                    />
+                </Form.Item>
+
+                <Form.Item label="Статус">
+                    <Select onChange={handleStatusChange}>
+                        <Select.Option value={PostStatusEnum.APPROVED}>Approved</Select.Option>
+                        <Select.Option value={PostStatusEnum.REJECT}>Rejected</Select.Option>
+                    </Select>
+                </Form.Item>
+
+                <Divider />
+
+                <div className="flex justify-end gap-4">
+                    <Button onClick={() => setSelectedPost(null)}>Отменить</Button>
+                    <Button type="primary" onClick={handleSubmit}>
+                        Отправить
+                    </Button>
+                </div>
+            </Form>
+        </Modal>
     );
 };
 
@@ -143,16 +104,20 @@ const ManagePostPage = () => {
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const [comment, setComment] = useState<string>("");
     const [status, setStatus] = useState<PostStatusEnum | null>(null);
+    const [fieldComments, setFieldComments] = useState({
+        name: "",
+        description: "",
+        content: "",
+    });
     const [form] = Form.useForm();
 
     useEffect(() => {
         moderatorStore.getPostForModerators();
-    }, []);
+    }, [moderatorStore]);
 
     const handlePostSelect = (post: Post) => {
         setSelectedPost(post);
-        setStatus(post.status); // Устанавливаем статус по умолчанию
-        form.setFieldsValue({ ...post });
+        form.setFieldsValue(post);
     };
 
     const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -163,20 +128,26 @@ const ManagePostPage = () => {
         setStatus(value);
     };
 
-    const handleSubmit = () => {
-        // if (!status) {
-        //     message.error("Пожалуйста, выберите статус для поста.");
-        //     return;
-        // }
+    const handleFieldCommentChange = (field: string, value: string) => {
+        setFieldComments((prevComments) => ({ ...prevComments, [field]: value }));
+    };
 
+    const handleSubmit = () => {
+        debugger
+        if (!status) {
+            message.error("Пожалуйста, выберите статус для поста.");
+            return;
+        }
 
         debugger
-        // Здесь мы можем добавить логику для отправки обновленного статуса и комментария в хранилище MobX
-        moderatorStore.updatePostStatus(selectedPost!.id, status, comment)
+
+        // Отправляем комментарии для всех полей на сервер
+        moderatorStore.updatePostStatus(selectedPost!.id, status, comment, fieldComments)
             .then(() => {
                 message.success("Статус поста успешно обновлен.");
                 setSelectedPost(null); // Закрыть модальное окно
                 setComment(""); // Очистить комментарий
+                setFieldComments({ name: "", description: "", content: "" }); // Очистить комментарии полей
                 form.resetFields(); // Сбросить форму
             })
             .catch(() => message.error("Произошла ошибка при обновлении поста."));
@@ -243,6 +214,8 @@ const ManagePostPage = () => {
                 handleStatusChange={handleStatusChange}
                 handleSubmit={handleSubmit}
                 form={form}
+                fieldComments={fieldComments}
+                handleFieldCommentChange={handleFieldCommentChange}
             />
         </div>
     );

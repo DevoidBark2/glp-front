@@ -81,12 +81,6 @@ class PostStore {
         })
     })
 
-    addReactionPost = action(async (emoji: string) => {
-        await PUT('/api/post', emoji).then(response => {
-
-        })
-    })
-
     deletePost = action(async (postId: number) => {
         await DELETE(`/api/posts?postId=${postId}`).then((response) => {
             debugger
@@ -98,15 +92,15 @@ class PostStore {
 
     submitReview = action(async (postId: number) => {
         await PUT(`/api/submit-preview?postId=${postId}`).then(response => {
-            const changedPostIndex = this.allPosts.findIndex(post => post.id === postId);
+            const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
-                const updatedPosts = [...this.allPosts];
+                const updatedPosts = [...this.userPosts];
                 updatedPosts[changedPostIndex] = {
                     ...updatedPosts[changedPostIndex],
                     status: PostStatusEnum.IN_PROCESSING
                 };
-                this.allPosts = updatedPosts;
+                this.userPosts = updatedPosts;
                 notification.success({ message: response.message });
             }
         }).catch()
@@ -120,9 +114,54 @@ class PostStore {
 
         })
     })
+
+    publishPost = action(async (postId: number,checked: boolean) => {
+        debugger
+        await POST('/api/publish-post',{id: postId,checked: checked}).then(response => {
+            debugger
+            const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
+
+            if (changedPostIndex !== -1) {
+                const updatedPosts = [...this.userPosts];
+                updatedPosts[changedPostIndex] = {
+                    ...updatedPosts[changedPostIndex],
+                    is_publish: checked
+                };
+                this.userPosts = updatedPosts;
+                notification.success({ message: response.data.message });
+            }
+
+        }).catch(e => {
+
+        })
+    })
+
+    changePost = action(async (post: Post) => {
+        debugger
+        await PUT('/api/post',post).then(response => {
+            debugger
+            this.userPosts = this.userPosts.map((item) =>
+                {
+                    if(item.id === post.id) {
+                        return {...item,...response.data.post }
+                    }
+                    else {
+                        return item;
+                    }
+                }
+            );
+            if(response.data.message) {
+                notification.warning({message: response.data.message})
+            }
+            notification.success({message: response.message})
+        }).catch(e => {
+            notification.success({message: e.response.data.message})
+        })
+    })
 }
 
 export const postMapper = (post: Post) => {
+    debugger
     return {
         id: post.id,
         name: post.name,

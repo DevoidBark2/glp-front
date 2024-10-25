@@ -20,7 +20,7 @@ export const platformMenu: PlatformMenu[] = [
 export const FILTER_STATUS_POST = [
     { id: 1, text: 'Новый', value: PostStatusEnum.NEW },
     { id: 2, text: 'В обработке', value: PostStatusEnum.IN_PROCESSING },
-    { id: 3, text: 'Активный', value: PostStatusEnum.ACTIVE },
+    { id: 2, text: 'Подтвержден', value: PostStatusEnum.APPROVED },
     { id: 4, text: 'Отклонен', value: PostStatusEnum.REJECT },
 ]
 

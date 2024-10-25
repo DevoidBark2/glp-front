@@ -12,6 +12,7 @@ export type User = {
     first_name: string;
     second_name: string;
     last_name: string;
+    phone: string;
     role: UserRole;
     status: StatusUserEnum;
     email: string;
@@ -141,6 +142,7 @@ class UserStore {
         try {
             const response = await POST("/api/login", values);
             signInUser({
+                id: response.response.data.id,
                 token: response.response.data.token,
                 email: response.response.data.email,
                 role: response.response.data.role,

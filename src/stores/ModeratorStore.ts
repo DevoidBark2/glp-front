@@ -11,7 +11,6 @@ class ModeratorStore {
 
     getPostForModerators = action(async () => {
         await GET('/api/post-for-moderators').then(response => {
-            debugger
             this.postForModerators = response.data.map(postMapper)
         })
     })
