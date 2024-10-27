@@ -7,6 +7,13 @@ import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { User } from "./UserStore";
 
+
+export type ModeratorFeedback = {
+    id: number;
+    comment: string;
+    comments: Object
+}
+
 export type Post = {
     id: number;
     name: string;
@@ -18,6 +25,7 @@ export type Post = {
     rejectReason?: string[];
     created_at: Date;
     user: User
+    moderatorFeedBack?: ModeratorFeedback
 }
 class PostStore {
     constructor() {
@@ -115,9 +123,9 @@ class PostStore {
         })
     })
 
-    publishPost = action(async (postId: number,checked: boolean) => {
+    publishPost = action(async (postId: number, checked: boolean) => {
         debugger
-        await POST('/api/publish-post',{id: postId,checked: checked}).then(response => {
+        await POST('/api/publish-post', { id: postId, checked: checked }).then(response => {
             debugger
             const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
@@ -138,24 +146,23 @@ class PostStore {
 
     changePost = action(async (post: Post) => {
         debugger
-        await PUT('/api/post',post).then(response => {
+        await PUT('/api/post', post).then(response => {
             debugger
-            this.userPosts = this.userPosts.map((item) =>
-                {
-                    if(item.id === post.id) {
-                        return {...item,...response.data.post }
-                    }
-                    else {
-                        return item;
-                    }
+            this.userPosts = this.userPosts.map((item) => {
+                if (item.id === post.id) {
+                    return { ...item, ...response.data.post }
                 }
-            );
-            if(response.data.message) {
-                notification.warning({message: response.data.message})
+                else {
+                    return item;
+                }
             }
-            notification.success({message: response.message})
+            );
+            if (response.data.message) {
+                notification.warning({ message: response.data.message })
+            }
+            notification.success({ message: response.message })
         }).catch(e => {
-            notification.success({message: e.response.data.message})
+            notification.success({ message: e.response.data.message })
         })
     })
 }
@@ -171,7 +178,8 @@ export const postMapper = (post: Post) => {
         status: post.status,
         is_publish: post.is_publish,
         created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
-        user: post.user
+        user: post.user,
+        moderatorFeedBack: post.moderatorFeedBack
     };
 }
 

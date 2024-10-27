@@ -12,7 +12,6 @@ const ManagePostModal = ({
     setSelectedPost,
     comment,
     handleCommentChange,
-    status,
     handleStatusChange,
     handleSubmit,
     form,
@@ -98,13 +97,19 @@ const ManagePostModal = ({
     );
 };
 
+export interface Comments {
+    name: string,
+    description: string,
+    content: string
+}
+
 const ManagePostPage = () => {
     const { moderatorStore } = useMobxStores();
 
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const [comment, setComment] = useState<string>("");
     const [status, setStatus] = useState<PostStatusEnum | null>(null);
-    const [fieldComments, setFieldComments] = useState({
+    const [fieldComments, setFieldComments] = useState<Comments>({
         name: "",
         description: "",
         content: "",
@@ -182,9 +187,9 @@ const ManagePostPage = () => {
                     },
                     {
                         title: "Автор",
-                        dataIndex: ["user", "first_name"],
+                        dataIndex: "user",
                         key: "user",
-                        render: (_, record) => `${record.user.first_name} ${record.user.second_name}`,
+                        render: (_, record) => `${record.user.first_name} ${record.user.second_name} ${record.user.last_name}`,
                     },
                     {
                         title: "Дата создания",
@@ -210,7 +215,6 @@ const ManagePostPage = () => {
                 setSelectedPost={setSelectedPost}
                 comment={comment}
                 handleCommentChange={handleCommentChange}
-                status={status}
                 handleStatusChange={handleStatusChange}
                 handleSubmit={handleSubmit}
                 form={form}

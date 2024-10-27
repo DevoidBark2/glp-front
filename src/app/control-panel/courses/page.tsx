@@ -1,7 +1,7 @@
 "use client";
 import { observer } from "mobx-react";
 import { Table } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import { coursesTable, paginationCount } from "@/tableConfig/coursesTable";
@@ -9,10 +9,12 @@ import SuccessfulCreateCourseModal from "@/components/SuccessfulCreateCourseModa
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { getCourseColumns } from "@/columnsTables/courseColumns";
+import { getCookieUserDetails } from "@/lib/users";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores()
     const router = useRouter();
+    const [currentUser, setCurrentUser] = useState(null);
 
     const publishCourse = (id: number) => courseStore.publishCourse(id)
 
@@ -23,6 +25,10 @@ const CoursesPage = () => {
 
     useEffect(() => {
         courseStore.getCoursesForCreator()
+
+        const currentUser = getCookieUserDetails();
+
+        setCurrentUser(currentUser);
 
         return () => {
             courseStore.setSuccessCreateCourseModal(false)
@@ -48,8 +54,7 @@ const CoursesPage = () => {
                     rowKey={(record) => record.id}
                     loading={courseStore.loadingCourses}
                     dataSource={courseStore.userCourses}
-                    columns={getCourseColumns({ publishCourse, forwardCourse, deleteCourse })}
-                    rowSelection={{ type: "checkbox" }}
+                    columns={getCourseColumns({ publishCourse, forwardCourse, deleteCourse, currentUser })}
                     pagination={{ pageSize: paginationCount }}
                     locale={coursesTable}
                     bordered

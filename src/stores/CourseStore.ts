@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { SectionCourseItem } from "@/stores/SectionCourse";
-import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import { User } from "./UserStore";
 
 export type Teacher = {
     id: number;
@@ -30,7 +30,7 @@ export type Course = {
     content_description: string;
     duration: number
     publish_date: Date
-    user: Teacher
+    user: User
     status: StatusCourseEnum
     sections: SectionCourseItem[]
 }

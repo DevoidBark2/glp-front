@@ -1,10 +1,12 @@
-import { FORMAT_VIEW_DATE, statusCourseLabels, statusCourses } from "@/constants";
+import { UserHoverCard } from "@/components/PostPage/UserHoverCard";
+import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from "@/constants";
 import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
+import { UserRole } from "@/enums/UserRoleEnum";
 import { isEditedCourse } from "@/selectors/courseSelectors";
 import { Course } from "@/stores/CourseStore";
 import { showCourseStatus } from "@/utils/showCourseStatusInTable";
-import { DeleteOutlined, EditOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, TableColumnsType, Tag, Tooltip } from "antd";
+import { CrownOutlined, DeleteOutlined, EditOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Popconfirm, Popover, TableColumnsType, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import Link from "next/link";
 
@@ -12,9 +14,10 @@ interface getCourseColumnsProps {
     publishCourse: (id: number) => void;
     forwardCourse: (id: number) => void;
     deleteCourse: (id: number) => void;
+    currentUser: any
 }
 
-export const getCourseColumns = ({ publishCourse, forwardCourse, deleteCourse }: getCourseColumnsProps): TableColumnsType<Course> => [
+export const getCourseColumns = ({ publishCourse, forwardCourse, deleteCourse, currentUser }: getCourseColumnsProps): TableColumnsType<Course> => [
     {
         title: 'Название',
         dataIndex: 'name',
@@ -59,6 +62,29 @@ export const getCourseColumns = ({ publishCourse, forwardCourse, deleteCourse }:
             <Tooltip title="Длительность курса в часах">
                 {value}
             </Tooltip>
+        ),
+    },
+    {
+        title: "Создатель",
+        dataIndex: "user",
+        hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
+        render: (_, record) => (
+            record.user.role === UserRole.SUPER_ADMIN ? (
+                <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
+                    <Tooltip title="Перейти в профиль">
+                        <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
+                            Администратор
+                        </Tag>
+                    </Tooltip>
+                </Link>
+            ) : (
+                <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
+                    <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
+                    <Link href={`/control-panel/users/${record.user.id}`} className="hover:text-blue-500">
+                        {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`}
+                    </Link>
+                </Popover>
+            )
         ),
     },
     {

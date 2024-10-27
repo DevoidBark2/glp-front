@@ -3,4 +3,5 @@ export enum PostStatusEnum {
     IN_PROCESSING = 'in_processing',
     APPROVED = "approved",
     REJECT = 'reject',
+    MODIFIED = "modified"
 }

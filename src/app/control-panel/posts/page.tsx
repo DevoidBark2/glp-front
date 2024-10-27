@@ -8,7 +8,7 @@ import {
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import React, { useEffect, useState } from "react";
-import { Post } from "@/stores/PostStore";
+import { ModeratorFeedback, Post } from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
     ClockCircleOutlined,
@@ -19,7 +19,6 @@ import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { postTable } from "@/tableConfig/postTable";
 import { getCookieUserDetails } from "@/lib/users";
-import { UserRole } from "@/enums/UserRoleEnum";
 import { getPostColumns } from "@/columnsTables/postColumns";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { CreatePostModal } from "@/components/PostPage/CreatePostModal";
@@ -30,9 +29,16 @@ const PostPage = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [form] = Form.useForm();
     const [changePostForm] = Form.useForm();
-    const [changePostModal,setChagePostModal] = useState(false);
+    const [changePostModal, setChagePostModal] = useState(false);
 
-    const getStatusTag = (status: PostStatusEnum, rejectReason?: string[]) => {
+    const fieldNames: { [key: string]: string } = {
+        name: "Заголовок",
+        description: "Описание",
+        content: "Содержание",
+    };
+
+    const getStatusTag = (status: PostStatusEnum, rejectReason?: ModeratorFeedback) => {
+        debugger
         switch (status) {
             case PostStatusEnum.NEW:
                 return (
@@ -50,11 +56,28 @@ const PostPage = () => {
                         </Tag>
                     </Tooltip>
                 );
+
+            case PostStatusEnum.MODIFIED:
+                return (
+                    <Tooltip title="Изменен">
+                        <Tag icon={<ClockCircleOutlined />} color="gray">
+                            Изменен
+                        </Tag>
+                    </Tooltip>
+                );
             case PostStatusEnum.REJECT:
                 return (
-                    <Tooltip title={rejectReason?.map((reason, index) => (
-                        <div key={index}>• {reason}</div>
-                    ))} color="red">
+                    <Tooltip
+                        title={
+                            rejectReason?.comments &&
+                            Object.entries(rejectReason.comments).map(([field, message], index) => (
+                                <div key={index}>
+                                    <strong>{fieldNames[field] || field}:</strong> {message}
+                                </div>
+                            ))
+                        }
+                        color="red"
+                    >
                         <Tag color="red">Отклонен</Tag>
                     </Tooltip>
                 );
@@ -78,13 +101,15 @@ const PostPage = () => {
     const renderTooltipTitle = (record: Post) => {
         switch (record.status) {
             case PostStatusEnum.NEW:
-                return "Отправьте сначала на проверку и ожидайте подтверждения перед публикацией поста.";
+                return "Отправьте сначала на проверку и ожидайте ответа от модератора перед публикацией поста.";
+            case PostStatusEnum.MODIFIED:
+                return "Отправьте сначала на проверку и ожидайте ответа от модератора перед публикацией поста.";
             case PostStatusEnum.IN_PROCESSING:
                 return "Ожидайте подтверждения модератором."
             case PostStatusEnum.REJECT:
                 return "Пост был отклонен модератором,больше информации находится в форме редактирования поста."
             case PostStatusEnum.APPROVED:
-                return "Пост успешно прошел проверку, Вы можете опубликовать данные пост."
+                return "Пост успешно прошел проверку, Вы можете опубликовать данный пост."
             default:
                 return "Неизвестно"
         }
