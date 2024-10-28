@@ -164,6 +164,34 @@ const SettingsControlPage = () => {
                                     </Select>
                                 </Form.Item>
 
+                                <Form.Item label="Иконка пользователя по умолчанию" name="default_avatar">
+                                    <Upload
+                                        name="user_logo_default"
+                                        listType="picture-card"
+                                        showUploadList={false}
+                                        beforeUpload={(file) => {
+                                            const isImage = file.type.startsWith("image/");
+                                            if (!isImage) {
+                                                message.error("Можно загрузить только изображения.");
+                                                return Upload.LIST_IGNORE;
+                                            }
+                                            const reader = new FileReader();
+                                            reader.onload = () => {
+                                                const imageUrl = reader.result as string;
+                                                debugger
+                                                //setUploadedLogo(imageUrl);
+                                            };
+                                            formForUserManagement.setFieldValue("user_logo_default", file)
+                                            reader.readAsDataURL(file);
+                                            return false;
+                                        }}
+                                    >
+                                        <div>
+                                            <UploadOutlined /> Загрузить иконку
+                                        </div>
+                                    </Upload>
+                                </Form.Item>
+
                                 <Form.Item
                                     label="Автоматическое подтверждение регистрации"
                                     tooltip="Если включено, пользователи будут автоматически подтверждены после регистрации."
@@ -270,7 +298,6 @@ const SettingsControlPage = () => {
                             </Form>
                         </TabPane>
 
-                        {/* Security Settings */}
                         <TabPane tab="Настройки безопасности" key="5">
                             <Form
                                 form={formForSec}
@@ -278,7 +305,6 @@ const SettingsControlPage = () => {
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
                                 <Form.Item name="id" hidden></Form.Item>
-                                {/* Максимальное количество попыток входа */}
                                 <Form.Item
                                     label="Максимальное количество попыток входа"
                                     tooltip="Задайте количество попыток входа перед временной блокировкой пользователя."
@@ -287,9 +313,8 @@ const SettingsControlPage = () => {
                                     <InputNumber min={1} max={10} placeholder="Введите количество попыток" style={{ width: '100%' }} />
                                 </Form.Item>
 
-                                {/* Время блокировки после неудачных попыток */}
                                 <Form.Item
-                                    label="Время блокировки после неудачных попыток"
+                                    label="Время блокировки после неудачных попыток (мин.)"
                                     tooltip="Укажите время, на которое пользователь будет заблокирован после превышения лимита попыток входа."
                                     name="lockout_duration"
                                 >

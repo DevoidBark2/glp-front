@@ -212,6 +212,7 @@ const ProfilePage = () => {
             </TabPane>
 
             {/* Вторая вкладка с настройками */}
+            {/* Вторая вкладка с настройками */}
             <TabPane tab="Настройки панели управления" key="2">
               <Form
                 form={formSettings}
@@ -225,10 +226,9 @@ const ProfilePage = () => {
                     <Form.Item
                       label="Количество элементов на странице"
                       name="pagination_size"
-                      initialValue={10}
                       rules={[{ required: true, message: "Укажите количество элементов" }]}
                     >
-                      <InputNumber min={5} max={100} />
+                      <InputNumber max={200} />
                     </Form.Item>
                   </Col>
                   <Col xs={24} md={12}>
@@ -261,6 +261,229 @@ const ProfilePage = () => {
                       <Switch />
                     </Form.Item>
                   </Col>
+
+                  {/* Новые настройки */}
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Анимации интерфейса"
+                      name="interface_animations"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Кастомизация главного меню"
+                      name="custom_menu"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Настройка уведомлений"
+                      name="notification_settings"
+                    >
+                      <Select mode="multiple" placeholder="Выберите уведомления">
+                        <Select.Option value="new_messages">Новые сообщения</Select.Option>
+                        <Select.Option value="updates">Обновления</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Темная/светлая тема"
+                      name="theme_switch"
+                      valuePropName="checked"
+                      initialValue={false}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Предварительный просмотр данных"
+                      name="preview_data"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Настройки адаптивного интерфейса"
+                      name="responsive_settings"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Сохранение состояния интерфейса"
+                      name="save_interface_state"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Настройка виджетов"
+                      name="widget_settings"
+                    >
+                      <Select mode="multiple" placeholder="Выберите виджеты">
+                        <Select.Option value="graph">Графики</Select.Option>
+                        <Select.Option value="table">Таблицы</Select.Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Группировка элементов управления"
+                      name="group_controls"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Пользовательские шрифты"
+                      name="custom_fonts"
+                    >
+                      <Upload>
+                        <Button>Загрузить шрифт</Button>
+                      </Upload>
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Интеграция с календарем"
+                      name="calendar_integration"
+                      valuePropName="checked"
+                      initialValue={false}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Возможность оценивания"
+                      name="feedback_option"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Загрузка пользовательских иконок"
+                      name="custom_icons"
+                    >
+                      <Upload>
+                        <Button>Загрузить иконку</Button>
+                      </Upload>
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Настройки для экранных читалок"
+                      name="screen_reader_settings"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Поддержка нескольких языков"
+                      name="multi_language_support"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Создание и сохранение шаблонов"
+                      name="template_creation"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Ограничение по времени использования"
+                      name="time_limit"
+                      tooltip="Установите лимит времени на использование панели управления."
+                    >
+                      <InputNumber min={1} max={120} placeholder="Часы" />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Интеграция с облачными хранилищами"
+                      name="cloud_storage_integration"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Тестирование новых функций"
+                      name="beta_testing"
+                      valuePropName="checked"
+                      initialValue={false}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                    <Form.Item
+                      label="Настройки приватности"
+                      name="privacy_settings"
+                      valuePropName="checked"
+                      initialValue={true}
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+
                 </Row>
 
                 <Divider />
@@ -279,6 +502,9 @@ const ProfilePage = () => {
                 </Form.Item>
               </Form>
             </TabPane>
+
+
+
           </Tabs>
         </div>
       ) : (
