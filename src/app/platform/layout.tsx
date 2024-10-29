@@ -59,72 +59,67 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {!pathName.includes('/courses/') && <HeaderBlock />}
                     <div style={{ flex: 1 }}>{children}</div>
                     {!pathName.includes('/courses/') && (
-                       <footer className="bg-gray-800 text-white py-10 mt-10">
-                       <div className="container mx-auto px-6">
-                           <div className="flex flex-wrap justify-between">
-                               {/* О проекте */}
-                               <div className="w-full sm:w-1/3 mb-6">
-                                   <h4 className="text-lg font-semibold mb-3">О проекте</h4>
-                                   <p className="text-gray-300 text-sm leading-relaxed">
-                                       {footerInfo?.subscription_platform}
-                                   </p>
-                               </div>
-                   
-                               {/* Контакты */}
-                               <div className="w-full sm:w-1/3 mb-6">
-                                   <h4 className="text-lg font-semibold mb-3">Контакты</h4>
-                                   <p className="text-gray-300 text-sm">
-                                       Email: 
-                                       <Link href={`mailto:${footerInfo?.support_email}`} className="hover:underline ml-1">
-                                           {footerInfo?.support_email}
-                                       </Link>
-                                   </p>
-                                   <p className="text-gray-300 text-sm mt-1">
-                                       Телефон: 
-                                       <span className="ml-1">{footerInfo?.support_phone || "+7 (000) 000-0000"}</span>
-                                   </p>
-                                   <p className="text-gray-300 text-sm mt-1">
-                                       Адрес: <span className="ml-1">Москва, ул. Примерная, 1</span>
-                                   </p>
-                               </div>
-                   
-                               {/* Полезные ссылки */}
-                               <div className="w-full sm:w-1/3 mb-6">
-                                   <h4 className="text-lg font-semibold mb-3">Полезные ссылки</h4>
-                                   <ul className="text-gray-300 text-sm space-y-2">
-                                       <li>
-                                           <Link href="/faq" className="hover:underline">
-                                               Вопросы и ответы (FAQ)
-                                           </Link>
-                                       </li>
-                                       <li>
-                                           <Link href="/terms" className="hover:underline">
-                                               Условия использования
-                                           </Link>
-                                       </li>
-                                       <li>
-                                           <Link href="/privacy" className="hover:underline">
-                                               Политика конфиденциальности
-                                           </Link>
-                                       </li>
-                                       <li>
-                                           <Link href="/support" className="hover:underline">
-                                               Поддержка
-                                           </Link>
-                                       </li>
-                                   </ul>
-                               </div>
-                           </div>
-                   
-                           {/* Подпись внизу */}
-                           <div className="mt-8 text-center border-t border-gray-700 pt-4 text-gray-400 text-xs">
-                               <p>
-                                   &copy; {new Date().getFullYear()} Проект {footerInfo?.platform_name}. Все права защищены.
-                               </p>
-                           </div>
-                       </div>
-                   </footer>
-                   
+                        <footer className="bg-gray-800 text-white py-10 mt-10">
+                            <div className="container mx-auto px-6">
+                                <div className="flex flex-wrap justify-between">
+                                    {/* О проекте */}
+                                    <div className="w-full sm:w-1/3 mb-6">
+                                        <h4 className="text-lg font-semibold mb-3">О проекте</h4>
+                                        <p className="text-gray-300 text-sm leading-relaxed">
+                                            {footerInfo?.subscription_platform}
+                                        </p>
+                                    </div>
+
+                                    {/* Контакты */}
+                                    <div className="w-full sm:w-1/3 mb-6">
+                                        <h4 className="text-lg font-semibold mb-3">Контакты</h4>
+                                        <p className="text-gray-300 text-sm">
+                                            Email:
+                                            <Link href={`mailto:${footerInfo?.support_email}`} className="hover:underline ml-1">
+                                                {footerInfo?.support_email}
+                                            </Link>
+                                        </p>
+                                        <p className="text-gray-300 text-sm mt-1">
+                                            Телефон:
+                                            <span className="ml-1">{footerInfo?.support_phone || "+7 (000) 000-0000"}</span>
+                                        </p>
+                                        <p className="text-gray-300 text-sm mt-1">
+                                            Адрес: <span className="ml-1">Москва, ул. Примерная, 1</span>
+                                        </p>
+                                    </div>
+
+                                    {/* Полезные ссылки */}
+                                    <div className="w-full sm:w-1/3 mb-6">
+                                        <h4 className="text-lg font-semibold mb-3">Полезные ссылки</h4>
+                                        <ul className="text-gray-300 text-sm space-y-2">
+                                            <li>
+                                                <Link href="/faq" className="hover:underline">
+                                                    Вопросы и ответы (FAQ)
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/terms" className="hover:underline">
+                                                    Условия использования
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/support" className="hover:underline">
+                                                    Поддержка
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                {/* Подпись внизу */}
+                                <div className="mt-8 text-center border-t border-gray-700 pt-4 text-gray-400 text-xs">
+                                    <p>
+                                        &copy; {new Date().getFullYear()} Проект {footerInfo?.platform_name}. Все права защищены.
+                                    </p>
+                                </div>
+                            </div>
+                        </footer>
+
                     )}
                 </>
             )}

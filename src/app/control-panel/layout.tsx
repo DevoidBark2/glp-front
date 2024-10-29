@@ -153,6 +153,23 @@ let dashboardMenuItems: MenuItem[] = [
         icon: <SettingOutlined />,
     },
     {
+        key: 'general',
+        label: 'Общее',
+        icon: <BarsOutlined />,
+        children: [
+            {
+                key: 'faq',
+                label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
+                icon: <BarsOutlined />,
+            },
+            {
+                key: 'avatar_icons',
+                label: <Link href={"/control-panel/terms"}>Условия использования</Link>,
+                icon: <BarsOutlined />,
+            },
+        ]
+    },
+    {
         key: 'profile',
         label: <Link href={"/control-panel/profile"}>Профиль</Link>,
         icon: <UserOutlined />,
@@ -174,7 +191,7 @@ let dashboardMenuItems: MenuItem[] = [
 
 const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { resolvedTheme } = useTheme()
-    const { avatarIconsStore,userProfileStore } = useMobxStores()
+    const { avatarIconsStore, userProfileStore } = useMobxStores()
 
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
     const [avatar, setAvatar] = useState<string | null>(null);
@@ -263,17 +280,17 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         userProfileStore.getUserProfile().then((response) => {
             const userData = response.data;
-      
+
             if (userData.profile_url) {
-              const fullAvatarUrl = `${nextConfig.env?.API_URL}${userData.profile_url}`;
-              setAvatar(fullAvatarUrl);
+                const fullAvatarUrl = `${nextConfig.env?.API_URL}${userData.profile_url}`;
+                setAvatar(fullAvatarUrl);
             } else {
-              setAvatar(null);
+                setAvatar(null);
             }
-            
-          }).finally(() => {
+
+        }).finally(() => {
             userProfileStore.setLoading(false)
-          });
+        });
         avatarIconsStore.getAllAvatarIcons();
     }, [])
 
