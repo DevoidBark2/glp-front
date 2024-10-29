@@ -40,20 +40,15 @@ export class GeneralSettings {
     })
 
     getGeneralSettings = action(async () => {
-     
         const response = await GET(`/api/general-settings`)
-        debugger
         this.setGeneralSetting(response.data[0])
         return response;
     })
 
     saveGeneralSetting = action(async (values:any) => {
         const formData = new FormData();
-        debugger
         Object.entries(values).forEach(([key,value]) => {
-            debugger
             if(key === "logo_url"){
-                debugger
                 formData.append(key,value.file);
             }
             formData.append(key,value);

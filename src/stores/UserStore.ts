@@ -166,8 +166,8 @@ class UserStore {
 
     registerUser = action(async (values: any) => {
         this.setLoading(true)
-        await POST("/api/register", { reqBody: values }).then(response => {
-            this.setRegisterSuccess(true);
+        return await POST("/api/register", { reqBody: values }).then(response => {
+            return response
         }).finally(() => {
             this.setLoading(false)
         })

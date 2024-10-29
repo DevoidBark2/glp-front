@@ -178,7 +178,6 @@ const SettingsControlPage = () => {
                                             const reader = new FileReader();
                                             reader.onload = () => {
                                                 const imageUrl = reader.result as string;
-                                                debugger
                                                 //setUploadedLogo(imageUrl);
                                             };
                                             formForUserManagement.setFieldValue("user_logo_default", file)

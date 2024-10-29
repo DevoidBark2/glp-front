@@ -1,19 +1,16 @@
-import { GET, POST } from "@/lib/fetcher";
+import { GET, POST, PUT } from "@/lib/fetcher";
 import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 
 type UserProfile = {
-    birth_day: Date
-    city: string
     first_name: string
-    id: number
     last_name: string
     second_name: string
-    university: string
-}
-
-type FeedBackItem = {
-
+    phone: string
+    email: string;
+    birth_day: Date
+    city: string
+    about_me: string
 }
 
 class UserProfileStore {
@@ -23,10 +20,15 @@ class UserProfileStore {
 
     fileListForFeedback: UploadFile[] = [];
     loading: boolean = false;
+    saveProfile: boolean = false;
 
     setFileForFeedBack = action((files: UploadFile[]) => {
         this.fileListForFeedback = files;
     });
+
+    setSaveProfile = action((value: boolean) => {
+        this.saveProfile = value;
+    })
 
     setLoading = action((value: boolean) => {
         this.loading = value
@@ -34,12 +36,24 @@ class UserProfileStore {
 
     getUserProfile = action(async () => {
         this.setLoading(true)
-        return await GET(`/api/get-user`)  // this.setUserProfileDetails()
-            .finally(() => {
-                this.setLoading(false)
-            })
+        return await GET(`/api/get-user`)
     })
 
+    updateProfile = action(async (values:UserProfile) => {
+        this.setSaveProfile(true)
+        await PUT('/api/profile', values).then(response => {
+            notification.success({message: response.message})
+        }).catch(e => {
+        }).finally(() => {
+            this.setSaveProfile(false)
+        })
+    })
+
+    uploadAvatar = action(async (file: File) => {
+        const form = new FormData();
+        form.append('logo_avatar', file)
+        return await PUT('/api/upload-avatar', form);
+    })
 
 }
 

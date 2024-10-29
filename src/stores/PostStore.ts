@@ -91,7 +91,6 @@ class PostStore {
 
     deletePost = action(async (postId: number) => {
         await DELETE(`/api/posts?postId=${postId}`).then((response) => {
-            debugger
             this.userPosts = this.userPosts.filter(post => post.id !== postId);
             notification.success({ message: response.message })
         }).catch(e => {
@@ -124,9 +123,7 @@ class PostStore {
     })
 
     publishPost = action(async (postId: number, checked: boolean) => {
-        debugger
         await POST('/api/publish-post', { id: postId, checked: checked }).then(response => {
-            debugger
             const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
@@ -145,9 +142,7 @@ class PostStore {
     })
 
     changePost = action(async (post: Post) => {
-        debugger
         await PUT('/api/post', post).then(response => {
-            debugger
             this.userPosts = this.userPosts.map((item) => {
                 if (item.id === post.id) {
                     return { ...item, ...response.data.post }
@@ -168,7 +163,6 @@ class PostStore {
 }
 
 export const postMapper = (post: Post) => {
-    debugger
     return {
         id: post.id,
         name: post.name,

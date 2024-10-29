@@ -38,7 +38,6 @@ const PostPage = () => {
     };
 
     const getStatusTag = (status: PostStatusEnum, rejectReason?: ModeratorFeedback) => {
-        debugger
         switch (status) {
             case PostStatusEnum.NEW:
                 return (

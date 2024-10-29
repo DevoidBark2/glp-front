@@ -78,7 +78,6 @@ class AchievementsStore {
     })
 
     createAchievements = action(async(value:any) => {
-        debugger
     })
 
 }

@@ -96,8 +96,10 @@ const ProfilePage = () => {
 
     useEffect(() => {
         setLoadingProfile(false)
-        userProfileStore.getUserProfile?.().then(() => {
-            formProfile.setFieldsValue(userProfileStore.userProfileDetails);
+        userProfileStore.getUserProfile?.().then((response) => {
+            formProfile.setFieldsValue(response.data);
+        }).finally(() => {
+            userProfileStore.setLoading(false)
         });
         feedBacksStore.getFeedBackForUser();
     }, []);

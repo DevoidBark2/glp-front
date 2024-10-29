@@ -14,7 +14,6 @@ export const UNAUTHORIZED_STATUS_CODE = 401
 
 export const platformMenu: PlatformMenu[] = [
     { key: 1, title: "Главная", link: '/platform' },
-    { key: 2, title: "Визуализация", link: '/platform/graphs' },
     { key: 3, title: "Курсы", link: '/platform/courses' },
 ]
 export const FILTER_STATUS_POST = [

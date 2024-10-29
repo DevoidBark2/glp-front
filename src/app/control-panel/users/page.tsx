@@ -111,35 +111,6 @@ const UsersPage = () => {
         },
     ];
 
-    const items: MenuProps['items'] = [
-        {
-            key: '1',
-            label: <div className="flex items-center">
-                <Image
-                    src="/static/delete_icon.svg"
-                    alt="Массовое удаление"
-                    width={20}
-                    height={20}
-                    className="cursor-pointer hover:scale-110 transition-transform duration-200"
-                />
-                <p className="ml-2">Массовое удаление</p>
-            </div>
-        },
-        {
-            key: '2',
-            label: <div className="flex items-center">
-                <Image
-                    src="/static/export_icon.svg"
-                    alt="Массовый экспорт"
-                    width={20}
-                    height={20}
-                    className="cursor-pointer hover:scale-110 transition-transform duration-200"
-                />
-                <p className="ml-2">Массовый экспорт</p>
-            </div>
-        },
-    ];
-
     useEffect(() => {
         userStore.getUsers();
     }, []);
@@ -151,10 +122,10 @@ const UsersPage = () => {
                     <h1 className="text-gray-800 font-bold text-3xl mb-4 md:mb-0 md:mr-4">
                         Пользователи
                     </h1>
-                    <GlobalActionComponent
+                    {/* <GlobalActionComponent
                         handleDelete={handleBulkStatusUpdate}
                         handleSendNotifications={handleBulkEmail}
-                    />
+                    /> */}
                 </div>
                 <div className="flex items-center mt-4 md:mt-0">
                     <Link href={"users/add"}>
@@ -166,9 +137,6 @@ const UsersPage = () => {
                             <span className="hidden sm:inline">Новый пользователь</span>
                         </Button>
                     </Link>
-                    <Dropdown menu={{ items }} placement="bottomLeft">
-                        <Button className="ml-2" icon={<MoreOutlined />} />
-                    </Dropdown>
                 </div>
             </div>
             <Divider />

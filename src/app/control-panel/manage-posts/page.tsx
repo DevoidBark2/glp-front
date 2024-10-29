@@ -138,13 +138,10 @@ const ManagePostPage = () => {
     };
 
     const handleSubmit = () => {
-        debugger
         if (!status) {
             message.error("Пожалуйста, выберите статус для поста.");
             return;
         }
-
-        debugger
 
         // Отправляем комментарии для всех полей на сервер
         moderatorStore.updatePostStatus(selectedPost!.id, status, comment, fieldComments)

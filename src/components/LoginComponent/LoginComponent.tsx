@@ -26,7 +26,13 @@ const LoginComponent = () => {
                 <Form.Item
                     label="Email"
                     name="email"
-                    rules={[{required: true, message: "Поле обязательно!"}]}
+                    rules={[
+                        {required: true, message: "Поле обязательно!"},
+                        {
+                            type: "email",
+                            message: "Формат email должен быть верным!"
+                        }
+                    ]}
                 >
                     <Input placeholder="Введите Email"/>
                 </Form.Item>

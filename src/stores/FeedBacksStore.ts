@@ -38,7 +38,6 @@ class FeedBacksStore {
             this.feedBackItems = [...this.feedBackItems, feedBackMapper(response.data)]
             notification.success({ message: response.message })
         }).catch(e => {
-            debugger
             notification.error({ message: e.response.data.message })
         })
     })

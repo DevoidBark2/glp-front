@@ -226,7 +226,6 @@ const CoursePage = () => {
     const [newComment, setNewComment] = useState("");
 
     const handleMenuClick = ({ key }) => {
-        debugger
         setSelectedSection(key);
     };
 
@@ -247,7 +246,6 @@ const CoursePage = () => {
 
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
-            debugger
             setSelectedSection(response.sections[0].id)
         });
     }, [courseId])

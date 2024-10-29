@@ -67,7 +67,6 @@ const AchievementsPage = () => {
                             const reader = new FileReader();
                             reader.onload = () => {
                                 const imageUrl = reader.result as string;
-                                debugger
                                 setUploadedLogo(imageUrl);
                             };
                             reader.readAsDataURL(file);

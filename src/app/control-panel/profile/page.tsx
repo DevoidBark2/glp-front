@@ -7,58 +7,49 @@ import {
   Switch,
   Upload,
   Avatar,
-  DatePicker,
-  Radio,
-  Tooltip,
   Divider,
-  Modal,
-  Menu,
-  Dropdown,
   message,
   Spin,
   Row,
   Col,
-  Checkbox,
   InputNumber,
   Tabs,
+  notification,
+  TabsProps,
+  Tooltip,
+  DatePicker,
 } from "antd";
 import {
-  UploadOutlined,
   UserOutlined,
-  LockOutlined,
-  InfoCircleOutlined,
-  FacebookOutlined,
-  TwitterOutlined,
-  LinkedinOutlined,
-  InstagramOutlined,
-  CloudUploadOutlined,
-  SettingOutlined,
-  ReloadOutlined,
-  HistoryOutlined,
-  DownloadOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { getCookieUserDetails } from "@/lib/users";
 import { UserRole } from "@/enums/UserRoleEnum";
-
-const { TabPane } = Tabs;
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/bootstrap.css";
+import nextConfig from "next.config.mjs";
+import { observer } from "mobx-react";
+import dayjs from "dayjs";
 
 const ProfilePage = () => {
   const [formProfile] = Form.useForm();
   const [formSettings] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const { userProfileStore, avatarIconsStore } = useMobxStores();
   const [currentUser, setCurrentUser] = useState(null);
-  const [backgroundImage, setBackgroundImage] = useState(null);
 
-  const handleUploadChange = (info: any) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
+  const [loading, setLoading] = useState(false);
+
+  const handleAvatarUpload = async (file: File) => {
+    setLoading(true);
+    try {
+      const response = await userProfileStore.uploadAvatar(file);
+      setAvatar(`${nextConfig.env?.API_URL}${response.data}`);
+      notification.success({ message: response.message });
+    } catch (error) {
+      message.error('Ошибка загрузки аватара');
+    } finally {
       setLoading(false);
     }
   };
@@ -68,24 +59,20 @@ const ProfilePage = () => {
     setCurrentUser(currentUser);
 
     userProfileStore.getUserProfile().then((response) => {
-      formProfile.setFieldsValue(response.data);
+      const userData = response.data;
+      setAvatar(`${nextConfig.env?.API_URL}${userData.profile_url}`);
+
+      if(userData.birth_day) {
+        userData.birth_day = dayjs(userData.birth_day)
+      }
+      formProfile.setFieldsValue(userData);
+      
+    }).finally(() => {
+      userProfileStore.setLoading(false)
     });
 
     avatarIconsStore.getAllAvatarIcons();
-
   }, []);
-
-  const handleResetChanges = () => {
-    formProfile.resetFields();
-    setAvatar(null);
-    setBackgroundImage(null);
-    message.info("Изменения сброшены.");
-  };
-
-  const handleSettingsReset = () => {
-    formSettings.resetFields();
-    message.info("Настройки сброшены.");
-  };
 
   const profileTitle = (role: UserRole) => {
     switch (role) {
@@ -98,27 +85,44 @@ const ProfilePage = () => {
     }
   };
 
-  return (
-    <>
-      {userProfileStore.loading ? (
-        <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
-          {/* Tabs для разделения профиля и настроек */}
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Личные данные" key="1">
-              {/* Profile Form */}
-              <div className="flex items-center mb-8">
+  const items: TabsProps['items'] = [
+    {
+      key: "1",
+      label: "Личные данные",
+      children: <>
+         <div className="flex items-center mb-8">
                 <Upload
                   name="avatar"
                   showUploadList={false}
-                  beforeUpload={() => false}
-                  onChange={handleUploadChange}
+                  beforeUpload={(file) => {
+                    handleAvatarUpload(file);
+                    return false;
+                  }}
                 >
-                  <Avatar
-                    size={100}
-                    src={avatar}
-                    icon={!avatar && <UserOutlined />}
-                    className="cursor-pointer transition-transform hover:scale-105"
-                  />
+                  <div className="relative cursor-pointer transition-transform hover:scale-105">
+                    {loading ? (
+                      <Spin
+                        size="large"
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          zIndex: 1,
+                        }}
+                      />
+                    ) : null}
+                    <Avatar
+                      size={100}
+                      src={avatar || undefined}
+                      icon={!avatar && <UserOutlined />}
+                      className="cursor-pointer"
+                      style={{
+                        opacity: loading ? 0.5 : 1,
+                        transition: 'opacity 0.3s ease',
+                      }}
+                    />
+                  </div>
                 </Upload>
                 <div className="ml-6">
                   <h2 className="text-2xl font-bold text-gray-800">
@@ -131,387 +135,145 @@ const ProfilePage = () => {
               </div>
 
               <Form
-                form={formProfile}
-                layout="vertical"
-                onFinish={(values) => {
-                  console.log("Updated Profile:", values);
-                }}
+                  form={formProfile}
+                  layout="vertical"
+                  onFinish={(values) => userProfileStore.updateProfile(values)}
               >
-                <Row gutter={16}>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Имя"
-                      name="first_name"
-                      rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}
-                    >
-                      <Input placeholder="Введите ваше имя" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Фамилия"
-                      name="second_name"
-                      rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
-                    >
-                      <Input placeholder="Введите вашу фамилию" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Отчество"
-                      name="last_name"
-                      rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
-                    >
-                      <Input placeholder="Введите ваше отчество" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Телефон"
-                      name="phone"
-                      rules={[{ required: true, message: "Пожалуйста, введите ваш номер телефона" }]}
-                    >
-                      <Input placeholder="+7 (___) ___-__-__" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item label="Дата рождения" name="birthdate">
-                      <DatePicker placeholder="Выберите дату" style={{ width: "100%" }} />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item label="Город" name="city">
-                      <Select placeholder="Выберите ваш город">
-                        <Select.Option value="moscow">Москва</Select.Option>
-                        <Select.Option value="saint-petersburg">Санкт-Петербург</Select.Option>
-                        <Select.Option value="novosibirsk">Новосибирск</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
+                  <Row gutter={16}>
+                      <Col xs={24} md={12}>
+                          <Form.Item
+                              label="Имя"
+                              name="first_name"
+                              rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}
+                          >
+                              <Input placeholder="Введите ваше имя" />
+                          </Form.Item>
+                      </Col>
+                      
+                      <Col xs={24} md={12}>
+                          <Form.Item
+                              label="Фамилия"
+                              name="second_name"
+                              rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
+                          >
+                              <Input placeholder="Введите вашу фамилию" />
+                          </Form.Item>
+                      </Col>
 
-                <Form.Item label="О себе" name="bio">
-                  <Input.TextArea rows={4} placeholder="Расскажите немного о себе..." />
-                </Form.Item>
+                      <Col xs={24} md={12}>
+                          <Form.Item
+                              label="Отчество"
+                              name="last_name"
+                              rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
+                          >
+                              <Input placeholder="Введите ваше отчество" />
+                          </Form.Item>
+                      </Col>
+                      
+                      <Col xs={24} md={12}>
+                          <Form.Item
+                              label="Телефон"
+                              name="phone"
+                          >
+                            <PhoneInput
+                                inputStyle={{width:'100%', height:'20px'}}
+                                country={"ru"}
+                                enableSearch={true}
+                                searchPlaceholder={"Пожалуйста, введите телефонный номер!"}
+                            />
+                          </Form.Item>
+                      </Col>
 
-                <Divider />
+                      <Col xs={24} md={12}>
+                          <Form.Item
+                              label="Email"
+                              name="email"
+                              rules={[
+                                  { required: true, message: "Пожалуйста, введите ваш email" },
+                                  { type: 'email', message: "Введите корректный Email!" }
+                              ]}
+                          >
+                              <Input placeholder="Введите ваш Email" />
+                          </Form.Item>
+                      </Col>
 
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" className="mt-4 dark:hover:bg-black">
-                    Сохранить изменения
-                  </Button>
-                  <Button
-                    type="default"
-                    onClick={handleResetChanges}
-                    className="ml-4"
-                  >
-                    Сбросить изменения
-                  </Button>
-                </Form.Item>
+
+                      <Col xs={24} md={12}>
+                          <Form.Item label="Дата рождения" name="birth_day">
+                            <DatePicker
+                                showNow={false}
+                                placeholder="Выберите дату" 
+                                style={{ width: "100%" }} 
+                            />
+                          </Form.Item>
+                      </Col>
+
+                      <Col xs={24} md={12}>
+                          <Form.Item label="Город" name="city">
+                              <Input placeholder="Введите город..."/>
+                          </Form.Item>
+                      </Col>
+                  </Row>
+
+                  <Form.Item label="О себе" name="about_me">
+                      <Input.TextArea rows={4} placeholder="Расскажите немного о себе..." />
+                  </Form.Item>
+
+                  <Divider />
+
+                  <Form.Item>
+                      <Button type="primary" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4 dark:hover:bg-black">
+                          Сохранить изменения
+                      </Button>
+                  </Form.Item>
               </Form>
-            </TabPane>
-
-            {/* Вторая вкладка с настройками */}
-            {/* Вторая вкладка с настройками */}
-            <TabPane tab="Настройки панели управления" key="2">
-              <Form
-                form={formSettings}
-                layout="vertical"
-                onFinish={(values) => {
-                  console.log("Settings Updated:", values);
-                }}
+      </>
+    },
+    {
+      key: "2",
+      label: "Настройки панели управления",
+      children: <> <Form
+      form={formSettings}
+      layout="vertical"
+      onFinish={(values) => userProfileStore.updateProfile(values)}
+    >
+      <Row gutter={16}>
+          <Col xs={24} md={12}>
+              <Form.Item
+                tooltip="Определяет количество элементов, отображаемых на одной странице списка."
+                label="Количество элементов на странице"
+                name="pagination_size"
+                rules={[{ required: true, message: "Укажите количество элементов" }]}
               >
-                <Row gutter={16}>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Количество элементов на странице"
-                      name="pagination_size"
-                      rules={[{ required: true, message: "Укажите количество элементов" }]}
-                    >
-                      <InputNumber max={200} />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Автоматическое обновление данных"
-                      name="auto_refresh"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Отображать иконки уведомлений"
-                      name="show_notifications"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Показывать историю изменений"
-                      name="show_history"
-                      valuePropName="checked"
-                      initialValue={false}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
+                <InputNumber max={200} />
+              </Form.Item>
+          </Col>
+      </Row>
 
-                  {/* Новые настройки */}
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Анимации интерфейса"
-                      name="interface_animations"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
+      <Divider />
 
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Кастомизация главного меню"
-                      name="custom_menu"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" className="mt-4">
+          Сохранить изменения
+        </Button>
+      </Form.Item>
+    </Form></>
+    }
+  ]
 
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Настройка уведомлений"
-                      name="notification_settings"
-                    >
-                      <Select mode="multiple" placeholder="Выберите уведомления">
-                        <Select.Option value="new_messages">Новые сообщения</Select.Option>
-                        <Select.Option value="updates">Обновления</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Темная/светлая тема"
-                      name="theme_switch"
-                      valuePropName="checked"
-                      initialValue={false}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Предварительный просмотр данных"
-                      name="preview_data"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Настройки адаптивного интерфейса"
-                      name="responsive_settings"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Сохранение состояния интерфейса"
-                      name="save_interface_state"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Настройка виджетов"
-                      name="widget_settings"
-                    >
-                      <Select mode="multiple" placeholder="Выберите виджеты">
-                        <Select.Option value="graph">Графики</Select.Option>
-                        <Select.Option value="table">Таблицы</Select.Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Группировка элементов управления"
-                      name="group_controls"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Пользовательские шрифты"
-                      name="custom_fonts"
-                    >
-                      <Upload>
-                        <Button>Загрузить шрифт</Button>
-                      </Upload>
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Интеграция с календарем"
-                      name="calendar_integration"
-                      valuePropName="checked"
-                      initialValue={false}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Возможность оценивания"
-                      name="feedback_option"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Загрузка пользовательских иконок"
-                      name="custom_icons"
-                    >
-                      <Upload>
-                        <Button>Загрузить иконку</Button>
-                      </Upload>
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Настройки для экранных читалок"
-                      name="screen_reader_settings"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Поддержка нескольких языков"
-                      name="multi_language_support"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Создание и сохранение шаблонов"
-                      name="template_creation"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Ограничение по времени использования"
-                      name="time_limit"
-                      tooltip="Установите лимит времени на использование панели управления."
-                    >
-                      <InputNumber min={1} max={120} placeholder="Часы" />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Интеграция с облачными хранилищами"
-                      name="cloud_storage_integration"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Тестирование новых функций"
-                      name="beta_testing"
-                      valuePropName="checked"
-                      initialValue={false}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                  <Col xs={24} md={12}>
-                    <Form.Item
-                      label="Настройки приватности"
-                      name="privacy_settings"
-                      valuePropName="checked"
-                      initialValue={true}
-                    >
-                      <Switch />
-                    </Form.Item>
-                  </Col>
-
-                </Row>
-
-                <Divider />
-
-                <Form.Item>
-                  <Button type="primary" htmlType="submit" className="mt-4">
-                    Сохранить настройки
-                  </Button>
-                  <Button
-                    type="default"
-                    onClick={handleSettingsReset}
-                    className="ml-4"
-                  >
-                    Сбросить настройки
-                  </Button>
-                </Form.Item>
-              </Form>
-            </TabPane>
-
-
-
-          </Tabs>
+  return (
+    <>
+      {!userProfileStore.loading ? (
+        <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
+          <Tabs defaultActiveKey="1" items={items}/>
         </div>
       ) : (
-        <Spin size="large" />
+        <div className="flex justify-center items-center">
+          <Spin size="large" />
+        </div>
       )}
     </>
   );
 };
 
-export default ProfilePage;
+export default observer(ProfilePage);

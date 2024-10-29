@@ -29,7 +29,7 @@ export const avatarIconColumns = ({ handleDeleteAvatar }: avatarIconColumnsProps
         ),
     },
     {
-        title: 'Дата публикации',
+        title: 'Дата создания',
         dataIndex: 'created_at',
         width: '20%',
         showSorterTooltip: false,

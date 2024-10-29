@@ -155,12 +155,10 @@ class CourseStore {
 
     deleteCourse = action(async (courseId: number) => {
         await DELETE(`/api/courses?courseId=${courseId}`).then(response => {
-            debugger
             notification.success({ message: response.message })
             this.userCourses = this.userCourses.filter(course => courseId !== course.id)
 
         }).catch(e => {
-            debugger
             notification.warning({ message: e.response.data.message })
         })
     })

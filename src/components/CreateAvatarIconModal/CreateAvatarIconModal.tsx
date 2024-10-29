@@ -34,7 +34,6 @@ const CreateAvatarIconModal: FC<CreateAvatarIconModalProps> = ({ showModal, onCa
             return true;
         },
         onChange(info: any) {
-            debugger
             const { status } = info.file;
             if (status === 'done') {
                 notification.success({ message: `${info.file.name} загружен успешно.` });

@@ -174,9 +174,10 @@ let dashboardMenuItems: MenuItem[] = [
 
 const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { resolvedTheme } = useTheme()
-    const { avatarIconsStore } = useMobxStores()
+    const { avatarIconsStore,userProfileStore } = useMobxStores()
 
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+    const [avatar, setAvatar] = useState<string | null>(null);
     const pathName = usePathname();
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
@@ -260,6 +261,19 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
+        userProfileStore.getUserProfile().then((response) => {
+            const userData = response.data;
+      
+            if (userData.profile_url) {
+              const fullAvatarUrl = `${nextConfig.env?.API_URL}${userData.profile_url}`;
+              setAvatar(fullAvatarUrl);
+            } else {
+              setAvatar(null);
+            }
+            
+          }).finally(() => {
+            userProfileStore.setLoading(false)
+          });
         avatarIconsStore.getAllAvatarIcons();
     }, [])
 
@@ -291,6 +305,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                     <div className="flex flex-col items-center justify-center mb-2">
                         <div className="relative mb-4">
                             <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300">
+                                {/* <Image src={avatar ?? undefined} width={100} height={100} alt="asdasd"/> */}
                                 {/* <div
                                     className="absolute bottom-0 right-0 bg-red-600 rounded-full p-2 transform transition-transform hover:scale-110 cursor-pointer shadow-lg"
                                     onClick={showUploadModal}

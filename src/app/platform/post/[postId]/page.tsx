@@ -3,9 +3,11 @@ import { Post } from "@/stores/PostStore";
 import { useMobxStores } from "@/stores/stores";
 import { Breadcrumb, Card, Divider, Button, Input, Avatar, C, List, notification } from "antd";
 import { observer } from "mobx-react";
+import nextConfig from "next.config.mjs";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const { TextArea } = Input;
 
@@ -55,8 +57,12 @@ const PostPage = () => {
                 <Card bordered={false} className="mt-6 shadow-lg">
                     {currentPost?.image && (
                         <div className="w-full h-80 overflow-hidden rounded-lg">
-                            <img
-                                src={`http://localhost:5000/${currentPost.image}`}
+                            <Image
+                                width={0}
+                                height={0}
+                                sizes="100vw"
+                                style={{ width: '100%', height: 'auto' }}
+                                src={`${nextConfig.env?.API_URL}${currentPost.image}`}
                                 alt={currentPost.name}
                                 className="w-full h-full object-cover"
                             />
