@@ -161,12 +161,7 @@ let dashboardMenuItems: MenuItem[] = [
                 key: 'faq',
                 label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
                 icon: <BarsOutlined />,
-            },
-            {
-                key: 'avatar_icons',
-                label: <Link href={"/control-panel/terms"}>Условия использования</Link>,
-                icon: <BarsOutlined />,
-            },
+            }
         ]
     },
     {

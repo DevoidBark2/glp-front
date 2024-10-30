@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Divider,
@@ -9,7 +9,7 @@ import {
   Row,
   Col,
   Statistic,
-  Progress, Skeleton, Spin, Button,
+  Progress, Skeleton
 } from "antd";
 import { observer } from "mobx-react";
 import {
@@ -49,14 +49,14 @@ const ControlPanel = () => {
       setCurrentDate(dayjs().locale('ru').format('DD MMMM YYYY, HH:mm:ss'));
     }, 1000);
 
-    statisticsStore.getAllStatisticsData();
-
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     const currentUser = getCookieUserDetails();
     setCurrentUser(currentUser);
+
+    statisticsStore.getAllStatisticsData();
   }, [])
 
 

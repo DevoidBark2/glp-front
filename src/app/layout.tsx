@@ -7,14 +7,13 @@ import {ConfigProvider} from "antd";
 import React from "react";
 import {MAIN_COLOR} from "@/constants";
 import {ThemeProviders} from "./themeProviders"
-import {useTheme} from "next-themes";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    const { resolvedTheme } = useTheme()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={roboto.className}>
@@ -90,7 +89,7 @@ export default function RootLayout({
            >
                <StoresProvider>
                    <AntdRegistry>
-                       <div>{children}</div>
+                        {children}
                    </AntdRegistry>
                </StoresProvider>
            </ConfigProvider>
