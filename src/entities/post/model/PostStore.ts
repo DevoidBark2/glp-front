@@ -1,11 +1,9 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
 import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
-import { getUserToken } from "@/lib/users";
 import { notification } from "antd"
-import dayjs, { Dayjs } from "dayjs";
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
-import { FORMAT_VIEW_DATE } from "@/constants";
 import { User } from "./UserStore";
+import { postMapper } from "../mappers";
 
 
 export type ModeratorFeedback = {
@@ -162,19 +160,19 @@ class PostStore {
     })
 }
 
-export const postMapper = (post: Post) => {
-    return {
-        id: post.id,
-        name: post.name,
-        image: post.image,
-        description: post.description,
-        content: post.content,
-        status: post.status,
-        is_publish: post.is_publish,
-        created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
-        user: post.user,
-        moderatorFeedBack: post.moderatorFeedBack
-    };
-}
+// export const postMapper = (post: Post) => {
+//     return {
+//         id: post.id,
+//         name: post.name,
+//         image: post.image,
+//         description: post.description,
+//         content: post.content,
+//         status: post.status,
+//         is_publish: post.is_publish,
+//         created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
+//         user: post.user,
+//         moderatorFeedBack: post.moderatorFeedBack
+//     };
+// }
 
 export default PostStore;
