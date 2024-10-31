@@ -1,10 +1,9 @@
 "use client"
-import React, { Suspense, useEffect, useState } from "react";
-import { Button, Divider, Menu, MenuProps, Modal, Skeleton, Upload } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Divider, Menu, MenuProps, Modal, Skeleton } from "antd";
 import Link from "next/link";
 import Image from "next/image"
 import { observer } from "mobx-react";
-import ThemeSwitch from "@/components/ThemeSwitch";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { UserType } from "@/components/Header/Header";
@@ -16,14 +15,11 @@ import {
     BookOutlined, LogoutOutlined,
     PartitionOutlined, SettingOutlined,
     SolutionOutlined,
-    ToolOutlined, UploadOutlined, UserOutlined, StarOutlined
+    ToolOutlined, UserOutlined,MenuUnfoldOutlined,MenuFoldOutlined
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import nextConfig from "next.config.mjs";
 
-const dark_color = "#e3d"
-const text1 = "#121212"
-const text2 = "#bbcaa3"
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';
     for (const item of items) {
@@ -205,7 +201,6 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         if (user.user.role === UserRole.TEACHER) {
             dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                 menuItem?.key !== "moderators_items"
-                //&& menuItem?.key !== "banners"
                 && menuItem?.key !== "settings"
                 && menuItem?.key !== "nomenclature"
                 && menuItem?.key !== "logging"
@@ -215,7 +210,6 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
 
         if (user.user.role === UserRole.MODERATOR) {
             dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
-                //menuItem?.key !== "banners"
                 menuItem?.key !== "settings"
                 && menuItem?.key !== "nomenclature"
                 && menuItem?.key !== "logging"
@@ -232,29 +226,11 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const [selectedAvatar, setSelectedAvatar] = useState(currentUser?.user?.avatar || "/static/default_avatar.png");
     const [customImage, setCustomImage] = useState(null);
 
-    const avatarOptions = [
-        '/static/avatar1.png',
-        '/static/avatar2.png',
-        '/static/avatar3.png',
-        '/static/avatar4.png',
-    ];
+    const [collapsed, setCollapsed] = useState(false);
 
-    const handleAvatarSelect = (avatar) => {
-        setSelectedAvatar(avatar);
-    };
-
-    const handleUpload = (file) => {
-        const reader = new FileReader();
-        // reader.onload = () => {
-        //     setCustomImage(reader.result);
-        // };
-        reader.readAsDataURL(file);
-        return false; // Prevent automatic upload
-    };
-
-    const showUploadModal = () => {
-        setIsModalVisible(true);
-    };
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
 
     const handleOk = (color) => {
         setIsModalVisible(false);
@@ -265,7 +241,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         setIsModalVisible(false);
     };
 
-    const [selectedColor, setSelectedColor] = useState<string>('#FF5733'); // Цвет по умолчанию
+    const [selectedColor, setSelectedColor] = useState<string>('#FF5733');
 
     const handleColorSelect = (color: string) => {
         setSelectedColor(color);
@@ -312,112 +288,63 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </Modal>
             <div className="flex">
+  {/* <Button type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
+    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+  </Button> */}
+  
+  {/* Обертка для всего меню с условием `collapsed` */}
+  <div className={`${collapsed ? 'hidden' : 'flex'} flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
+    <div className="flex flex-col items-center justify-center mb-2">
+      <div className="relative mb-4">
+        <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300">
+          {/* <Image src={avatar ?? undefined} width={100} height={100} alt="asdasd"/> */}
+          {/* <div
+              className="absolute bottom-0 right-0 bg-red-600 rounded-full p-2 transform transition-transform hover:scale-110 cursor-pointer shadow-lg"
+              onClick={showUploadModal}
+          >
+              <Button type="text" icon={<UploadOutlined />} size="small" />
+          </div> */}
+        </div>
+      </div>
 
-                <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
-                    <div className="flex flex-col items-center justify-center mb-2">
-                        <div className="relative mb-4">
-                            <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300">
-                                {/* <Image src={avatar ?? undefined} width={100} height={100} alt="asdasd"/> */}
-                                {/* <div
-                                    className="absolute bottom-0 right-0 bg-red-600 rounded-full p-2 transform transition-transform hover:scale-110 cursor-pointer shadow-lg"
-                                    onClick={showUploadModal}
-                                >
-                                    <Button type="text" icon={<UploadOutlined />} size="small" />
-                                </div> */}
-                            </div>
-                        </div>
+      <Skeleton loading={loading} active>
+        <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
+          <h1 className="text-lg font-bold mb-1 text-center">{currentUser?.user?.user_name}</h1>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-gray-300 text-sm">{currentUser?.user.role}</span>
+            <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
+          </div>
+        </div>
+      </Skeleton>
+    </div>
 
-                        <Skeleton loading={loading} active>
-                            <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
-                                <h1 className={`text-[${text1}] dark:text-[${text2}] text-lg font-bold mb-1 text-center`}>{currentUser?.user?.user_name}</h1>
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className="text-gray-300 text-sm">{currentUser?.user.role}</span>
-                                    <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
-                                </div>
-                            </div>
-                        </Skeleton>
-                        <div className="flex items-center gap-6 mt-4">
-                            {/* <div className="group relative cursor-pointer transform transition-transform hover:scale-110">
-                            <ThemeSwitch />
-                            <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white
-                            text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity delay-150">
-                                <Suspense>
-                                    {resolvedTheme === "light" ? "Темная тема" : "Светлая тема"}
-                                </Suspense>
-                            </span>
-                        </div> */}
-                            {/*<div className="group relative cursor-pointer transform transition-transform hover:scale-110">*/}
-                            {/*    <Image*/}
-                            {/*        src="/static/notification_icon.svg"*/}
-                            {/*        alt="Уведомления"*/}
-                            {/*        width={30}*/}
-                            {/*        height={30}*/}
-                            {/*        className="hover:opacity-80"*/}
-                            {/*    />*/}
-                            {/*    <div className="absolute top-0 right-0 bg-red-600 rounded-full h-4 w-4 text-xs*/}
-                            {/*    text-white flex items-center justify-center animate-bounce">3</div>*/}
-                            {/*    <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black*/}
-                            {/*        text-white text-xs rounded-lg px-2 py-1 opacity-0*/}
-                            {/*        group-hover:opacity-100 transition-opacity delay-150"*/}
-                            {/*    >*/}
-                            {/*        Уведомления</span>*/}
-                            {/*</div>*/}
+    <Divider className="bg-gray-600 dark:bg-white" />
+    {
+      !loading ? (
+        <Menu
+          style={{ width: 240 }}
+          defaultSelectedKeys={[selectedKey]}
+          mode="vertical"
+          inlineCollapsed={collapsed}
+          items={dashboardMenuItems}
+          theme={resolvedTheme === "light" ? "light" : "dark"}
+        />
+      ) : (
+        <>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
+            <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
+          ))}
+        </>
+      )
+    }
+  </div>
 
-                            {/*<div className="group relative cursor-pointer transform transition-transform hover:scale-110">*/}
-                            {/*    <Link href={"/control-panel/settings"}>*/}
-                            {/*        <Image*/}
-                            {/*            src="/static/settings_panel_icon.svg"*/}
-                            {/*            alt="Настройки"*/}
-                            {/*            width={30}*/}
-                            {/*            height={30}*/}
-                            {/*            className="hover:opacity-80"*/}
-                            {/*        />*/}
-                            {/*    </Link>*/}
-                            {/*    <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black*/}
-                            {/*        text-white text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100*/}
-                            {/*        transition-opacity delay-150"*/}
-                            {/*    >Настройки</span>*/}
-                            {/*</div>*/}
-                            {/* <div className="group relative cursor-pointer transform transition-transform hover:scale-110">
-                            <Link href={"/control-panel/profile"}>
-                                <Image
-                                    src="/static/profile_panel_icon.svg"
-                                    alt="Профиль"
-                                    width={30}
-                                    height={30}
-                                    className="hover:opacity-80"
-                                />
-                            </Link>
-                            <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black text-white
-                                text-xs rounded-lg px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity delay-150"
-                            >Профиль</span>
-                        </div> */}
-                        </div>
-                    </div>
+  {/* Контент справа от меню */}
+  <div className="p-6 w-full">
+    {children}
+  </div>
+</div>
 
-
-                    <Divider className="bg-gray-600 dark:bg-white" />
-                    {
-                        !loading ? <Menu
-                            style={{ width: 240 }}
-                            defaultSelectedKeys={[selectedKey]}
-                            mode="vertical"
-                            items={dashboardMenuItems}
-                            theme={resolvedTheme === "light" ? "light" : "dark"}
-
-                        /> : <>
-                            {
-                                [1, 2, 3, 4, 5, 6, 7, 8].map(it => (
-                                    <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
-                                ))
-                            }
-                        </>
-                    }
-                </div>
-                <div className="p-6 w-full">
-                    {children}
-                </div>
-            </div>
         </>
     );
 }

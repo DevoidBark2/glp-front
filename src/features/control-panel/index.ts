@@ -1,0 +1,1 @@
+export {WelcomeTextComponent} from "./ui/welcomeTextComponent";
