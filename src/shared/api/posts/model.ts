@@ -1,5 +1,4 @@
 import { UploadFile } from "antd";
-import { File } from "buffer";
 
 export enum PostStatusEnum {
     NEW = 'new',

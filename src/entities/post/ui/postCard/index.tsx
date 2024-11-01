@@ -1,81 +1,51 @@
+import { Post } from "@/shared/api/posts/model";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { Card, Divider } from "antd";
+import dayjs from "dayjs";
+import nextConfig from "next.config.mjs";
+import Image from "next/image";
 
-export const PostCard = () => {
+type PostCardProps = {
+    post: Post
+}
+
+export const PostCard = ({ post }: PostCardProps) => {
     return (
-        <div className="container mx-auto">
-            <div className="px-6">
-                {/* <div className="mt-4">
-                    <Breadcrumb items={[
-                        {
-                            title: <Link href={"/platform"}>Главная</Link>,
-                        },
-                        {
-                            title: <Link href={`/platform/post/${postId}`}>{currentPost?.name || "Пост"}</Link>,
-                        }
-                    ]} />
-                </div> */}
+        <Card bordered={false} className="mt-6 shadow-lg p-6">
+            <div className="flex flex-col sm:flex-row">
 
-
-                {/* Карточка поста */}
-                <Card bordered={false} className="mt-6 shadow-lg">
-                    {currentPost?.image && (
-                        <div className="w-full h-80 overflow-hidden rounded-lg">
-                            <Image
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                style={{ width: '100%', height: 'auto' }}
-                                src={`${nextConfig.env?.API_URL}${currentPost.image}`}
-                                alt={currentPost.name}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                    )}
-                    <h1 className="text-3xl font-bold mt-4">{currentPost?.name}</h1>
-                    <p className="text-gray-600 mt-2">{currentPost?.description}</p>
-                    <Divider />
-                    <div
-                        className="prose max-w-none mt-4"
-                        dangerouslySetInnerHTML={{ __html: currentPost?.content || "" }}
-                    />
-                </Card>
-
-                {/* Блок дял комментариев */}
-                {/* <div className="mt-8">
-                    <h2 className="text-xl font-semibold mb-4">Комментарии</h2>
-                    <Card>
-                        <List
-                            className="comment-list"
-                            itemLayout="horizontal"
-                            dataSource={comments}
-                            renderItem={(item) => (
-                                <li>
-                                    {item.author}
-                                </li>
-                            )}
+                {/* Левая колонка с изображением */}
+                {post?.image && (
+                    <div className="flex-shrink-0 w-full sm:w-1/3 h-64 overflow-hidden rounded-lg mb-4 sm:mb-0 sm:mr-6">
+                        <Image
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: '100%', height: 'auto' }}
+                            src={`${nextConfig.env?.API_URL}${post?.image}`}
+                            alt={post?.name}
+                            className="w-full h-full object-cover"
                         />
-                    </Card>
+                    </div>
+                )}
 
-                    <Card className="mt-4">
-                        <h3 className="text-lg font-semibold mb-2">Добавить комментарий</h3>
-                        <TextArea
-                            rows={4}
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            placeholder="Напишите ваш комментарий здесь..."
-                        />
-                        <div className="flex justify-end mt-2">
-                            <Button
-                                type="primary"
-                                onClick={handleCommentSubmit}
-                                disabled={!comment.trim()}
-                            >
-                                Отправить
-                            </Button>
-                        </div>
-                    </Card>
-                </div> */}
+                {/* Правая колонка с заголовком и контентом */}
+                <div className="flex-grow">
+                    <h1 className="text-3xl font-bold mb-2">{post?.name}</h1>
+                    <p className="text-gray-600 mb-4">{post?.description}</p>
+
+                </div>
+                <p className="flex flex-col justify-end text-sm text-gray-500 mt-4"
+                    title="Дата публикации">
+                    Опубликовано: {dayjs(post?.created_at).format(FORMAT_VIEW_DATE)}
+                </p>
+
             </div>
-        </div>
+            <Divider />
+            <div
+                className="prose max-w-none mt-4"
+                dangerouslySetInnerHTML={{ __html: post?.content || "" }}
+            />
+        </Card>
     );
 }

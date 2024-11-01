@@ -62,7 +62,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
                     title={currentUser?.user.role !== UserRole.SUPER_ADMIN && renderTooltipTitle(record)}
                 >
                     <Switch
-                        disabled={record.status !== PostStatusEnum.APPROVED}
+                        // disabled={record.status !== PostStatusEnum.APPROVED}
                         checked={record.is_publish}
                         onChange={(checked) => publishPost(record.id, checked)}
                     />

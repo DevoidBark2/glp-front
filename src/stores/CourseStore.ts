@@ -8,12 +8,6 @@ import { FORMAT_VIEW_DATE } from "@/constants";
 import { SectionCourseItem } from "@/stores/SectionCourse";
 import { User } from "./UserStore";
 
-export type Teacher = {
-    id: number;
-    name: string;
-    email: string;
-}
-
 type Category = {
     id: number;
     name: string
@@ -35,12 +29,6 @@ export type Course = {
     sections: SectionCourseItem[]
 }
 
-export type TeacherCourse = {
-    key: number;
-    name: string;
-    image: string;
-    publish_date: Date
-}
 class CourseStore {
     constructor() {
         makeAutoObservable(this)

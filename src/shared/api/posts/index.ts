@@ -29,9 +29,9 @@ export const createPost = withAuth(async (values: PostCreateForm, config = {}): 
 });
 
 
-export const publishPost = async (postId: number, checked: boolean) => (await axiosInstance.post('api/publish-post', {id: postId, checked: checked})).data;
+export const publishPost = async (postId: number, checked: boolean) => (await axiosInstance.post('api/publish-post', { id: postId, checked: checked })).data;
 
-export const changePost = async (post:Post) => (await axiosInstance.put<Post>('/api/post', post)).data;
+export const changePost = withAuth(async (post: Post, config = {}) => (await axiosInstance.put<Post>('/api/post', post, config)).data);
 
 export const deletePost = async (id: number) => (await axiosInstance.delete(`/api/posts/${id}`)).data;
 

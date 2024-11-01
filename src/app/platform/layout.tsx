@@ -61,9 +61,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {!pathName.includes('/courses/') && (
                         <footer className="bg-gray-800 text-white py-10 mt-10">
                             <div className="container mx-auto px-6">
-                                <div className="flex flex-wrap justify-between">
+                                <div className="flex flex-wrap sm:flex-nowrap justify-around items-start">
+
                                     {/* О проекте */}
-                                    <div className="w-full sm:w-1/3 mb-6">
+                                    <div className="w-full sm:w-1/3 mb-6 sm:mb-0 text-left">
                                         <h4 className="text-lg font-semibold mb-3">О проекте</h4>
                                         <p className="text-gray-300 text-sm leading-relaxed">
                                             {footerInfo?.subscription_platform}
@@ -71,7 +72,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                     </div>
 
                                     {/* Контакты */}
-                                    <div className="w-full sm:w-1/3 mb-6">
+                                    <div className="w-full sm:w-1/3 mb-6 sm:mb-0 text-left sm:text-center">
                                         <h4 className="text-lg font-semibold mb-3">Контакты</h4>
                                         <p className="text-gray-300 text-sm">
                                             Email:
@@ -81,25 +82,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                         </p>
                                         <p className="text-gray-300 text-sm mt-1">
                                             Телефон:
-                                            <span className="ml-1">{footerInfo?.support_phone || "+7 (000) 000-0000"}</span>
-                                        </p>
-                                        <p className="text-gray-300 text-sm mt-1">
-                                            Адрес: <span className="ml-1">Москва, ул. Примерная, 1</span>
+                                            <span className="ml-1">{footerInfo?.contact_phone || "+7 (000) 000-0000"}</span>
                                         </p>
                                     </div>
 
                                     {/* Полезные ссылки */}
-                                    <div className="w-full sm:w-1/3 mb-6">
+                                    <div className="w-full sm:w-1/3 text-left sm:text-center">
                                         <h4 className="text-lg font-semibold mb-3">Полезные ссылки</h4>
                                         <ul className="text-gray-300 text-sm space-y-2">
                                             <li>
                                                 <Link href="/faq" className="hover:underline">
                                                     Вопросы и ответы (FAQ)
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link href="/terms" className="hover:underline">
-                                                    Условия использования
                                                 </Link>
                                             </li>
                                             <li>
@@ -119,6 +112,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                 </div>
                             </div>
                         </footer>
+
 
                     )}
                 </>
