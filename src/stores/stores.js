@@ -1,5 +1,4 @@
 import React from "react";
-import UserStore from "./UserStore";
 import PostStore from "@/stores/PostStore";
 import SettingsStore from "@/stores/SettingsStore";
 import CourseStore from "@/stores/CourseStore";
@@ -15,6 +14,7 @@ import UserProfileStore from "./UserProfileStore";
 import FeedBacksStore from "./FeedBacksStore";
 import AchievementsStore from "./AchievementsStore";
 import ModeratorStore from "./ModeratorStore";
+import UserStore from "./UserStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();

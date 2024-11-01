@@ -1,103 +1,84 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
-import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
-import { notification } from "antd"
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
-import { User } from "./UserStore";
+import { action, makeAutoObservable } from "mobx";
 import { postMapper } from "../mappers";
+import { Post, PostStatusEnum } from "@/shared/api/posts/model";
+import { changePost, createPost, deletePost, getAllPost, getCPAllPost, getPostById, publishPost, submitReviewPost } from "@/shared/api/posts";
 
-
-export type ModeratorFeedback = {
-    id: number;
-    comment: string;
-    comments: Object
-}
-
-export type Post = {
-    id: number;
-    name: string;
-    image: string;
-    description: string;
-    content: string;
-    status: PostStatusEnum;
-    is_publish: boolean;
-    rejectReason?: string[];
-    created_at: Date;
-    user: User
-    moderatorFeedBack?: ModeratorFeedback
-}
 class PostStore {
     constructor() {
-        makeAutoObservable(this, {});
+        makeAutoObservable(this);
     }
 
     allPosts: Post[] = []
     userPosts: Post[] = [];
     loading: boolean = false;
+    createPostModal: boolean = false;
 
     setLoading = action((value: boolean) => {
         this.loading = value;
     })
 
-    createPostModal: boolean = false;
-
     setCreatePostModal = action((value: boolean) => {
         this.createPostModal = value;
     })
+
     getAllPosts = action(async () => {
-        this.setLoading(true);
-        await GET(`/api/posts`).then(response => {
-            this.allPosts = response.response.data.map(postMapper)
-        }).catch(e => { }).finally(() => {
+        try{
+            this.setLoading(true);
+            const data = await getAllPost();
+            this.allPosts = data.map(postMapper);
+        }catch(e) {
+
+        }finally{
             this.setLoading(false);
-        })
+        }
+    })
+
+    getPostById = action(async (postId: number) => {
+        try{
+            return await getPostById(postId);
+        }catch(e) {
+
+        }finally{
+
+        }
     })
 
     getUserPosts = action(async () => {
-        this.setLoading(true);
-        await GET(`/api/posts-user`).then(response => {
-            this.userPosts = response.data.map(postMapper)
-        }).catch(e => { }).finally(() => {
-            this.setLoading(false);
-        })
+        try{
+            this.setLoading(true);
+            const data = await getCPAllPost();
+            this.userPosts = data.map(postMapper);
+        }catch(e) {
+
+        }finally {
+            this.setLoading(false)
+        }
     })
 
     createPost = action(async (values: any) => {
-        this.setLoading(true)
-        const form = new FormData();
-        form.append('image', values.image && values.image.originFileObj)
-        form.append('name', values.name)
-        form.append('description', values.description);
-        form.append('content', values.content)
-        if (values.status) {
-            form.append('status', values.status)
-        }
+        try{
+            this.setLoading(true)
+            const data = await createPost(values);
+            
+            this.userPosts = [...this.userPosts, postMapper(data)];
+             //notification.success({ message: response.message });
+        }catch(e) {
 
-        if (values.is_publish) {
-            form.append('is_publish', values.is_publish)
-        }
-
-        return await POST(`/api/posts`, form).then(response => {
-            runInAction(() => {
-                this.userPosts = [...this.userPosts, postMapper(response.data)];
-                notification.success({ message: response.message });
-            })
-        }).finally(() => {
+        }finally {
             this.setLoading(false)
             this.setCreatePostModal(false)
-        })
+        }
     })
 
-    deletePost = action(async (postId: number) => {
-        await DELETE(`/api/posts?postId=${postId}`).then((response) => {
-            this.userPosts = this.userPosts.filter(post => post.id !== postId);
-            notification.success({ message: response.message })
-        }).catch(e => {
-        })
+    deletePost = action(async (id: number) => {
+        await deletePost(id);
+        //notification.success({ message: response.message })
+        this.userPosts = this.userPosts.filter(post => post.id !== id);
     })
 
     submitReview = action(async (postId: number) => {
-        await PUT(`/api/submit-preview?postId=${postId}`).then(response => {
-            const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
+        await submitReviewPost(postId);
+        const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
                 const updatedPosts = [...this.userPosts];
@@ -106,22 +87,18 @@ class PostStore {
                     status: PostStatusEnum.IN_PROCESSING
                 };
                 this.userPosts = updatedPosts;
-                notification.success({ message: response.message });
+                // notification.success({ message: response.message });
             }
-        }).catch()
+        // await PUT(`/api/submit-preview?postId=${postId}`).then(response => {
+            
+        // }).catch()
     })
 
-
-    getPostById = action(async (postId: string) => {
-        return await GET(`/api/post?postId=${postId}`).then(response => {
-            return response.data
-        }).catch(e => {
-
-        })
-    })
+   
 
     publishPost = action(async (postId: number, checked: boolean) => {
-        await POST('/api/publish-post', { id: postId, checked: checked }).then(response => {
+        try{
+            await publishPost(postId,checked);
             const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
@@ -131,48 +108,34 @@ class PostStore {
                     is_publish: checked
                 };
                 this.userPosts = updatedPosts;
-                notification.success({ message: response.data.message });
+                //notification.success({ message: response.data.message });
             }
+        }catch(e) {
 
-        }).catch(e => {
-
-        })
+        }
     })
 
     changePost = action(async (post: Post) => {
-        await PUT('/api/post', post).then(response => {
-            this.userPosts = this.userPosts.map((item) => {
-                if (item.id === post.id) {
-                    return { ...item, ...response.data.post }
-                }
-                else {
-                    return item;
-                }
+        const data = await changePost(post);
+        this.userPosts = this.userPosts.map((item) => {
+            if (item.id === post.id) {
+                return { ...item, ...data }
             }
-            );
-            if (response.data.message) {
-                notification.warning({ message: response.data.message })
+            else {
+                return item;
             }
-            notification.success({ message: response.message })
-        }).catch(e => {
-            notification.success({ message: e.response.data.message })
-        })
+        }
+        );
+        // if (response.data.message) {
+        //     notification.warning({ message: response.data.message })
+        // }
+        // notification.success({ message: response.message })
+        // await PUT('/api/post', post).then(response => {
+            
+        // }).catch(e => {
+        //     notification.success({ message: e.response.data.message })
+        // })
     })
 }
-
-// export const postMapper = (post: Post) => {
-//     return {
-//         id: post.id,
-//         name: post.name,
-//         image: post.image,
-//         description: post.description,
-//         content: post.content,
-//         status: post.status,
-//         is_publish: post.is_publish,
-//         created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
-//         user: post.user,
-//         moderatorFeedBack: post.moderatorFeedBack
-//     };
-// }
 
 export default PostStore;

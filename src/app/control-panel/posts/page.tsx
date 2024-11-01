@@ -6,7 +6,7 @@ import {
     Tooltip,
 } from "antd";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/stores/stores";
+import { useMobxStores } from "@/shared/store/RootStore";
 import React, { useEffect, useState } from "react";
 import { ModeratorFeedback, Post } from "@/stores/PostStore";
 import {

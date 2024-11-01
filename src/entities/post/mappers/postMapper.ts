@@ -1,4 +1,4 @@
-import { FORMAT_VIEW_DATE } from "@/constants";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { Post } from "@/stores/PostStore";
 import dayjs from "dayjs";
 

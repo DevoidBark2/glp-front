@@ -1,11 +1,11 @@
 "use client"
-import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { PlatformPostItem } from "@/components/PlatformPostItem/PlatformPostItem";
 import { Drawer, Button, Divider, Tooltip, Input, DatePicker, Select, Checkbox, Space, Typography, Empty, Spin } from 'antd';
 import { SearchOutlined, FilterOutlined, CloseCircleOutlined, CheckOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const { Text } = Typography;
 
@@ -15,7 +15,7 @@ const PlatformPage = () => {
     const toggleFilterDrawer = () => {
         setIsFilterVisible(!isFilterVisible);
     };
-    const { postStore } = useMobxStores()
+    const { postStore } = useMobxStores();
     const { RangePicker } = DatePicker;
 
     useEffect(() => {

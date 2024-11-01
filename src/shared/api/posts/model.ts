@@ -1,3 +1,6 @@
+import { UploadFile } from "antd";
+import { File } from "buffer";
+
 export enum PostStatusEnum {
     NEW = 'new',
     IN_PROCESSING = 'in_processing',
@@ -6,6 +9,20 @@ export enum PostStatusEnum {
     MODIFIED = "modified"
 }
 
+export type PostCreateForm = {
+    name: string;
+    description: string;
+    content: string;
+    is_publish?: boolean;
+    status?: string;
+    image?: UploadFile;
+}
+
+export type ModeratorFeedback = {
+    id: number;
+    comment: string;
+    comments: Object
+}
 
 export type Post = {
     id: number;

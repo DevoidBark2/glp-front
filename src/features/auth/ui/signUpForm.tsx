@@ -1,5 +1,6 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
+import { useMobxStores } from "@/stores/stores";
 
 type SignUpFormType = {
     first_name: string;
@@ -10,23 +11,27 @@ type SignUpFormType = {
 }
 
 export const SignUpForm = () => {
+    const { userStore } = useMobxStores();
     const [form] = Form.useForm<SignUpFormType>();
 
+    const handleSubmitForm = (values: SignUpFormType) => {
+        userStore.registerUser(values).then(response => {
+            userStore.setOpenRegisterModal(false);
+            notification.success({message: response.response.data.message})
+        }).catch(e => {
+            notification.error({
+                message: e.response.data.message
+            })
+        })
+    }
+
     return(
-        <div className="flex">
-            <div className="m-auto">
-                <Form
+        <div className="flex m-auto">
+            <Form
                     form={form}
                     layout="vertical"
                     style={{width:300}}
-                    onFinish={(values) => userStore.registerUser(values).then(response => {
-                        userStore.setOpenRegisterModal(false);
-                        notification.success({message: response.response.data.message})
-                    }).catch(e => {
-                        notification.error({
-                            message: e.response.data.message
-                        })
-                    })}
+                    onFinish={handleSubmitForm}
                 >
                     <Form.Item
                         label="Имя"
@@ -108,7 +113,7 @@ export const SignUpForm = () => {
                     </Form.Item>
 
 
-                    {/* <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center">
                         <Form.Item style={{marginTop: '22px'}}>
                             <Button type="primary" htmlType="submit" loading={userStore.loading}
                                     style={{padding: '20px 43px', display: "flex", alignItems: "center"}}>
@@ -117,10 +122,9 @@ export const SignUpForm = () => {
                         </Form.Item>
                         <p>Есть аккаунт? <span onClick={() => {
                             userStore.setOpenRegisterModal(false)
-                        }} className="hover:cursor-pointer" style={{color:MAIN_COLOR}}>Авторизуйся</span></p>
-                    </div> */}
+                        }} className="hover:cursor-pointer text-[#00b96b]">Авторизуйся</span></p>
+                    </div>
                 </Form>
-            </div>
         </div>
     );
 }
