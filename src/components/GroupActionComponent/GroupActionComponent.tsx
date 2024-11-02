@@ -1,7 +1,16 @@
 import {Button, Input, Select, Space} from "antd";
 import React from "react";
-import {GroupActionComponentProps} from "@/interfaces/GroupActionComponentProps";
+
 import {StatusUserEnum} from "@/enums/StatusUserEnum";
+
+export interface GroupActionComponentProps {
+    loading: boolean;
+    searchText: string;
+    setSearchText: (value: string) => void,
+    selectedAction: StatusUserEnum | null;
+    setSelectedAction: (value: StatusUserEnum) => void,
+    submitSelectedAction: () => Promise<void>,
+}
 
 const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loading,searchText,setSearchText,selectedAction,setSelectedAction,submitSelectedAction}) => {
     return <div>

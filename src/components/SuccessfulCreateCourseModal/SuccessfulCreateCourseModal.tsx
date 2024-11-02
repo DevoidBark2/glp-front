@@ -1,5 +1,5 @@
 import { Button, Modal, Result } from "antd";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FC } from "react";
 
 interface SuccessfulCreateCourseModalProps {
@@ -8,7 +8,6 @@ interface SuccessfulCreateCourseModalProps {
 }
 
 const SuccessfulCreateCourseModal: FC<SuccessfulCreateCourseModalProps> = ({ openModal, onCancel }) => {
-    const router = useRouter();
     return (
         <Modal
             open={openModal}
@@ -20,7 +19,9 @@ const SuccessfulCreateCourseModal: FC<SuccessfulCreateCourseModalProps> = ({ ope
                 title="Курс успешно создан!"
                 subTitle="Для успешного публикования курса необходимо создать, как минимум 1 раздел."
                 extra={[
-                    <Button type="primary" onClick={() => router.push('/control-panel/sections/add')}> Перейти к созданию</Button>,
+                    <Link href="/control-panel/sections/add">
+                    <Button type="primary"> Перейти к созданию</Button>
+                    </Link>,
                     <Button onClick={onCancel}>Закрыть</Button>,
                 ]}
             />

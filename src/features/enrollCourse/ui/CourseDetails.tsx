@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Divider, Input, Modal, Rate } from "antd";
 import Image from "next/image"
-import { CourseDetailsModalProps } from "@/interfaces/CourseDetailsModalProps";
 import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
 import CourseAccessComponent from "@/components/CourseAccessComponent/CourseAccessComponent";
 import { AccessRightEnum } from "@/enums/AccessCourseEnum";
@@ -11,8 +10,15 @@ import { getCookieUserDetails } from "@/lib/users";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import nextConfig from "next.config.mjs";
+import { Course } from "@/shared/api/course/model";
 
-const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({ course, openModal, setOpenModal }) => {
+export interface CourseDetailsModalProps {
+    course: Course
+    openModal: boolean,
+    setOpenModal: (value: boolean) => void
+}
+
+const CourseDetails: React.FC<CourseDetailsModalProps> = ({ course, openModal, setOpenModal }) => {
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState<boolean>(false)
     const router = useRouter();
     const { userStore } = useMobxStores();
@@ -90,4 +96,4 @@ const CourseDetailsModal: React.FC<CourseDetailsModalProps> = ({ course, openMod
     </>
 }
 
-export default observer(CourseDetailsModal);
+export default observer(CourseDetails);

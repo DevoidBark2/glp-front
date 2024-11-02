@@ -1,4 +1,5 @@
 import { UploadFile } from "antd";
+import { User } from "../user/model";
 
 export enum PostStatusEnum {
     NEW = 'new',

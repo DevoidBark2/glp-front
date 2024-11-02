@@ -4,12 +4,12 @@ import { Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
-import { coursesTable, paginationCount } from "@/tableConfig/coursesTable";
 import SuccessfulCreateCourseModal from "@/components/SuccessfulCreateCourseModal/SuccessfulCreateCourseModal";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { getCourseColumns } from "@/columnsTables/courseColumns";
 import { getCookieUserDetails } from "@/lib/users";
+import { coursesTable, paginationCount } from "@/shared/config";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores()

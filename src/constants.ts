@@ -5,12 +5,17 @@ import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import { UserRole } from "@/enums/UserRoleEnum";
 import { StatusUserEnum } from "@/enums/StatusUserEnum";
-import { PlatformMenu } from "@/types/platformMenu";
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "./stores/AchievementsStore";
 import { StatusAvatarIconEnum } from "./enums/StatusAvatarIconEnum";
 
 export const MAIN_COLOR = "#00b96b"
 export const UNAUTHORIZED_STATUS_CODE = 401
+
+export type PlatformMenu = {
+    key: number;
+    title: string;
+    link: string;
+}
 
 export const platformMenu: PlatformMenu[] = [
     { key: 1, title: "Главная", link: '/platform' },

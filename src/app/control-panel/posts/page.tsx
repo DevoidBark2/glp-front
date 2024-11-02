@@ -17,17 +17,18 @@ import {
 import { PostStatusEnum } from "@/enums/PostStatusEnum";
 
 import PageHeader from "@/components/PageHeader/PageHeader";
-import { postTable } from "@/tableConfig/postTable";
 import { getCookieUserDetails } from "@/lib/users";
 import { getPostColumns } from "@/columnsTables/postColumns";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { CreatePostModal } from "@/components/PostPage/CreatePostModal";
 import { ChangePostModal } from "@/components/PostPage/ChangePostModal";
+import { postTable } from "@/shared/config";
+import { PostCreateForm } from "@/shared/api/posts/model";
 
 const PostPage = () => {
     const { postStore } = useMobxStores();
     const [currentUser, setCurrentUser] = useState(null);
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<PostCreateForm>();
     const [changePostForm] = Form.useForm();
     const [changePostModal, setChagePostModal] = useState(false);
 

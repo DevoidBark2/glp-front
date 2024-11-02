@@ -1,6 +1,6 @@
 import { action, makeAutoObservable } from "mobx";
 import { postMapper } from "../mappers";
-import { Post, PostStatusEnum } from "@/shared/api/posts/model";
+import { Post, PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { changePost, createPost, deletePost, getAllPost, getCPAllPost, getPostById, publishPost, submitReviewPost } from "@/shared/api/posts";
 
 class PostStore {
@@ -55,7 +55,7 @@ class PostStore {
         }
     })
 
-    createPost = action(async (values: any) => {
+    createPost = action(async (values: PostCreateForm) => {
         try{
             this.setLoading(true)
             const data = await createPost(values);

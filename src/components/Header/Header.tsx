@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Avatar, Badge, Modal, Spin, Button, Dropdown, MenuProps } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { UserOutlined, TrophyOutlined, BookOutlined, TeamOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
-import { getCookieUserDetails, getUserRole } from "@/lib/users";
+import { getCookieUserDetails } from "@/lib/users";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
 import RegisterComponent from "@/components/RegisterComponent/RegisterComponent";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
@@ -92,14 +92,7 @@ const HeaderBlock = () => {
 
     return (
         <>
-            <Modal
-                open={userStore.openLoginModal}
-                title="Авторизация"
-                onCancel={() => userStore.setOpenLoginModal(false)}
-                footer={null}
-            >
-                <LoginComponent />
-            </Modal>
+            <LoginComponent />
 
             <Modal
                 open={userStore.openRegisterModal}

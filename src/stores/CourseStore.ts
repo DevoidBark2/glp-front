@@ -7,27 +7,30 @@ import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { SectionCourseItem } from "@/stores/SectionCourse";
 import { User } from "./UserStore";
+import { getAllCourses } from "@/shared/api/course";
+import { Course } from "@/shared/api/course/model";
+import { courseMapper } from "@/entities/course/mappers/courseMapper";
 
 type Category = {
     id: number;
     name: string
 }
 
-export type Course = {
-    id: number;
-    name: string;
-    image: string;
-    category: Category;
-    access_right: number;
-    level: number;
-    small_description: string;
-    content_description: string;
-    duration: number
-    publish_date: Date
-    user: User
-    status: StatusCourseEnum
-    sections: SectionCourseItem[]
-}
+// export type Course = {
+//     id: number;
+//     name: string;
+//     image: string;
+//     category: Category;
+//     access_right: number;
+//     level: number;
+//     small_description: string;
+//     content_description: string;
+//     duration: number
+//     publish_date: Date
+//     user: User
+//     status: StatusCourseEnum
+//     sections: SectionCourseItem[]
+// }
 
 class CourseStore {
     constructor() {
@@ -41,7 +44,10 @@ class CourseStore {
     selectedCourseForDetailModal: Course | null = null
     loadingCourseDetails: boolean = true;
     successCreateCourseModal: boolean = false;
+    openCourseDetailsModal: boolean = false;
     courseDetailsSections: SectionCourseItem[] = [];
+    courses: Course[] = []
+    userCourses: Course[] = []
 
     setFullDetailCourse = action((value: Course) => {
         this.fullDetailCourse = value;
@@ -58,8 +64,7 @@ class CourseStore {
     setSelectedCourseForDetailModal = action((course: Course) => {
         this.selectedCourseForDetailModal = course;
     })
-
-    openCourseDetailsModal: boolean = false;
+    
     setOpenCourseDetailsModal = action((value: boolean) => {
         this.openCourseDetailsModal = value;
     })
@@ -68,21 +73,28 @@ class CourseStore {
         this.loadingCreateCourse = value;
     })
 
-    courses: Course[] = []
-
-    userCourses: Course[] = []
     setLoadingCourses = action((value: boolean) => {
         this.loadingCourses = value;
     })
+
     getAllCourses = action(async () => {
-        this.setLoadingCourses(true)
-        await GET('/api/courses').then(response => {
-            this.courses = response.response.data.map(courseMapper)
-        }).catch(e => {
-            notification.error({ message: e.response.data.message })
-        }).finally(() => {
-            this.setLoadingCourses(false);
-        })
+        try{
+            this.setLoadingCourses(true)
+            const data = await getAllCourses();
+            this.courses = data.map(courseMapper);
+        }catch(e) {
+
+        }finally {
+            this.setLoadingCourses(false)
+        }
+        
+        // await GET('/api/courses').then(response => {
+        //     this.courses = response.response.data.map(courseMapper)
+        // }).catch(e => {
+        //     notification.error({ message: e.response.data.message })
+        // }).finally(() => {
+        //     this.setLoadingCourses(false);
+        // })
     })
 
     createCourse = action(async (values: any) => {
@@ -159,22 +171,22 @@ class CourseStore {
     })
 }
 
-export const courseMapper = (course: Course) => {
-    return {
-        id: course.id,
-        name: course.name,
-        image: course.image,
-        category: course.category,
-        access_right: course.access_right,
-        level: course.level,
-        small_description: course.small_description,
-        content_description: course.content_description,
-        duration: course.duration,
-        status: course.status,
-        publish_date: dayjs(course.publish_date, FORMAT_VIEW_DATE).toDate(),
-        user: course.user
-    };
-}
+// export const courseMapper = (course: Course) => {
+//     return {
+//         id: course.id,
+//         name: course.name,
+//         image: course.image,
+//         category: course.category,
+//         access_right: course.access_right,
+//         level: course.level,
+//         small_description: course.small_description,
+//         content_description: course.content_description,
+//         duration: course.duration,
+//         status: course.status,
+//         publish_date: dayjs(course.publish_date, FORMAT_VIEW_DATE).toDate(),
+//         user: course.user
+//     };
+// }
 
 // const teachCourseMapper = (course: TeacherCourse) => {
 //     return {

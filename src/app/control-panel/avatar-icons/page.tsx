@@ -6,8 +6,8 @@ import { useMobxStores } from "@/stores/stores";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import CreateAvatarIconModal from "@/components/CreateAvatarIconModal/CreateAvatarIconModal";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-import { avatarIconTable } from "@/tableConfig/avatarIconsTable";
 import { avatarIconColumns } from "@/columnsTables/avatarIconColumns";
+import { avatarIconTable } from "@/shared/config/tableConfig";
 
 const AvatarIconsPage = () => {
     const { avatarIconsStore } = useMobxStores();

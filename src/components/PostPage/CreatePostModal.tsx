@@ -12,16 +12,17 @@ import 'react-quill/dist/quill.snow.css';
 import Dragger from "antd/es/upload/Dragger";
 import { FC } from "react";
 import { Post } from "@/stores/PostStore";
+import { PostCreateForm } from "@/shared/api/posts/model";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
 )
 
 interface CreatePostModalProps {
-    form:FormInstance
+    form:FormInstance<PostCreateForm>
     createPostModal: boolean
     setCreatePostModal: (value: boolean) => void
-    createPost: (post: Post) => Promise<void>
+    createPost: (post: PostCreateForm) => Promise<void>
     currentUser: any
     postLoading: boolean
 }

@@ -17,8 +17,8 @@ import GlobalActionComponent from "@/components/GlobalActionComponent/GlobalActi
 import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/constants";
 import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 import { showUserStatus } from "@/utils/showUserStatus";
-import { paginationCount, usersTable } from "@/tableConfig/usersTable";
 import { useRouter } from "next/navigation";
+import { paginationCount, usersTable } from "@/shared/config";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
