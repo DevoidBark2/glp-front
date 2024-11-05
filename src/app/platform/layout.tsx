@@ -82,7 +82,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                         </p>
                                         <p className="text-gray-300 text-sm mt-1">
                                             Телефон:
-                                            <span className="ml-1">{footerInfo?.contact_phone || "+7 (000) 000-0000"}</span>
+                                            <Link href={`tel:${footerInfo?.contact_phone}`} className="hover:underline ml-1">
+                                                <span className="ml-1">{footerInfo?.contact_phone || "+7 (000) 000-0000"}</span>
+                                            </Link>
                                         </p>
                                     </div>
 
@@ -91,12 +93,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                         <h4 className="text-lg font-semibold mb-3">Полезные ссылки</h4>
                                         <ul className="text-gray-300 text-sm space-y-2">
                                             <li>
-                                                <Link href="/faq" className="hover:underline">
+                                                <Link href="/platform/faq" className="hover:underline">
                                                     Вопросы и ответы (FAQ)
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/support" className="hover:underline">
+                                                <Link href="/platform/support" className="hover:underline">
                                                     Поддержка
                                                 </Link>
                                             </li>

@@ -1,13 +1,16 @@
 import React from "react";
-import {PostStore} from "@/entities/post";
+import { PostStore } from "@/entities/post";
 import { CourseStore } from "@/entities/course";
+import { FaqStore } from "@/entities/faq";
 
 const postStore = new PostStore();
 const courseStore = new CourseStore();
+const faqStore = new FaqStore();
 
 export const RootStore = {
     postStore,
-    courseStore
+    courseStore,
+    faqStore
 };
 
 const StoreContext = React.createContext(RootStore);

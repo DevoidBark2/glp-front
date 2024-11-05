@@ -1,11 +1,11 @@
-import {observer} from "mobx-react";
-import {useMobxStores} from "@/stores/stores";
-import {Button, Form, Input, Modal, notification} from "antd";
+import { observer } from "mobx-react";
+import { useMobxStores } from "@/stores/stores";
+import { Button, Form, Input, Modal, notification } from "antd";
 import React from "react";
-import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 const LoginComponent = () => {
-    const {userStore} = useMobxStores();
+    const { userStore } = useMobxStores();
     const [form] = Form.useForm();
 
     return (
@@ -15,6 +15,7 @@ const LoginComponent = () => {
                 title="Авторизация"
                 onCancel={() => userStore.setOpenLoginModal(false)}
                 footer={null}
+                zIndex={10001}
             >
                 <div className="flex justify-center items-center">
                     <Form
@@ -71,7 +72,7 @@ const LoginComponent = () => {
                                     Войти
                                 </Button>
                             </Form.Item>
-                            <p>Нет аккаунта?  
+                            <p>Нет аккаунта?
                                 <span
                                     className="hover:cursor-pointer ml-1 text-primary-color text-[#00b96b] transition-opacity duration-300 ease-in-out hover:opacity-70"
                                     onClick={() => userStore.setOpenRegisterModal(true)}

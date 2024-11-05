@@ -1,26 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Collapse, Typography, Row, Col, Card, Button, Modal, Form, Input, Table, Popconfirm, Space } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Modal, Form, Input, Table, Popconfirm, TableColumnsType, Tooltip } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-
-const { Panel } = Collapse;
-const { Title } = Typography;
+import { Faq } from "@/shared/api/faq/model";
+import { useMobxStores } from "@/shared/store/RootStore";
+import PageHeader from "@/components/PageHeader/PageHeader";
 
 const FaqPage = () => {
-    const [faqData, setFaqData] = useState([
-        { key: "1", question: "Как я могу зарегистрироваться?", answer: "Чтобы зарегистрироваться, нажмите на кнопку регистрации в верхнем правом углу." },
-        { key: "2", question: "Как восстановить пароль?", answer: "Для восстановления пароля нажмите на 'Забыли пароль?' и следуйте инструкциям." },
-        { key: "3", question: "Как я могу связаться с поддержкой?", answer: "Вы можете связаться с поддержкой по электронной почте support@example.com." },
-    ]);
+    const { faqStore } = useMobxStores();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [editingItem, setEditingItem] = useState<Faq | null>(null);
+    const [form] = Form.useForm<Faq>();
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
-    const [form] = Form.useForm();
-
-    const openModal = (record = null) => {
-        setEditingItem(record);
+    const openModal = (record?: Faq) => {
+        if (record) {
+            setEditingItem(record);
+        }
         setIsModalOpen(true);
         form.setFieldsValue(record || { question: "", answer: "" });
     };
@@ -31,22 +28,16 @@ const FaqPage = () => {
         form.resetFields();
     };
 
-    const handleAddOrUpdate = (values) => {
+    const handleAddOrUpdate = (values: Faq) => {
         if (editingItem) {
-            setFaqData((prev) =>
-                prev.map((item) => (item.key === editingItem.key ? { ...item, ...values } : item))
-            );
+            faqStore.updatedFaq(form.getFieldsValue());
         } else {
-            setFaqData((prev) => [...prev, { key: Date.now().toString(), ...values }]);
+            faqStore.create(values);
         }
         closeModal();
     };
 
-    const handleDelete = (key) => {
-        setFaqData((prev) => prev.filter((item) => item.key !== key));
-    };
-
-    const columns = [
+    const columns: TableColumnsType<Faq> = [
         {
             title: "Вопрос",
             dataIndex: "question",
@@ -57,47 +48,58 @@ const FaqPage = () => {
             title: "Ответ",
             dataIndex: "answer",
             key: "answer",
+            render: (text) => {
+                const maxLength = 50;
+                return text.length > maxLength
+                    ? `${text.substring(0, maxLength)}...`
+                    : text;
+            }
         },
         {
             title: "Действия",
             key: "actions",
             render: (_, record) => (
-                <Space size="middle">
-                    <Button icon={<EditOutlined />} onClick={() => openModal(record)}>
-                        Редактировать
-                    </Button>
-                    <Popconfirm title="Удалить этот вопрос?" onConfirm={() => handleDelete(record.key)}>
-                        <Button icon={<DeleteOutlined />} danger>
-                            Удалить
-                        </Button>
-                    </Popconfirm>
-                </Space>
+                <div className="flex justify-end gap-2">
+                    <Tooltip title="Редактировать">
+                        <Button type="default" icon={<EditOutlined />} onClick={() => openModal(record)} />
+                    </Tooltip>
+                    <Tooltip title="Удалить">
+                        <Popconfirm
+                            title="Удалить этот вопрос?"
+                            onConfirm={() => faqStore.delete(record.id)}
+                            placement="leftBottom"
+                            okText="Да"
+                            cancelText="Нет"
+                        >
+                            <Button danger type="primary" icon={<DeleteOutlined />} />
+                        </Popconfirm>
+                    </Tooltip>
+                </div>
             ),
         },
     ];
 
+    useEffect(() => {
+        faqStore.getAll();
+    }, [])
+
     return (
         <PageContainerControlPanel>
-            <Title level={2} style={{ textAlign: "center", marginBottom: 20 }}>
-                            Панель управления FAQ
-                        </Title>
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            onClick={() => openModal()}
-                            style={{ marginBottom: 20 }}
-                        >
-                            Добавить вопрос
-                        </Button>
-                        <Table
-                            dataSource={faqData}
-                            columns={columns}
-                            pagination={false}
-                            expandable={{
-                                expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.answer}</p>,
-                            }}
-                            rowKey="key"
-                        />
+            <PageHeader
+                title="Вопросы и ответы"
+                buttonTitle="Добавить FAQ"
+                onClickButton={() => openModal()}
+                showBottomDivider
+            />
+            <Table
+                dataSource={faqStore.faqs}
+                columns={columns}
+                pagination={false}
+                expandable={{
+                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.answer}</p>,
+                }}
+                rowKey={(record) => record.id}
+            />
 
             <Modal
                 title={editingItem ? "Редактировать вопрос" : "Добавить новый вопрос"}
@@ -107,6 +109,7 @@ const FaqPage = () => {
                 okText={editingItem ? "Сохранить" : "Добавить"}
             >
                 <Form form={form} layout="vertical" onFinish={handleAddOrUpdate}>
+                    <Form.Item name="id" hidden></Form.Item>
                     <Form.Item
                         name="question"
                         label="Вопрос"
