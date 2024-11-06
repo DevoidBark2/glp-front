@@ -65,15 +65,15 @@ const ProfilePage = () => {
       const userData = response.data;
       setAvatar(`${nextConfig.env?.API_URL}${userData.profile_url}`);
 
-      if(userData.birth_day) {
+      if (userData.birth_day) {
         userData.birth_day = dayjs(userData.birth_day)
       }
       formProfile.setFieldsValue(userData);
       formSettings.setFieldsValue(userData);
-      if(userData.show_footer_table) {
+      if (userData.show_footer_table) {
         setShowFooterOptions(true)
       }
-      
+
     }).finally(() => {
       userProfileStore.setLoading(false)
     });
@@ -97,210 +97,210 @@ const ProfilePage = () => {
       key: "1",
       label: "Личные данные",
       children: <>
-         <div className="flex items-center mb-8">
-                <Upload
-                  name="avatar"
-                  showUploadList={false}
-                  beforeUpload={(file) => {
-                    handleAvatarUpload(file);
-                    return false;
+        <div className="flex items-center mb-8">
+          <Upload
+            name="avatar"
+            showUploadList={false}
+            beforeUpload={(file) => {
+              handleAvatarUpload(file);
+              return false;
+            }}
+          >
+            <div className="relative cursor-pointer transition-transform hover:scale-105">
+              {loading ? (
+                <Spin
+                  size="large"
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1,
                   }}
-                >
-                  <div className="relative cursor-pointer transition-transform hover:scale-105">
-                    {loading ? (
-                      <Spin
-                        size="large"
-                        style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          zIndex: 1,
-                        }}
-                      />
-                    ) : null}
-                    <Avatar
-                      size={100}
-                      src={avatar || undefined}
-                      icon={!avatar && <UserOutlined />}
-                      className="cursor-pointer"
-                      style={{
-                        opacity: loading ? 0.5 : 1,
-                        transition: 'opacity 0.3s ease',
-                      }}
-                    />
-                  </div>
-                </Upload>
-                <div className="ml-6">
-                  <h2 className="text-2xl font-bold text-gray-800">
-                    {profileTitle(currentUser?.user.role as UserRole)}
-                  </h2>
-                  <p className="text-gray-600">
-                    Здесь вы можете обновить ваши личные данные и настройки.
-                  </p>
-                </div>
-              </div>
+                />
+              ) : null}
+              <Avatar
+                size={100}
+                src={avatar || undefined}
+                icon={!avatar && <UserOutlined />}
+                className="cursor-pointer"
+                style={{
+                  opacity: loading ? 0.5 : 1,
+                  transition: 'opacity 0.3s ease',
+                }}
+              />
+            </div>
+          </Upload>
+          <div className="ml-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {profileTitle(currentUser?.user.role as UserRole)}
+            </h2>
+            <p className="text-gray-600">
+              Здесь вы можете обновить ваши личные данные и настройки.
+            </p>
+          </div>
+        </div>
 
-              <Form
-                  form={formProfile}
-                  layout="vertical"
-                  onFinish={(values) => userProfileStore.updateProfile(values)}
+        <Form
+          form={formProfile}
+          layout="vertical"
+          onFinish={(values) => userProfileStore.updateProfile(values)}
+        >
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Имя"
+                name="first_name"
+                rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}
               >
-                  <Row gutter={16}>
-                      <Col xs={24} md={12}>
-                          <Form.Item
-                              label="Имя"
-                              name="first_name"
-                              rules={[{ required: true, message: "Пожалуйста, введите ваше имя" }]}
-                          >
-                              <Input placeholder="Введите ваше имя" />
-                          </Form.Item>
-                      </Col>
-                      
-                      <Col xs={24} md={12}>
-                          <Form.Item
-                              label="Фамилия"
-                              name="second_name"
-                              rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
-                          >
-                              <Input placeholder="Введите вашу фамилию" />
-                          </Form.Item>
-                      </Col>
+                <Input placeholder="Введите ваше имя" />
+              </Form.Item>
+            </Col>
 
-                      <Col xs={24} md={12}>
-                          <Form.Item
-                              label="Отчество"
-                              name="last_name"
-                              rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
-                          >
-                              <Input placeholder="Введите ваше отчество" />
-                          </Form.Item>
-                      </Col>
-                      
-                      <Col xs={24} md={12}>
-                          <Form.Item
-                              label="Телефон"
-                              name="phone"
-                          >
-                            <PhoneInput
-                                inputStyle={{width:'100%', height:'20px'}}
-                                country={"ru"}
-                                enableSearch={true}
-                                searchPlaceholder={"Пожалуйста, введите телефонный номер!"}
-                            />
-                          </Form.Item>
-                      </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Фамилия"
+                name="second_name"
+                rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
+              >
+                <Input placeholder="Введите вашу фамилию" />
+              </Form.Item>
+            </Col>
 
-                      <Col xs={24} md={12}>
-                          <Form.Item
-                              label="Email"
-                              name="email"
-                              rules={[
-                                  { required: true, message: "Пожалуйста, введите ваш email" },
-                                  { type: 'email', message: "Введите корректный Email!" }
-                              ]}
-                          >
-                              <Input placeholder="Введите ваш Email" />
-                          </Form.Item>
-                      </Col>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Отчество"
+                name="last_name"
+                rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
+              >
+                <Input placeholder="Введите ваше отчество" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Телефон"
+                name="phone"
+              >
+                <PhoneInput
+                  inputStyle={{ width: '100%', height: '20px' }}
+                  country={"ru"}
+                  enableSearch={true}
+                  searchPlaceholder={"Пожалуйста, введите телефонный номер!"}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  { required: true, message: "Пожалуйста, введите ваш email" },
+                  { type: 'email', message: "Введите корректный Email!" }
+                ]}
+              >
+                <Input placeholder="Введите ваш Email" />
+              </Form.Item>
+            </Col>
 
 
-                      <Col xs={24} md={12}>
-                          <Form.Item label="Дата рождения" name="birth_day">
-                            <DatePicker
-                                showNow={false}
-                                placeholder="Выберите дату" 
-                                style={{ width: "100%" }} 
-                            />
-                          </Form.Item>
-                      </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Дата рождения" name="birth_day">
+                <DatePicker
+                  showNow={false}
+                  placeholder="Выберите дату"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
 
-                      <Col xs={24} md={12}>
-                          <Form.Item label="Город" name="city">
-                              <Input placeholder="Введите город..."/>
-                          </Form.Item>
-                      </Col>
-                  </Row>
+            <Col xs={24} md={12}>
+              <Form.Item label="Город" name="city">
+                <Input placeholder="Введите город..." />
+              </Form.Item>
+            </Col>
+          </Row>
 
-                  <Form.Item label="О себе" name="about_me">
-                      <Input.TextArea rows={4} placeholder="Расскажите немного о себе..." />
-                  </Form.Item>
+          <Form.Item label="О себе" name="about_me">
+            <Input.TextArea rows={4} placeholder="Расскажите немного о себе..." />
+          </Form.Item>
 
-                  <Divider />
+          <Divider />
 
-                  <Form.Item>
-                      <Button type="primary" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4 dark:hover:bg-black">
-                          Сохранить изменения
-                      </Button>
-                  </Form.Item>
-              </Form>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4 dark:hover:bg-black">
+              Сохранить изменения
+            </Button>
+          </Form.Item>
+        </Form>
       </>
     },
     {
       key: "2",
       label: "Настройки панели управления",
       children: <> <Form
-      form={formSettings}
-      layout="vertical"
-      onFinish={(values) => userProfileStore.updateProfile(values)}
-    >
-      <Row gutter={16}>
+        form={formSettings}
+        layout="vertical"
+        onFinish={(values) => userProfileStore.updateProfile(values)}
+      >
+        <Row gutter={16}>
           <Col xs={24} md={12}>
+            <Form.Item
+              tooltip="Определяет количество элементов, отображаемых на одной странице списка."
+              label="Количество элементов на странице"
+              name="pagination_size"
+              rules={[{ required: true, message: "Укажите количество элементов" }]}
+            >
+              <InputNumber max={200} />
+            </Form.Item>
+            <Form.Item
+              tooltip="Размер таблицы"
+              label="Размер таблиц"
+              name="table_size"
+              rules={[{ required: true, message: "Укажите количество элементов" }]}
+            >
+              <Select>
+                <Select.Option value="large">Большой</Select.Option>
+                <Select.Option value="middle">Средний</Select.Option>
+                <Select.Option value="small">Маленький</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              tooltip="Отображение нижней части таблицы"
+              label="Отображение нижней части таблицы"
+              name="show_footer_table"
+              valuePropName="checked"
+            >
+              <Checkbox onChange={(e) => setShowFooterOptions(e.target.checked)}>
+                Показать нижнюю часть таблицы
+              </Checkbox>
+            </Form.Item>
+
+            {showFooterOptions && (
               <Form.Item
-                tooltip="Определяет количество элементов, отображаемых на одной странице списка."
-                label="Количество элементов на странице"
-                name="pagination_size"
-                rules={[{ required: true, message: "Укажите количество элементов" }]}
+                label="Выберите содержимое для нижней части"
+                name="footerContent"
+                rules={[{ required: true, message: "Выберите опцию для нижней части" }]}
               >
-                <InputNumber max={200} />
-              </Form.Item>
-              <Form.Item
-                tooltip="Размер таблицы"
-                label="Размер таблиц"
-                name="table_size"
-                rules={[{ required: true, message: "Укажите количество элементов" }]}
-              >
-                <Select>
-                  <Select.Option value="large">Большой</Select.Option>
-                  <Select.Option value="middle">Средний</Select.Option>
-                  <Select.Option value="small">Маленький</Select.Option>
+                <Select placeholder="Выберите отображение в footer">
+                  <Select.Option value="totalCount">Общее количество записей</Select.Option>
                 </Select>
               </Form.Item>
-
-              <Form.Item
-                tooltip="Отображение нижней части таблицы"
-                label="Отображение нижней части таблицы"
-                name="show_footer_table"
-                valuePropName="checked"
-              >
-                <Checkbox onChange={(e) => setShowFooterOptions(e.target.checked)}>
-                  Показать нижнюю часть таблицы
-                </Checkbox>
-              </Form.Item>
-
-              {showFooterOptions && (
-                <Form.Item
-                  label="Выберите содержимое для нижней части"
-                  name="footerContent"
-                  rules={[{ required: true, message: "Выберите опцию для нижней части" }]}
-                >
-                  <Select placeholder="Выберите отображение в footer">
-                    <Select.Option value="totalCount">Общее количество записей</Select.Option>
-                  </Select>
-                </Form.Item>
-              )}
+            )}
 
           </Col>
-      </Row>
+        </Row>
 
-      <Divider />
+        <Divider />
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" className="mt-4">
-          Сохранить изменения
-        </Button>
-      </Form.Item>
-    </Form></>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4">
+            Сохранить изменения
+          </Button>
+        </Form.Item>
+      </Form></>
     }
   ]
 
@@ -308,7 +308,7 @@ const ProfilePage = () => {
     <>
       {!userProfileStore.loading ? (
         <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
-          <Tabs defaultActiveKey="1" items={items}/>
+          <Tabs defaultActiveKey="1" items={items} />
         </div>
       ) : (
         <div className="flex justify-center items-center">

@@ -12,10 +12,10 @@ export const paginationCount = 10;
 
 export const coursesTable = {
     filterEmptyText: "Список пуст",
-    filterReset:"Сбросить фильтр",
+    filterReset: "Сбросить фильтр",
     filterConfirm: "Применить",
     filterSearchPlaceholder: "Поиск...",
-    emptyText : <Empty description="Список пуст"/>
+    emptyText: <Empty description="Список пуст" />
 }
 
 import { Button } from "antd";
@@ -44,16 +44,16 @@ export const postTable = ({ setShowModal }: postTableProps) => ({
 
 export const usersTable = {
     filterEmptyText: "Список пуст",
-    filterReset:"Сбросить фильтр",
+    filterReset: "Сбросить фильтр",
     filterConfirm: "Применить",
     filterSearchPlaceholder: "Поиск...",
-    emptyText : <Empty description="Список пуст"/>
+    emptyText: <Empty description="Список пуст" />
 }
 
 export const faqTable = {
     filterEmptyText: "Список пуст",
-    filterReset:"Сбросить фильтр",
+    filterReset: "Сбросить фильтр",
     filterConfirm: "Применить",
     filterSearchPlaceholder: "Поиск...",
-    emptyText : <Empty description="Список пуст"/>
+    emptyText: <Empty description="Список пуст" />
 }

@@ -121,9 +121,10 @@ const PostPage = () => {
         setChagePostModal(true);
     }
 
-    const [settings,setSettings] = useState<{
+    const [settings, setSettings] = useState<{
         pagination_size: number,
-        table_size:SizeType
+        table_size: SizeType,
+        show_footer_table: boolean
     } | null>(null);
 
 
@@ -157,8 +158,9 @@ const PostPage = () => {
                     deletePost: postStore.deletePost,
                     handleChangePost: handelChangePost
                 })}
+                footer={settings && settings.show_footer_table ? () => <div>Общее количество: {postStore.userPosts.length}</div> : undefined}
                 rowKey={(record) => record.id}
-                pagination={{pageSize:Number(settings && settings.pagination_size)}}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
             />
             <CreatePostModal

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Table, Button, Space, Modal, Input, Tag } from "antd";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import PageHeader from "@/components/PageHeader/PageHeader";
 
 const { TextArea } = Input;
 
@@ -15,55 +16,50 @@ const SupportPage = () => {
   const data = [
     {
       key: '1',
-      customer: 'customer1@example.com',
+      customerEmail: 'customer1@example.com',
+      customer: "Петров Иван Михайлович",
       question: 'How do I reset my password?',
-      status: 'Pending',
     },
     {
       key: '2',
-      customer: 'customer2@example.com',
+      customerEmail: 'customer2@example.com',
+      customer: "Петров Иван Михайлович",
       question: 'Can I change my email address?',
-      status: 'Resolved',
     },
     {
       key: '3',
-      customer: 'customer3@example.com',
+      customerEmail: 'customer3@example.com',
+      customer: "Петров Иван Михайлович",
       question: 'What is the refund policy?',
-      status: 'Pending',
     },
   ];
 
-  // Columns for the table
   const columns = [
     {
-      title: 'Customer Email',
+      title: 'Email отправителя',
+      dataIndex: 'customerEmail',
+      key: 'customerEmail',
+    },
+    {
+      title: 'ФИО',
       dataIndex: 'customer',
       key: 'customer',
     },
     {
-      title: 'Question',
+      title: 'Вопрос',
       dataIndex: 'question',
       key: 'question',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: status => (
-        <Tag color={status === 'Pending' ? 'orange' : 'green'}>{status}</Tag>
-      ),
-    },
-    {
-      title: 'Action',
+      title: 'Действия',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
           <Button
             type="primary"
             onClick={() => handleResponse(record)}
-            disabled={record.status === 'Resolved'}
           >
-            Respond
+            Ответить
           </Button>
         </Space>
       ),
@@ -71,7 +67,7 @@ const SupportPage = () => {
   ];
 
   // Handle opening the response modal
-  const handleResponse = (record) => {
+  const handleResponse = (record: any) => {
     setSelectedTicket(record);
     setIsModalVisible(true);
   };
@@ -79,24 +75,30 @@ const SupportPage = () => {
   // Handle submitting the response
   const handleSendResponse = () => {
     // Logic to send response (e.g., API call) goes here
-    console.log(`Sending response: ${response} to ${selectedTicket.customer}`);
+    //console.log(`Sending response: ${response} to ${selectedTicket.customer}`);
     setIsModalVisible(false);
     setResponse("");
   };
 
   return (
     <PageContainerControlPanel>
-      <h1>Support Page</h1>
-      <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
+      <PageHeader
+        title="Поддержка"
+        showBottomDivider
+      />
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{ pageSize: 5 }}
+      />
 
-      {/* Modal for responding to a question */}
       <Modal
-        title="Respond to Customer"
+        title="Ответ пользователю"
         open={isModalVisible}
         onOk={handleSendResponse}
         onCancel={() => setIsModalVisible(false)}
       >
-        <p><strong>Question:</strong> {selectedTicket?.question}</p>
+        <p className="mb-3"><strong>Вопрос:</strong> {selectedTicket?.question}</p>
         <TextArea
           rows={4}
           value={response}
