@@ -24,6 +24,7 @@ import { CreatePostModal } from "@/components/PostPage/CreatePostModal";
 import { ChangePostModal } from "@/components/PostPage/ChangePostModal";
 import { postTable } from "@/shared/config";
 import { PostCreateForm } from "@/shared/api/posts/model";
+import { SizeType } from "antd/es/config-provider/SizeContext";
 
 const PostPage = () => {
     const { postStore } = useMobxStores();
@@ -120,10 +121,18 @@ const PostPage = () => {
         setChagePostModal(true);
     }
 
+    const [settings,setSettings] = useState<{
+        pagination_size: number,
+        table_size:SizeType
+    } | null>(null);
+
 
     useEffect(() => {
         const user = getCookieUserDetails();
         setCurrentUser(user);
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        debugger
+        setSettings(settingUser);
         postStore.getUserPosts();
     }, []);
 
@@ -136,7 +145,7 @@ const PostPage = () => {
                 showBottomDivider
             />
             <Table
-                size="small"
+                size={settings && settings.table_size}
                 loading={postStore.loading}
                 dataSource={postStore.userPosts}
                 columns={getPostColumns({
@@ -149,7 +158,7 @@ const PostPage = () => {
                     handleChangePost: handelChangePost
                 })}
                 rowKey={(record) => record.id}
-                pagination={{size: 100}}
+                pagination={{pageSize:Number(settings && settings.pagination_size)}}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
             />
             <CreatePostModal

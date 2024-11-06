@@ -70,6 +70,9 @@ const ProfilePage = () => {
       }
       formProfile.setFieldsValue(userData);
       formSettings.setFieldsValue(userData);
+      if(userData.show_footer_table) {
+        setShowFooterOptions(true)
+      }
       
     }).finally(() => {
       userProfileStore.setLoading(false)
@@ -275,20 +278,18 @@ const ProfilePage = () => {
                 </Checkbox>
               </Form.Item>
 
-      {/* Conditional Select for footer options */}
-      {showFooterOptions && (
-        <Form.Item
-          label="Выберите содержимое для нижней части"
-          name="footerContent"
-          rules={[{ required: true, message: "Выберите опцию для нижней части" }]}
-        >
-          <Select placeholder="Выберите отображение в footer">
-            <Select.Option value="summary">Общая информация</Select.Option>
-            <Select.Option value="statistics">Статистика</Select.Option>
-            <Select.Option value="customMessage">Настраиваемое сообщение</Select.Option>
-          </Select>
-        </Form.Item>
-      )}
+              {showFooterOptions && (
+                <Form.Item
+                  label="Выберите содержимое для нижней части"
+                  name="footerContent"
+                  rules={[{ required: true, message: "Выберите опцию для нижней части" }]}
+                >
+                  <Select placeholder="Выберите отображение в footer">
+                    <Select.Option value="totalCount">Общее количество записей</Select.Option>
+                  </Select>
+                </Form.Item>
+              )}
+
           </Col>
       </Row>
 

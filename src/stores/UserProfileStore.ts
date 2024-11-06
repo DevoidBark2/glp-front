@@ -42,6 +42,7 @@ class UserProfileStore {
 
     updateProfile = action(async (values:UserProfile) => {
         debugger
+        window.localStorage.setItem('user_settings',JSON.stringify(values))
         this.setSaveProfile(true)
         await PUT('/api/profile', values).then(response => {
             notification.success({message: response.message})

@@ -141,6 +141,14 @@ class UserStore {
         this.setLoading(true);
         try {
             const response = await POST("/api/login", values);
+            const settingUser = {
+                pagination_size: response.response.data.pagination_size,
+                table_size: response.response.data.pagination_size,
+                show_footer_table: response.response.data.pagination_size,
+                footerContent: response.response.data.pagination_size
+            }
+
+            window.localStorage.setItem('user_settings', JSON.stringify(settingUser));
             signInUser({
                 id: response.response.data.id,
                 token: response.response.data.token,
