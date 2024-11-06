@@ -59,6 +59,9 @@ class NomenclatureStore {
     })
 
     handleChangeCategoryName = action(async (values: NomenclatureItem) => {
+        if(values.name === this.selectedCategory?.name) {
+            return;
+        }
         await PUT(`/api/categories`, { ...values }).then(response => {
             notification.success({ message: response.data.message })
             this.categories = this.categories.map((category) =>

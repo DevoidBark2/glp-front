@@ -136,6 +136,7 @@ const PostPage = () => {
                 showBottomDivider
             />
             <Table
+                size="small"
                 loading={postStore.loading}
                 dataSource={postStore.userPosts}
                 columns={getPostColumns({
@@ -148,6 +149,7 @@ const PostPage = () => {
                     handleChangePost: handelChangePost
                 })}
                 rowKey={(record) => record.id}
+                pagination={{size: 100}}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
             />
             <CreatePostModal

@@ -1,19 +1,24 @@
 import { action, makeAutoObservable } from "mobx";
 import { User } from "@/stores/UserStore";
-import { Course } from "@/stores/CourseStore";
 import SectionCourse from "@/stores/SectionCourse";
 import { Post } from "@/stores/PostStore";
 import { GET } from "@/lib/fetcher";
 import { getUserToken } from "@/lib/users";
+import { Course } from "@/shared/api/course/model";
 
 export type StatisticsData = {
-    courseCount: number;
-    postCount: number;
-    postsCountPublish: number
-    postsCountNew: number
-    postsCountIsProcessing: number
-    postsCountReject: number
     countUsers: number;
+    courseCount: number;
+    courseCountIsProcessing: number;
+    courseCountNew: number;
+    courseCountPublish: number;
+    courseCountReject: number;
+    postCount: number;
+    postsCountPublish: number;
+    postsCountNew: number;
+    postsCountIsProcessing: number;
+    postsCountReject: number;
+   
 }
 
 export type ResultSearchItems = {

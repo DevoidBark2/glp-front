@@ -7,6 +7,7 @@ import PageContainerControlPanel from "@/components/PageContainerControlPanel/Pa
 import { Faq } from "@/shared/api/faq/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import PageHeader from "@/components/PageHeader/PageHeader";
+import { faqTable } from "@/shared/config/tableConfig";
 
 const FaqPage = () => {
     const { faqStore } = useMobxStores();
@@ -92,13 +93,15 @@ const FaqPage = () => {
                 showBottomDivider
             />
             <Table
+                rowKey={(record) => record.id}
+                loading={faqStore.loading}
                 dataSource={faqStore.faqs}
                 columns={columns}
                 pagination={false}
                 expandable={{
                     expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.answer}</p>,
                 }}
-                rowKey={(record) => record.id}
+                locale={faqTable}
             />
 
             <Modal

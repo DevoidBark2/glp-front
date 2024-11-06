@@ -114,11 +114,11 @@ let dashboardMenuItems: MenuItem[] = [
                 label: <Link href={"/control-panel/category"}>Категории</Link>,
                 icon: <BarsOutlined />,
             },
-            {
-                key: 'avatar_icons',
-                label: <Link href={"/control-panel/avatar-icons"}>Иконки пользователя</Link>,
-                icon: <BarsOutlined />,
-            },
+            // {
+            //     key: 'avatar_icons',
+            //     label: <Link href={"/control-panel/avatar-icons"}>Иконки пользователя</Link>,
+            //     icon: <BarsOutlined />,
+            // },
         ]
     },
     // {
@@ -156,6 +156,11 @@ let dashboardMenuItems: MenuItem[] = [
             {
                 key: 'faq',
                 label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
+                icon: <BarsOutlined />,
+            },
+            {
+                key: 'support',
+                label: <Link href={"/control-panel/faq"}>Поддержка</Link>,
                 icon: <BarsOutlined />,
             }
         ]
@@ -205,6 +210,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 && menuItem?.key !== "nomenclature"
                 && menuItem?.key !== "logging"
                 && menuItem?.key !== "users"
+                && menuItem?.key !== "general"
             )
         }
 
@@ -217,6 +223,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 && menuItem?.key !== "courses-parent"
                 && menuItem?.key !== "posts"
                 && menuItem?.key !== "feedbacks"
+                && menuItem?.key !== "general"
             )
         }
         setLoading(false)

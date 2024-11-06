@@ -18,6 +18,7 @@ import {
   TabsProps,
   Tooltip,
   DatePicker,
+  Checkbox,
 } from "antd";
 import {
   UserOutlined,
@@ -38,6 +39,8 @@ const ProfilePage = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const { userProfileStore, avatarIconsStore } = useMobxStores();
   const [currentUser, setCurrentUser] = useState(null);
+
+  const [showFooterOptions, setShowFooterOptions] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -66,6 +69,7 @@ const ProfilePage = () => {
         userData.birth_day = dayjs(userData.birth_day)
       }
       formProfile.setFieldsValue(userData);
+      formSettings.setFieldsValue(userData);
       
     }).finally(() => {
       userProfileStore.setLoading(false)
@@ -247,6 +251,44 @@ const ProfilePage = () => {
               >
                 <InputNumber max={200} />
               </Form.Item>
+              <Form.Item
+                tooltip="Размер таблицы"
+                label="Размер таблиц"
+                name="table_size"
+                rules={[{ required: true, message: "Укажите количество элементов" }]}
+              >
+                <Select>
+                  <Select.Option value="large">Большой</Select.Option>
+                  <Select.Option value="middle">Средний</Select.Option>
+                  <Select.Option value="small">Маленький</Select.Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                tooltip="Отображение нижней части таблицы"
+                label="Отображение нижней части таблицы"
+                name="show_footer_table"
+                valuePropName="checked"
+              >
+                <Checkbox onChange={(e) => setShowFooterOptions(e.target.checked)}>
+                  Показать нижнюю часть таблицы
+                </Checkbox>
+              </Form.Item>
+
+      {/* Conditional Select for footer options */}
+      {showFooterOptions && (
+        <Form.Item
+          label="Выберите содержимое для нижней части"
+          name="footerContent"
+          rules={[{ required: true, message: "Выберите опцию для нижней части" }]}
+        >
+          <Select placeholder="Выберите отображение в footer">
+            <Select.Option value="summary">Общая информация</Select.Option>
+            <Select.Option value="statistics">Статистика</Select.Option>
+            <Select.Option value="customMessage">Настраиваемое сообщение</Select.Option>
+          </Select>
+        </Form.Item>
+      )}
           </Col>
       </Row>
 

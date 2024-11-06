@@ -9,8 +9,9 @@ type UserProfile = {
     phone: string
     email: string;
     birth_day: Date
-    city: string
-    about_me: string
+    city: string;
+    about_me: string;
+    pagination_size: number;
 }
 
 class UserProfileStore {
@@ -40,6 +41,7 @@ class UserProfileStore {
     })
 
     updateProfile = action(async (values:UserProfile) => {
+        debugger
         this.setSaveProfile(true)
         await PUT('/api/profile', values).then(response => {
             notification.success({message: response.message})

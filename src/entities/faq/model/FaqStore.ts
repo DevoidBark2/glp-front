@@ -9,11 +9,17 @@ class FaqStore {
     }
 
     faqs: Faq[] = [];
+    loading: boolean = false;
 
+    setLoading = action((value:boolean) => {
+        this.loading = value;
+    })
 
     getAll = action(async () => {
+        this.setLoading(true);
         const data = await getAllFaq();
         this.faqs = data;
+        this.setLoading(false);
     })
 
     create = action(async (faq: Faq) => {
