@@ -1,45 +1,27 @@
 "use client";
 import { observer } from "mobx-react";
-import { Button, Divider, Table, Tag, Tooltip, message, Popconfirm, Dropdown } from "antd";
-import type { MenuProps, TableColumnsType } from "antd";
+import { Button, Divider, Table, Tag, Tooltip, message, Popconfirm } from "antd";
+import type { TableColumnsType } from "antd";
 import React, { Key, useEffect } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { User } from "@/stores/UserStore";
-import Image from "next/image";
 import {
     EditOutlined,
     DeleteOutlined,
-    PlusCircleOutlined, MoreOutlined
+    PlusCircleOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Link from "next/link";
-import GlobalActionComponent from "@/components/GlobalActionComponent/GlobalActionComponent";
 import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/constants";
 import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
 import { paginationCount, usersTable } from "@/shared/config";
+import PageHeader from "@/components/PageHeader/PageHeader";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
     const router = useRouter();
-
-    const handleBulkStatusUpdate = (status: boolean) => {
-        if (userStore.selectedRowsUser.length === 0) {
-            message.warning("Выберите пользователей,которых хотите удалить!");
-            return;
-        }
-
-        userStore.deleteUsers(userStore.selectedRowsUser).then()
-    };
-
-    const handleBulkEmail = () => {
-        if (userStore.selectedRowsUser.length === 0) {
-            message.warning("Выберите элементы");
-            return;
-        }
-        message.success("Emails sent successfully!");
-    };
 
     const columns: TableColumnsType<User> = [
         {
@@ -117,29 +99,11 @@ const UsersPage = () => {
 
     return (
         <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-                <div className="flex">
-                    <h1 className="text-gray-800 font-bold text-3xl mb-4 md:mb-0 md:mr-4">
-                        Пользователи
-                    </h1>
-                    {/* <GlobalActionComponent
-                        handleDelete={handleBulkStatusUpdate}
-                        handleSendNotifications={handleBulkEmail}
-                    /> */}
-                </div>
-                <div className="flex items-center mt-4 md:mt-0">
-                    <Link href={"users/add"}>
-                        <Button
-                            type="primary"
-                            icon={<PlusCircleOutlined />}
-                            className="flex items-center justify-center transition-transform transform hover:scale-105"
-                        >
-                            <span className="hidden sm:inline">Новый пользователь</span>
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-            <Divider />
+            <PageHeader
+                title="Пользователи"
+                buttonTitle="Создать пользователя"
+                showBottomDivider
+            />
             <GroupActionComponent
                 loading={userStore.loadingSearchUser}
                 searchText={userStore.searchUserText}

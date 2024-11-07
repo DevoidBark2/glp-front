@@ -15,7 +15,7 @@ import {
 import { UserHoverCard } from "@/components/PostPage/UserHoverCard";
 
 interface getPostColumnsProps {
-    getStatusTag: (record: Post, status: PostStatusEnum, rejectReason?: ModeratorFeedback) => React.JSX.Element;
+    getStatusTag: (status: PostStatusEnum, rejectReason?: ModeratorFeedback) => React.JSX.Element;
     currentUser: any,
     renderTooltipTitle: (post: Post) => string
     publishPost: (postId: number, checked: boolean) => void

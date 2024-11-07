@@ -30,7 +30,7 @@ const PostPage = () => {
     const { postStore } = useMobxStores();
     const [currentUser, setCurrentUser] = useState(null);
     const [form] = Form.useForm<PostCreateForm>();
-    const [changePostForm] = Form.useForm();
+    const [changePostForm] = Form.useForm<Post>();
     const [changePostModal, setChagePostModal] = useState(false);
 
     const fieldNames: { [key: string]: string } = {
@@ -146,7 +146,7 @@ const PostPage = () => {
                 showBottomDivider
             />
             <Table
-                size={settings && settings.table_size}
+                size={(settings && settings.table_size) ?? "middle"}
                 loading={postStore.loading}
                 dataSource={postStore.userPosts}
                 columns={getPostColumns({
@@ -158,7 +158,7 @@ const PostPage = () => {
                     deletePost: postStore.deletePost,
                     handleChangePost: handelChangePost
                 })}
-                footer={settings && settings.show_footer_table ? () => <div>Общее количество: {postStore.userPosts.length}</div> : undefined}
+                footer={settings && settings.show_footer_table ? (talbe) => <div>Общее количество: {talbe.length}</div> : undefined}
                 rowKey={(record) => record.id}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}

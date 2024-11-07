@@ -11,14 +11,14 @@ import {
 import 'react-quill/dist/quill.snow.css';
 import Dragger from "antd/es/upload/Dragger";
 import { FC } from "react";
-import { Post } from "@/stores/PostStore";
+import { Post } from "@/shared/api/posts/model";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
 )
 
 interface ChangePostModalProps {
-    form:FormInstance
+    form:FormInstance<Post>
     createPostModal: boolean
     setChangePostModal: (value: boolean) => void
     changePost: (post: Post) => Promise<void>
