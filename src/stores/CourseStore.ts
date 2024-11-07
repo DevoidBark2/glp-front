@@ -10,6 +10,7 @@ import { User } from "./UserStore";
 import { getAllCourses } from "@/shared/api/course";
 import { Course } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
+import { axiosInstance } from "@/shared/api/http-client";
 
 type Category = {
     id: number;
@@ -64,7 +65,7 @@ class CourseStore {
     setSelectedCourseForDetailModal = action((course: Course) => {
         this.selectedCourseForDetailModal = course;
     })
-    
+
     setOpenCourseDetailsModal = action((value: boolean) => {
         this.openCourseDetailsModal = value;
     })
@@ -78,16 +79,16 @@ class CourseStore {
     })
 
     getAllCourses = action(async () => {
-        try{
+        try {
             this.setLoadingCourses(true)
             const data = await getAllCourses();
             this.courses = data.map(courseMapper);
-        }catch(e) {
+        } catch (e) {
 
-        }finally {
+        } finally {
             this.setLoadingCourses(false)
         }
-        
+
         // await GET('/api/courses').then(response => {
         //     this.courses = response.response.data.map(courseMapper)
         // }).catch(e => {
@@ -167,6 +168,14 @@ class CourseStore {
         return await GET(`/api/full-course?courseId=${id}`).then(response => {
             this.setFullDetailCourse(response.data);
             return response.data;
+        })
+    })
+
+    subscribeCourse = action(async (courseId: number, userId: number) => {
+        debugger
+        const data = await axiosInstance.post('api/subscribe-course', {
+            courseId: courseId,
+            userId: userId
         })
     })
 }

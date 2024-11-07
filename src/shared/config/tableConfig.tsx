@@ -57,3 +57,19 @@ export const faqTable = {
     filterSearchPlaceholder: "Поиск...",
     emptyText: <Empty description="Список пуст" />
 }
+
+export const taskTable = {
+    filterEmptyText: "Список пуст",
+    filterReset: "Сбросить фильтр",
+    filterConfirm: "Применить",
+    filterSearchPlaceholder: "Поиск...",
+    emptyText: <Empty description="Список пуст" />
+}
+
+export const sectionsTable = {
+    filterEmptyText: "Список пуст",
+    filterReset: "Сбросить фильтр",
+    filterConfirm: "Применить",
+    filterSearchPlaceholder: "Поиск...",
+    emptyText: <Empty description="Список пуст" />
+}

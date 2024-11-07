@@ -1,9 +1,8 @@
-import {action, makeAutoObservable} from "mobx";
-import {Course} from "@/stores/CourseStore";
-import {CourseComponentTypeI} from "@/stores/CourseComponent";
-import {getUserToken} from "@/lib/users";
-import {GET, POST} from "@/lib/fetcher";
-import {StatusSectionEnum} from "@/enums/StatusSectionEnum";
+import { action, makeAutoObservable } from "mobx";
+import { Course } from "@/shared/api/course/model";
+import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import { GET, POST } from "@/lib/fetcher";
+import { StatusSectionEnum } from "@/enums/StatusSectionEnum";
 
 export type SectionCourseItem = {
     id: number;

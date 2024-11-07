@@ -64,6 +64,7 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent }: Ta
     {
         title: "Дата создания",
         dataIndex: "created_at",
+        showSorterTooltip: false,
         sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
         render: (_, record) => dayjs(record.created_at).format(FORMAT_VIEW_DATE)
     },

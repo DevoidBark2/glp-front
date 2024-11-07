@@ -1,5 +1,5 @@
 "use client"
-import { Button, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
+import { Button, Popconfirm, Table, TableColumnsType, Tag, Tooltip } from "antd";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { SectionCourseItem } from "@/stores/SectionCourse";
@@ -10,14 +10,16 @@ import { FORMAT_VIEW_DATE } from "@/constants";
 import {
     DeleteOutlined,
     EditOutlined,
-    UploadOutlined
 } from "@ant-design/icons";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { useRouter } from "next/navigation";
+import { sectionsTable } from "@/shared/config";
+import { StatusSectionEnum } from "@/shared/api/course/model";
 
 const SectionPage = () => {
     const { sectionCourseStore } = useMobxStores();
     const router = useRouter();
+
     const columns: TableColumnsType<SectionCourseItem> = [
         {
             title: 'Заголовок',
@@ -31,14 +33,14 @@ const SectionPage = () => {
             ),
         },
         {
-            title: 'Курс',
+            title: 'Название курса',
             dataIndex: ['course'],
             width: '20%',
             ellipsis: true,
             render: (_, record) => {
                 return (
-                    <Tooltip title={record.course.name}>
-                        <Link href={`courses/${record.course.id}`} style={{ color: '#1890ff', textDecoration: 'none' }}>
+                    <Tooltip title={`Перейти к курсу "${record.course.name}"`}>
+                        <Link href={`courses/${record.course.id}`}>
                             {record.course.name}
                         </Link>
                     </Tooltip>
@@ -50,13 +52,25 @@ const SectionPage = () => {
             dataIndex: 'created_at',
             key: 'publish_date',
             width: '20%',
+            showSorterTooltip: false,
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
             render: (date: Dayjs) => dayjs(date).format(FORMAT_VIEW_DATE)
         },
         {
             title: "Статус",
             dataIndex: "status",
-            render: (value) => value
+            filters: [
+                { text: 'Активный', value: StatusSectionEnum.ACTIVE },
+                { text: 'Не активный', value: StatusSectionEnum.DEACTIVE }
+            ],
+            onFilter: (value, record) => record.status === value,
+            render: (value) => {
+                return value === StatusSectionEnum.ACTIVE ? (
+                    <Tag color="green">Активный</Tag>
+                ) : (
+                    <Tag color="red">Неактивный</Tag>
+                );
+            }
         },
         {
             title: "Действия",
@@ -65,9 +79,6 @@ const SectionPage = () => {
             align: 'center',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    <Tooltip title="Опубликовать">
-                        <Button type="default" icon={<UploadOutlined />} />
-                    </Tooltip>
                     <Tooltip title="Редактировать раздел">
                         <Button type="default" shape="circle" icon={<EditOutlined />} />
                     </Tooltip>
@@ -89,6 +100,7 @@ const SectionPage = () => {
     useEffect(() => {
         sectionCourseStore.getAllSectionCourse();
     }, []);
+
     return (
         <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
             <PageHeader
@@ -103,6 +115,7 @@ const SectionPage = () => {
                 columns={columns}
                 dataSource={sectionCourseStore.sectionCourse}
                 pagination={{ pageSize: 10 }}
+                locale={sectionsTable}
             />
         </div>
     )

@@ -20,10 +20,11 @@ import QuizTask from "@/components/CourseComponentTask/TaskTypes/QuizTask";
 import MultiPlayChoise from "@/components/CourseComponentTask/TaskTypes/MultiPlayChoiceTask";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { taskColumns } from "@/columnsTables/taskColumns";
+import { taskTable } from "@/shared/config";
 
 const TaskPage = () => {
     const { courseComponentStore } = useMobxStores()
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<CourseComponentTypeI>();
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
     const [changedComponent, setChangedComponent] = useState<number | null>(null)
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -70,6 +71,13 @@ const TaskPage = () => {
             });
     }
 
+    const handleCancelAddComponent = () => {
+        form.resetFields();
+        setChangedComponent(null)
+        setTypeTask(null);
+        setIsModalVisible(false)
+    }
+
     useEffect(() => {
         courseComponentStore.getAllComponent();
     }, []);
@@ -84,23 +92,19 @@ const TaskPage = () => {
             />
             <Table
                 rowKey={(record) => record.id}
+                loading={courseComponentStore.loadingCourseComponent}
                 dataSource={courseComponentStore.courseComponents}
                 columns={taskColumns({
                     handleChangeComponent: handleChangeComponentTask,
                     handleDeleteComponent: courseComponentStore.deleteComponent
                 })}
-                loading={courseComponentStore.loadingCourseComponent}
+                locale={taskTable}
             />
 
             <Modal
-                title="Новый компонент"
+                title={changedComponent ? "Изменить компонент" : "Новый компонент"}
                 open={isModalVisible}
-                onCancel={() => {
-                    form.resetFields();
-                    setChangedComponent(null)
-                    setTypeTask(null);
-                    setIsModalVisible(false)
-                }}
+                onCancel={handleCancelAddComponent}
                 width={600}
                 footer={null}
             >

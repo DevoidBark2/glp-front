@@ -27,12 +27,12 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import { CourseComponentType } from "@/enums/CourseComponentType";
-import { Course } from "@/stores/CourseStore";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { useRouter } from "next/navigation";
+import { Course } from "@/shared/api/course/model";
 
 const SectionAddPage = () => {
-    const { courseStore, courseComponentStore, sectionCourseStore,generalSettingsStore } = useMobxStores();
+    const { courseStore, courseComponentStore, sectionCourseStore, generalSettingsStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
     const [current, setCurrent] = useState(0);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
@@ -232,54 +232,54 @@ const SectionAddPage = () => {
 
                     {generalSettingsStore.generalSettings?.allow_extra_materials && <>
                         <Form.Item
-                        name="uploadFile"
-                        label="Дополнительные материалы"
-                        tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
-                    >
-                        <Upload beforeUpload={() => false}>
-                            <Button icon={<UploadOutlined />}>Загрузить файл</Button>
-                        </Upload>
-                    </Form.Item>
+                            name="uploadFile"
+                            label="Дополнительные материалы"
+                            tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
+                        >
+                            <Upload beforeUpload={() => false}>
+                                <Button icon={<UploadOutlined />}>Загрузить файл</Button>
+                            </Upload>
+                        </Form.Item>
 
-                    <Form.Item
-                        label="Ссылки на внешние ресурсы"
-                        tooltip="Добавьте ссылки на связанные внешние ресурсы"
-                    >
-                        <Form.List name="externalLinks">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, ...restField }) => (
-                                        <div key={key} className="flex items-center mb-4">
-                                            <Form.Item
-                                                {...restField}
-                                                name={[name]}
-                                                rules={[{ type: 'url', message: 'Введите корректный URL' }]}
-                                                style={{ flexGrow: 1 }}
-                                            >
-                                                <Input placeholder="Введите URL" />
-                                            </Form.Item>
+                        <Form.Item
+                            label="Ссылки на внешние ресурсы"
+                            tooltip="Добавьте ссылки на связанные внешние ресурсы"
+                        >
+                            <Form.List name="externalLinks">
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map(({ key, name, ...restField }) => (
+                                            <div key={key} className="flex items-center mb-4">
+                                                <Form.Item
+                                                    {...restField}
+                                                    name={[name]}
+                                                    rules={[{ type: 'url', message: 'Введите корректный URL' }]}
+                                                    style={{ flexGrow: 1 }}
+                                                >
+                                                    <Input placeholder="Введите URL" />
+                                                </Form.Item>
+                                                <Button
+                                                    type="link"
+                                                    onClick={() => remove(name)}
+                                                    icon={<DeleteOutlined />}
+                                                    danger
+                                                />
+                                            </div>
+                                        ))}
+                                        <Form.Item>
                                             <Button
-                                                type="link"
-                                                onClick={() => remove(name)}
-                                                icon={<DeleteOutlined />}
-                                                danger
-                                            />
-                                        </div>
-                                    ))}
-                                    <Form.Item>
-                                        <Button
-                                            type="dashed"
-                                            onClick={() => add()}
-                                            style={{ width: '100%' }}
-                                            icon={<PlusOutlined />}
-                                        >
-                                            Добавить ссылку
-                                        </Button>
-                                    </Form.Item>
-                                </>
-                            )}
-                        </Form.List>
-                    </Form.Item>
+                                                type="dashed"
+                                                onClick={() => add()}
+                                                style={{ width: '100%' }}
+                                                icon={<PlusOutlined />}
+                                            >
+                                                Добавить ссылку
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
+                        </Form.Item>
                     </>}
                 </>
             ),

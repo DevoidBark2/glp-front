@@ -1,10 +1,11 @@
-import { axiosInstance } from "../http-client";
+import { axiosInstance, withAuth } from "../http-client";
 import { Course } from "./model";
 
-export const getAllCourses = async (): Promise<Course[]> => {
-    const data = (await axiosInstance.get('api/courses')).data;
+export const getAllCourses = withAuth(async (arg: any, config = {}): Promise<Course[]> => {
+    debugger
+    const data = (await axiosInstance.get('api/courses', config)).data;
     return data.data;
-};
+});
 
 export const createCourse = async (): Promise<Course> => {
     const data = (await axiosInstance.post('/api/courses')).data;

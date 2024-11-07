@@ -160,11 +160,10 @@ const QuizMultiComponent: React.FC<QuizProps> = ({ quiz }) => {
                         {questionItem.options.map((option, optionIndex) => (
                             <label
                                 key={optionIndex}
-                                className={`block cursor-pointer mb-2 p-4 border rounded-lg transition-all ${
-                                    selectedAnswers.includes(optionIndex)
+                                className={`block cursor-pointer mb-2 p-4 border rounded-lg transition-all ${selectedAnswers.includes(optionIndex)
                                         ? 'bg-blue-100 border-blue-500'
                                         : 'bg-white border-gray-300'
-                                }`}
+                                    }`}
                             >
                                 <input
                                     type="checkbox"
@@ -198,8 +197,8 @@ const QuizMultiComponent: React.FC<QuizProps> = ({ quiz }) => {
                                 const className = isCorrect
                                     ? 'text-green-600'
                                     : isSelected && !isCorrect
-                                    ? 'text-red-600'
-                                    : 'text-gray-800';
+                                        ? 'text-red-600'
+                                        : 'text-gray-800';
 
                                 return (
                                     <p key={optionIndex} className={`mt-2 ${className}`}>

@@ -3,7 +3,7 @@ import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from 
 import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
 import { UserRole } from "@/enums/UserRoleEnum";
 import { isEditedCourse } from "@/selectors/courseSelectors";
-import { Course } from "@/stores/CourseStore";
+import { Course } from "@/shared/api/course/model";
 import { showCourseStatus } from "@/utils/showCourseStatusInTable";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Popover, TableColumnsType, Tag, Tooltip } from "antd";

@@ -21,7 +21,7 @@ export interface CourseDetailsModalProps {
 const CourseDetails: React.FC<CourseDetailsModalProps> = ({ course, openModal, setOpenModal }) => {
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState<boolean>(false)
     const router = useRouter();
-    const { userStore } = useMobxStores();
+    const { userStore, courseStore } = useMobxStores();
 
     return <>
         <Modal
@@ -50,6 +50,9 @@ const CourseDetails: React.FC<CourseDetailsModalProps> = ({ course, openModal, s
                         userStore.setOpenLoginModal(true);
                         return;
                     }
+                    debugger
+                    courseStore.subscribeCourse(course.id, currentUser.user.id)
+                    return;
                     router.push(`/platform/courses/${course.id}`);
                 }
             }}
