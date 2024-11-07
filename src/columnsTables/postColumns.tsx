@@ -73,8 +73,8 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             title: "Создатель",
             dataIndex: "user",
             hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
-            render: (_, record) => (
-                record.user.role === UserRole.SUPER_ADMIN ? (
+            render: (_, record) => {
+                return  record.user.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                         <Tooltip title="Перейти в профиль">
                             <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
@@ -90,7 +90,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
                         </Link>
                     </Popover>
                 )
-            ),
+            },
         },
         {
             title: "Действия",

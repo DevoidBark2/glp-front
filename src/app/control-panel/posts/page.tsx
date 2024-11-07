@@ -158,7 +158,7 @@ const PostPage = () => {
                     deletePost: postStore.deletePost,
                     handleChangePost: handelChangePost
                 })}
-                footer={settings && settings.show_footer_table ? (talbe) => <div>Общее количество: {talbe.length}</div> : undefined}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
                 rowKey={(record) => record.id}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}

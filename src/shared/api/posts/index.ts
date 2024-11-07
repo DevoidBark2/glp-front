@@ -25,7 +25,8 @@ export const createPost = withAuth(async (values: PostCreateForm, config = {}): 
     if (values.status) form.append("status", values.status);
     if (typeof values.is_publish !== "undefined") form.append("is_publish", String(values.is_publish));
 
-    return (await axiosInstance.post<Post>("/api/posts", form, config)).data;
+    const data = (await axiosInstance.post("/api/posts", form, config)).data;
+    return data.data;
 });
 
 
