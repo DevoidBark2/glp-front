@@ -6,9 +6,11 @@ import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import React, { useEffect, useState } from "react";
 import { FeedBackItem } from "@/stores/FeedBacksStore";
-import { Course } from "@/stores/CourseStore";
-import { UploadChangeParam } from "antd/lib/upload";
 import { useRouter } from "next/navigation";
+import { Course } from "@/shared/api/course/model";
+import PageHeader from "@/components/PageHeader/PageHeader";
+import nextConfig from "next.config.mjs";
+import { MAIN_COLOR } from "@/shared/constants";
 
 const ProfilePage = () => {
     const { userStore, userProfileStore, feedBacksStore } = useMobxStores();
@@ -44,12 +46,6 @@ const ProfilePage = () => {
         }, 2000);
     };
 
-    const handleAvatarChange = (file) => {
-        const reader = new FileReader();
-        reader.onload = () => setPreviewImage(reader.result);
-        reader.readAsDataURL(file.file.originFileObj);
-    };
-
     const [userLevel, setUserLevel] = useState(3); // Уровень пользователя
     const [userXP, setUserXP] = useState(150); // Очки опыта пользователя
     const maxXP = 200; // Максимальное количество очков опыта для повышения уровня
@@ -58,31 +54,28 @@ const ProfilePage = () => {
     const confirmLeaveCourse = (courseId: number) => {
         Modal.confirm({
             title: "Вы уверены, что хотите покинуть курс?",
-            icon: <ExclamationCircleOutlined />,
-            content: "Это действие нельзя отменить.",
+            icon: <ExclamationCircleOutlined style={{ color: '#faad14' }} />, // иконка с оранжевым цветом
+            content: (
+                <div>
+                    <p>Это действие нельзя отменить.</p>
+                    <p style={{ color: '#595959' }}>Вы всегда сможете повторно записаться на курс позже.</p>
+                </div>
+            ),
+            okText: "Покинуть",
+            cancelText: "Отмена",
+            okButtonProps: {
+                style: {
+                    backgroundColor: MAIN_COLOR,
+                    borderColor: '#52c41a',
+                    color: '#fff',
+                },
+            },
             onOk() {
-                // Логика покидания курса
                 setUserCourses(userCourses.filter(course => course.id !== courseId));
             },
         });
     };
 
-    const recommendedCourses = [
-        { id: 1, name: "Основы Python", image: "https://example.com/python.png" },
-        { id: 2, name: "React для начинающих", image: "https://example.com/react.png" },
-    ];
-    const achievements = [
-        { title: "Завершил первый курс", icon: <TrophyOutlined />, description: "Поздравляем! Вы завершили свой первый курс." },
-        { title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс." },
-        { title: "5 звёзд за курс", icon: <TrophyOutlined />, description: "Вы получили максимальный рейтинг за курс." }
-    ];
-
-    const handleCalendarSelect = (date) => {
-        Modal.info({
-            title: "Планируйте своё обучение",
-            content: `Вы выбрали дату: ${date.format('YYYY-MM-DD')}. Вы можете запланировать учебную сессию на этот день.`,
-        });
-    };
     const [loadingAvatar, setLoadingAvatar] = useState(false);
 
     // // Показывать спин при загрузке аватара
@@ -96,7 +89,9 @@ const ProfilePage = () => {
 
     useEffect(() => {
         setLoadingProfile(false)
-        userProfileStore.getUserProfile?.().then((response) => {
+        userProfileStore.getUserProfile().then((response) => {
+            debugger
+            setUserCourses(response.data.userCourses)
             formProfile.setFieldsValue(response.data);
         }).finally(() => {
             userProfileStore.setLoading(false)
@@ -106,7 +101,7 @@ const ProfilePage = () => {
 
     return (
         !userProfileStore.loading ? (
-            <div className="container mx-auto mb-4">
+            <div className="container mx-auto mb-4 mt-4">
                 {/* Модальное окно для покидания курса */}
                 <Modal
                     open={userStore.openLeaveCourseModal}
@@ -118,9 +113,10 @@ const ProfilePage = () => {
                     Вы уверены, что хотите покинуть курс? Это действие нельзя отменить.
                 </Modal>
 
-                <h1 className="text-gray-800 text-4xl my-5 font-bold">Профиль пользователя</h1>
-
-                <Divider/>
+                <PageHeader
+                    title="Профиль пользователя"
+                    showBottomDivider
+                />
 
                 <div className="flex gap-6 mt-2">
                     {/* Левая часть - профиль */}
@@ -216,7 +212,7 @@ const ProfilePage = () => {
                         {/* Модальное окно с подробной информацией */}
                         <Modal
                             title="Информация о пользователе"
-                            visible={isModalVisible}
+                            open={isModalVisible}
                             onOk={handleModalOk}
                             onCancel={handleModalCancel}
                             footer={[
@@ -290,11 +286,11 @@ const ProfilePage = () => {
                         {loadingCourses ? (
                             <Skeleton active />
                         ) : (
-                            1 > 5 ? userCourses.map(course => (
+                            userCourses.length > 0 ? userCourses.map(course => (
                                 <div key={course.id} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md hover:bg-white hover:shadow-lg transition-all duration-300">
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center">
-                                            <img src={course.image} alt={course.name} width={50} height={50} className="rounded-lg mr-4" />
+                                            <img src={`${nextConfig.env!.API_URL}${course?.image}`} alt={course.name} width={100} height={100} className="mr-4" />
                                             <div>
                                                 <h3 className="text-xl font-semibold">{course.name}</h3>
                                                 <p className="text-gray-600">{course.small_description}</p>
@@ -302,7 +298,9 @@ const ProfilePage = () => {
                                         </div>
                                         <div className="flex items-center">
                                             <Tooltip title="Продолжить курс">
-                                                <Button type="primary">Продолжить</Button>
+                                                <Button type="primary" onClick={() => {
+                                                    router.push(`/platform/courses/${course.id}`)
+                                                }}>Продолжить</Button>
                                             </Tooltip>
                                             <Button
                                                 danger
@@ -311,7 +309,7 @@ const ProfilePage = () => {
                                             >Покинуть курс</Button>
                                         </div>
                                     </div>
-                                    <Progress percent={course.level} strokeColor="#87d068" />
+                                    <Progress percent={course.progress} strokeColor="#87d068" />
                                 </div>
                             )) : <div className="flex items-center justify-center h-3/4">
                                 <Empty description={<div className="flex flex-col">
@@ -326,7 +324,7 @@ const ProfilePage = () => {
                 {/* Дополнительные интерактивные блоки */}
 
                 {/* Блок с рейтингом курсов */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
+                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Оцените ваши курсы</h2>
                     <Divider />
                     <div className="grid grid-cols-2 gap-4">
@@ -337,7 +335,7 @@ const ProfilePage = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Форма обратной связи */}
                 <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
@@ -413,40 +411,6 @@ const ProfilePage = () => {
                     </div>
                 </div>
 
-                {/* Рекомендуемые курсы */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
-                    <h2 className="text-2xl font-bold mb-4">Рекомендуемые курсы</h2>
-                    <Divider />
-                    <div className="grid grid-cols-2 gap-4">
-                        {recommendedCourses.map(course => (
-                            <div key={course.id} className="flex items-center bg-gray-50 p-4 rounded-md shadow-md hover:bg-white hover:shadow-lg">
-                                <img src={course.image} alt={course.name} width={50} height={50} className="rounded-lg mr-4" />
-                                <div>
-                                    <h3 className="text-xl font-semibold">{course.name}</h3>
-                                    <Button type="primary">Записаться</Button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* История активности */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
-                    <h2 className="text-2xl font-bold mb-4">История активности</h2>
-                    <Divider />
-                    <List
-                        bordered
-                        dataSource={[
-                            "Начал курс по HTTP",
-                            "Завершил урок: Основы HTTP",
-                            "Записался на курс по Java",
-                        ]}
-                        renderItem={item => (
-                            <List.Item>{item}</List.Item>
-                        )}
-                    />
-                </div>
-
                 {/* Прогресс-бар с уровнем пользователя */}
                 <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
                     <h2 className="text-2xl font-bold mb-4">Ваш уровень</h2>
@@ -457,39 +421,6 @@ const ProfilePage = () => {
                     </div>
                     <p className="text-gray-600 mt-2">Опыт: {userXP}/{maxXP} XP</p>
                 </div>
-
-                {/* Блок с наградами */}
-                <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
-                    <h2 className="text-2xl font-bold mb-4">Ваши достижения</h2>
-                    <Divider />
-                    <div className="grid grid-cols-2 gap-4">
-                        {achievements.map((achieve, index) => (
-                            <Badge.Ribbon key={index} text="Награда" color="gold">
-                                <div className="p-4 bg-gray-50 rounded-md shadow-md flex items-center">
-                                    {achieve.icon}
-                                    <div className="ml-4">
-                                        <h3 className="text-lg font-semibold">{achieve.title}</h3>
-                                        <p className="text-gray-600">{achieve.description}</p>
-                                    </div>
-                                </div>
-                            </Badge.Ribbon>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Календарь для планирования обучения */}
-                {/* <div className="mt-12 bg-white rounded-md shadow-lg p-6 transition-all duration-300 hover:shadow-2xl">
-                    <h2 className="text-2xl font-bold mb-4">Календарь обучения</h2>
-                    <Divider />
-                    <Calendar fullscreen={false} onSelect={handleCalendarSelect} />
-                </div> */}
-
-                {/* Чат с поддержкой */}
-                {/* <div className="fixed bottom-6 right-6">
-                    <Tooltip title="Чат с поддержкой">
-                        <Button shape="circle" icon={<MessageOutlined />} size="large" />
-                    </Tooltip>
-                </div> */}
             </div>
         ) : <div className="flex justify-center">
             <Spin size="large" />

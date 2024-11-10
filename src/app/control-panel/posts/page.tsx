@@ -132,7 +132,6 @@ const PostPage = () => {
         const user = getCookieUserDetails();
         setCurrentUser(user);
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
-        debugger
         setSettings(settingUser);
         postStore.getUserPosts();
     }, []);

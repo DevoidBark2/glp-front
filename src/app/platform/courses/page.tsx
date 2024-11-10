@@ -20,9 +20,9 @@ const CoursesPage = () => {
                 </div>
             </div>
             <Divider className="my-6" />
-           {
+            {
                 !courseStore.loadingCourses ? (
-                    <CourseList courses={courseStore.courses}/>
+                    <CourseList courses={courseStore.courses} />
                 ) : (
                     <div className="flex justify-center items-center h-60">
                         <Spin size="large" />

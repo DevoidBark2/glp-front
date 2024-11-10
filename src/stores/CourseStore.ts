@@ -50,6 +50,12 @@ class CourseStore {
     courses: Course[] = []
     userCourses: Course[] = []
 
+    loadingSubscribeCourse: boolean = false;
+
+    setLoadingSubscribeCourse = action((value: boolean) => {
+        this.loadingSubscribeCourse = value;
+    })
+
     setFullDetailCourse = action((value: Course) => {
         this.fullDetailCourse = value;
     })
@@ -172,11 +178,17 @@ class CourseStore {
     })
 
     subscribeCourse = action(async (courseId: number, userId: number) => {
-        debugger
-        const data = await axiosInstance.post('api/subscribe-course', {
-            courseId: courseId,
-            userId: userId
-        })
+        this.setLoadingSubscribeCourse(true)
+        try {
+            const data = await axiosInstance.post('api/subscribe-course', {
+                courseId: courseId,
+                userId: userId
+            })
+
+            return data
+        } finally {
+            this.setLoadingSubscribeCourse(false)
+        }
     })
 }
 

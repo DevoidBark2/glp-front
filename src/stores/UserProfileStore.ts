@@ -40,12 +40,11 @@ class UserProfileStore {
         return await GET(`/api/get-user`)
     })
 
-    updateProfile = action(async (values:UserProfile) => {
-        debugger
-        window.localStorage.setItem('user_settings',JSON.stringify(values))
+    updateProfile = action(async (values: UserProfile) => {
+        window.localStorage.setItem('user_settings', JSON.stringify(values))
         this.setSaveProfile(true)
         await PUT('/api/profile', values).then(response => {
-            notification.success({message: response.message})
+            notification.success({ message: response.message })
         }).catch(e => {
         }).finally(() => {
             this.setSaveProfile(false)

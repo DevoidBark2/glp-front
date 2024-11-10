@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Divider, Input, Modal, Rate } from "antd";
 import Image from "next/image"
 import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
@@ -23,6 +23,8 @@ const CourseDetails: React.FC<CourseDetailsModalProps> = ({ course, openModal, s
     const router = useRouter();
     const { userStore, courseStore } = useMobxStores();
 
+    debugger
+
     return <>
         <Modal
             open={inputSecretKeyModal}
@@ -38,22 +40,29 @@ const CourseDetails: React.FC<CourseDetailsModalProps> = ({ course, openModal, s
 
         <Modal
             open={openModal}
-            okText="Начать"
+            okText={course && course.courseUsers && course.courseUsers.length > 0 ? "Продолжить" : "Начать"}
             cancelText="Закрыть"
             width="60%"
+            confirmLoading={courseStore.loadingSubscribeCourse}
             onOk={() => {
                 if (course && course.access_right === AccessRightEnum.PRIVATE) {
                     setInputSecretKeyModal(true);
                 } else {
+                    if (course.courseUsers && course.courseUsers.length > 0) {
+                        courseStore.setOpenCourseDetailsModal(false)
+                        router.push(`/platform/courses/${course.id}`);
+                        return;
+                    }
                     const currentUser = getCookieUserDetails();
                     if (!currentUser) {
                         userStore.setOpenLoginModal(true);
                         return;
                     }
-                    debugger
-                    courseStore.subscribeCourse(course.id, currentUser.user.id)
-                    return;
-                    router.push(`/platform/courses/${course.id}`);
+                    courseStore.subscribeCourse(course.id, currentUser.user.id).then(() => {
+                        courseStore.setOpenCourseDetailsModal(false)
+                        router.push(`/platform/courses/${course.id}`);
+                    })
+
                 }
             }}
             onCancel={() => setOpenModal(false)}

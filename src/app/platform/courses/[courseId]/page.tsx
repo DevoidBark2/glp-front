@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Tooltip, Modal, Input, List, Checkbox, Dropdown } from "antd";
+import { Menu, Layout, Card, Progress, Button, Tooltip, Modal, Input, List, Checkbox, Dropdown, Popover, Divider } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeftOutlined, ArrowRightOutlined, BookOutlined, CheckOutlined, DownOutlined, MessageOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
@@ -161,8 +161,8 @@ const QuizMultiComponent: React.FC<QuizProps> = ({ quiz }) => {
                             <label
                                 key={optionIndex}
                                 className={`block cursor-pointer mb-2 p-4 border rounded-lg transition-all ${selectedAnswers.includes(optionIndex)
-                                        ? 'bg-blue-100 border-blue-500'
-                                        : 'bg-white border-gray-300'
+                                    ? 'bg-blue-100 border-blue-500'
+                                    : 'bg-white border-gray-300'
                                     }`}
                             >
                                 <input
@@ -220,18 +220,11 @@ const CoursePage = () => {
     const { courseStore } = useMobxStores();
     const [selectedSection, setSelectedSection] = useState(0);
     const [progress, setProgress] = useState(0);
-    const [isQuizVisible, setQuizVisible] = useState(false);
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState("");
 
     const handleMenuClick = ({ key }) => {
         setSelectedSection(key);
     };
 
-    const handleAddComment = () => {
-        setComments([...comments, newComment]);
-        setNewComment("");
-    };
     const router = useRouter()
 
     // Определяем меню для выпадающего списка
@@ -241,6 +234,16 @@ const CoursePage = () => {
                 Выйти из курса
             </Menu.Item>
         </Menu>
+    );
+
+    const courseDetailsContent = (
+        <div>
+            <p>Всего заданий: 100</p>
+            <p>Сложных заданий: 2</p>
+            <p>Легких заданий: 4</p>
+            <p>Оценочное время: не указано</p>
+            {/* Добавьте другие детали по необходимости */}
+        </div>
     );
 
     useEffect(() => {
@@ -264,9 +267,12 @@ const CoursePage = () => {
                     height: '64px',
                 }}
             >
-                <h1 className="text-xl font-semibold text-gray-800">
-                    {courseStore.fullDetailCourse?.name}
-                </h1>
+                <Popover content={courseDetailsContent} placement="topLeft" title="Информация о курсе" trigger="hover">
+                    <h1 className="text-xl font-semibold text-gray-800 cursor-pointer">
+                        {courseStore.fullDetailCourse?.name || 'Название курса'}
+                    </h1>
+                </Popover>
+
 
                 {/* Прогресс по курсу */}
                 <div style={{ flex: 1, margin: '0 16px' }}>
@@ -329,11 +335,14 @@ const CoursePage = () => {
                         {/* Карточка контента */}
                         <Card
                             title={
-                                <h2 className="text-2xl font-semibold text-gray-800">
-                                    {courseStore.fullDetailCourse?.sections.find(
-                                        (s) => s.id === Number(selectedSection)
-                                    )?.name || 'Section Name'}
-                                </h2>
+                                <>
+                                    <h2 className="text-2xl font-semibold text-gray-800 mt-4">
+                                        {courseStore.fullDetailCourse?.sections.find(
+                                            (s) => s.id === Number(selectedSection)
+                                        )?.name || 'Section Name'}
+                                    </h2>
+                                    <Divider />
+                                </>
                             }
                             style={{
                                 flex: 1,
@@ -341,7 +350,8 @@ const CoursePage = () => {
                                 borderRadius: '12px',
                             }}
                             bodyStyle={{
-                                padding: '24px',
+                                paddingLeft: '24px',
+                                paddingRight: '24px',
                                 backgroundColor: '#fff',
                                 borderRadius: '12px',
                             }}
@@ -462,47 +472,6 @@ const CoursePage = () => {
                             </Button>
                         </div>
 
-
-                        {/* Блок комментариев */}
-                        <Card
-                            title="Комментарии"
-                            style={{
-                                flex: 1,
-                                marginBottom: 24,
-                                borderRadius: '12px',
-                            }}
-                            bodyStyle={{
-                                padding: '24px',
-                                backgroundColor: '#fff',
-                                borderRadius: '12px',
-                            }}
-                        >
-                            <List
-                                dataSource={comments}
-                                renderItem={(comment) => (
-                                    <List.Item className="mb-2">
-                                        <MessageOutlined style={{ marginRight: 8 }} />
-                                        <span className="text-gray-700">{comment}</span>
-                                    </List.Item>
-                                )}
-                                style={{
-                                    maxHeight: '200px',
-                                    overflowY: 'auto',
-                                    marginBottom: '16px',
-                                    paddingRight: '10px',
-                                }}
-                            />
-                            <TextArea
-                                rows={4}
-                                value={newComment}
-                                onChange={(e) => setNewComment(e.target.value)}
-                                placeholder="Оставьте комментарий..."
-                                style={{ marginBottom: '8px', borderRadius: '8px' }}
-                            />
-                            <Button type="primary" onClick={handleAddComment}>
-                                Добавить комментарий
-                            </Button>
-                        </Card>
                     </Content>
                 </Layout>
             </Layout>
@@ -511,23 +480,3 @@ const CoursePage = () => {
 }
 
 export default observer(CoursePage);
-
-
-
-{/* <Sider width={300} style={{ background: '#f0f2f5', padding: '24px', overflowY: 'auto' }}>
-                    <h3>Прогресс по курсу</h3>
-                    <Progress percent={progress} status="active" />
-                    <h3>Закладки</h3>
-                    <Menu
-                        mode="inline"
-                        style={{ borderRight: 0, overflowY: 'auto' }}
-                    >
-                        {sections.map(section => (
-                            bookmarkedSections.includes(section.key) && (
-                                <Menu.Item key={section.key} onClick={() => setSelectedSection(section.key)}>
-                                    {section.title}
-                                </Menu.Item>
-                            )
-                        ))}
-                    </Menu>
-                </Sider> */}

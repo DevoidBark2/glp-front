@@ -78,4 +78,6 @@ export type Course = {
     user: User
     status: StatusCourseEnum
     sections: SectionCourseItem[]
+    courseUsers: any
+    progress: any
 }
