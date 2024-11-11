@@ -1,4 +1,4 @@
-import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
+import { StatusCourseEnum } from "@/shared/api/course/model";
 import {Tag} from "antd";
 import React from "react";
 

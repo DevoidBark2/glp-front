@@ -119,7 +119,7 @@ export const UserProfileBlock = observer(() => {
                             </Form.Item>
                         </div>
                     </div>
-                </Form>
+            </Form>
         </div>
     )
 })

@@ -3,9 +3,8 @@ import { DELETE, GET, POST } from "@/lib/fetcher";
 import { delete_cookie, getCookieUserDetails, getUserToken, signInUser } from "@/lib/users";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
-import { UserRole } from "@/enums/UserRoleEnum";
-import { StatusUserEnum } from "@/enums/StatusUserEnum";
 import { message } from "antd";
+import { StatusUserEnum, UserRole } from "@/shared/api/user/model";
 
 export type User = {
     id: number;

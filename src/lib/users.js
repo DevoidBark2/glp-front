@@ -20,7 +20,10 @@ export const delete_cookie_by_name = function (name) {
 };
 
 export const delete_cookie = () => {
-    cookieCutter.set(COOKIE_NAME, "", { expires: new Date(0) });
+    if (typeof window !== "undefined") {
+        // Устанавливаем куки с прошедшей датой для удаления
+        document.cookie = `${COOKIE_NAME}=; Max-Age=-99999999; path=/`;
+    }
 };
 
 export const setActiveUser = (value) => {

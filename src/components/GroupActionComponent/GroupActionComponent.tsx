@@ -1,7 +1,6 @@
+import { StatusUserEnum } from "@/shared/api/user/model";
 import {Button, Input, Select, Space} from "antd";
 import React from "react";
-
-import {StatusUserEnum} from "@/enums/StatusUserEnum";
 
 export interface GroupActionComponentProps {
     loading: boolean;

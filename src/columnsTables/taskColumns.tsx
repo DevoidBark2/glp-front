@@ -1,5 +1,4 @@
 import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE } from "@/constants";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { Button, Popconfirm, TableColumnsType, Tag, Tooltip } from "antd";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
+import { CourseComponentType } from "@/shared/api/course/model";
 
 const typeIcons = {
     [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Post } from "@/stores/PostStore";
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
+import { PostStatusEnum } from "@/shared/api/posts/model";
 
 const ManagePostModal = ({
     selectedPost,

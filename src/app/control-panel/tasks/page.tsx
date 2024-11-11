@@ -9,7 +9,6 @@ import {
     Table,
     Tag,
 } from "antd";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
@@ -21,6 +20,7 @@ import MultiPlayChoise from "@/components/CourseComponentTask/TaskTypes/MultiPla
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { taskColumns } from "@/columnsTables/taskColumns";
 import { taskTable } from "@/shared/config";
+import { CourseComponentType } from "@/shared/api/course/model";
 
 const TaskPage = () => {
     const { courseComponentStore } = useMobxStores()

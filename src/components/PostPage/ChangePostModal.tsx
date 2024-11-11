@@ -1,5 +1,3 @@
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
-import { UserRole } from "@/enums/UserRoleEnum";
 import { Button, Form, FormInstance, Input, Modal, notification, Select, Tag, Tooltip, UploadProps } from "antd";
 import dynamic from "next/dynamic";
 import {
@@ -11,7 +9,8 @@ import {
 import 'react-quill/dist/quill.snow.css';
 import Dragger from "antd/es/upload/Dragger";
 import { FC } from "react";
-import { Post } from "@/shared/api/posts/model";
+import { Post, PostStatusEnum } from "@/shared/api/posts/model";
+import { UserRole } from "@/shared/api/user/model";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }

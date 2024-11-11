@@ -4,13 +4,12 @@ import { Divider, Input, Modal, Rate } from "antd";
 import Image from "next/image"
 import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
 import CourseAccessComponent from "@/components/CourseAccessComponent/CourseAccessComponent";
-import { AccessRightEnum } from "@/enums/AccessCourseEnum";
 import { useRouter } from "next/navigation";
 import { getCookieUserDetails } from "@/lib/users";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import nextConfig from "next.config.mjs";
-import { Course } from "@/shared/api/course/model";
+import { AccessRightEnum, Course } from "@/shared/api/course/model";
 
 export interface CourseDetailsModalProps {
     course: Course

@@ -1,4 +1,4 @@
-import { getAllCourses } from "@/shared/api/course";
+import { confirmLeaveCourse, getAllCourses } from "@/shared/api/course";
 import { Course, SectionCourseItem } from "@/shared/api/course/model";
 import { action, makeAutoObservable } from "mobx";
 import { courseMapper } from "../mappers";
@@ -61,10 +61,6 @@ class CourseStore {
         }finally {
             this.setLoadingCourses(false)
         }
-    })
-
-    confirmLeaveCourse = action(async (courseId: number) => {
-
     })
 
     // createCourse = action(async (values: any) => {

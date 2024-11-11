@@ -1,4 +1,5 @@
-import {StatusUserEnum} from "@/enums/StatusUserEnum";
+
+import { StatusUserEnum } from "@/shared/api/user/model";
 import {Tag} from "antd";
 import React from "react";
 

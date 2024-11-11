@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { Form, Input, Select, Button, InputNumber, message, Upload } from "antd";
+import { Form, Input, Select, Button, InputNumber, message, Upload, Breadcrumb } from "antd";
 import { conditionForAchievements, typesConsitions } from "@/constants";
 import Link from "next/link";
 import { observer } from "mobx-react";
@@ -8,7 +8,6 @@ import { useMobxStores } from "@/stores/stores";
 import { UploadOutlined } from "@ant-design/icons";
 import Image from "next/image"
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-import BreadCrumbsComponent from "@/components/BreadCrumbsComponent/BreadCrumbsComponent";
 
 const AchievementsPage = () => {
     const [form] = Form.useForm();
@@ -18,13 +17,12 @@ const AchievementsPage = () => {
 
     return (
         <PageContainerControlPanel>
-            <BreadCrumbsComponent items={[{
-                title: <Link href={"/control-panel/achievements"}>Доступные достижения</Link>,
-            }, {
-                title: "Новое достижение",
-            }]}
-                currentPageTitle="Создание достижения"
-                showBottomDivider
+            <Breadcrumb
+                items={[{
+                    title: <Link href={"/control-panel/achievements"}>Доступные достижения</Link>,
+                }, {
+                    title: "Новое достижение",
+                }]}
             />
             <Form
                 form={form}

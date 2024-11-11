@@ -10,8 +10,8 @@ import { getCookieUserDetails } from "@/lib/users";
 import LoginComponent from "@/components/LoginComponent/LoginComponent";
 import RegisterComponent from "@/components/RegisterComponent/RegisterComponent";
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
-import { UserRole } from "@/enums/UserRoleEnum";
 import { platformMenu } from "@/constants";
+import { UserRole } from "@/shared/api/user/model";
 
 export type UserType = {
     user: { user_name: string; role: UserRole };
@@ -67,6 +67,7 @@ const HeaderBlock = () => {
                             userStore.logout();
                             setCurrentUser(null);
                             setItems([]);
+                            router.push('/platform')
                         }}
                     >
                         <Image src="/static/logout_icon.svg" alt="Выйти из аккаунта" width={20} height={20} />
@@ -132,15 +133,11 @@ const HeaderBlock = () => {
                         ) : currentUser ? (
                             <Dropdown menu={{ items }} placement="bottomLeft">
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
-                                <Avatar shape="circle" size={40} className="overflow-hidden">
-                                    <Image 
-                                    src={userProfileStore.userAvatar} 
-                                    width={40} 
-                                    height={40} 
-                                    alt="User Profile" 
-                                    className="rounded-full object-cover"
-                                    />
-                                </Avatar>
+                                <Avatar
+                                    size={40}
+                                    src={userProfileStore.userAvatar || undefined}
+                                    icon={!userProfileStore.userAvatar}
+                                />
                                 <div className="text-white font-semibold ml-3">
                                     {`${userProfileStore.userProfile?.second_name} ${userProfileStore.userProfile?.first_name} ${userProfileStore.userProfile?.last_name}`}
                                 </div>

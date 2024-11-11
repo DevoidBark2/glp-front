@@ -26,10 +26,9 @@ import {
     ReconciliationOutlined, EditOutlined, PlusCircleOutlined, ExportOutlined
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { useRouter } from "next/navigation";
-import { Course } from "@/shared/api/course/model";
+import { Course, CourseComponentType } from "@/shared/api/course/model";
 
 const SectionAddPage = () => {
     const { courseStore, courseComponentStore, sectionCourseStore, generalSettingsStore } = useMobxStores();

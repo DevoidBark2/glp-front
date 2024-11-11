@@ -1,9 +1,8 @@
 import { action, makeAutoObservable } from "mobx";
-import { ComplexityPasswordEnum } from "@/enums/ComplexityPasswordEnum";
-import { UserRole } from "@/enums/UserRoleEnum";
 import { GET, POST } from "@/lib/fetcher";
-import { getUserToken } from "@/lib/users";
 import { notification } from "antd";
+import { ComplexityPasswordEnum } from "@/shared/api/auth/model";
+import { UserRole } from "@/shared/api/user/model";
 
 type GeneralSettingsType = {
     id: number;

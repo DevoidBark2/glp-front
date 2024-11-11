@@ -1,9 +1,8 @@
 import { UserHoverCard } from "@/components/PostPage/UserHoverCard";
 import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from "@/constants";
-import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
-import { UserRole } from "@/enums/UserRoleEnum";
 import { isEditedCourse } from "@/selectors/courseSelectors";
-import { Course } from "@/shared/api/course/model";
+import { Course, StatusCourseEnum } from "@/shared/api/course/model";
+import { UserRole } from "@/shared/api/user/model";
 import { showCourseStatus } from "@/utils/showCourseStatusInTable";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Popover, TableColumnsType, Tag, Tooltip } from "antd";

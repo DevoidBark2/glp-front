@@ -1,12 +1,11 @@
-import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
+
 import { ActionEvent } from "@/enums/ActionEventUser";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
-import { UserRole } from "@/enums/UserRoleEnum";
-import { StatusUserEnum } from "@/enums/StatusUserEnum";
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "./stores/AchievementsStore";
 import { StatusAvatarIconEnum } from "./enums/StatusAvatarIconEnum";
+import { CourseComponentType, StatusCourseEnum } from "./shared/api/course/model";
+import { StatusUserEnum, UserRole } from "./shared/api/user/model";
+import { PostStatusEnum } from "./shared/api/posts/model";
 
 export const MAIN_COLOR = "#00b96b"
 export const UNAUTHORIZED_STATUS_CODE = 401

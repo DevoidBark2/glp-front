@@ -14,7 +14,6 @@ import {
     ClockCircleOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
 
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { getCookieUserDetails } from "@/lib/users";
@@ -23,7 +22,7 @@ import PageContainerControlPanel from "@/components/PageContainerControlPanel/Pa
 import { CreatePostModal } from "@/components/PostPage/CreatePostModal";
 import { ChangePostModal } from "@/components/PostPage/ChangePostModal";
 import { postTable } from "@/shared/config";
-import { PostCreateForm } from "@/shared/api/posts/model";
+import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 
 const PostPage = () => {

@@ -2,8 +2,9 @@ import { Button, Empty } from "antd";
 import { CourseProfileItem } from "../CourseProfileItem";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
+import { observer } from "mobx-react";
 
-export const CourseProfileList = () => {
+export const CourseProfileList = observer(() => {
     const {userProfileStore} = useMobxStores();
     const router = useRouter();
     return (
@@ -18,4 +19,4 @@ export const CourseProfileList = () => {
                 </div>}
         </div>
     )
-}
+})

@@ -1,9 +1,9 @@
 import { action, makeAutoObservable } from "mobx";
 import { Post, postMapper } from "./PostStore";
 import { GET, PUT } from "@/lib/fetcher";
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
 import { Comments } from "@/app/control-panel/manage-posts/page";
 import { notification } from "antd";
+import { PostStatusEnum } from "@/shared/api/posts/model";
 
 class ModeratorStore {
     constructor() {

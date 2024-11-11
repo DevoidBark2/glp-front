@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import React, { useEffect } from "react";
 import { Divider, Spin } from "antd";
-import { CourseList } from "@/entities/course/ui/CourseList";
+import { CourseList } from "@/entities/course/ui";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores();

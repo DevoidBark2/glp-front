@@ -1,10 +1,10 @@
 import { action, makeAutoObservable } from "mobx";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
 import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import { notification } from "antd";
+import { CourseComponentType } from "@/shared/api/course/model";
 
 export type QuestionsType = {
     question: string;

@@ -8,7 +8,6 @@ import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { UserType } from "@/components/Header/Header";
 import { getCookieUserDetails } from "@/lib/users";
-import { UserRole } from "@/enums/UserRoleEnum";
 import {
     AppstoreOutlined,
     BarsOutlined,
@@ -19,6 +18,7 @@ import {
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import nextConfig from "next.config.mjs";
+import { UserRole } from "@/shared/api/user/model";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';

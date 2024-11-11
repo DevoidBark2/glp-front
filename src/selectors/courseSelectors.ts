@@ -1,5 +1,5 @@
-import {StatusCourseEnum} from "@/enums/StatusCourseEnum";
-import { Course } from "@/shared/api/course/model";
+
+import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 
 export const isNewCourse = (course: Course) => course.status === StatusCourseEnum.NEW
 export const isEditedCourse = (course: Course) => course.status === StatusCourseEnum.IN_PROCESSING

@@ -13,6 +13,17 @@ export enum StatusCourseEnum {
     REJECTED = 'rejected',
 }
 
+export enum AccessRightEnum {
+    PUBLIC = 0,
+    PRIVATE = 1
+}
+
+export enum LevelCourseEnum {
+    LIGHT = 1,
+    MIDDLE = 2,
+    HARD = 3
+}
+
 export type SectionCourseItem = {
     id: number;
     name: string;
@@ -38,7 +49,6 @@ export enum CourseComponentType {
     Matching = "matching",
     Sequencing = "sequencing"
 }
-
 
 export type CourseComponentTypeI = {
     id: number;
@@ -66,6 +76,7 @@ export type QuestionsType = {
 
 export type Course = {
     id: number;
+    courseId: number;
     name: string;
     image: string;
     category: Category;

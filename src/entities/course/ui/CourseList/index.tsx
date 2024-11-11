@@ -1,6 +1,6 @@
 import { Course } from "@/shared/api/course/model";
-import { CourseItem } from "../CourseItem";
 import { observer } from "mobx-react";
+import { CourseItem } from "../CourseItem";
 
 type CourseListProps = {
     courses: Course[]

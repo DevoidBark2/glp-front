@@ -3,35 +3,12 @@ import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { notification } from "antd";
 import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
-import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { SectionCourseItem } from "@/stores/SectionCourse";
-import { User } from "./UserStore";
 import { getAllCourses } from "@/shared/api/course";
-import { Course } from "@/shared/api/course/model";
+import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
-
-type Category = {
-    id: number;
-    name: string
-}
-
-// export type Course = {
-//     id: number;
-//     name: string;
-//     image: string;
-//     category: Category;
-//     access_right: number;
-//     level: number;
-//     small_description: string;
-//     content_description: string;
-//     duration: number
-//     publish_date: Date
-//     user: User
-//     status: StatusCourseEnum
-//     sections: SectionCourseItem[]
-// }
 
 class CourseStore {
     constructor() {

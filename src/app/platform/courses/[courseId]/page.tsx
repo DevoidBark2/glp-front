@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Tooltip, Modal, Input, List, Checkbox, Dropdown, Popover, Divider } from "antd";
+import { Menu, Layout, Card, Progress, Button, Input, Dropdown, Popover, Divider } from "antd";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeftOutlined, ArrowRightOutlined, BookOutlined, CheckOutlined, DownOutlined, MessageOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined, DownOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { Header } from "antd/es/layout/layout";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import { CourseComponentType } from "@/shared/api/course/model";
 
 const { Sider, Content } = Layout;
 const { TextArea } = Input;

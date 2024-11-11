@@ -1,4 +1,4 @@
-import { LevelCourseEnum } from "@/enums/LevelCourseEnum";
+import { LevelCourseEnum } from "@/shared/api/course/model";
 import Image from "next/image";
 import React from "react";
 

@@ -1,11 +1,10 @@
-import { action, makeAutoObservable } from "mobx"
+import { action, makeAutoObservable, runInAction } from "mobx"
 import { DELETE, GET, POST } from "@/lib/fetcher";
 import { delete_cookie, getCookieUserDetails, getUserToken, signInUser } from "@/lib/users";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
-import { UserRole } from "@/enums/UserRoleEnum";
-import { StatusUserEnum } from "@/enums/StatusUserEnum";
 import { message } from "antd";
+import { StatusUserEnum, UserRole } from "@/shared/api/user/model";
 
 export type User = {
     id: number;
@@ -124,10 +123,6 @@ class UserStore {
         this.openRegisterModal = value;
     })
 
-    setOpenLeaveCourseModal = action((value: boolean) => {
-        this.openLeaveCourseModal = value;
-    })
-
     setLoading = action((value: boolean) => {
         this.loading = value
     })
@@ -182,7 +177,7 @@ class UserStore {
     })
 
     logout = action(async () => {
-        delete_cookie()
+        delete_cookie();
     })
 
     sendEmailForgotPassword = action(async (values: any) => {

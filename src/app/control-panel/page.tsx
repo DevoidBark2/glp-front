@@ -19,11 +19,11 @@ import {
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import { getCookieUserDetails } from "@/lib/users";
-import { UserRole } from "@/enums/UserRoleEnum";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import dayjs from "dayjs";
 import {SmileOutlined, CloudOutlined, MoonOutlined} from "@ant-design/icons";
 import { welcomeTextRender } from "@/utils/welcomeText";
+import { UserRole } from "@/shared/api/user/model";
 
 const ControlPanel = () => {
   const { statisticsStore } = useMobxStores();

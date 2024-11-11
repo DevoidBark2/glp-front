@@ -1,4 +1,5 @@
 import { GET, POST, PUT } from "@/lib/fetcher";
+import { confirmLeaveCourse } from "@/shared/api/course";
 import { Course } from "@/shared/api/course/model";
 import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
@@ -31,6 +32,12 @@ class UserProfileStore {
 
     setUserAvatar = action ((value: string) => {
         this.userAvatar = `${nextConfig.env?.API_URL}${value}`;
+    })
+
+    confirmLeaveCourse = action(async (courseId: number) => {
+        const data = await confirmLeaveCourse(courseId);
+        debugger
+        this.userProfileCourses = this.userProfileCourses.filter(it => it.courseId !== courseId);
     })
 
     setFileForFeedBack = action((files: UploadFile[]) => {

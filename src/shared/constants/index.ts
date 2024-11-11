@@ -3,15 +3,13 @@ export const UNAUTHORIZED_STATUS_CODE = 401;
 export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"
 
 
-import { StatusCourseEnum } from "@/enums/StatusCourseEnum";
 import { ActionEvent } from "@/enums/ActionEventUser";
-import { CourseComponentType } from "@/enums/CourseComponentType";
 import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
-import { PostStatusEnum } from "@/enums/PostStatusEnum";
-import { UserRole } from "@/enums/UserRoleEnum";
-import { StatusUserEnum } from "@/enums/StatusUserEnum";
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/stores/AchievementsStore";
 import { StatusAvatarIconEnum } from "@/enums/StatusAvatarIconEnum";
+import { CourseComponentType, StatusCourseEnum } from "../api/course/model";
+import { StatusUserEnum, UserRole } from "../api/user/model";
+import { PostStatusEnum } from "../api/posts/model";
 
 export type PlatformMenu = {
     key: number;

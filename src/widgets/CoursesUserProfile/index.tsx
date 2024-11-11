@@ -1,4 +1,4 @@
-import { CourseProfileList } from "@/entities/course/ui/CourseProfileList"
+import { CourseProfileList } from "@/entities/course/ui"
 import { Divider } from "antd"
 
 export const CourseUserProfle = () => {

@@ -13,7 +13,7 @@ export const PostRow = ({ post }: PostProps) => {
     return (
         <div
             key={post.id}
-            className="p-6 mb-12 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer relative group flex items-start"
+            className="p-6 mb-5 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer relative group flex items-start"
         >
             <div className="w-1/3 flex-shrink-0">
                 {!post.image ? (

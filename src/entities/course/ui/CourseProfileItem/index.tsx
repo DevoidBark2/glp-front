@@ -1,6 +1,6 @@
 import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/constants"
 import { Course } from "@/shared/api/course/model"
-import { useMobxStores } from "@/shared/store/RootStore"
+import { useMobxStores } from "@/stores/stores"
 import { Button, Popconfirm, Progress, Tooltip } from "antd"
 import dayjs from "dayjs"
 import nextConfig from "next.config.mjs"
@@ -13,7 +13,7 @@ type CourseProfileItemProps = {
 
 export const CourseProfileItem: FC<CourseProfileItemProps> = ({course} ) => {
     const router = useRouter();
-    const {courseStore} = useMobxStores();
+    const {courseStore,userProfileStore} = useMobxStores();
 
     return (
         <div key={course.id} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md hover:bg-white hover:shadow-lg transition-all duration-300">
@@ -41,7 +41,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({course} ) => {
                             </span>
                             </span>
                         }
-                        onConfirm={() => courseStore.confirmLeaveCourse(course.id)}
+                        onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)}
                         placement="leftBottom"
                         okText="Да"
                         cancelText="Нет"

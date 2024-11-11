@@ -48,6 +48,10 @@ class SettingsStore {
         })
 
     })
+
+    changePassword = action(async (values: any) => {
+        const data = await changePassword()
+    })
 }
 
 export default SettingsStore;

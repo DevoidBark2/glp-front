@@ -11,5 +11,8 @@ export const createCourse = async (): Promise<Course> => {
     return data.data;
 }
 
+export const confirmLeaveCourse = withAuth(async (courseId: number,config = {}) => {
+    const data = (await axiosInstance.delete(`/api/leave-course/${courseId}`,config)).data
 
-// export const 
+    return data.data;
+})

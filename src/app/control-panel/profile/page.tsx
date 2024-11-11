@@ -26,12 +26,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { getCookieUserDetails } from "@/lib/users";
-import { UserRole } from "@/enums/UserRoleEnum";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
+import { UserRole } from "@/shared/api/user/model";
 
 const ProfilePage = () => {
   const [formProfile] = Form.useForm();

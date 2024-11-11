@@ -1,14 +1,14 @@
 "use client";
-import { Modal,Spin } from "antd";
+import { Spin } from "antd";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { CourseUserProfle } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 
 const ProfilePage = () => {
-    const { userStore, userProfileStore, feedBacksStore } = useMobxStores();
+    const { userProfileStore } = useMobxStores();
 
     useEffect(() => {
         userProfileStore.getUserProfile();
@@ -17,17 +17,6 @@ const ProfilePage = () => {
     return (
         !userProfileStore.loading ? (
             <div className="container mx-auto mb-4 mt-4">
-                {/* Модальное окно для покидания курса */}
-                <Modal
-                    open={userStore.openLeaveCourseModal}
-                    onCancel={() => userStore.setOpenLeaveCourseModal(false)}
-                    title="Покинуть курс?"
-                    okText="Да"
-                    cancelText="Нет"
-                >
-                    Вы уверены, что хотите покинуть курс? Это действие нельзя отменить.
-                </Modal>
-
                 <PageHeader
                     title="Профиль пользователя"
                     showBottomDivider
@@ -38,7 +27,7 @@ const ProfilePage = () => {
                     <CourseUserProfle/>
                 </div>
             </div>
-        ) : <div className="flex justify-center">
+        ) : <div className="flex justify-center items-center custom-height-screen">
             <Spin size="large" />
         </div>
     );
