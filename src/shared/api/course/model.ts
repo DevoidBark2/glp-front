@@ -80,4 +80,5 @@ export type Course = {
     sections: SectionCourseItem[]
     courseUsers: any
     progress: any
+    enrolledAt: Date
 }

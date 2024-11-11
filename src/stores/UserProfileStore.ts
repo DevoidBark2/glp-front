@@ -1,8 +1,10 @@
 import { GET, POST, PUT } from "@/lib/fetcher";
+import { Course } from "@/shared/api/course/model";
 import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
+import nextConfig from "next.config.mjs";
 
-type UserProfile = {
+export type UserProfile = {
     first_name: string
     last_name: string
     second_name: string
@@ -22,10 +24,22 @@ class UserProfileStore {
     fileListForFeedback: UploadFile[] = [];
     loading: boolean = false;
     saveProfile: boolean = false;
+    userProfile: UserProfile | null = null;
+    userAvatar: string = "";
+
+    userProfileCourses: Course[] = [];
+
+    setUserAvatar = action ((value: string) => {
+        this.userAvatar = `${nextConfig.env?.API_URL}${value}`;
+    })
 
     setFileForFeedBack = action((files: UploadFile[]) => {
         this.fileListForFeedback = files;
     });
+
+    setUserProfile = action(async (value: UserProfile) => {
+        this.userProfile = value;
+    })
 
     setSaveProfile = action((value: boolean) => {
         this.saveProfile = value;
@@ -35,9 +49,25 @@ class UserProfileStore {
         this.loading = value
     })
 
+    setUserProfileCourses = action(async(courses: Course[]) => {
+        this.userProfileCourses = courses
+    })
+
     getUserProfile = action(async () => {
-        this.setLoading(true)
-        return await GET(`/api/get-user`)
+        try{
+
+            this.setLoading(true)
+            const data = await GET(`/api/get-user`) 
+            debugger
+            this.setUserProfileCourses(data.data.userCourses);
+            this.setUserAvatar(data.data.image)
+            this.setUserProfile(data.data)
+            return data;
+        }catch(e) {
+
+        }finally {
+            this.setLoading(false)
+        }
     })
 
     updateProfile = action(async (values: UserProfile) => {
@@ -48,6 +78,7 @@ class UserProfileStore {
         }).catch(e => {
         }).finally(() => {
             this.setSaveProfile(false)
+            this.setUserProfile(values);
         })
     })
 

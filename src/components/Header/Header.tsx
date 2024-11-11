@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Avatar, Badge, Modal, Spin, Button, Dropdown, MenuProps } from "antd";
+import { Avatar, Modal, Spin, Button, Dropdown, MenuProps } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { UserOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import { getCookieUserDetails } from "@/lib/users";
@@ -19,8 +18,7 @@ export type UserType = {
 };
 
 const HeaderBlock = () => {
-    const { userStore } = useMobxStores();
-    const [loading, setLoading] = useState<boolean>(true);
+    const { userStore,userProfileStore } = useMobxStores();
     const pathName = usePathname();
     const router = useRouter();
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
@@ -83,7 +81,6 @@ const HeaderBlock = () => {
     useEffect(() => {
         const user = getCookieUserDetails();
         setCurrentUser(user);
-        setLoading(false);
 
         if (user) {
             configureMenuItems(user.user.role);
@@ -130,15 +127,23 @@ const HeaderBlock = () => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {loading ? (
+                        {userProfileStore.loading ? (
                             <Spin size="large" />
                         ) : currentUser ? (
                             <Dropdown menu={{ items }} placement="bottomLeft">
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
-                                    <Badge count={1} className="mr-2">
-                                        <Avatar shape="square" icon={<UserOutlined />} />
-                                    </Badge>
-                                    <div className="text-white font-semibold">{currentUser.user?.user_name}</div>
+                                <Avatar shape="circle" size={40} className="overflow-hidden">
+                                    <Image 
+                                    src={userProfileStore.userAvatar} 
+                                    width={40} 
+                                    height={40} 
+                                    alt="User Profile" 
+                                    className="rounded-full object-cover"
+                                    />
+                                </Avatar>
+                                <div className="text-white font-semibold ml-3">
+                                    {`${userProfileStore.userProfile?.second_name} ${userProfileStore.userProfile?.first_name} ${userProfileStore.userProfile?.last_name}`}
+                                </div>
                                 </div>
                             </Dropdown>
                         ) : (

@@ -63,6 +63,10 @@ class CourseStore {
         }
     })
 
+    confirmLeaveCourse = action(async (courseId: number) => {
+
+    })
+
     // createCourse = action(async (values: any) => {
     //     this.setLoadingCreateCourse(true)
     //     const form = new FormData();
