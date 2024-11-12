@@ -217,6 +217,7 @@ class UserStore {
         }
     })
 }
+
 const usersMapper = (value: User) => {
     const user: User = {
         id: value.id,
@@ -227,6 +228,7 @@ const usersMapper = (value: User) => {
         role: value.role,
         email: value.email,
         created_at: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
+        phone: value.phone
     }
 
     return user;

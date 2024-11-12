@@ -1,17 +1,14 @@
 import { action, makeAutoObservable } from "mobx";
-import { Teacher } from "@/stores/CourseStore";
 import { GET } from "@/lib/fetcher";
-import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
-import { ActionEvent } from "@/enums/ActionEventUser";
 import { FORMAT_VIEW_DATE } from "@/constants";
+import { ActionEvent } from "@/shared/api/action-user";
 
 export type EventUser = {
     id: number;
     action: ActionEvent;
     description: string;
     createdAt: Date;
-    user: Teacher
 }
 
 class EventStore {

@@ -1,9 +1,9 @@
 import { action, makeAutoObservable } from "mobx";
 import { DELETE, GET, POST } from "@/lib/fetcher";
-import { StatusAvatarIconEnum } from "@/enums/StatusAvatarIconEnum";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { notification } from "antd";
+import { StatusAvatarIconEnum } from "@/shared/api/avatar-icon";
 
 export type AvatarIcon = {
     id: number

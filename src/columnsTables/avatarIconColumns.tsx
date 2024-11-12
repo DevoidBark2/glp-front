@@ -10,7 +10,7 @@ import {
 import { DeleteOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import nextConfig from "next.config.mjs";
-import { StatusAvatarIconEnum } from "@/enums/StatusAvatarIconEnum";
+import { StatusAvatarIconEnum } from "@/shared/api/avatar-icon";
 
 
 interface avatarIconColumnsProps {

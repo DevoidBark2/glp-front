@@ -1,3 +1,5 @@
+import { StatusComponentTaskEnum } from "../component-task";
+import { StatusSectionEnum } from "../section";
 import { User } from "../user/model";
 
 type Category = {
@@ -36,11 +38,6 @@ export type SectionCourseItem = {
     created_at: Date
 }
 
-export enum StatusSectionEnum {
-    ACTIVE = 'active',
-    DEACTIVE = 'deactive',
-}
-
 export enum CourseComponentType {
     Text = "text",
     Quiz = "quiz",
@@ -60,11 +57,6 @@ export type CourseComponentTypeI = {
     status: StatusComponentTaskEnum
     tags: string[]
     created_at: Date
-}
-
-export enum StatusComponentTaskEnum {
-    ACTIVATED = 'activated',
-    DEACTIVATED = 'deactivated',
 }
 
 export type QuestionsType = {

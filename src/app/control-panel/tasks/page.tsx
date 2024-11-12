@@ -12,7 +12,6 @@ import {
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
-import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import TextTask from "@/components/CourseComponentTask/TaskTypes/TextTask";
 import QuizTask from "@/components/CourseComponentTask/TaskTypes/QuizTask";
@@ -21,6 +20,7 @@ import PageContainerControlPanel from "@/components/PageContainerControlPanel/Pa
 import { taskColumns } from "@/columnsTables/taskColumns";
 import { taskTable } from "@/shared/config";
 import { CourseComponentType } from "@/shared/api/course/model";
+import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 
 const TaskPage = () => {
     const { courseComponentStore } = useMobxStores()

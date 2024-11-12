@@ -37,7 +37,7 @@ const PostPage = () => {
                             title: <Link href={"/platform"}>Главная</Link>,
                         },
                         {
-                            title: <Link href={`/platform/post/${postId}`}>{currentPost?.name || "Пост"}</Link>,
+                            title: <p>{currentPost?.name || "Пост"}</p>,
                         }
                     ]} />
                 </div>

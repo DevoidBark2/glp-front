@@ -2,7 +2,7 @@ import { action, makeAutoObservable } from "mobx";
 import { Course } from "@/shared/api/course/model";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { GET, POST } from "@/lib/fetcher";
-import { StatusSectionEnum } from "@/enums/StatusSectionEnum";
+import { StatusSectionEnum } from "@/shared/api/section";
 
 export type SectionCourseItem = {
     id: number;

@@ -2,14 +2,13 @@ export const MAIN_COLOR = "#00b96b";
 export const UNAUTHORIZED_STATUS_CODE = 401;
 export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"
 
-
-import { ActionEvent } from "@/enums/ActionEventUser";
-import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/stores/AchievementsStore";
-import { StatusAvatarIconEnum } from "@/enums/StatusAvatarIconEnum";
 import { CourseComponentType, StatusCourseEnum } from "../api/course/model";
 import { StatusUserEnum, UserRole } from "../api/user/model";
 import { PostStatusEnum } from "../api/posts/model";
+import { StatusAvatarIconEnum } from "../api/avatar-icon";
+import { StatusComponentTaskEnum } from "../api/component-task";
+import { ActionEvent } from "../api/action-user";
 
 export type PlatformMenu = {
     key: number;

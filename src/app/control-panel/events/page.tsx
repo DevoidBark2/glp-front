@@ -8,8 +8,8 @@ import {EventUser} from "@/stores/EventStore";
 import {ReloadOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
 import {eventColors, eventTooltips, FORMAT_VIEW_DATE} from "@/constants";
 import {MAIN_COLOR} from "@/constants";
-import {ActionEvent} from "@/enums/ActionEventUser";
 import dayjs from "dayjs";
+import { ActionEvent } from "@/shared/api/action-user";
 
 const { RangePicker } = DatePicker;
 const EventPage = () => {
@@ -64,10 +64,10 @@ const EventPage = () => {
                 <div>
                     <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
                     <Link
-                        href={`/control-panel/users/${record.user.id}`}
+                        href={`/control-panel/users/${record.id}`}
                         className="hover:text-black"
                     >
-                        {record.user.name}
+                        {record.action}
                     </Link>
                 </div>
             ),

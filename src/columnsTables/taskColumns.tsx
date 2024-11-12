@@ -11,8 +11,8 @@ import {
     ReconciliationOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { StatusComponentTaskEnum } from "@/enums/StatusComponentTaskEnum";
 import { CourseComponentType } from "@/shared/api/course/model";
+import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 
 const typeIcons = {
     [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,

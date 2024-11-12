@@ -14,7 +14,7 @@ import {
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { useRouter } from "next/navigation";
 import { sectionsTable } from "@/shared/config";
-import { StatusSectionEnum } from "@/shared/api/course/model";
+import { StatusSectionEnum } from "@/shared/api/section";
 
 const SectionPage = () => {
     const { sectionCourseStore } = useMobxStores();

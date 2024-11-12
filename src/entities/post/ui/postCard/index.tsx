@@ -14,7 +14,6 @@ export const PostCard = ({ post }: PostCardProps) => {
         <Card bordered={false} className="mt-6 shadow-lg p-6">
             <div className="flex flex-col sm:flex-row">
 
-                {/* Левая колонка с изображением */}
                 {post?.image && (
                     <div className="flex-shrink-0 w-full sm:w-1/3 h-64 overflow-hidden rounded-lg mb-4 sm:mb-0 sm:mr-6">
                         <Image

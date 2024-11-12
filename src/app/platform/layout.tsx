@@ -6,7 +6,6 @@ import { observer } from 'mobx-react';
 import { useMobxStores } from '@/stores/stores';
 import { Spin } from 'antd';
 import Link from 'next/link';
-import nextConfig from 'next.config.mjs';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface LayoutProps {

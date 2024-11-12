@@ -48,6 +48,7 @@ const ProfilePage = () => {
     setLoading(true);
     try {
       const response = await userProfileStore.uploadAvatar(file);
+      debugger
       setAvatar(`${nextConfig.env?.API_URL}${response.data}`);
       notification.success({ message: response.message });
     } catch (error) {
@@ -63,7 +64,8 @@ const ProfilePage = () => {
 
     userProfileStore.getUserProfile().then((response) => {
       const userData = response.data;
-      setAvatar(`${nextConfig.env?.API_URL}${userData.profile_url}`);
+      debugger
+      setAvatar(`${nextConfig.env?.API_URL}${userData.image}`);
 
       if (userData.birth_day) {
         userData.birth_day = dayjs(userData.birth_day)
