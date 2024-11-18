@@ -22,8 +22,6 @@ const CourseDetails: React.FC<CourseDetailsModalProps> = ({ course, openModal, s
     const router = useRouter();
     const { userStore, courseStore } = useMobxStores();
 
-    debugger
-
     return <>
         <Modal
             open={inputSecretKeyModal}

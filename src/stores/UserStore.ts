@@ -160,13 +160,6 @@ class UserStore {
         }
     });
 
-
-    registerSuccess: boolean = false;
-
-    setRegisterSuccess = action((value: boolean) => {
-        this.registerSuccess = value;
-    })
-
     registerUser = action(async (values: any) => {
         this.setLoading(true)
         return await POST("/api/register", { reqBody: values }).then(response => {
@@ -231,6 +224,7 @@ const usersMapper = (value: User) => {
         role: value.role,
         email: value.email,
         created_at: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
+        phone: value.phone
     }
 
     return user;

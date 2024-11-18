@@ -26,17 +26,16 @@ class UserProfileStore {
     loading: boolean = false;
     saveProfile: boolean = false;
     userProfile: UserProfile | null = null;
-    userAvatar: string = "";
+    userAvatar: string | null = "";
 
     userProfileCourses: Course[] = [];
 
-    setUserAvatar = action ((value: string) => {
-        this.userAvatar = `${nextConfig.env?.API_URL}${value}`;
+    setUserAvatar = action((value: string) => {
+        this.userAvatar = value ? `${nextConfig.env?.API_URL}${value}` : null;
     })
 
     confirmLeaveCourse = action(async (courseId: number) => {
         const data = await confirmLeaveCourse(courseId);
-        debugger
         this.userProfileCourses = this.userProfileCourses.filter(it => it.courseId !== courseId);
     })
 
@@ -56,23 +55,23 @@ class UserProfileStore {
         this.loading = value
     })
 
-    setUserProfileCourses = action(async(courses: Course[]) => {
+    setUserProfileCourses = action(async (courses: Course[]) => {
         this.userProfileCourses = courses
     })
 
     getUserProfile = action(async () => {
-        try{
+        try {
 
             this.setLoading(true)
-            const data = await GET(`/api/get-user`) 
+            const data = await GET(`/api/get-user`)
             debugger
             this.setUserProfileCourses(data.data.userCourses);
             this.setUserAvatar(data.data.image)
             this.setUserProfile(data.data)
             return data;
-        }catch(e) {
+        } catch (e) {
 
-        }finally {
+        } finally {
             this.setLoading(false)
         }
     })

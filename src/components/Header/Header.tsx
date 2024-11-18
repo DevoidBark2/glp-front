@@ -18,11 +18,11 @@ export type UserType = {
 };
 
 const HeaderBlock = () => {
-    const { userStore,userProfileStore } = useMobxStores();
+    const { userStore, userProfileStore } = useMobxStores();
     const pathName = usePathname();
     const router = useRouter();
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-    
+
     const [items, setItems] = useState<MenuProps["items"]>([]);
 
     const configureMenuItems = (role: UserRole) => {
@@ -133,14 +133,14 @@ const HeaderBlock = () => {
                         ) : currentUser ? (
                             <Dropdown menu={{ items }} placement="bottomLeft">
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
-                                <Avatar
-                                    size={40}
-                                    src={userProfileStore.userAvatar || undefined}
-                                    icon={!userProfileStore.userAvatar}
-                                />
-                                <div className="text-white font-semibold ml-3">
-                                    {`${userProfileStore.userProfile?.second_name} ${userProfileStore.userProfile?.first_name} ${userProfileStore.userProfile?.last_name}`}
-                                </div>
+                                    <Avatar
+                                        size={40}
+                                        src={userProfileStore.userAvatar || undefined}
+                                        icon={!userProfileStore.userAvatar}
+                                    />
+                                    <div className="text-white font-semibold ml-3">
+                                        {`${userProfileStore.userProfile?.second_name ?? ""} ${userProfileStore.userProfile?.first_name ?? ""} ${userProfileStore.userProfile?.last_name ?? ""}`}
+                                    </div>
                                 </div>
                             </Dropdown>
                         ) : (

@@ -13,7 +13,7 @@ export const PostList = ({ loading, posts }: PostListProps) => {
             <div className="flex flex-col w-full lg:w-3/4 mx-auto">
                 {!loading ? posts.length > 0 ? (
                     posts.map(post => (
-                        <PostRow post={post} />
+                        <PostRow key={post.id} post={post} />
                     ))
                 ) : (
                     <div className="text-center py-10">

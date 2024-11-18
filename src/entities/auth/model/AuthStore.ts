@@ -10,14 +10,12 @@ class AuthStore {
 
 
     changePassword = action(async (values: ChnagePasswordType) => {
-        try{
+        try {
             const { confirmNewPassword, ...passwordData } = values;
             const data = await changePassword(passwordData);
-            debugger
-            notification.success({message: data.message})
-        }catch(e: any) {
-            debugger
-            notification.error({message: e.response.data.message})
+            notification.success({ message: data.message })
+        } catch (e: any) {
+            notification.error({ message: e.response.data.message })
         }
     })
 }

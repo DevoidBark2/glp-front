@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from "mobx";
+import { action, makeAutoObservable, runInAction } from "mobx";
 import { postMapper } from "../mappers";
 import { Post, PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { changePost, createPost, deletePost, getAllPost, getCPAllPost, getPostById, publishPost, submitReviewPost } from "@/shared/api/posts";
@@ -22,49 +22,51 @@ class PostStore {
     })
 
     getAllPosts = action(async () => {
-        try{
+        try {
             this.setLoading(true);
             const data = await getAllPost();
-            this.allPosts = data.map(postMapper);
-        }catch(e) {
+            runInAction(() => {
+                this.allPosts = data.map(postMapper);
+            })
+        } catch (e) {
 
-        }finally{
+        } finally {
             this.setLoading(false);
         }
     })
 
     getPostById = action(async (postId: number) => {
-        try{
+        try {
             return await getPostById(postId);
-        }catch(e) {
+        } catch (e) {
 
-        }finally{
+        } finally {
 
         }
     })
 
     getUserPosts = action(async () => {
-        try{
+        try {
             this.setLoading(true);
             const data = await getCPAllPost();
             this.userPosts = data.map(postMapper);
-        }catch(e) {
+        } catch (e) {
 
-        }finally {
+        } finally {
             this.setLoading(false)
         }
     })
 
     createPost = action(async (values: PostCreateForm) => {
-        try{
+        try {
             this.setLoading(true)
             const data = await createPost(values);
-            
-            this.userPosts = [...this.userPosts, postMapper(data)];
-             //notification.success({ message: response.message });
-        }catch(e) {
 
-        }finally {
+            this.userPosts = [...this.userPosts, postMapper(data)];
+            //notification.success({ message: response.message });
+        } catch (e) {
+
+        } finally {
             this.setLoading(false)
             this.setCreatePostModal(false)
         }
@@ -80,25 +82,25 @@ class PostStore {
         await submitReviewPost(postId);
         const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
-            if (changedPostIndex !== -1) {
-                const updatedPosts = [...this.userPosts];
-                updatedPosts[changedPostIndex] = {
-                    ...updatedPosts[changedPostIndex],
-                    status: PostStatusEnum.IN_PROCESSING
-                };
-                this.userPosts = updatedPosts;
-                // notification.success({ message: response.message });
-            }
+        if (changedPostIndex !== -1) {
+            const updatedPosts = [...this.userPosts];
+            updatedPosts[changedPostIndex] = {
+                ...updatedPosts[changedPostIndex],
+                status: PostStatusEnum.IN_PROCESSING
+            };
+            this.userPosts = updatedPosts;
+            // notification.success({ message: response.message });
+        }
         // await PUT(`/api/submit-preview?postId=${postId}`).then(response => {
-            
+
         // }).catch()
     })
 
-   
+
 
     publishPost = action(async (postId: number, checked: boolean) => {
-        try{
-            await publishPost(postId,checked);
+        try {
+            await publishPost(postId, checked);
             const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
@@ -110,7 +112,7 @@ class PostStore {
                 this.userPosts = updatedPosts;
                 //notification.success({ message: response.data.message });
             }
-        }catch(e) {
+        } catch (e) {
 
         }
     })
@@ -131,7 +133,7 @@ class PostStore {
         // }
         // notification.success({ message: response.message })
         // await PUT('/api/post', post).then(response => {
-            
+
         // }).catch(e => {
         //     notification.success({ message: e.response.data.message })
         // })

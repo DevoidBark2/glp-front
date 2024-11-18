@@ -164,33 +164,6 @@ const SettingsControlPage = () => {
                                     </Select>
                                 </Form.Item>
 
-                                <Form.Item label="Иконка пользователя по умолчанию" name="default_avatar">
-                                    <Upload
-                                        name="user_logo_default"
-                                        listType="picture-card"
-                                        showUploadList={false}
-                                        beforeUpload={(file) => {
-                                            const isImage = file.type.startsWith("image/");
-                                            if (!isImage) {
-                                                message.error("Можно загрузить только изображения.");
-                                                return Upload.LIST_IGNORE;
-                                            }
-                                            const reader = new FileReader();
-                                            reader.onload = () => {
-                                                const imageUrl = reader.result as string;
-                                                //setUploadedLogo(imageUrl);
-                                            };
-                                            formForUserManagement.setFieldValue("user_logo_default", file)
-                                            reader.readAsDataURL(file);
-                                            return false;
-                                        }}
-                                    >
-                                        <div>
-                                            <UploadOutlined /> Загрузить иконку
-                                        </div>
-                                    </Upload>
-                                </Form.Item>
-
                                 <Form.Item
                                     label="Автоматическое подтверждение регистрации"
                                     tooltip="Если включено, пользователи будут автоматически подтверждены после регистрации."
