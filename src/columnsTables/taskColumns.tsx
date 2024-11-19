@@ -42,7 +42,7 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent }: Ta
                     onClick={() => handleChangeComponent(record)}
                     style={{ color: !text ? 'grey' : "black" }}
                 >
-                    {text ?? 'Название не указано'}
+                    {text?.length > 30 ? `${text.slice(0, 30)}...` : text ?? 'Название не указано'}
                 </p>
             </Tooltip>
         ),
@@ -52,7 +52,6 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent }: Ta
         dataIndex: "type",
         filters: FILTER_TYPE_COMPONENT_COURSE,
         onFilter: (value, record) => record.type.startsWith(value as string),
-        filterSearch: true,
         render: (value, record) => (
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Tag icon={typeIcons[record.type]}>

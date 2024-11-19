@@ -60,15 +60,15 @@ const SectionPage = () => {
             title: "Статус",
             dataIndex: "status",
             filters: [
-                { text: 'Активный', value: StatusSectionEnum.ACTIVE },
-                { text: 'Не активный', value: StatusSectionEnum.DEACTIVE }
+                { text: 'Активен', value: StatusSectionEnum.ACTIVE },
+                { text: 'Неактивен', value: StatusSectionEnum.DEACTIVE }
             ],
             onFilter: (value, record) => record.status === value,
             render: (value) => {
                 return value === StatusSectionEnum.ACTIVE ? (
-                    <Tag color="green">Активный</Tag>
+                    <Tag color="green">Активен</Tag>
                 ) : (
-                    <Tag color="red">Неактивный</Tag>
+                    <Tag color="red">Неактивен</Tag>
                 );
             }
         },

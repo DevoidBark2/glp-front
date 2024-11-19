@@ -88,7 +88,11 @@ const QuizTask: FC<QuizTaskProps> = ({ options }) => {
                                     )}
                                 </Form.List>
 
-                                <Form.Item label="Правильный ответ" name={[name, "correctOption"]}>
+                                <Form.Item
+                                    label="Правильный ответ"
+                                    name={[name, "correctOption"]}
+                                    rules={[{ required: true, message: 'Пожалуйста, выберите правильный ответ' }]}
+                                >
                                     <Select placeholder="Выберите правильный ответ">
                                         {options[qIndex]?.map((option: string, index: number) => (
                                             <Select.Option key={index} value={index}>

@@ -43,7 +43,7 @@ const SectionAddPage = () => {
     };
 
     const handleForwardComponent = (record: CourseComponentTypeI) => {
-        {`/control-panel/tasks/${record.id}`}
+        { `/control-panel/tasks/${record.id}` }
     }
 
     const columns: TableColumnsType<CourseComponentTypeI> = [
@@ -363,7 +363,8 @@ const SectionAddPage = () => {
     const onFinish = () => {
         const values = createSectionForm.getFieldsValue(true)
         if (!values.components || values.components.length === 0) {
-            message.warning("добавь что нибудь")
+            message.warning("Добавь хотя бы один компонент в раздел!")
+            return;
         }
         sectionCourseStore.addSection(values).then((response) => {
             notification.success({ message: response.message })
