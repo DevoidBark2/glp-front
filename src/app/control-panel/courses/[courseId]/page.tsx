@@ -246,35 +246,72 @@ const CoursePage = () => {
                         {
                             label: 'Дополнительные настройки',
                             key: '3',
-                            children: <>
-                                <div style={{ padding: '10px 0' }}>
-                                    <Switch
-                                        checked={isCourseLocked}
-                                        onChange={handleLockToggle}
-                                        checkedChildren="Курс заблокирован"
-                                        unCheckedChildren="Курс разблокирован"
-                                    />
-                                    <p style={{ marginTop: 10 }}>
-                                        {isCourseLocked ? 'Курс заблокирован для новых участников' : 'Курс открыт для регистрации'}
-                                    </p>
-                                </div>
-                                <div style={{ padding: '10px 0' }}>
-                                    <Button danger onClick={handleDeleteParticipants}>
-                                        Удалить всех участников курса
-                                    </Button>
-                                </div>
-                                <div style={{ padding: '10px 0' }}>
-                                    <h4>Текущие участники:</h4>
-                                    <List
-                                        bordered
-                                        dataSource={participants}
-                                        renderItem={item => (
-                                            <List.Item>{item}</List.Item>
+                            children: (
+                                <>
+                                    <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                                        <h3 style={{ marginBottom: 10 }}>⚙️ Управление доступом</h3>
+                                        <Switch
+                                            checked={isCourseLocked}
+                                            onChange={handleLockToggle}
+                                            checkedChildren="Курс заблокирован"
+                                            unCheckedChildren="Курс открыт"
+                                        />
+                                        <p style={{ marginTop: 10, fontStyle: 'italic' }}>
+                                            {isCourseLocked 
+                                                ? '🔒 Доступ к курсу ограничен для новых участников.' 
+                                                : '🔓 Курс открыт для регистрации и доступен всем желающим.'}
+                                        </p>
+                                    </div>
+                                    <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                                        <h3 style={{ marginBottom: 10 }}>🗑️ Управление участниками</h3>
+                                        <Button 
+                                            danger 
+                                            onClick={handleDeleteParticipants}
+                                            style={{ marginBottom: 10 }}
+                                        >
+                                            Удалить всех участников
+                                        </Button>
+                                        <p style={{ fontSize: '14px', color: 'gray' }}>
+                                            Это действие необратимо! Убедитесь, что вы уверены в удалении.
+                                        </p>
+                                    </div>
+                                    <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                                        <h3 style={{ marginBottom: 10 }}>👥 Текущие участники</h3>
+                                        {participants.length > 0 ? (
+                                            <List
+                                                bordered
+                                                dataSource={participants}
+                                                renderItem={(item, index) => (
+                                                    <List.Item>
+                                                        {index + 1}. {item}
+                                                    </List.Item>
+                                                )}
+                                            />
+                                        ) : (
+                                            <p style={{ fontStyle: 'italic', color: 'gray' }}>
+                                                Нет участников. Начните приглашать новых!
+                                            </p>
                                         )}
-                                    />
-                                </div>
-                            </>
+                                    </div>
+                                    <div style={{ padding: '10px 0' }}>
+                                        <h3 style={{ marginBottom: 10 }}>📅 Настройки расписания</h3>
+                                        <Button 
+                                            type="primary" 
+                                            
+                                            style={{ marginRight: 10 }}
+                                        >
+                                            Настроить расписание курса
+                                        </Button>
+                                        <Button 
+                                            type="default" 
+                                        >
+                                            Управление уведомлениями
+                                        </Button>
+                                    </div>
+                                </>
+                            )
                         },
+                        
                     ]}
                 />
             </div>
