@@ -42,6 +42,10 @@ const SectionAddPage = () => {
         createSectionForm.setFieldsValue({ course: course });
     };
 
+    const handleForwardComponent = (record: CourseComponentTypeI) => {
+        {`/control-panel/tasks/${record.id}`}
+    }
+
     const columns: TableColumnsType<CourseComponentTypeI> = [
         {
             title: 'Название',
@@ -50,9 +54,9 @@ const SectionAddPage = () => {
             ellipsis: true,
             render: (text: string, record) => (
                 <Tooltip title={`Перейти к компоненту: ${text}`}>
-                    <Link href={`/control-panel/tasks/${record.id}`} target="_blank">
+                    <p onClick={() => handleForwardComponent(record)}>
                         {text}
-                    </Link>
+                    </p>
                 </Tooltip>
             ),
         },
@@ -332,6 +336,7 @@ const SectionAddPage = () => {
                             <Table
                                 dataSource={courseComponentStore.selectedComponents}
                                 columns={columns}
+                                rowKey={(record) => record.id}
                             />
                         </Form.Item>
                     </div>

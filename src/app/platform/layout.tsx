@@ -31,11 +31,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     useEffect(() => {
         generalSettingsStore.getGeneralSettings().then(response => {
-            setServiceMode(response.data[0].service_mode);
-            if (response.data[0].service_mode) {
+            setServiceMode(response.data[0]?.service_mode);
+            if (response.data[0]?.service_mode) {
                 router.push('/platform');
             }
-            setFooterInfo({ subscription_platform: response.data[0].subscription_platform, platform_name: response.data[0].platform_name, support_email: response.data[0].support_email, contact_phone: response.data[0].contact_phone, service_mode_text: response.data[0].service_mode_text, logo_url: response.data[0].logo_url });
+            setFooterInfo({ subscription_platform: response.data[0]?.subscription_platform, platform_name: response.data[0]?.platform_name, support_email: response.data[0]?.support_email, contact_phone: response.data[0]?.contact_phone, service_mode_text: response.data[0]?.service_mode_text, logo_url: response.data[0]?.logo_url });
         }).finally(() => {
             setIsLoading(false);
         });

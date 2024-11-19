@@ -34,7 +34,7 @@ const CoursePage = () => {
     const [isCourseLocked, setIsCourseLocked] = useState(false);
     const [participants, setParticipants] = useState(['John Doe', 'Jane Smith']);
 
-    const handleLockToggle = (checked) => {
+    const handleLockToggle = (checked:boolean) => {
         setIsCourseLocked(checked);
         message.success(`Курс ${checked ? 'заблокирован' : 'разблокирован'}`);
     };
@@ -87,7 +87,9 @@ const CoursePage = () => {
                             children: <Form
                                 form={form}
                                 layout="vertical"
-                                onFinish={(values) => courseStore.changeCourse(values)}
+                                onFinish={(values) => courseStore.changeCourse(values).then(() => {
+                                    setCourseName(values.name)
+                                })}
                             >
                                 {
                                     !courseStore.loadingCourseDetails ? <>
@@ -117,7 +119,7 @@ const CoursePage = () => {
                                                 <Form.Item
                                                     name="category"
                                                     label="Категория"
-                                                    rules={[{required: true,message:"Категория курса обязательно!"}]}
+                                                    rules={[{ required: nomenclatureStore.categories.length > 0, message: "Категория курса обязательно!" }]}
                                                 >
                                                     <Select loading={nomenclatureStore.loadingCategories} placeholder="Выберите категорию">
                                                         {
@@ -224,7 +226,6 @@ const CoursePage = () => {
                                                     </div>
                                                 }))}/>
                                             </div>,
-                                            extra: <SettingOutlined/>
                                         }
                                     ))} />
                                         : <Empty description={<div>
@@ -258,7 +259,7 @@ const CoursePage = () => {
                                     </p>
                                 </div>
                                 <div style={{ padding: '10px 0' }}>
-                                    <Button type="danger" onClick={handleDeleteParticipants}>
+                                    <Button danger onClick={handleDeleteParticipants}>
                                         Удалить всех участников курса
                                     </Button>
                                 </div>

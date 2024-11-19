@@ -269,7 +269,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         }).finally(() => {
             userProfileStore.setLoading(false)
         });
-        avatarIconsStore.getAllAvatarIcons();
+       // avatarIconsStore.getAllAvatarIcons();
     }, [])
 
     return (
@@ -332,7 +332,6 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                                 style={{ width: 240 }}
                                 defaultSelectedKeys={[selectedKey]}
                                 mode="vertical"
-                                inlineCollapsed={collapsed}
                                 items={dashboardMenuItems}
                                 theme={resolvedTheme === "light" ? "light" : "dark"}
                             />

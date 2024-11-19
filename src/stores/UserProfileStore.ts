@@ -64,7 +64,6 @@ class UserProfileStore {
 
             this.setLoading(true)
             const data = await GET(`/api/get-user`)
-            debugger
             this.setUserProfileCourses(data.data.userCourses);
             this.setUserAvatar(data.data.image)
             this.setUserProfile(data.data)

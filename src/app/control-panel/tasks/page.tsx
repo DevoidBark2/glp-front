@@ -32,18 +32,12 @@ const TaskPage = () => {
 
     const handleChangeComponentTask = (record: CourseComponentTypeI) => {
         form.setFieldsValue(record);
-        setChangedComponent(record.id)
-
+        setChangedComponent(record.id);
         setTypeTask(record.type);
-        setIsModalVisible(true)
-
-        const updatedOptions = record.questions?.reduce((acc, question, index) => {
+        setOptions(record.questions?.reduce((acc, question, index) => {
             acc[index] = question.options || [];
             return acc;
-        }, {} as Record<number, string[]>);
-
-        setOptions(updatedOptions || {});
-        setTypeTask(record.type);
+        }, {} as Record<number, string[]>));
         setIsModalVisible(true);
     }
 
@@ -52,31 +46,32 @@ const TaskPage = () => {
             acc[index] = question?.options || [];
             return acc;
         }, {});
-
         setOptions(updatedOptions);
     };
     const onFinish = (values: CourseComponentTypeI) => {
         if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
-            message.warning("Вопрос должен быть хотя бы 1!")
+            message.warning("Вопрос должен быть хотя бы 1!");
             return;
         }
 
-        changedComponent ? courseComponentStore.changeComponent(values).finally(() => {
-            setIsModalVisible(false)
-        }) :
-            courseComponentStore.addComponentCourse(values).finally(() => {
-                form.resetFields();
-                setTypeTask(null)
-                setIsModalVisible(false)
-            });
+        const action = changedComponent 
+            ? courseComponentStore.changeComponent(values) 
+            : courseComponentStore.addComponentCourse(values);
+
+        action.finally(() => {
+            form.resetFields();
+            setTypeTask(null);
+            setChangedComponent(null);
+            setIsModalVisible(false);
+        });
     }
 
     const handleCancelAddComponent = () => {
         form.resetFields();
-        setChangedComponent(null)
+        setChangedComponent(null);
         setTypeTask(null);
-        setIsModalVisible(false)
-    }
+        setIsModalVisible(false);
+    };
 
     useEffect(() => {
         courseComponentStore.getAllComponent();
@@ -84,23 +79,6 @@ const TaskPage = () => {
 
     return (
         <PageContainerControlPanel>
-            <PageHeader
-                title="Доступные компоненты"
-                buttonTitle="Добавить компонент"
-                onClickButton={() => setIsModalVisible(true)}
-                showBottomDivider
-            />
-            <Table
-                rowKey={(record) => record.id}
-                loading={courseComponentStore.loadingCourseComponent}
-                dataSource={courseComponentStore.courseComponents}
-                columns={taskColumns({
-                    handleChangeComponent: handleChangeComponentTask,
-                    handleDeleteComponent: courseComponentStore.deleteComponent
-                })}
-                locale={taskTable}
-            />
-
             <Modal
                 title={changedComponent ? "Изменить компонент" : "Новый компонент"}
                 open={isModalVisible}
@@ -114,7 +92,7 @@ const TaskPage = () => {
                     onFinish={onFinish}
                     onValuesChange={handleValuesChange}
                 >
-                    <Form.Item name="id" hidden></Form.Item>
+                    {changedComponent && <Form.Item name="id" hidden></Form.Item>}
                     <Form.Item
                         label="Тип задания"
                         name="type"
@@ -161,6 +139,22 @@ const TaskPage = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+            <PageHeader
+                title="Доступные компоненты"
+                buttonTitle="Добавить компонент"
+                onClickButton={() => setIsModalVisible(true)}
+                showBottomDivider
+            />
+            <Table
+                rowKey={(record) => record.id}
+                loading={courseComponentStore.loadingCourseComponent}
+                dataSource={courseComponentStore.courseComponents}
+                columns={taskColumns({
+                    handleChangeComponent: handleChangeComponentTask,
+                    handleDeleteComponent: courseComponentStore.deleteComponent
+                })}
+                locale={taskTable}
+            />
         </PageContainerControlPanel>
     );
 };

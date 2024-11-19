@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from "mobx";
+import { action, makeAutoObservable, runInAction } from "mobx";
 import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
@@ -48,7 +48,9 @@ class CourseComponent {
     getAllComponent = action(async () => {
         this.setLoadingCourseComponent(true)
         await GET(`/api/component-task`).then(response => {
-            this.courseComponents = response.data.map(componentTaskMapper)
+            runInAction(() => {
+                this.courseComponents = response.data.map(componentTaskMapper)
+            })
         }).finally(() => {
             this.setLoadingCourseComponent(false)
         })
@@ -95,6 +97,10 @@ class CourseComponent {
     removeComponentFromTable(id: number) {
         this.selectedComponents = this.selectedComponents.filter(item => item.id !== id);
     }
+
+    getComponentById = action((id:number) => {
+        return this.courseComponents.find(it => it.id === id)
+    })
 }
 
 const componentTaskMapper = (state: CourseComponentTypeI) => {

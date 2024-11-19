@@ -2,7 +2,7 @@
 import React from "react";
 import { ChnagePasswordType } from "@/shared/api/auth/model";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {Button, Form, Input, Tabs, TabsProps} from "antd";
+import {Button, Form, Input, notification, Tabs, TabsProps} from "antd";
 import {observer} from "mobx-react";
 
 const SettingsPage = () => {
@@ -10,8 +10,11 @@ const SettingsPage = () => {
     const [form] = Form.useForm<ChnagePasswordType>();
 
     const handleChangePassword = (values:ChnagePasswordType) => {
-        authStore.changePassword(values).then(() => {
+        authStore.changePassword(values).then((response) => {
+            notification.success({message: response.message})
             form.resetFields();
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
         });
     };
 

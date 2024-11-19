@@ -1,11 +1,11 @@
+import { Form, Input, Select, Tag } from "antd"
+import dynamic from "next/dynamic"
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
 )
 import 'react-quill/dist/quill.snow.css';
 
-import { Form, Input, Select, Tag } from "antd"
-import dynamic from "next/dynamic"
 
 const TextTask = () => {
     return (
@@ -31,7 +31,6 @@ const TextTask = () => {
                             {label}
                         </Tag>
                     )}
-                    options={[]}
                 />
             </Form.Item>
 

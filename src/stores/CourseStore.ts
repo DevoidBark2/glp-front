@@ -131,7 +131,7 @@ class CourseStore {
     changeCourse = action(async (values: Course) => {
         const token = getUserToken();
         await PUT(`/api/courses?token=${token}`, values).then(response => {
-            notification.success({ message: response.response.message })
+            notification.success({ message: response.message })
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         })
