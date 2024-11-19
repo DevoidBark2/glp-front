@@ -54,8 +54,8 @@ const TaskPage = () => {
             return;
         }
 
-        const action = changedComponent 
-            ? courseComponentStore.changeComponent(values) 
+        const action = changedComponent
+            ? courseComponentStore.changeComponent(values)
             : courseComponentStore.addComponentCourse(values);
 
         action.finally(() => {

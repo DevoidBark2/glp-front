@@ -80,7 +80,10 @@ const SectionPage = () => {
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
                     <Tooltip title="Редактировать раздел">
-                        <Button type="default" shape="circle" icon={<EditOutlined />} />
+                        <Button type="default" shape="circle" icon={<EditOutlined />} onClick={() => {
+                            debugger
+                            console.log(record)
+                        }} />
                     </Tooltip>
                     <Tooltip title="Удалить раздел">
                         <Popconfirm
@@ -110,7 +113,7 @@ const SectionPage = () => {
                 showBottomDivider
             />
             <Table
-                rowKey={(record) => record.course?.id || record.id}
+                rowKey={(record) => record.id}
                 loading={sectionCourseStore.loadingSectionsCourse}
                 columns={columns}
                 dataSource={sectionCourseStore.sectionCourse}
