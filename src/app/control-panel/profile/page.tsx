@@ -4,7 +4,6 @@ import {
   Input,
   Button,
   Select,
-  Switch,
   Upload,
   Avatar,
   Divider,
@@ -133,7 +132,7 @@ const ProfilePage = () => {
           </Upload>
           <div className="ml-6">
             <h2 className="text-2xl font-bold text-gray-800">
-              {profileTitle(currentUser?.user.role as UserRole)}
+              {profileTitle(currentUser?.user?.role as UserRole)}
             </h2>
             <p className="text-gray-600">
               Здесь вы можете обновить ваши личные данные и настройки.
@@ -161,7 +160,6 @@ const ProfilePage = () => {
               <Form.Item
                 label="Фамилия"
                 name="second_name"
-                rules={[{ required: true, message: "Пожалуйста, введите вашу фамилию" }]}
               >
                 <Input placeholder="Введите вашу фамилию" />
               </Form.Item>
@@ -171,7 +169,6 @@ const ProfilePage = () => {
               <Form.Item
                 label="Отчество"
                 name="last_name"
-                rules={[{ required: true, message: "Пожалуйста, введите ваше отчество" }]}
               >
                 <Input placeholder="Введите ваше отчество" />
               </Form.Item>
@@ -305,17 +302,9 @@ const ProfilePage = () => {
   ]
 
   return (
-    <>
-      {!userProfileStore.loading ? (
-        <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
-          <Tabs defaultActiveKey="1" items={items} />
-        </div>
-      ) : (
-        <div className="flex justify-center items-center">
-          <Spin size="large" />
-        </div>
-      )}
-    </>
+    <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
+      <Tabs defaultActiveKey="1" items={items} />
+    </div>
   );
 };
 

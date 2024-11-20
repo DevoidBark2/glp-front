@@ -62,26 +62,29 @@ const MultiPlayChoise: FC<MultiPlayChoiseProps> = ({ form }) => {
                                 <Form.List name={[name, 'options']}>
                                     {(optionFields, { add: addOption, remove: removeOption }) => (
                                         <>
-                                            {optionFields.map((optionField, oIndex) => (
-                                                <Row gutter={8} align="stretch" key={optionField.key}>
-                                                    <Col flex="auto">
-                                                        <Form.Item
-                                                            {...optionField}
-                                                            name={[optionField.name]}
-                                                            rules={[{ required: true, message: 'Введите вариант ответа' }]}
-                                                        >
-                                                            <Input placeholder={`Вариант ${oIndex + 1}`} />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col>
-                                                        <Button
-                                                            type="text"
-                                                            icon={<DeleteOutlined />}
-                                                            onClick={() => removeOption(optionField.name)}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            ))}
+                                            {optionFields.map((optionField, oIndex) => {
+                                                const { key, ...fieldProps } = optionField;
+                                                return (
+                                                    <Row gutter={8} align="stretch" key={key}>
+                                                        <Col flex="auto">
+                                                            <Form.Item
+                                                                {...fieldProps}
+                                                                name={[optionField.name]}
+                                                                rules={[{ required: true, message: "Введите вариант ответа" }]}
+                                                            >
+                                                                <Input placeholder={`Вариант ответа ${oIndex + 1}`} />
+                                                            </Form.Item>
+                                                        </Col>
+                                                        <Col>
+                                                            <Button
+                                                                type="text"
+                                                                icon={<DeleteOutlined />}
+                                                                onClick={() => removeOption(optionField.name)}
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                );
+                                            })}
                                             <Button
                                                 type="dashed"
                                                 className="mb-4"

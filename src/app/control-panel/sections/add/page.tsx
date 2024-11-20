@@ -29,6 +29,7 @@ import TextArea from "antd/lib/input/TextArea";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { useRouter } from "next/navigation";
 import { Course, CourseComponentType } from "@/shared/api/course/model";
+import { postTable } from "@/shared/config";
 
 const SectionAddPage = () => {
     const { courseStore, courseComponentStore, sectionCourseStore, generalSettingsStore } = useMobxStores();
@@ -233,7 +234,7 @@ const SectionAddPage = () => {
                         />
                     </Form.Item>
 
-                    {generalSettingsStore.generalSettings?.allow_extra_materials && <>
+                    {/* {generalSettingsStore.generalSettings?.allow_extra_materials && <>
                         <Form.Item
                             name="uploadFile"
                             label="Дополнительные материалы"
@@ -283,7 +284,7 @@ const SectionAddPage = () => {
                                 )}
                             </Form.List>
                         </Form.Item>
-                    </>}
+                    </>} */}
                 </>
             ),
         },
@@ -371,6 +372,7 @@ const SectionAddPage = () => {
             notification.success({ message: response.message })
             courseComponentStore.setSearchResult([]);
             courseComponentStore.setSelectedComponent([]);
+            sectionCourseStore.setCreateSectionLoading(false);
         })
     };
 

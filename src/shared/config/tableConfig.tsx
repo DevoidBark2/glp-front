@@ -68,7 +68,7 @@ export const taskTable = {
 
 export const sectionsTable = {
     filterEmptyText: "Список пуст",
-    filterReset: "Сбросить фильтр",
+    filterReset: "Сбросить",
     filterConfirm: "Применить",
     filterSearchPlaceholder: "Поиск...",
     emptyText: <Empty description="Список пуст" />

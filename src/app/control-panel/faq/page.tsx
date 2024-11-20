@@ -30,11 +30,9 @@ const FaqPage = () => {
     };
 
     const handleAddOrUpdate = (values: Faq) => {
-        if (editingItem) {
-            faqStore.updatedFaq(form.getFieldsValue());
-        } else {
-            faqStore.create(values);
-        }
+        if (editingItem)
+            faqStore.updatedFaq(values);
+        else faqStore.create(values);
         closeModal();
     };
 
@@ -89,7 +87,7 @@ const FaqPage = () => {
             <PageHeader
                 title="Вопросы и ответы"
                 buttonTitle="Добавить FAQ"
-                onClickButton={() => openModal()}
+                onClickButton={openModal}
                 showBottomDivider
             />
             <Table

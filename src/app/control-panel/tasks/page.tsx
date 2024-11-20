@@ -131,7 +131,7 @@ const TaskPage = () => {
                     }
 
                     {typeTask === CourseComponentType.Text && <TextTask />}
-                    {typeTask === CourseComponentType.Quiz && <QuizTask options={options} />}
+                    {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
                     {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoise form={form} />}
 
                     <Form.Item>

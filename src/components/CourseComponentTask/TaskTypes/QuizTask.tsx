@@ -4,10 +4,10 @@ import { FC } from "react";
 import { FormInstance } from "antd/lib";
 
 interface QuizTaskProps {
-    options: Record<number, string[]>;
+    form: FormInstance;
 }
 
-const QuizTask: FC<QuizTaskProps> = ({ options }) => {
+const QuizTask: FC<QuizTaskProps> = ({ form }) => {
     return (
         <>
             <Form.Item label="Заголовок" name="title">
@@ -55,26 +55,29 @@ const QuizTask: FC<QuizTaskProps> = ({ options }) => {
                                 <Form.List name={[name, "options"]}>
                                     {(optionFields, { add: addOption, remove: removeOption }) => (
                                         <>
-                                            {optionFields.map((optionField, oIndex) => (
-                                                <Row gutter={8} align="stretch" key={optionField.key}>
-                                                    <Col flex="auto">
-                                                        <Form.Item
-                                                            {...optionField}
-                                                            name={[optionField.name]}
-                                                            rules={[{ required: true, message: "Введите вариант ответа" }]}
-                                                        >
-                                                            <Input placeholder={`Вариант ответа ${oIndex + 1}`} />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col>
-                                                        <Button
-                                                            type="text"
-                                                            icon={<DeleteOutlined />}
-                                                            onClick={() => removeOption(optionField.name)}
-                                                        />
-                                                    </Col>
-                                                </Row>
-                                            ))}
+                                            {optionFields.map((optionField, oIndex) => {
+                                                const { key, ...fieldProps } = optionField;
+                                                return (
+                                                    <Row gutter={8} align="stretch" key={key}>
+                                                        <Col flex="auto">
+                                                            <Form.Item
+                                                                {...fieldProps}
+                                                                name={[optionField.name]}
+                                                                rules={[{ required: true, message: "Введите вариант ответа" }]}
+                                                            >
+                                                                <Input placeholder={`Вариант ответа ${oIndex + 1}`} />
+                                                            </Form.Item>
+                                                        </Col>
+                                                        <Col>
+                                                            <Button
+                                                                type="text"
+                                                                icon={<DeleteOutlined />}
+                                                                onClick={() => removeOption(optionField.name)}
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                );
+                                            })}
                                             <Button
                                                 type="dashed"
                                                 className="mb-4"
@@ -94,7 +97,7 @@ const QuizTask: FC<QuizTaskProps> = ({ options }) => {
                                     rules={[{ required: true, message: 'Пожалуйста, выберите правильный ответ' }]}
                                 >
                                     <Select placeholder="Выберите правильный ответ">
-                                        {options[qIndex]?.map((option: string, index: number) => (
+                                        {form.getFieldValue(['questions', qIndex, 'options'])?.map((option: string, index: number) => (
                                             <Select.Option key={index} value={index}>
                                                 {option}
                                             </Select.Option>

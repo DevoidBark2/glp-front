@@ -269,7 +269,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         }).finally(() => {
             userProfileStore.setLoading(false)
         });
-       // avatarIconsStore.getAllAvatarIcons();
+        // avatarIconsStore.getAllAvatarIcons();
     }, [])
 
     return (
