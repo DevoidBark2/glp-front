@@ -23,7 +23,11 @@ class SectionCourse {
 
     loadingSectionsCourse: boolean = false;
     sectionCourse: SectionCourseItem[] = []
+    createSectionLoading: boolean = false;
 
+    setCreateSectionLoading = action((value: boolean) => {
+        this.createSectionLoading = value
+    })
 
     setLoadingSectionsCourse = action((value: boolean) => {
         this.loadingSectionsCourse = value;
@@ -39,8 +43,8 @@ class SectionCourse {
     })
 
     addSection = action(async (values: SectionCourseItem) => {
-        return await POST(`/api/sections`, values).catch(e => {
-        })
+        this.setCreateSectionLoading(true);
+        return await POST(`/api/sections`, values);
     })
 }
 

@@ -367,8 +367,10 @@ const SectionAddPage = () => {
             return;
         }
         sectionCourseStore.addSection(values).then((response) => {
-            notification.success({ message: response.message })
             router.push("/control-panel/sections");
+            notification.success({ message: response.message })
+            courseComponentStore.setSearchResult([]);
+            courseComponentStore.setSelectedComponent([]);
         })
     };
 
@@ -409,7 +411,7 @@ const SectionAddPage = () => {
                         </Button>
                     )}
                     {current === steps.length - 1 && (
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" loading={sectionCourseStore.createSectionLoading}>
                             Подтвердить и создать
                         </Button>
                     )}

@@ -32,6 +32,14 @@ class CourseComponent {
     searchResults: CourseComponentTypeI[] = [];
     selectedComponents: CourseComponentTypeI[] = [];
 
+
+    setSearchResult = action((value: CourseComponentTypeI[]) => {
+        this.searchResults = value;
+    })
+
+    setSelectedComponent = action((value: CourseComponentTypeI[]) => {
+        this.selectedComponents = value
+    })
     setLoadingCourseComponent = action((value: boolean) => {
         this.loadingCourseComponent = value
     })
