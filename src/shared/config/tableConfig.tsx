@@ -44,7 +44,7 @@ export const postTable = ({ setShowModal }: postTableProps) => ({
 
 export const usersTable = {
     filterEmptyText: "Список пуст",
-    filterReset: "Сбросить фильтр",
+    filterReset: "Сбросить",
     filterConfirm: "Применить",
     filterSearchPlaceholder: "Поиск...",
     emptyText: <Empty description="Список пуст" />

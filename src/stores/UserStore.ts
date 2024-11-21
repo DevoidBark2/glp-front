@@ -4,19 +4,9 @@ import { delete_cookie, getCookieUserDetails, getUserToken, signInUser } from "@
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { message } from "antd";
-import { StatusUserEnum, UserRole } from "@/shared/api/user/model";
+import { StatusUserEnum, User } from "@/shared/api/user/model";
+import { getUserById } from "@/shared/api/user";
 
-export type User = {
-    id: number;
-    first_name: string;
-    second_name: string;
-    last_name: string;
-    phone: string;
-    role: UserRole;
-    status: StatusUserEnum;
-    email: string;
-    created_at: Date;
-}
 class UserStore {
     constructor() {
         makeAutoObservable(this, {});
@@ -212,6 +202,10 @@ class UserStore {
         } catch (e) {
             throw e;
         }
+    })
+
+    getUserById = action( async (userId: number): Promise<User> => {
+        return await getUserById(userId);
     })
 }
 const usersMapper = (value: User) => {

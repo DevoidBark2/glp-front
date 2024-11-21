@@ -256,19 +256,19 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
-        userProfileStore.getUserProfile().then((response) => {
-            const userData = response.data;
+        // userProfileStore.getUserProfile().then((response) => {
+        //     const userData = response.data;
 
-            if (userData.profile_url) {
-                const fullAvatarUrl = `${nextConfig.env?.API_URL}${userData.profile_url}`;
-                setAvatar(fullAvatarUrl);
-            } else {
-                setAvatar(null);
-            }
+        //     if (userData.profile_url) {
+        //         const fullAvatarUrl = `${nextConfig.env?.API_URL}${userData.profile_url}`;
+        //         setAvatar(fullAvatarUrl);
+        //     } else {
+        //         setAvatar(null);
+        //     }
 
-        }).finally(() => {
-            userProfileStore.setLoading(false)
-        });
+        // }).finally(() => {
+        //     userProfileStore.setLoading(false)
+        // });
         // avatarIconsStore.getAllAvatarIcons();
     }, [])
 

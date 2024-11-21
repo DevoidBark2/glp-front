@@ -1,23 +1,21 @@
 "use client";
 import { observer } from "mobx-react";
-import { Button, Divider, Table, Tag, Tooltip, message, Popconfirm } from "antd";
+import { Button, Table, Tag, Tooltip, Popconfirm } from "antd";
 import type { TableColumnsType } from "antd";
-import React, { Key, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useMobxStores } from "@/stores/stores";
-import { User } from "@/stores/UserStore";
 import {
     EditOutlined,
     DeleteOutlined,
-    PlusCircleOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/constants";
 import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
 import { paginationCount, usersTable } from "@/shared/config";
 import PageHeader from "@/components/PageHeader/PageHeader";
+import { User } from "@/shared/api/user/model";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
@@ -101,16 +99,12 @@ const UsersPage = () => {
         <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
             <PageHeader
                 title="Пользователи"
-                buttonTitle="Создать пользователя"
                 showBottomDivider
             />
             <GroupActionComponent
                 loading={userStore.loadingSearchUser}
                 searchText={userStore.searchUserText}
                 setSearchText={userStore.setSearchUserText}
-                selectedAction={userStore.selectedGroupAction}
-                setSelectedAction={userStore.setSelectedGroupAction}
-                submitSelectedAction={userStore.submitSelectedAction}
             />
             <Table
                 rowKey={(record) => record.id}
@@ -119,12 +113,6 @@ const UsersPage = () => {
                 pagination={{ pageSize: paginationCount }}
                 loading={userStore.loading}
                 showSorterTooltip={false}
-                rowSelection={{
-                    type: "checkbox",
-                    onChange: (selectedRowKeys: Key[]) => {
-                        userStore.setSelectedRowsUsers(selectedRowKeys.map(key => Number(key)));
-                    },
-                }}
                 locale={usersTable}
             />
         </div>

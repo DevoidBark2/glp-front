@@ -1,3 +1,6 @@
+import { Course } from "../course/model";
+import { Post } from "../posts/model";
+
 export enum UserRole {
     SUPER_ADMIN = 'superadmin',
     TEACHER = 'teacher',
@@ -19,7 +22,13 @@ export type User = {
     last_name: string;
     phone: string;
     role: UserRole;
+    city: string;
+    profile_url: string;
     status: StatusUserEnum;
     email: string;
+    birth_day: Date;
+    about_me: string;
     created_at: Date;
+    courses: Course[];
+    posts: Post[]
 }

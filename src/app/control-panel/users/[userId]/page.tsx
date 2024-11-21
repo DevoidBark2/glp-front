@@ -1,187 +1,191 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import {
-    Breadcrumb,
-    Form,
-    Input,
-    Button,
-    Select,
-    Switch,
-    Divider,
-    DatePicker,
-    notification
-} from "antd";
+import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Popconfirm, Breadcrumb, Collapse } from "antd";
+import { useMobxStores } from "@/stores/stores";
+import { useParams, useRouter } from "next/navigation";
+import { UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/bootstrap.css";
-import {useMobxStores} from "@/stores/stores";
-import {useRouter} from "next/navigation";
+import nextConfig from "next.config.mjs";
+import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
+import { Course } from "@/shared/api/course/model";
+
+const { Title, Text } = Typography;
 
 const UserDetailsPage = () => {
-    const {userStore} = useMobxStores()
-    const [form] = Form.useForm();
+    const { userId } = useParams();
     const router = useRouter();
+    const { userStore } = useMobxStores();
+
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        if (userId) {
+            userStore.getUserById(Number(userId))
+                .then(setUser)
+                .finally(() => setLoading(false));
+        }
+    }, [userId, userStore]);
+
+    const handleBlockUser = () => {
+        // Логика блокировки пользователя
+        console.log("Пользователь заблокирован");
+    };
+
+    const renderTag = (role: UserRole | undefined, status: StatusUserEnum | undefined) => (
+        <>
+            <Tag color={role === UserRole.TEACHER ? "blue" : role === UserRole.MODERATOR ? "purple" : "green"}>
+                {role === UserRole.TEACHER ? "Преподаватель" : role === UserRole.MODERATOR ? "Модератор" : "Пользователь"}
+            </Tag>
+            <Tag color={status ? "green" : "red"}>{status ? "Активен" : "Не активен"}</Tag>
+        </>
+    );
+
+    const renderCourses = (courses: Course[], isTeacher: boolean) => {
+        if (!courses || courses.length === 0) {
+            return (
+                <Text type="secondary" className="block text-center">
+                    {isTeacher ? "Преподаватель не создал курсы." : "Пользователь не подписан на курсы."}
+                </Text>
+            );
+        }
+    
+        return (
+            <List
+                itemLayout="horizontal"
+                dataSource={courses}
+                renderItem={(course) => (
+                    <List.Item>
+                        <Collapse
+                            bordered={false}
+                            className="w-full"
+                            expandIconPosition="end"
+                        >
+                            <Collapse.Panel
+                                header={
+                                    <div className="flex items-center space-x-4">
+                                        <Avatar
+                                            src={course.image || "/default-course-image.jpg"}
+                                            size={64}
+                                            shape="square"
+                                        />
+                                        <div>
+                                            <Typography.Text strong>{course.name}</Typography.Text>
+                                            <br />
+                                            <Typography.Text type="secondary" ellipsis>
+                                                {course.small_description || "Описание отсутствует"}
+                                            </Typography.Text>
+                                        </div>
+                                    </div>
+                                }
+                                key={course.id}
+                            >
+                                <div className="p-4 bg-gray-50 rounded-md">
+                                    <Typography.Paragraph>
+                                        <strong>Категория:</strong> {course.category?.name || "Не указано"}
+                                    </Typography.Paragraph>
+                                    <Typography.Paragraph>
+                                        <strong>Длительность:</strong> {course.duration} часов
+                                    </Typography.Paragraph>
+                                    <Typography.Paragraph>
+                                        <strong>Опубликован:</strong>{" "}
+                                        {course.publish_date ? new Date(course.publish_date).toLocaleDateString() : "Не указано"}
+                                    </Typography.Paragraph>
+                                    <Typography.Paragraph>
+                                        <strong>Описание:</strong> {course.content_description || "Нет информации"}
+                                    </Typography.Paragraph>
+                                    <Button
+                                        type="primary"
+                                        size="small"
+                                        onClick={() => router.push(`/courses/${course.id}`)}
+                                    >
+                                        Подробнее
+                                    </Button>
+                                </div>
+                            </Collapse.Panel>
+                        </Collapse>
+                    </List.Item>
+                )}
+            />
+        );
+    };
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-full"><Spin size="large" /></div>;
+    }
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto custom-height-screen">
-            <Breadcrumb
-                items={[
-                    {
-                        title: <Link href={"/control-panel/users"}>Пользователи</Link>,
-                    },
-                    {
-                        title: 'Новый пользователь',
-                    },
-                ]}
-            />
-            <h1 className="text-center text-3xl mb-5">Добавление пользователя</h1>
-            <Form
-                form={form}
-                layout="vertical"
-                scrollToFirstError
-                onFinish={(values) => userStore.createUser(values).then(response => {
-                    router.push('/control-panel/users')
-                    notification.success({message: response.response.message})
-                }).catch((e) => {
-                    notification.error({message: e.response.data.result})
-                })}
-            >
-                <Form.Item
-                    label="Фамилия"
-                    name="second_name"
-                    rules={[{ required: true, message: 'Пожалуйста, введите фамилию!' }]}
-                >
-                    <Input placeholder="Введите фамилию" />
-                </Form.Item>
+        <div className="bg-white p-5 shadow-lg rounded-lg relative">
+            <div className="absolute top-5 right-5 flex space-x-3">
+                <Button type="primary" danger onClick={handleBlockUser}>
+                    Заблокировать
+                </Button>
+            </div>
+            
+            <Breadcrumb items={[
+                { title: <Link href="/control-panel/users">Пользователи</Link> },
+                { title: `${user?.second_name} ${user?.first_name} ${user?.last_name}` || "Пользователь" },
+            ]} />
+            <Title level={2} className="text-center my-5">Информация о пользователе</Title>
 
-                <Form.Item
-                    label="Имя"
-                    name="first_name"
-                    rules={[{ required: true, message: 'Пожалуйста, введите имя!' }]}
-                >
-                    <Input placeholder="Введите имя" />
-                </Form.Item>
+            <Card>
+                <div className="flex items-center">
+                    <div className="mr-4">
+                        <Avatar
+                            size={180}
+                            src={user?.profile_url ? `${nextConfig.env?.API_URL}${user.profile_url}` : ""}
+                            icon={<UserOutlined />}
+                            className="border border-gray-300"
+                        />
+                    </div>
+                    <Descriptions column={2} bordered>
+                        <Descriptions.Item label="Фамилия">{user?.second_name || "Не указано"}</Descriptions.Item>
+                        <Descriptions.Item label="Имя">{user?.first_name || "Не указано"}</Descriptions.Item>
+                        <Descriptions.Item label="Отчество">{user?.last_name || "Не указано"}</Descriptions.Item>
+                        <Descriptions.Item label="Дата рождения">
+                            {user?.birth_day ? new Date(user.birth_day).toLocaleDateString() : "Не указано"}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Электронная почта">{user?.email || "Не указано"}</Descriptions.Item>
+                        <Descriptions.Item label="Телефон">{user?.phone || "Не указано"}</Descriptions.Item>
+                    </Descriptions>
+                </div>
+            </Card>
 
-                <Form.Item
-                    label="Отчество"
-                    name="last_name"
-                    rules={[{ required: true, message: 'Пожалуйста, введите отчество!' }]}
-                >
-                    <Input placeholder="Введите отчество" />
-                </Form.Item>
+            <Divider />
 
-                <Form.Item
-                    label="Дата рождения"
-                    name="birth_day"
-                    rules={[{ required: true, message: 'Пожалуйста, выберите дату рождения!' }]}
-                >
-                    <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
-                </Form.Item>
-
-                <Form.Item
-                    label="Электронная почта"
-                    name="email"
-                    rules={[
-                        { required: true, message: 'Пожалуйста, введите электронную почту!' },
-                        { type: 'email', message: 'Некорректный формат электронной почты!' },
-                    ]}
-                >
-                    <Input placeholder="Введите email" />
-                </Form.Item>
-
-                <Form.Item
-                    label="Телефонный номер"
-                    name="phone"
-                >
-                    <PhoneInput
-                        inputStyle={{width:'100%', height:'25px'}}
-                        country={"ru"}
-                        enableSearch={true}
-                        searchPlaceholder={"Пожалуйста, введите телефонный номер!"}
-                    />
-
-                </Form.Item>
-
-                <Form.Item
-                    label="Город"
-                    name="city"
-                >
-                    <Input placeholder="Введите город" />
-                </Form.Item>
-
-                <Form.Item
-                    label="Университет"
-                    name="university"
-                >
-                    <Input placeholder="Введите университет" />
-                </Form.Item>
-
-                <Form.Item
-                    label="Роль пользователя"
-                    name="role"
-                    rules={[{ required: true, message: 'Пожалуйста, выберите роль!' }]}
-                >
-                    <Select placeholder="Выберите роль">
-                        <Select.Option value="teacher">Преподаватель</Select.Option>
-                        <Select.Option value="student">Пользователь</Select.Option>
-                        <Select.Option value="moderator">Модератор</Select.Option>
-                    </Select>
-                </Form.Item>
-
-                <Form.Item
-                    label="Пароль"
-                    name="password"
-                    rules={[{ required: true, message: 'Пожалуйста, введите пароль!' }]}
-                >
-                    <Input.Password placeholder="Введите пароль" />
-                </Form.Item>
-
-                <Form.Item
-                    label="Подтверждение пароля"
-                    name="confirm_password"
-                    dependencies={['password']}
-                    rules={[
-                        { required: true, message: 'Пожалуйста, подтвердите пароль!' },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (!value || getFieldValue('password') === value) {
-                                    return Promise.resolve();
-                                }
-                                return Promise.reject(new Error('Пароли не совпадают!'));
-                            },
-                        }),
-                    ]}
-                >
-                    <Input.Password placeholder="Введите пароль еще раз" />
-                </Form.Item>
-
-                <Form.Item
-                    label="Активен"
-                    tooltip={"Активный пользователь может войти в систему и использовать все доступные функции."}
-                    name="is_active"
-                    valuePropName="checked"
-                >
-                    <Switch />
-                </Form.Item>
-
-                <Form.Item
-                    label="Двухфакторная аутентификация (2FA)"
-                    name="2fa"
-                    tooltip={"Включите двухфакторную аутентификацию для повышения безопасности."}
-                    valuePropName="checked"
-                >
-                    <Switch />
-                </Form.Item>
-
+            <Card>
+                <Descriptions title="Дополнительная информация" bordered>
+                    <Descriptions.Item label="Город">{user?.city || "Не указано"}</Descriptions.Item>
+                    <Descriptions.Item label="Роль и статус">{renderTag(user?.role, user?.status)}</Descriptions.Item>
+                    <Descriptions.Item label="Дата регистрации">
+                        {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "Не указано"}
+                    </Descriptions.Item>
+                </Descriptions>
                 <Divider />
+                <div>
+                    <Title level={4}>Обо мне</Title>
+                    <div className="bg-gray-50 p-4 rounded-md shadow-inner border">
+                        <Text>{user?.about_me || "Нет информации"}</Text>
+                    </div>
+                </div>
+            </Card>
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={userStore.createUserLoading}>
-                        Создать пользователя
-                    </Button>
-                </Form.Item>
-            </Form>
+            <Divider />
+
+            {user?.role === "teacher" && (
+                <Card>
+                    <Title level={4}>Курсы, созданные преподавателем</Title>
+                    {renderCourses(user?.courses, true)}
+                </Card>
+            )}
+
+            {user?.role === "student" && (
+                <Card>
+                    <Title level={4}>Курсы, на которые подписан пользователь</Title>
+                    {renderCourses(user?.courses, false)}
+                </Card>
+            )}
         </div>
     );
 };

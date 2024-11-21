@@ -6,9 +6,9 @@ export interface GroupActionComponentProps {
     loading: boolean;
     searchText: string;
     setSearchText: (value: string) => void,
-    selectedAction: StatusUserEnum | null;
-    setSelectedAction: (value: StatusUserEnum) => void,
-    submitSelectedAction: () => Promise<void>,
+    selectedAction?: StatusUserEnum | null;
+    setSelectedAction?: (value: StatusUserEnum) => void,
+    submitSelectedAction?: () => Promise<void>,
 }
 
 const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loading,searchText,setSearchText,selectedAction,setSelectedAction,submitSelectedAction}) => {
@@ -21,10 +21,11 @@ const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loading,searc
                 allowClear={true}
                 onChange={(e) => setSearchText(e.target.value)}
             />
-            <Select
+            {selectedAction && <>
+                <Select
                 placeholder="Групповые действия"
                 style={{width: 200}}
-                onChange={(value) => setSelectedAction(value)}
+                onChange={(value) => setSelectedAction!(value)}
             >
                 <Select.Option value={StatusUserEnum.ACTIVATED}>Активировать</Select.Option>
                 <Select.Option value={StatusUserEnum.DEACTIVATED}>Деактивировать</Select.Option>
@@ -32,10 +33,11 @@ const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loading,searc
             </Select>
             <Button
                 type="primary"
-                onClick={() => submitSelectedAction()}
+                onClick={() => submitSelectedAction!()}
             >
                 Применить
             </Button>
+            </>}
         </Space>
     </div>
 }
