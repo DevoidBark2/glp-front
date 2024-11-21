@@ -1,7 +1,33 @@
-import { axiosInstance } from "../http-client"
+import { axiosInstance, withAuth } from "../http-client"
+import { StatusUserEnum, UserRole } from "./model";
 
+type ChangeUserRoleDto = {
+    userId: number;
+    role: UserRole
+}
+type ChangeBlockUserDto = {
+    userId: number;
+    status: StatusUserEnum
+}
 export const getUserById = async (userId: number) => {
     const data = (await axiosInstance.get(`api/users/${userId}`)).data;
 
     return data.data;
 }
+
+export const updateRole = withAuth(async (body: ChangeUserRoleDto, config = {}) => {
+    return (await axiosInstance.put('/api/change-user-role', {
+        userId: body.userId,
+        role: body.role
+    }, config)).data;
+
+})
+
+export const handleBlockUser = withAuth(async (body: ChangeBlockUserDto, config = {}) => {
+    const data = (await axiosInstance.put('/api/block-user', {
+        userId: body.userId,
+        status: body.status
+    }, config)).data;
+
+    return data.data;
+})

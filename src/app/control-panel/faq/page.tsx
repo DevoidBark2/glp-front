@@ -8,12 +8,18 @@ import { Faq } from "@/shared/api/faq/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { faqTable } from "@/shared/config/tableConfig";
+import { SizeType } from "antd/es/config-provider/SizeContext";
 
 const FaqPage = () => {
     const { faqStore } = useMobxStores();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [editingItem, setEditingItem] = useState<Faq | null>(null);
     const [form] = Form.useForm<Faq>();
+    const [settings, setSettings] = useState<{
+        pagination_size: number,
+        table_size: SizeType,
+        show_footer_table: boolean
+    } | null>(null);
 
     const openModal = (record?: Faq) => {
         if (record) {
@@ -79,6 +85,8 @@ const FaqPage = () => {
     ];
 
     useEffect(() => {
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        setSettings(settingUser);
         faqStore.getAll();
     }, [])
 
@@ -91,11 +99,13 @@ const FaqPage = () => {
                 showBottomDivider
             />
             <Table
+                size={(settings && settings.table_size) ?? "middle"}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 rowKey={(record) => record.id}
                 loading={faqStore.loading}
                 dataSource={faqStore.faqs}
                 columns={columns}
-                pagination={false}
                 expandable={{
                     expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.answer}</p>,
                 }}

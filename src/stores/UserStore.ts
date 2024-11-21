@@ -4,8 +4,8 @@ import { delete_cookie, getCookieUserDetails, getUserToken, signInUser } from "@
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { message } from "antd";
-import { StatusUserEnum, User } from "@/shared/api/user/model";
-import { getUserById } from "@/shared/api/user";
+import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
+import { getUserById, handleBlockUser, updateRole } from "@/shared/api/user";
 
 class UserStore {
     constructor() {
@@ -193,10 +193,10 @@ class UserStore {
         }
     })
 
-    deleteUsers = action(async (userIds: number[]) => {
+    deleteUsers = action(async (id: number) => {
         try {
-            const response = await DELETE(`/api/users?userIds=${userIds}`)
-            this.allUsers = this.allUsers.filter(user => !userIds.includes(user.id))
+            const response = await DELETE(`/api/users?id=${id}`)
+            this.allUsers = this.allUsers.filter(user => id !== user.id)
 
             return response;
         } catch (e) {
@@ -204,8 +204,21 @@ class UserStore {
         }
     })
 
-    getUserById = action( async (userId: number): Promise<User> => {
+    getUserById = action(async (userId: number): Promise<User> => {
         return await getUserById(userId);
+    })
+
+    updateUserRole = action(async (userId: number, role: UserRole) => {
+        const data = await updateRole({ userId: userId, role: role });
+
+        return data;
+    })
+
+    blockUser = action(async (id: number, status: StatusUserEnum) => {
+        const data = await handleBlockUser({ userId: id, status: status });
+
+        debugger
+        return data;
     })
 }
 const usersMapper = (value: User) => {
@@ -215,10 +228,16 @@ const usersMapper = (value: User) => {
         second_name: value.second_name,
         last_name: value.last_name,
         status: value.status,
+        phone: value.phone,
         role: value.role,
         email: value.email,
         created_at: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
-        phone: value.phone
+        about_me: value.about_me,
+        birth_day: value.birth_day,
+        courses: value.courses,
+        posts: value.posts,
+        city: value.city,
+        profile_url: value.profile_url
     }
 
     return user;

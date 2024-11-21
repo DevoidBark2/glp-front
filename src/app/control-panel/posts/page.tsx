@@ -24,6 +24,7 @@ import { ChangePostModal } from "@/components/PostPage/ChangePostModal";
 import { postTable } from "@/shared/config";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
+import { useRouter } from "next/navigation";
 
 const PostPage = () => {
     const { postStore } = useMobxStores();
@@ -31,6 +32,7 @@ const PostPage = () => {
     const [form] = Form.useForm<PostCreateForm>();
     const [changePostForm] = Form.useForm<Post>();
     const [changePostModal, setChagePostModal] = useState(false);
+    const router = useRouter();
 
     const fieldNames: { [key: string]: string } = {
         name: "Заголовок",
@@ -140,10 +142,11 @@ const PostPage = () => {
             <PageHeader
                 title="Доступные посты"
                 buttonTitle="Добавить пост"
-                onClickButton={() => postStore.setCreatePostModal(true)}
+                onClickButton={() => router.push('posts/add')}
                 showBottomDivider
             />
             <Table
+                rowKey={(record) => record.id}
                 size={(settings && settings.table_size) ?? "middle"}
                 loading={postStore.loading}
                 dataSource={postStore.userPosts}
@@ -157,7 +160,6 @@ const PostPage = () => {
                     handleChangePost: handelChangePost
                 })}
                 footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
-                rowKey={(record) => record.id}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
             />

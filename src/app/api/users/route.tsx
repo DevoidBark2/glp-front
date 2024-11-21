@@ -23,18 +23,17 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url);
-    const userIds = searchParams.get('userIds');
+    const id = searchParams.get('id');
     const token = req.headers.get('authorization');
 
     try {
-        const response = await axios.delete(nextConfig.env?.API_URL + `api/users/${userIds}`, {
+        const { data } = await axios.delete(nextConfig.env?.API_URL + `api/user/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
-        const responseData = response.data;
-        return NextResponse.json({ response: responseData });
+        return NextResponse.json({ ...data });
     } catch (error: any) {
         console.error(error)
         return NextResponse.json(error.response.data, { status: error.response.status })

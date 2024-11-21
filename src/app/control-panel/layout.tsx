@@ -158,11 +158,11 @@ let dashboardMenuItems: MenuItem[] = [
                 label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
                 icon: <BarsOutlined />,
             },
-            {
-                key: 'support',
-                label: <Link href={"/control-panel/support"}>Поддержка</Link>,
-                icon: <BarsOutlined />,
-            }
+            // {
+            //     key: 'support',
+            //     label: <Link href={"/control-panel/support"}>Поддержка</Link>,
+            //     icon: <BarsOutlined />,
+            // }
         ]
     },
     {
@@ -190,7 +190,6 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { avatarIconsStore, userProfileStore } = useMobxStores()
 
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-    const [avatar, setAvatar] = useState<string | null>(null);
     const pathName = usePathname();
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
@@ -229,32 +228,6 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         setLoading(false)
     }, [])
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedAvatar, setSelectedAvatar] = useState(currentUser?.user?.avatar || "/static/default_avatar.png");
-    const [customImage, setCustomImage] = useState(null);
-
-    const [collapsed, setCollapsed] = useState(false);
-
-    const toggleCollapsed = () => {
-        setCollapsed(!collapsed);
-    };
-
-    const handleOk = (color) => {
-        setIsModalVisible(false);
-        if (customImage) setSelectedAvatar(customImage); // Save the uploaded image
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
-
-    const [selectedColor, setSelectedColor] = useState<string>('#FF5733');
-
-    const handleColorSelect = (color: string) => {
-        setSelectedColor(color);
-        setCustomImage(null); // Очищаем предварительный просмотр при выборе цвета
-    };
-
     useEffect(() => {
         // userProfileStore.getUserProfile().then((response) => {
         //     const userData = response.data;
@@ -274,43 +247,11 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <>
-            <Modal
-                title="Выберите аватар"
-                open={isModalVisible}
-                onOk={() => handleOk(selectedColor)}
-                onCancel={handleCancel}
-            >
-                <div className="grid grid-cols-4 gap-4 mb-4">
-                    {avatarIconsStore.avatarIcons?.map((color, index) => (
-                        <Image
-                            crossOrigin='anonymous' src={`${nextConfig.env?.API_URL}${color.image}`}
-                            key={index}
-                            alt={color.id}
-                            className={`border-2 rounded-full p-2 cursor-pointer ${selectedColor === color ? 'border-blue-500' : 'border-transparent'}`}
-                            width={90}
-                            height={90}
-                            onClick={() => handleColorSelect(color)}
-                        />
-                    ))}
-                </div>
-            </Modal>
             <div className="flex">
-                {/* <Button type="primary" onClick={toggleCollapsed} style={{ marginBottom: 16 }}>
-    {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-  </Button> */}
-
-                {/* Обертка для всего меню с условием `collapsed` */}
-                <div className={`${collapsed ? 'hidden' : 'flex'} flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
+                <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
                     <div className="flex flex-col items-center justify-center mb-2">
                         <div className="relative mb-4">
                             <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300">
-                                {/* <Image src={avatar ?? undefined} width={100} height={100} alt="asdasd"/> */}
-                                {/* <div
-              className="absolute bottom-0 right-0 bg-red-600 rounded-full p-2 transform transition-transform hover:scale-110 cursor-pointer shadow-lg"
-              onClick={showUploadModal}
-          >
-              <Button type="text" icon={<UploadOutlined />} size="small" />
-          </div> */}
                             </div>
                         </div>
 

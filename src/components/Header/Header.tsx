@@ -14,7 +14,7 @@ import { platformMenu } from "@/constants";
 import { UserRole } from "@/shared/api/user/model";
 
 export type UserType = {
-    user: { user_name: string; role: UserRole };
+    user: { user_name: string; role: UserRole, avatar: string };
 };
 
 const HeaderBlock = () => {

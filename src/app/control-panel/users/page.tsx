@@ -1,8 +1,8 @@
 "use client";
 import { observer } from "mobx-react";
-import { Button, Table, Tag, Tooltip, Popconfirm } from "antd";
+import { Button, Table, Tag, Tooltip, Popconfirm, notification } from "antd";
 import type { TableColumnsType } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
 import {
     EditOutlined,
@@ -13,13 +13,19 @@ import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors 
 import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
-import { paginationCount, usersTable } from "@/shared/config";
+import { usersTable } from "@/shared/config";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { User } from "@/shared/api/user/model";
+import { SizeType } from "antd/es/config-provider/SizeContext";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
     const router = useRouter();
+    const [settings, setSettings] = useState<{
+        pagination_size: number,
+        table_size: SizeType,
+        show_footer_table: boolean
+    } | null>(null);
 
     const columns: TableColumnsType<User> = [
         {
@@ -62,7 +68,7 @@ const UsersPage = () => {
             key: "actions",
             render: (_, record) => {
                 return (
-                    <div className="flex items-center justify-start">
+                    <div className="flex justify-end gap-2">
                         <Tooltip title="Редактировать">
                             <Button
                                 shape="circle"
@@ -76,10 +82,12 @@ const UsersPage = () => {
                                 placement="leftBottom"
                                 description="Вы уверены, что хотите удалить этого пользователя? Это действие нельзя будет отменить."
                                 okText="Да"
+                                onConfirm={() => userStore.deleteUsers(record.id).then(response => {
+                                    notification.success({ message: response.message })
+                                })}
                                 cancelText="Нет"
                             >
                                 <Button
-                                    className="ml-3"
                                     danger type="primary"
                                     icon={<DeleteOutlined />}
                                 />
@@ -92,6 +100,8 @@ const UsersPage = () => {
     ];
 
     useEffect(() => {
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        setSettings(settingUser);
         userStore.getUsers();
     }, []);
 
@@ -107,10 +117,12 @@ const UsersPage = () => {
                 setSearchText={userStore.setSearchUserText}
             />
             <Table
+                size={(settings && settings.table_size) ?? "middle"}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 rowKey={(record) => record.id}
                 dataSource={userStore.allUsers}
                 columns={columns}
-                pagination={{ pageSize: paginationCount }}
                 loading={userStore.loading}
                 showSorterTooltip={false}
                 locale={usersTable}
