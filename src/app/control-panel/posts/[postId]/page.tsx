@@ -85,7 +85,7 @@ const postPage = () => {
                     label="Заголовок"
                     rules={[{ required: true, message: 'Введите заголовок поста!' }]}
                 >
-                    <Input placeholder="Введите название поста" />
+                    <Input disabled={currentUser?.user.role === UserRole.SUPER_ADMIN} placeholder="Введите название поста" />
                 </Form.Item>
 
                 <Form.Item
@@ -93,14 +93,14 @@ const postPage = () => {
                     label="Описание"
                     rules={[{ required: true, message: 'Введите описание поста!' }]}
                 >
-                    <Input placeholder="Введите описание поста" />
+                    <Input disabled={currentUser?.user.role === UserRole.SUPER_ADMIN} placeholder="Введите описание поста" />
                 </Form.Item>
 
                 <Form.Item
                     name="image"
                     label="Изображение поста"
                 >
-                    <Dragger {...props}>
+                    <Dragger {...props} disabled={currentUser?.user.role === UserRole.SUPER_ADMIN}>
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
                         </p>
@@ -111,7 +111,7 @@ const postPage = () => {
                     </Dragger>
                 </Form.Item>
 
-                {
+                {/* {
                     currentUser?.user.role === UserRole.SUPER_ADMIN && <Form.Item
                         label="Статус"
                         name="status"
@@ -144,7 +144,7 @@ const postPage = () => {
                         </Select>
                     </Form.Item>
 
-                }
+                } */}
 
                 <Form.Item
                     name="content"
@@ -155,7 +155,7 @@ const postPage = () => {
 
                 <div className="flex flex-col items-center">
                     <Form.Item style={{ marginTop: '10px' }}>
-                        <Button type="primary" htmlType="submit" loading={postStore.loading}>Изменить</Button>
+                        <Button type="primary" htmlType="submit" loading={postStore.loading} disabled={currentUser?.user.role === UserRole.SUPER_ADMIN}>Изменить</Button>
                     </Form.Item>
                 </div>
             </Form>

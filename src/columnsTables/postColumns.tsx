@@ -59,11 +59,11 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             dataIndex: "is_publish",
             render: (_, record) => {
                 const isSuperAdmin = currentUser?.user.role === UserRole.SUPER_ADMIN;
-                const isUnderReview = record.status === PostStatusEnum.IN_PROCESSING;
-                const isDisabled = 
+                const isUnderReview = record.status !== PostStatusEnum.APPROVED;
+                const isDisabled =
                     (isSuperAdmin && isUnderReview) || // Суперадмин и статус "В проверке"
                     (!isSuperAdmin && record.status !== PostStatusEnum.APPROVED); // Не суперадмин и статус не "Подтвержден"
-        
+
                 return (
                     <Tooltip
                         title={
@@ -83,14 +83,14 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
                 );
             },
         },
-         
+
         {
             title: "Создатель",
             dataIndex: "user",
             hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => {
                 debugger
-                return  record.user.role === UserRole.SUPER_ADMIN ? (
+                return record.user.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                         <Tooltip title="Перейти в профиль">
                             <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>

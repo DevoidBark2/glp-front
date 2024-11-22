@@ -31,6 +31,7 @@ import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
 import { UserRole } from "@/shared/api/user/model";
+import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 
 const ProfilePage = () => {
   const [formProfile] = Form.useForm();
@@ -302,9 +303,9 @@ const ProfilePage = () => {
   ]
 
   return (
-    <div className="w-full mx-auto bg-white shadow-lg rounded p-8 overflow-y-auto custom-height-screen">
-      <Tabs defaultActiveKey="1" items={items} />
-    </div>
+    <PageContainerControlPanel>
+      {userProfileStore.loading ? <div className="flex justify-center items-center"><Spin size="large" /></div> : <Tabs defaultActiveKey="1" items={items} />}
+    </PageContainerControlPanel>
   );
 };
 

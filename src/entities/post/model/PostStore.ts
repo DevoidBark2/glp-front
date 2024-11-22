@@ -102,18 +102,22 @@ class PostStore {
 
     publishPost = action(async (postId: number, checked: boolean) => {
         try {
-            await publishPost(postId, checked);
-            const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
+            await publishPost(postId, checked).then(response => {
+                const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
-            if (changedPostIndex !== -1) {
-                const updatedPosts = [...this.userPosts];
-                updatedPosts[changedPostIndex] = {
-                    ...updatedPosts[changedPostIndex],
-                    is_publish: checked
-                };
-                this.userPosts = updatedPosts;
-                //notification.success({ message: response.data.message });
-            }
+                if (changedPostIndex !== -1) {
+                    const updatedPosts = [...this.userPosts];
+                    updatedPosts[changedPostIndex] = {
+                        ...updatedPosts[changedPostIndex],
+                        is_publish: checked
+                    };
+                    this.userPosts = updatedPosts;
+
+                }
+                debugger
+                notification.success({ message: response.data.message });
+            });
+
         } catch (e) {
 
         }

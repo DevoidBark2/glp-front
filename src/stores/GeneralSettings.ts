@@ -44,13 +44,13 @@ export class GeneralSettings {
         return response;
     })
 
-    saveGeneralSetting = action(async (values:any) => {
+    saveGeneralSetting = action(async (values: any) => {
         const formData = new FormData();
-        Object.entries(values).forEach(([key,value]) => {
-            if(key === "logo_url"){
-                formData.append(key,value.file);
+        Object.entries(values).forEach(([key, value]) => {
+            if (key === "logo_url") {
+                formData.append(key, value.file);
             }
-            formData.append(key,value);
+            formData.append(key, value);
         })
         await POST(`/api/general-settings`, formData).then(response => {
             notification.success({ message: response.data.message });

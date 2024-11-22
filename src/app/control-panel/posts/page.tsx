@@ -1,6 +1,5 @@
 "use client";
 import {
-    Form,
     Table,
     Tag,
     Tooltip,
@@ -20,16 +19,13 @@ import { getCookieUserDetails } from "@/lib/users";
 import { getPostColumns } from "@/columnsTables/postColumns";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { postTable } from "@/shared/config";
-import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
+import { PostStatusEnum } from "@/shared/api/posts/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { useRouter } from "next/navigation";
 
 const PostPage = () => {
     const { postStore } = useMobxStores();
     const [currentUser, setCurrentUser] = useState(null);
-    const [form] = Form.useForm<PostCreateForm>();
-    const [changePostForm] = Form.useForm<Post>();
-    const [changePostModal, setChagePostModal] = useState(false);
     const router = useRouter();
 
     const fieldNames: { [key: string]: string } = {

@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { Breadcrumb, Button, Divider, Form, FormInstance, Input, Modal, notification, Select, Tag, Tooltip, UploadProps } from "antd";
 import dynamic from "next/dynamic";
 import {
+    CheckCircleOutlined,
     ClockCircleOutlined,
     InboxOutlined,
     SyncOutlined,
@@ -103,7 +104,7 @@ const CreatePostPage = () => {
                     </Dragger>
                 </Form.Item>
 
-                {
+                {/* {
                     currentUser?.user.role === UserRole.SUPER_ADMIN && <Form.Item
                         label="Статус"
                         name="status"
@@ -114,17 +115,20 @@ const CreatePostPage = () => {
 
                         >
                             <Select.Option value={PostStatusEnum.NEW}>
-                                <Tooltip title="Новый">
-                                    <Tag icon={<ClockCircleOutlined />} color="blue">
-                                        Новый
+                                <Tag icon={<ClockCircleOutlined />} color="blue">
+                                    Новый
+                                </Tag>
+                            </Select.Option>
+
+                            <Select.Option value={PostStatusEnum.APPROVED}>
+                                <Tooltip title="Подтвержден">
+                                    <Tag icon={<CheckCircleOutlined />} color="green">
+                                        Подтвержден
                                     </Tag>
                                 </Tooltip>
                             </Select.Option>
-                            <Select.Option value={PostStatusEnum.REJECT}>
-                                <Tooltip color="red">
-                                    <Tag color="red">Отклонен</Tag>
-                                </Tooltip>
-                            </Select.Option>
+
+
 
                             <Select.Option value={PostStatusEnum.IN_PROCESSING}>
                                 <Tooltip title="В обработке">
@@ -133,10 +137,26 @@ const CreatePostPage = () => {
                                     </Tag>
                                 </Tooltip>
                             </Select.Option>
+                            <Select.Option value={PostStatusEnum.MODIFIED}>
+                                <Tooltip title="Изменен">
+                                    <Tag icon={<ClockCircleOutlined />} color="gray">
+                                        Изменен
+                                    </Tag>
+                                </Tooltip>
+                            </Select.Option>
+
+                            <Select.Option value={PostStatusEnum.REJECT}>
+                                <Tooltip
+                                    title="Отклонен"
+                                    color="red"
+                                >
+                                    <Tag color="red">Отклонен</Tag>
+                                </Tooltip>
+                            </Select.Option>
                         </Select>
                     </Form.Item>
 
-                }
+                } */}
 
                 <Form.Item
                     name="content"

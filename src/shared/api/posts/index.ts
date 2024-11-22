@@ -22,7 +22,6 @@ export const createPost = withAuth(async (values: PostCreateForm, config = {}) =
     form.append("description", values.description);
     form.append("content", values.content);
     if (values.image?.originFileObj) form.append("image", values.image.originFileObj);
-    if (values.status) form.append("status", values.status);
     if (typeof values.is_publish !== "undefined") form.append("is_publish", String(values.is_publish));
 
     return (await axiosInstance.post("/api/posts", form, config)).data;
@@ -35,4 +34,4 @@ export const changePost = withAuth(async (post: Post, config = {}) => (await axi
 
 export const deletePost = async (id: number) => (await axiosInstance.delete(`/api/posts/${id}`)).data;
 
-export const submitReviewPost = async (id: number) => withAuth((await axiosInstance.put(`/api/submit-preview?postId=${id}`)).data);
+export const submitReviewPost = withAuth(async (id: number, config = {}) => (await axiosInstance.put(`/api/submit-preview?postId=${id}`, {}, config)).data);

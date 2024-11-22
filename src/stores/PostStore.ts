@@ -66,7 +66,6 @@ class PostStore {
     createPost = action(async (values: PostCreateForm) => {
         await createPost(values).then(response => {
             runInAction(() => {
-                debugger
                 this.userPosts = [...this.userPosts, postMapper(response.data)];
                 notification.success({ message: response.message });
             })

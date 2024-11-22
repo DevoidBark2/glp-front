@@ -53,18 +53,6 @@ let dashboardMenuItems: MenuItem[] = [
                 icon: <BookOutlined />,
             },
             {
-                key: 'manage-sections',
-                label: <Link href={"/control-panel/manage-sections"}>Управление разделами</Link>,
-                title: "Управление разделами",
-                icon: <PartitionOutlined />,
-            },
-            {
-                key: 'manage-components',
-                label: <Link href={"/control-panel/manage-component"}>Управление компонентами</Link>,
-                title: "Управление компонентами",
-                icon: <SolutionOutlined />
-            },
-            {
                 key: 'manage-posts',
                 label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
                 title: "Управление постами",

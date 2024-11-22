@@ -71,7 +71,7 @@ const SettingsControlPage = () => {
                                     <Input placeholder="Введите название вашей платформы" />
                                 </Form.Item>
 
-                                <Form.Item label="Логотип платформы" name="logo_url">
+                                {/* <Form.Item label="Логотип платформы" name="logo_url">
                                     <Upload
                                         name="logo_url"
                                         listType="picture-card"
@@ -102,7 +102,7 @@ const SettingsControlPage = () => {
                                             </div>
                                         )}
                                     </Upload>
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 <Form.Item label="Описание платформы" name="subscription_platform">
                                     <Input.TextArea rows={3} placeholder="Введите описание, которое будет отображаться на сайте в нижнем колонтикуле" />
@@ -196,13 +196,13 @@ const SettingsControlPage = () => {
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
                                 </Form.Item>
 
-                                <Form.Item
+                                {/* <Form.Item
                                     label="Лимит на количество создаваемых курсов"
                                     tooltip="Укажите максимальное количество курсов, которое может создать один пользователь."
                                     name="course_creation_limit"
                                 >
                                     <InputNumber min={1} max={50} placeholder="Введите лимит" style={{ width: '100%' }} />
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 <Form.Item
                                     label={GeneralSettingTooltips.MAX_UPLOAD_FILE_SIZE.LABEL}
@@ -215,14 +215,14 @@ const SettingsControlPage = () => {
                                     />
                                 </Form.Item>
 
-                                <Form.Item
+                                {/* <Form.Item
                                     label={GeneralSettingTooltips.MODERATION_REVIEWS_COURSE.LABEL}
                                     tooltip={GeneralSettingTooltips.MODERATION_REVIEWS_COURSE.TOOLTIP}
                                     name="moderation_review_course"
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 {/* Модерация новых курсов */}
                                 <Form.Item
@@ -255,14 +255,14 @@ const SettingsControlPage = () => {
                                 </Form.Item>
 
                                 {/* Разрешить комментарии к курсам */}
-                                <Form.Item
+                                {/* <Form.Item
                                     label="Комментарии к курсам"
                                     tooltip="Разрешить пользователям оставлять комментарии под курсами."
                                     name="allow_course_comments"
                                     valuePropName="checked"
                                 >
                                     <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
+                                </Form.Item> */}
 
                                 <Form.Item>
                                     <Button type="primary" htmlType="submit">Сохранить изменения</Button>
@@ -338,6 +338,7 @@ const SettingsControlPage = () => {
                                 form={formForUserManagement}
                                 onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
                             >
+                                <Form.Item name="id" hidden></Form.Item>
                                 <Form.Item
                                     name="moderationAccess"
                                     label="Права доступа модераторов"
@@ -351,36 +352,6 @@ const SettingsControlPage = () => {
                                             { label: 'Блокировка пользователей', value: 'block_users' },
                                         ]}
                                     />
-                                </Form.Item>
-
-                                <Form.Item
-                                    name="activityMonitoring"
-                                    label="Мониторинг активности модераторов"
-                                    tooltip="Настройте параметры для отслеживания активности модераторов."
-                                >
-                                    <Checkbox.Group
-                                        options={[
-                                            { label: 'Отслеживать количество проверенных постов', value: 'track_reviewed_posts' },
-                                            { label: 'Отслеживать отклоненные/одобренные курсы', value: 'track_courses' },
-                                            { label: 'Отслеживать количество выданных предупреждений пользователям', value: 'track_warnings_issued' },
-                                        ]}
-                                    />
-                                    <div className="text-gray-500 mt-1">
-                                        Включите нужные опции, чтобы получать статистику об активности модераторов.
-                                    </div>
-                                </Form.Item>
-
-                                {/* Разрешение на доступ к аналитике */}
-                                <Form.Item
-                                    name="analyticsAccess"
-                                    label="Доступ к аналитике"
-                                    tooltip="Позволяет модераторам просматривать аналитику своих действий."
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                    <div className="text-gray-500 mt-1">
-                                        Включите, если хотите предоставить модераторам доступ к отчетам и аналитике их деятельности.
-                                    </div>
                                 </Form.Item>
 
                                 <Form.Item>

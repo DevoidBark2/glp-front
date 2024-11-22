@@ -14,14 +14,18 @@ import { observer } from "mobx-react";
 import {
   UserOutlined,
   FileTextOutlined,
-  BookOutlined,UnorderedListOutlined,
+  BookOutlined, UnorderedListOutlined,
+  ClockCircleOutlined,
+  CheckCircleOutlined,
+  SyncOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import { getCookieUserDetails } from "@/lib/users";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import dayjs from "dayjs";
-import {SmileOutlined, CloudOutlined, MoonOutlined} from "@ant-design/icons";
+import { SmileOutlined, CloudOutlined, MoonOutlined } from "@ant-design/icons";
 import { welcomeTextRender } from "@/utils/welcomeText";
 import { UserRole } from "@/shared/api/user/model";
 
@@ -37,7 +41,7 @@ const ControlPanel = () => {
       return <SmileOutlined className="text-yellow-400 text-4xl" />; // Утро
     } else if (currentHours >= 12 && currentHours < 18) {
       return <CloudOutlined className="text-orange-400 text-4xl" />; // День
-    }else if (currentHours >= 18 && currentHours < 21) {
+    } else if (currentHours >= 18 && currentHours < 21) {
       return <CloudOutlined className="text-orange-400 text-4xl" />; // Вечер
     } else {
       return <MoonOutlined className="text-blue-400 text-4xl" />; // Ночь
@@ -51,7 +55,7 @@ const ControlPanel = () => {
 
     return () => clearInterval(interval);
   }, []);
-  
+
   useEffect(() => {
     const currentUser = getCookieUserDetails();
     setCurrentUser(currentUser);
@@ -63,7 +67,7 @@ const ControlPanel = () => {
   return (
     <PageContainerControlPanel>
       <div className="flex items-center justify-start">
-      <div className="flex items-center justify-center p-6 bg-gradient-to-r from-green-300 via-blue-300 to-purple-400 rounded-xl shadow-lg">
+        <div className="flex items-center justify-center p-6 bg-gradient-to-r from-green-300 via-blue-300 to-purple-400 rounded-xl shadow-lg">
           <div className="flex items-center space-x-4">
             <Tooltip title="Текущее время суток">{renderIcon()}</Tooltip>
             <div className="flex flex-col">
@@ -137,7 +141,7 @@ const ControlPanel = () => {
         (currentUser?.user.role === UserRole.SUPER_ADMIN || currentUser?.user.role === UserRole.TEACHER) && <Divider />
       }
       <Row gutter={16}>
-        <Col span={12}>
+        {currentUser?.user.role !== UserRole.MODERATOR && <Col span={12}>
           <Card title="Статистика курсов">
             <div className="flex justify-between">
               <Skeleton active loading={statisticsStore.loadingStatisticsData}>
@@ -197,13 +201,13 @@ const ControlPanel = () => {
               </Skeleton>
             </div>
           </Card>
-        </Col>
+        </Col>}
 
-        <Col span={12}>
+        {currentUser?.user.role !== UserRole.MODERATOR && <Col span={12}>
           <Card title="Статистика постов">
             <div className="flex justify-between">
               <Skeleton active loading={statisticsStore.loadingStatisticsData}>
-              <Progress
+                <Progress
                   type="circle"
                   percent={statisticsStore.statisticsData?.postsCountNew}
                   format={(percent) => (
@@ -259,7 +263,89 @@ const ControlPanel = () => {
               </Skeleton>
             </div>
           </Card>
-        </Col>
+        </Col>}
+
+        {currentUser?.user.role === UserRole.MODERATOR && (
+          <Col span={12}>
+            <Card title="Статистика курсов">
+              <div className="flex justify-between space-x-4">
+                <div className="flex flex-col items-center">
+                  <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                    <div className="bg-blue-100 p-3 rounded-full">
+                      <ClockCircleOutlined className="text-blue-500 text-2xl" />
+                    </div>
+                    <p className="text-lg font-semibold mt-2">
+                      {statisticsStore.statisticsData?.postsCountNew || 0}
+                    </p>
+                    <p className="text-sm text-gray-500">Ожидают проверки</p>
+                  </Skeleton>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                    <div className="bg-green-100 p-3 rounded-full">
+                      <CheckCircleOutlined className="text-green-500 text-2xl" />
+                    </div>
+                    <p className="text-lg font-semibold mt-2">
+                      {statisticsStore.statisticsData?.postsCountPublish || 0}
+                    </p>
+                    <p className="text-sm text-gray-500">Подтвержденно</p>
+                  </Skeleton>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                    <div className="bg-red-100 p-3 rounded-full">
+                      <CloseCircleOutlined className="text-red-500 text-2xl" />
+                    </div>
+                    <p className="text-lg font-semibold mt-2">
+                      {statisticsStore.statisticsData?.postsCountReject || 0}
+                    </p>
+                    <p className="text-sm text-gray-500">Отклонено</p>
+                  </Skeleton>
+                </div>
+              </div>
+            </Card>
+
+            <div className="mt-3">
+              <Card title="Статистика постов">
+                <div className="flex justify-between space-x-4">
+                  <div className="flex flex-col items-center">
+                    <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                      <div className="bg-blue-100 p-3 rounded-full">
+                        <ClockCircleOutlined className="text-blue-500 text-2xl" />
+                      </div>
+                      <p className="text-lg font-semibold mt-2">
+                        {statisticsStore.statisticsData?.postsCountNew || 0}
+                      </p>
+                      <p className="text-sm text-gray-500">Ожидают проверки</p>
+                    </Skeleton>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                      <div className="bg-green-100 p-3 rounded-full">
+                        <CheckCircleOutlined className="text-green-500 text-2xl" />
+                      </div>
+                      <p className="text-lg font-semibold mt-2">
+                        {statisticsStore.statisticsData?.postsCountPublish || 0}
+                      </p>
+                      <p className="text-sm text-gray-500">Подтвержденно</p>
+                    </Skeleton>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Skeleton active loading={statisticsStore.loadingStatisticsData}>
+                      <div className="bg-red-100 p-3 rounded-full">
+                        <CloseCircleOutlined className="text-red-500 text-2xl" />
+                      </div>
+                      <p className="text-lg font-semibold mt-2">
+                        {statisticsStore.statisticsData?.postsCountReject || 0}
+                      </p>
+                      <p className="text-sm text-gray-500">Отклонено</p>
+                    </Skeleton>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </Col>
+        )}
       </Row>
 
     </PageContainerControlPanel>
