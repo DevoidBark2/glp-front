@@ -21,7 +21,7 @@ interface getPostColumnsProps {
     publishPost: (postId: number, checked: boolean) => void
     submitReview: (postId: number) => void
     deletePost: (postId: number) => void
-    handleChangePost: (post: Post) => void;
+    handleChangePost: (postId: number) => void;
 }
 
 
@@ -57,23 +57,39 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
         {
             title: "Опубликован",
             dataIndex: "is_publish",
-            render: (_, record) => (
-                <Tooltip
-                    title={currentUser?.user.role !== UserRole.SUPER_ADMIN && renderTooltipTitle(record)}
-                >
-                    <Switch
-                        // disabled={record.status !== PostStatusEnum.APPROVED}
-                        checked={record.is_publish}
-                        onChange={(checked) => publishPost(record.id, checked)}
-                    />
-                </Tooltip>
-            ),
+            render: (_, record) => {
+                const isSuperAdmin = currentUser?.user.role === UserRole.SUPER_ADMIN;
+                const isUnderReview = record.status === PostStatusEnum.IN_PROCESSING;
+                const isDisabled = 
+                    (isSuperAdmin && isUnderReview) || // Суперадмин и статус "В проверке"
+                    (!isSuperAdmin && record.status !== PostStatusEnum.APPROVED); // Не суперадмин и статус не "Подтвержден"
+        
+                return (
+                    <Tooltip
+                        title={
+                            isDisabled
+                                ? isSuperAdmin && isUnderReview
+                                    ? "Кнопка недоступна, так как запись находится в проверке"
+                                    : "Кнопка доступна только для подтвержденных записей"
+                                : undefined
+                        }
+                    >
+                        <Switch
+                            disabled={isDisabled}
+                            checked={record.is_publish}
+                            onChange={(checked) => publishPost(record.id, checked)}
+                        />
+                    </Tooltip>
+                );
+            },
         },
+         
         {
             title: "Создатель",
             dataIndex: "user",
             hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => {
+                debugger
                 return  record.user.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                         <Tooltip title="Перейти в профиль">
@@ -98,27 +114,24 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             align: 'center',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    {/* Отправить на проверку */}
-                    <Tooltip title="Отправить на проверку">
+                    {(currentUser && currentUser.user.role !== UserRole.SUPER_ADMIN) && <Tooltip title="Отправить на проверку">
                         <Button
                             type="default"
                             disabled={record.status === PostStatusEnum.IN_PROCESSING || record.status === PostStatusEnum.APPROVED}
                             icon={<UploadOutlined />}
                             onClick={() => submitReview(record.id)}
                         />
-                    </Tooltip>
+                    </Tooltip>}
 
-                    {/* Редактировать пост */}
                     <Tooltip title="Редактировать пост">
                         <Button
                             type="default"
                             icon={<EditOutlined />}
-                            disabled={record.status === PostStatusEnum.IN_PROCESSING}
-                            onClick={() => handleChangePost(record)}
+                            disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
+                            onClick={() => handleChangePost(record.id)}
                         />
                     </Tooltip>
 
-                    {/* Удалить пост */}
                     <Tooltip title="Удалить пост">
                         <Popconfirm
                             title="Удалить пост?"
@@ -131,7 +144,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
                                 danger
                                 type="primary"
                                 icon={<DeleteOutlined />}
-                                disabled={record.status === PostStatusEnum.IN_PROCESSING}
+                                disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
                             />
                         </Popconfirm>
                     </Tooltip>

@@ -8,7 +8,7 @@ import {
     InboxOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
-import 'react-quill/dist/quill.snow.css';
+
 import Dragger from "antd/es/upload/Dragger";
 import { FC, useEffect, useState } from "react";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
@@ -21,6 +21,7 @@ const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
 )
+import 'react-quill/dist/quill.snow.css';
 
 const CreatePostPage = () => {
     const { postStore } = useMobxStores();

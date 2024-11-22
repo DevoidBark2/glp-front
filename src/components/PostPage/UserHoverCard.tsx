@@ -1,4 +1,4 @@
-import { User } from "@/stores/UserStore";
+import { User } from "@/shared/api/user/model";
 import { Button, Typography } from "antd";
 import Link from "next/link";
 import { FC } from "react";

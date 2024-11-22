@@ -19,8 +19,6 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import { getCookieUserDetails } from "@/lib/users";
 import { getPostColumns } from "@/columnsTables/postColumns";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-import { CreatePostModal } from "@/components/PostPage/CreatePostModal";
-import { ChangePostModal } from "@/components/PostPage/ChangePostModal";
 import { postTable } from "@/shared/config";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
@@ -117,9 +115,8 @@ const PostPage = () => {
         }
     }
 
-    const handelChangePost = (post: Post) => {
-        changePostForm.setFieldsValue(post);
-        setChagePostModal(true);
+    const handelChangePost = (postId: number) => {
+        router.push(`posts/${postId}`)
     }
 
     const [settings, setSettings] = useState<{
@@ -162,23 +159,6 @@ const PostPage = () => {
                 footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
-            />
-            <CreatePostModal
-                form={form}
-                createPostModal={postStore.createPostModal}
-                setCreatePostModal={postStore.setCreatePostModal}
-                createPost={postStore.createPost}
-                currentUser={currentUser}
-                postLoading={postStore.loading}
-            />
-
-            <ChangePostModal
-                form={changePostForm}
-                createPostModal={changePostModal}
-                setChangePostModal={setChagePostModal}
-                changePost={postStore.changePost}
-                currentUser={currentUser}
-                postLoading={postStore.loading}
             />
         </PageContainerControlPanel>
     );

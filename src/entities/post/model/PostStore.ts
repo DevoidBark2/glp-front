@@ -2,6 +2,7 @@ import { action, makeAutoObservable, runInAction } from "mobx";
 import { postMapper } from "../mappers";
 import { Post, PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { changePost, createPost, deletePost, getAllPost, getCPAllPost, getPostById, publishPost, submitReviewPost } from "@/shared/api/posts";
+import { notification } from "antd";
 
 class PostStore {
     constructor() {
@@ -73,9 +74,10 @@ class PostStore {
     })
 
     deletePost = action(async (id: number) => {
-        await deletePost(id);
-        //notification.success({ message: response.message })
-        this.userPosts = this.userPosts.filter(post => post.id !== id);
+        await deletePost(id).then(response => {
+            notification.success({ message: response.message })
+            this.userPosts = this.userPosts.filter(post => post.id !== id);
+        });
     })
 
     submitReview = action(async (postId: number) => {
@@ -128,15 +130,7 @@ class PostStore {
             }
         }
         );
-        // if (response.data.message) {
-        //     notification.warning({ message: response.data.message })
-        // }
-        // notification.success({ message: response.message })
-        // await PUT('/api/post', post).then(response => {
-
-        // }).catch(e => {
-        //     notification.success({ message: e.response.data.message })
-        // })
+        notification.success({ message: data.message })
     })
 }
 

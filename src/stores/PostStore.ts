@@ -3,8 +3,9 @@ import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { notification } from "antd"
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
-import { User } from "./UserStore";
-import { PostStatusEnum } from "@/shared/api/posts/model";
+import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
+import { createPost } from "@/shared/api/posts";
+import { User } from "@/shared/api/user/model";
 
 
 export type ModeratorFeedback = {
@@ -62,23 +63,10 @@ class PostStore {
         })
     })
 
-    createPost = action(async (values: any) => {
-        this.setLoading(true)
-        const form = new FormData();
-        form.append('image', values.image && values.image.originFileObj)
-        form.append('name', values.name)
-        form.append('description', values.description);
-        form.append('content', values.content)
-        if (values.status) {
-            form.append('status', values.status)
-        }
-
-        if (values.is_publish) {
-            form.append('is_publish', values.is_publish)
-        }
-
-        return await POST(`/api/posts`, form).then(response => {
+    createPost = action(async (values: PostCreateForm) => {
+        await createPost(values).then(response => {
             runInAction(() => {
+                debugger
                 this.userPosts = [...this.userPosts, postMapper(response.data)];
                 notification.success({ message: response.message });
             })
@@ -162,6 +150,7 @@ class PostStore {
 }
 
 export const postMapper = (post: Post) => {
+    debugger
     return {
         id: post.id,
         name: post.name,

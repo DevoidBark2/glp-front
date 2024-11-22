@@ -16,7 +16,7 @@ export const getPostById = async (id: number): Promise<Post> => {
     return data.data;
 };
 
-export const createPost = withAuth(async (values: PostCreateForm, config = {}): Promise<Post> => {
+export const createPost = withAuth(async (values: PostCreateForm, config = {}) => {
     const form = new FormData();
     form.append("name", values.name);
     form.append("description", values.description);
@@ -25,14 +25,13 @@ export const createPost = withAuth(async (values: PostCreateForm, config = {}): 
     if (values.status) form.append("status", values.status);
     if (typeof values.is_publish !== "undefined") form.append("is_publish", String(values.is_publish));
 
-    const data = (await axiosInstance.post("/api/posts", form, config)).data;
-    return data.data;
+    return (await axiosInstance.post("/api/posts", form, config)).data;
 });
 
 
 export const publishPost = async (postId: number, checked: boolean) => (await axiosInstance.post('api/publish-post', { id: postId, checked: checked })).data;
 
-export const changePost = withAuth(async (post: Post, config = {}) => (await axiosInstance.put<Post>('/api/post', post, config)).data);
+export const changePost = withAuth(async (post: Post, config = {}) => (await axiosInstance.put('api/post', post, config)).data);
 
 export const deletePost = async (id: number) => (await axiosInstance.delete(`/api/posts/${id}`)).data;
 
