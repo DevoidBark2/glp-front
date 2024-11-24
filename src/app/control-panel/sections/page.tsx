@@ -80,10 +80,7 @@ const SectionPage = () => {
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
                     <Tooltip title="Редактировать раздел">
-                        <Button type="default" shape="circle" icon={<EditOutlined />} onClick={() => {
-                            debugger
-                            console.log(record)
-                        }} />
+                        <Button type="default" shape="circle" icon={<EditOutlined />} onClick={() => handleEditSection(record.id)} />
                     </Tooltip>
                     <Tooltip title="Удалить раздел">
                         <Popconfirm
@@ -99,6 +96,10 @@ const SectionPage = () => {
             ),
         },
     ];
+
+    const handleEditSection = (id: number) => {
+        router.push(`sections/${id}`)
+    }
 
     useEffect(() => {
         sectionCourseStore.getAllSectionCourse();

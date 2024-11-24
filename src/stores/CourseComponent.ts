@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { notification } from "antd";
 import { CourseComponentType } from "@/shared/api/course/model";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
+import { getComponentTask } from "@/shared/api/component";
 
 export type QuestionsType = {
     question: string;
@@ -106,8 +107,8 @@ class CourseComponent {
         this.selectedComponents = this.selectedComponents.filter(item => item.id !== id);
     }
 
-    getComponentById = action((id:number) => {
-        return this.courseComponents.find(it => it.id === id)
+    getComponentById = action(async (id: number) => {
+        return await getComponentTask(id);
     })
 }
 

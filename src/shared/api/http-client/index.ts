@@ -12,7 +12,6 @@ export const withAuth = <T>(apiCall: (...args: any[]) => Promise<T>) => {
         const token = getUserToken();
         const config = args[1] || {};
 
-        debugger
         if (token) {
             config.headers = {
                 ...config.headers,
