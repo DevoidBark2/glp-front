@@ -9,6 +9,7 @@ import { useMobxStores } from "@/shared/store/RootStore";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import { faqTable } from "@/shared/config/tableConfig";
 import { SizeType } from "antd/es/config-provider/SizeContext";
+import { FaqControlList, FaqModal } from "@/entities/faq";
 
 const FaqPage = () => {
     const { faqStore } = useMobxStores();
@@ -42,47 +43,7 @@ const FaqPage = () => {
         closeModal();
     };
 
-    const columns: TableColumnsType<Faq> = [
-        {
-            title: "Вопрос",
-            dataIndex: "question",
-            key: "question",
-            render: (text) => <strong>{text}</strong>,
-        },
-        {
-            title: "Ответ",
-            dataIndex: "answer",
-            key: "answer",
-            render: (text) => {
-                const maxLength = 50;
-                return text.length > maxLength
-                    ? `${text.substring(0, maxLength)}...`
-                    : text;
-            }
-        },
-        {
-            title: "Действия",
-            key: "actions",
-            render: (_, record) => (
-                <div className="flex justify-end gap-2">
-                    <Tooltip title="Редактировать">
-                        <Button type="default" icon={<EditOutlined />} onClick={() => openModal(record)} />
-                    </Tooltip>
-                    <Tooltip title="Удалить">
-                        <Popconfirm
-                            title="Удалить этот вопрос?"
-                            onConfirm={() => faqStore.delete(record.id)}
-                            placement="leftBottom"
-                            okText="Да"
-                            cancelText="Нет"
-                        >
-                            <Button danger type="primary" icon={<DeleteOutlined />} />
-                        </Popconfirm>
-                    </Tooltip>
-                </div>
-            ),
-        },
-    ];
+
 
     useEffect(() => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
@@ -92,51 +53,14 @@ const FaqPage = () => {
 
     return (
         <PageContainerControlPanel>
+            <FaqModal openModal={openModal}/>
             <PageHeader
                 title="Вопросы и ответы"
                 buttonTitle="Добавить FAQ"
                 onClickButton={openModal}
                 showBottomDivider
             />
-            <Table
-                size={(settings && settings.table_size) ?? "middle"}
-                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
-                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
-                rowKey={(record) => record.id}
-                loading={faqStore.loading}
-                dataSource={faqStore.faqs}
-                columns={columns}
-                expandable={{
-                    expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.answer}</p>,
-                }}
-                locale={faqTable}
-            />
-
-            <Modal
-                title={editingItem ? "Редактировать вопрос" : "Добавить новый вопрос"}
-                open={isModalOpen}
-                onCancel={closeModal}
-                onOk={() => form.submit()}
-                okText={editingItem ? "Сохранить" : "Добавить"}
-            >
-                <Form form={form} layout="vertical" onFinish={handleAddOrUpdate}>
-                    <Form.Item name="id" hidden></Form.Item>
-                    <Form.Item
-                        name="question"
-                        label="Вопрос"
-                        rules={[{ required: true, message: "Пожалуйста, введите вопрос" }]}
-                    >
-                        <Input placeholder="Введите вопрос" />
-                    </Form.Item>
-                    <Form.Item
-                        name="answer"
-                        label="Ответ"
-                        rules={[{ required: true, message: "Пожалуйста, введите ответ" }]}
-                    >
-                        <Input.TextArea rows={4} placeholder="Введите ответ" />
-                    </Form.Item>
-                </Form>
-            </Modal>
+            <FaqControlList/>
         </PageContainerControlPanel>
     );
 };

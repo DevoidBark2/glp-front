@@ -1,5 +1,5 @@
 import { StatusComponentTaskEnum } from "../component-task";
-import { StatusSectionEnum } from "../section";
+import { StatusSectionEnum } from "../section/model";
 import { User } from "../user/model";
 
 type Category = {

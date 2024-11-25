@@ -3,10 +3,10 @@ import "./globals.css";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { StoresProvider } from "@/shared/store/RootStore"
 import { roboto } from "@/app/fonts";
-import { App, ConfigProvider } from "antd";
+import { ConfigProvider } from "antd";
 import React from "react";
-import { MAIN_COLOR } from "@/constants";
 import { ThemeProviders } from "./themeProviders"
+import { themeConfig } from "@/shared/config/themeConfig";
 
 export default function RootLayout({
     children,
@@ -18,75 +18,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={roboto.className}>
                 <ThemeProviders>
-                    <ConfigProvider
-                        theme={{
-                            components: {
-                                Button: {
-                                    colorPrimaryBorderHover: MAIN_COLOR,
-                                    colorPrimaryHover: MAIN_COLOR,
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryActive: 'lightgray',
-                                    colorPrimaryTextHover: 'lightgray',
-                                },
-                                FloatButton: {
-                                    colorPrimaryHover: MAIN_COLOR,
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryActive: 'lightgray',
-                                    colorPrimaryTextHover: 'lightgray',
-                                },
-                                Radio: {
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryActive: MAIN_COLOR,
-                                    colorPrimaryBgHover: MAIN_COLOR,
-                                    colorPrimaryHover: MAIN_COLOR
-                                },
-                                Input: {
-                                    colorPrimaryHover: MAIN_COLOR,
-                                    colorPrimaryActive: MAIN_COLOR,
-                                    colorPrimaryBorder: MAIN_COLOR,
-                                    colorPrimaryBorderHover: MAIN_COLOR,
-                                },
-                                DatePicker: {
-                                    colorPrimaryHover: MAIN_COLOR,
-                                    colorPrimaryActive: MAIN_COLOR,
-                                    colorPrimaryBorder: MAIN_COLOR
-                                },
-                                Menu: {
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryBg: MAIN_COLOR,
-                                    colorBgLayout: MAIN_COLOR,
-                                    colorPrimaryActive: MAIN_COLOR,
-                                    colorPrimaryBgHover: MAIN_COLOR
-                                },
-                                Spin: {
-                                    colorPrimary: MAIN_COLOR
-                                },
-                                Pagination: {
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryHover: MAIN_COLOR
-                                },
-                                Tabs: {
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryHover: MAIN_COLOR,
-                                    colorPrimaryActive: MAIN_COLOR,
-                                },
-                                Checkbox: {
-                                    colorPrimary: MAIN_COLOR,
-                                    colorPrimaryHover: "#025834"
-                                },
-                                Table: {
-                                    colorPrimary: "back"
-                                },
-                                Switch: {
-                                    colorPrimary: MAIN_COLOR,
-                                    // colorPrimaryHover: MAIN_COLOR
-                                }
-                            },
-                            token: {
-
-                            }
-                        }}
-                    >
+                    <ConfigProvider theme={themeConfig}>
                         <StoresProvider>
                             <AntdRegistry>
                                 {children}

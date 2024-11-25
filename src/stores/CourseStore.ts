@@ -26,9 +26,14 @@ class CourseStore {
     courseDetailsSections: SectionCourseItem[] = [];
     courses: Course[] = []
     userCourses: Course[] = []
+    selectedCourse: Course | null = null;
+    
 
     loadingSubscribeCourse: boolean = false;
 
+    setSelectedCourse = action((value: Course) => {
+        this.selectedCourse = value;
+    })
     setLoadingSubscribeCourse = action((value: boolean) => {
         this.loadingSubscribeCourse = value;
     })

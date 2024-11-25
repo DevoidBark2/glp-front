@@ -1,8 +1,9 @@
-import { action, makeAutoObservable } from "mobx";
+import { action, makeAutoObservable, runInAction } from "mobx";
 import { Course } from "@/shared/api/course/model";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { GET, POST } from "@/lib/fetcher";
-import { StatusSectionEnum } from "@/shared/api/section";
+import { StatusSectionEnum } from "@/shared/api/section/model";
+import { deleteSectionCourse, getSectionCourseById } from "@/shared/api/section";
 
 export type SectionCourseItem = {
     id: number;
@@ -33,18 +34,29 @@ class SectionCourse {
         this.loadingSectionsCourse = value;
     })
 
-    getAllSectionCourse = action(async () => {
+    getAllSectionCourse = async () => {
         this.setLoadingSectionsCourse(true)
         await GET(`/api/sections`).then(response => {
-            this.sectionCourse = response.data.map(sectionMapper);
+            runInAction(() => {
+                this.sectionCourse = response.data.map(sectionMapper);
+            })
         }).finally(() => {
             this.setLoadingSectionsCourse(false)
         })
-    })
+    }
 
     addSection = action(async (values: SectionCourseItem) => {
         this.setCreateSectionLoading(true);
         return await POST(`/api/sections`, values);
+    })
+
+    deleteSection = action(async (id: number) => {
+        this.sectionCourse = this.sectionCourse.filter(section => section.id !== id);
+        return await deleteSectionCourse(id);
+    })
+
+    getSectionById = action (async (id: number) => {
+        return await getSectionCourseById(id);
     })
 }
 

@@ -23,6 +23,7 @@ import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import {PlusCircleOutlined, SettingOutlined} from "@ant-design/icons";
 import dayjs from "dayjs";
+import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 
 const CoursePage = () => {
     const {courseId} = useParams();
@@ -66,10 +67,10 @@ const CoursePage = () => {
             courseStore.setLoadingCourseDetails(false)
         })
     }, [courseId]);
+
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto" style={{height: 'calc(100vh - 60px)'}}>
-            <div className="bg-white h-full p-5">
-                <div className="flex items-center justify-between">
+        <PageContainerControlPanel>
+            <div className="flex items-center justify-between">
                     <Breadcrumb items={[ {
                         title: <Link href={"/control-panel/courses"}>Доступные курсы</Link>,
                     },{
@@ -314,8 +315,7 @@ const CoursePage = () => {
                         
                     ]}
                 />
-            </div>
-        </div>
+        </PageContainerControlPanel>
     )
 }
 export default observer(CoursePage);

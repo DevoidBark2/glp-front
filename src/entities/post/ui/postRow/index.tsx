@@ -16,7 +16,7 @@ export const PostRow = ({ post }: PostProps) => {
             className="p-6 mb-5 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer relative group flex items-start"
         >
             {!post.image ? (
-                <div className="flex items-center justify-center w-200 h-40 bg-gray-100 rounded-lg">
+                <div className="flex-shrink-0 w-full sm:w-1/3 h-64 overflow-hidden mb-4 sm:mb-0 sm:mr-6 flex items-center justify-center w-200 bg-gray-100 rounded-lg">
                     <span className="text-gray-400">Изображение отсутствует</span>
                 </div>
             ) : (
