@@ -66,7 +66,7 @@ export const General = () => {
             <Form.Item
                 name="parentSection"
                 label="Выберите раздел"
-                rules={[{ required: true, message: "Выберите раздел или добавьте новый!" }]}
+                rules={[{ required: false, message: "Выберите раздел или добавьте новый!" }]}
             >
                 <Select
                     placeholder="Выберите раздел..."
