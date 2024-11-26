@@ -35,7 +35,7 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
         }
 
         if (current === 1) {
-            await createSectionForm.validateFields(["name", "description"]);
+            await createSectionForm.validateFields(["name", "description","parentSection"]);
             setCurrent(current + 1);
         } else {
             setCurrent(current + 1);
@@ -45,6 +45,7 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
 
     const onFinish = () => {
         const values = createSectionForm.getFieldsValue(true)
+        debugger
         if (!values.components || values.components.length === 0) {
             message.warning("Добавь хотя бы один компонент в раздел!")
             return;

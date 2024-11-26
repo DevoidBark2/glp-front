@@ -3,23 +3,23 @@ import TextArea from "antd/es/input/TextArea"
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
+import { MainSection } from "@/stores/SectionCourse";
 
 export const General = () => {
     const { sectionCourseStore } = useMobxStores();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newSectionName, setNewSectionName] = useState("");
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<MainSection>();
 
-    const handleAddSection = (values: any) => {
-        //setSections([...sections, newSectionName]);
-        setNewSectionName("");
+    const handleAddSection = (values: MainSection) => {
+        sectionCourseStore.addMainSection(values)
+
         setIsModalOpen(false);
-        message.success(`Раздел "${newSectionName}" добавлен!`);
+        message.success(`Раздел "${values.title}" добавлен!`);
     };
 
     useEffect(() => {
         sectionCourseStore.getMainSections();
-    })
+    },[])
     return {
         title: "Информация о разделе",
         content: (
@@ -37,6 +37,7 @@ export const General = () => {
                 >
                     <Form.Item
                         label="Название нового раздела"
+                        name="title"
                         rules={[{ required: true, message: "Введите название нового раздела!" }]}
                     >
                         <Input placeholder="Введите название нового раздела..." />

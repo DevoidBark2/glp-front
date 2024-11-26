@@ -22,3 +22,9 @@ export const getMainCourseSection = withAuth(async (id: number,config = {}) => {
 
     return data.data;
 })
+
+export const createMainSection = withAuth(async (values: MainSection,config = {}): Promise<MainSection> => {
+    const data = (await axiosInstance.post('api/main-section', values, config)).data;
+
+    return data.data;
+})
