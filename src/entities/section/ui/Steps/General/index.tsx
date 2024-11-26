@@ -1,11 +1,104 @@
-import { Form, Input } from "antd"
+import { Button, Form, Input, message, Modal, Select } from "antd"
 import TextArea from "antd/es/input/TextArea"
+import { useEffect, useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { useMobxStores } from "@/stores/stores";
 
 export const General = () => {
+    const { sectionCourseStore } = useMobxStores();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newSectionName, setNewSectionName] = useState("");
+    const [form] = Form.useForm();
+
+    const handleAddSection = (values: any) => {
+        //setSections([...sections, newSectionName]);
+        setNewSectionName("");
+        setIsModalOpen(false);
+        message.success(`Раздел "${newSectionName}" добавлен!`);
+    };
+
+    useEffect(() => {
+        sectionCourseStore.getMainSections();
+    })
     return {
         title: "Информация о разделе",
         content: (
             <>
+            <Modal
+                title="Добавить новый раздел"
+                open={isModalOpen}
+                onCancel={() => setIsModalOpen(false)}
+                footer={null}
+            >
+                <Form
+                  form={form}
+                  layout="vertical"
+                  onFinish={(values) => handleAddSection(values)}
+                >
+                    <Form.Item
+                        label="Название нового раздела"
+                        rules={[{ required: true, message: "Введите название нового раздела!" }]}
+                    >
+                        <Input placeholder="Введите название нового раздела..." />
+                    </Form.Item>
+
+
+                    <div className="flex justify-end">
+                        <Form.Item>
+                            <Button onClick={() => {
+                                form.resetFields();
+                                setIsModalOpen(false)
+                            }}>
+                                Отменить
+                            </Button>
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button className="ml-2" type="primary" htmlType="submit">
+                                Добавить
+                            </Button>
+                        </Form.Item>
+                    </div>
+                </Form>
+            </Modal>
+
+            <Form.Item
+                name="parentSection"
+                label="Выберите раздел"
+                rules={[{ required: true, message: "Выберите раздел или добавьте новый!" }]}
+            >
+                <Select
+                    placeholder="Выберите раздел..."
+                    dropdownRender={(menu) => (
+                        <>
+                            {menu}
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    padding: 8,
+                                }}
+                            >
+                                <Button
+                                    type="text"
+                                    icon={<PlusOutlined />}
+                                    onClick={() => setIsModalOpen(true)}
+                                    style={{ width: "100%" }}
+                                >
+                                    Добавить новый раздел
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                >
+                    {sectionCourseStore.mainSections.map((section) => (
+                        <Select.Option key={section.id} value={section.id}>
+                            {section.title}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
                 <Form.Item
                     name="name"
                     label="Название раздела"

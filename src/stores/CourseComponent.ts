@@ -10,7 +10,7 @@ import { getComponentTask } from "@/shared/api/component";
 export type QuestionsType = {
     question: string;
     options: string[];
-    correctOption: number
+    correctOption: number[]
 }
 export type CourseComponentTypeI = {
     id: number;

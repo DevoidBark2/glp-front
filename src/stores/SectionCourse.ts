@@ -3,7 +3,7 @@ import { Course } from "@/shared/api/course/model";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { GET, POST } from "@/lib/fetcher";
 import { StatusSectionEnum } from "@/shared/api/section/model";
-import { deleteSectionCourse, getSectionCourseById } from "@/shared/api/section";
+import { deleteSectionCourse, getMainCourseSection, getSectionCourseById } from "@/shared/api/section";
 
 export type SectionCourseItem = {
     id: number;
@@ -17,6 +17,12 @@ export type SectionCourseItem = {
     created_at: Date
 }
 
+
+export type MainSection = {
+    id: number;
+    title: string;
+}
+
 class SectionCourse {
     constructor() {
         makeAutoObservable(this)
@@ -25,6 +31,8 @@ class SectionCourse {
     loadingSectionsCourse: boolean = false;
     sectionCourse: SectionCourseItem[] = []
     createSectionLoading: boolean = false;
+
+    mainSections: MainSection[] = [];
 
     setCreateSectionLoading = action((value: boolean) => {
         this.createSectionLoading = value
@@ -57,6 +65,11 @@ class SectionCourse {
 
     getSectionById = action (async (id: number) => {
         return await getSectionCourseById(id);
+    })
+
+    getMainSections = action(async () => {
+        const data = await getMainCourseSection();
+        debugger
     })
 }
 

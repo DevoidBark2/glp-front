@@ -20,16 +20,16 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
     const steps = [
         {
             title: "Выбор курса",
-            content: <SelectCourse createSectionForm={sectionCourseForm ?? createSectionForm} />,
+            content: <SelectCourse createSectionForm={createSectionForm} />,
         },
         General(),
-        SelectComponent({createSectionForm: sectionCourseForm ?? createSectionForm})
+        SelectComponent({createSectionForm: createSectionForm})
     ];
 
     const next = async () => {
         const co = sectionCourseForm?.getFieldsValue();
         debugger
-        if (current === 0 && !courseStore.selectedCourse ? !courseStore.selectedCourse : !sectionCourseForm?.getFieldValue("course")) {
+        if (current === 0 && !courseStore.selectedCourse) {
             message.warning("Выберите курс!")
             return;
         }
