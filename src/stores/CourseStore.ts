@@ -154,6 +154,7 @@ class CourseStore {
 
     getFullCourseById = action(async (id: number) => {
         return await GET(`/api/full-course?courseId=${id}`).then(response => {
+            debugger
             this.setFullDetailCourse(response.data);
             return response.data;
         })

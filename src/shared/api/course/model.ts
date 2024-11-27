@@ -36,6 +36,7 @@ export type SectionCourseItem = {
     components: CourseComponentTypeI[];
     status: StatusSectionEnum
     created_at: Date
+    children: any;
 }
 
 export enum CourseComponentType {
@@ -84,4 +85,5 @@ export type Course = {
     courseUsers: any
     progress: any
     enrolledAt: Date
+    children: any
 }

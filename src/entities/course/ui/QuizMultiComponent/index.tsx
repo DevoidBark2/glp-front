@@ -24,7 +24,7 @@ export const QuizMultiComponent = observer(({quiz} :QuizMultiComponentProps) => 
     };
 
     return (
-        <div className="quiz-component bg-white p-6 rounded-lg shadow-md">
+        <div className="quiz-component bg-white p-6">
             {quiz.title && <h2 className="text-2xl font-bold mb-4 text-gray-800">{quiz.title}</h2>}
             {quiz.description && <p className="text-gray-600 mb-4">{quiz.description}</p>}
 
@@ -57,7 +57,7 @@ export const QuizMultiComponent = observer(({quiz} :QuizMultiComponentProps) => 
 
             <button
                 onClick={checkAnswers}
-                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
+                className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
             >
                 Check Answers
             </button>

@@ -10,6 +10,7 @@ import { CourseComponentType } from "@/shared/api/course/model";
 import { QuizComponent } from "@/entities/course/ui/QuizComponent";
 import { QuizMultiComponent } from "@/entities/course/ui/QuizMultiComponent";
 import { TextComponent } from "@/entities/course/ui/TextComponent";
+import { MenuItem } from "@/utils/dashboardMenu";
 
 const { Sider, Content } = Layout;
 
@@ -22,7 +23,7 @@ const CoursePage = () => {
     const handleMenuClick = ({ key }: any) => {
         debugger
         setSelectedSection(key);
-        updateStepInUrl(key);
+        // updateStepInUrl(key);
     };
 
     const router = useRouter()
@@ -75,13 +76,36 @@ const CoursePage = () => {
         }
     };
 
+    const items: MenuItem[] = courseStore.fullDetailCourse?.sections.map((section) => {
+        // Если есть дети, добавляем как группу, иначе как обычный пункт
+        if (section.children && section.children.length > 0) {
+            return {
+                key: section.id.toString(),
+                label: section.name,
+                type: 'group', // Главный раздел как группа
+                children: section.children.map((child) => ({
+                    key: child.id.toString(),
+                    label: child.name,
+                })),
+            };
+        } else {
+            return {
+                key: section.id.toString(),
+                label: section.name, // Отдельный пункт меню без стрелки
+            };
+        }
+    }) || [];
+    
+  
+
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
-            const stepFromUrl = Number(searchParams.get("step"));
-            const initialSectionId = stepFromUrl || response.sections[0]?.id || 0;
-            setSelectedSection(initialSectionId);
+            // debugger
+            // const stepFromUrl = Number(searchParams.get("step"));
+            // const initialSectionId = stepFromUrl || response.sections[0]?.id || 0;
+            // setSelectedSection(initialSectionId);
         });
-    }, [courseId, searchParams]);
+    }, [courseId]);
 
     return (
         <Layout style={{ minHeight: '100vh', overflow: 'hidden' }}>
@@ -132,18 +156,14 @@ const CoursePage = () => {
                         position: 'fixed',
                     }}
                 >
-                    <Menu
-                        mode="inline"
-                        selectedKeys={[selectedSection.toString()]}
-                        onClick={handleMenuClick}
-                        style={{ height: '100%', borderRight: 0 }}
-                    >
-                        {courseStore.fullDetailCourse?.sections.map((section) => (
-                            <Menu.Item key={section.id}>
-                                {section.name}
-                            </Menu.Item>
-                        ))}
-                    </Menu>
+
+                <Menu
+                    mode="inline"
+                    selectedKeys={[selectedSection.toString()]}
+                    onClick={handleMenuClick}
+                    style={{  height: 'calc(100vh - 85px)', borderRight: 0 }}
+                    items={items}
+                />;
                 </Sider>
 
                 <Layout style={{ marginLeft: 300 }}>
@@ -159,41 +179,33 @@ const CoursePage = () => {
                         }}
                     >
                         <Card
+                            bordered={false}
                             title={
                                 <>
-                                    <h2 className="text-2xl font-semibold text-gray-800 mt-4">
-                                        {courseStore.fullDetailCourse?.sections.find(
-                                            (s) => s.id === Number(selectedSection)
-                                        )?.name || 'Section Name'}
+                                    <h2 className="text-2xl font-semibold text-gray-800 my-4">
+                                        {
+                                            courseStore.fullDetailCourse?.sections
+                                                .flatMap(section => section.children || []) // Получаем все подразделы
+                                                .find(child => child.id === Number(selectedSection))?.name || 'Section Name'
+                                        }
                                     </h2>
-                                    <Divider />
                                 </>
                             }
-                            style={{
-                                flex: 1,
-                                marginBottom: 24,
-                                borderRadius: '12px',
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-                            }}
-                            bodyStyle={{
-                                padding: '24px',
-                                backgroundColor: '#fff',
-                                borderRadius: '12px',
-                            }}
                         >
-                            {courseStore.fullDetailCourse?.sections
-                                .find((s) => s.id === Number(selectedSection))
-                                ?.components.map((component) => {
-                                    if (component.type === CourseComponentType.Text) {
-                                        return  <TextComponent component={component}/>
-                                    }
-                                    if (component.type === CourseComponentType.Quiz) {
-                                        return <QuizComponent key={component.id} quiz={component} />;
-                                    }
-                                    if (component.type === CourseComponentType.MultiPlayChoice) {
-                                        return <QuizMultiComponent key={component.id} quiz={component} />;
-                                    }
-                                })}
+                            {
+                            courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.components.map((component) => {
+
+                                debugger;
+                                if (component.type === CourseComponentType.Text) {
+                                    return  <TextComponent component={component}/>
+                                }
+                                if (component.type === CourseComponentType.Quiz) {
+                                    return <QuizComponent key={component.id} quiz={component} />;
+                                }
+                                if (component.type === CourseComponentType.MultiPlayChoice) {
+                                    return <QuizMultiComponent key={component.id} quiz={component} />;
+                                }
+                            }))}
                         </Card>
 
                         <div className="flex justify-between my-10">
