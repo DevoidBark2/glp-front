@@ -11,6 +11,7 @@ import { QuizComponent } from "@/entities/course/ui/QuizComponent";
 import { QuizMultiComponent } from "@/entities/course/ui/QuizMultiComponent";
 import { TextComponent } from "@/entities/course/ui/TextComponent";
 import { MenuItem } from "@/utils/dashboardMenu";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 const { Sider, Content } = Layout;
 
@@ -27,7 +28,6 @@ const CoursePage = () => {
     };
 
     const router = useRouter()
-    const searchParams = useSearchParams();
 
     const menu = (
         <Menu>
@@ -45,37 +45,7 @@ const CoursePage = () => {
             <p>Оценочное время: не указано</p>
         </div>
     );
-
-    const saveLastVisitedSection = (sectionId: string) => {
-        localStorage.setItem(`lastVisitedSection_${courseId}`, sectionId);
-    };
     
-    const getLastVisitedSection = () => {
-        return Number(localStorage.getItem(`lastVisitedSection_${courseId}`)) || null;
-    };
-    
-    const updateStepInUrl = (sectionId: number) => {
-        router.push(`/platform/courses/${courseId}?step=${sectionId}`, undefined);
-        setSelectedSection(sectionId);
-    };
-
-    const handleSectionChange = (direction: number) => {
-        debugger
-        const allSections = courseStore.fullDetailCourse?.sections;
-
-        if (!allSections || allSections.length === 0) return;
-
-        const currentIndex = allSections.findIndex(section => section.id === selectedSection);
-        const newIndex = currentIndex + direction;
-
-        if (newIndex >= 0 && newIndex < allSections.length) {
-            const newSectionId = allSections[newIndex].id;
-            setSelectedSection(newSectionId);
-            saveLastVisitedSection(String(newSectionId)); // Сохранение раздела
-            updateStepInUrl(newSectionId);
-        }
-    };
-
     const items: MenuItem[] = courseStore.fullDetailCourse?.sections.map((section) => {
         // Если есть дети, добавляем как группу, иначе как обычный пункт
         if (section.children && section.children.length > 0) {
@@ -97,7 +67,11 @@ const CoursePage = () => {
     }) || [];
     
   
+    const [collapsed, setCollapsed] = useState(false);
 
+    const handleToggle = () => {
+        setCollapsed(!collapsed); // Переключение состояния
+    };
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
             // debugger
@@ -139,32 +113,45 @@ const CoursePage = () => {
                     />
                 </div>
 
-                <Dropdown overlay={menu} trigger={['hover']}>
+                {/* <Dropdown overlay={menu} trigger={['hover']}>
                     <Button type="primary">
                         Кнопка действия <DownOutlined />
                     </Button>
-                </Dropdown>
+                </Dropdown> */}
             </Header>
 
             <Layout style={{ marginTop: 64 }}>
-                <Sider
-                    width={300}
-                    className="site-layout-background"
+            <Sider
+                collapsible
+                collapsed={collapsed}
+                width={300}
+                className="site-layout-background"
+                style={{
+                    overflowY: 'auto',
+                    height: 'calc(100vh - 64px)',
+                    position: 'fixed',
+                }}
+            >
+                <Button
+                    type="text"
+                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={handleToggle}
                     style={{
-                        overflowY: 'auto',
-                        height: 'calc(100vh - 64px)',
-                        position: 'fixed',
+                        position: 'absolute',
+                        top: 10,
+                        right: 7, // Расстояние кнопки от края Sider
+                        zIndex: 1000,
+                        background: 'white',
+                        borderRadius: '50%',
+                        border: '1px solid #ddd',
                     }}
-                >
-
+                />
                 <Menu
                     mode="inline"
-                    selectedKeys={[selectedSection.toString()]}
-                    onClick={handleMenuClick}
-                    style={{  height: 'calc(100vh - 85px)', borderRight: 0 }}
                     items={items}
-                />;
-                </Sider>
+                    onClick={handleMenuClick}
+                />
+            </Sider>
 
                 <Layout style={{ marginLeft: 300 }}>
                     <Content
@@ -195,7 +182,6 @@ const CoursePage = () => {
                             {
                             courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.components.map((component) => {
 
-                                debugger;
                                 if (component.type === CourseComponentType.Text) {
                                     return  <TextComponent component={component}/>
                                 }
@@ -207,26 +193,6 @@ const CoursePage = () => {
                                 }
                             }))}
                         </Card>
-
-                        <div className="flex justify-between my-10">
-                            {selectedSection > 0 && (
-                                <Button
-                                    type="primary"
-                                    onClick={() => handleSectionChange(-1)}
-                                    icon={<ArrowLeftOutlined />}
-                                >
-                                    Назад
-                                </Button>
-                            )}
-
-                            <Button
-                                type="primary"
-                                onClick={() => handleSectionChange(1)}
-                                icon={<ArrowRightOutlined />}
-                            >
-                                Следующий раздел
-                            </Button>
-                        </div>
                     </Content>
                 </Layout>
             </Layout>

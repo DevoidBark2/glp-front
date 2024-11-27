@@ -24,7 +24,7 @@ export const QuizMultiComponent = observer(({quiz} :QuizMultiComponentProps) => 
     };
 
     return (
-        <div className="quiz-component bg-white p-6">
+        <div className="quiz-component bg-white">
             {quiz.title && <h2 className="text-2xl font-bold mb-4 text-gray-800">{quiz.title}</h2>}
             {quiz.description && <p className="text-gray-600 mb-4">{quiz.description}</p>}
 

@@ -10,7 +10,7 @@ interface QuizComponentProps {
 export const QuizComponent = observer(({quiz}: QuizComponentProps) => {
     const { title, questions } = quiz;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null)); // Для хранения ответов
+    const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
 
     const currentQuestion = questions[currentQuestionIndex];
 
