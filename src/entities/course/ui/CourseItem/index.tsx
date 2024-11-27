@@ -9,7 +9,7 @@ type CourseItemProps = {
 }
 
 export const CourseItem = observer(({ course }: CourseItemProps) => {
-    const {courseStore} = useMobxStores();
+    const { courseStore } = useMobxStores();
     return (
         <>
             <CourseDetails

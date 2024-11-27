@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Divider } from "antd";
+import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Divider, Tooltip } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeftOutlined, ArrowRightOutlined, DownOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined, DownOutlined, LogoutOutlined, ToolOutlined, SettingOutlined, EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Header } from "antd/es/layout/layout";
 import { CourseComponentType } from "@/shared/api/course/model";
@@ -45,28 +45,89 @@ const CoursePage = () => {
             <p>Оценочное время: не указано</p>
         </div>
     );
-    
+
     const items: MenuItem[] = courseStore.fullDetailCourse?.sections.map((section) => {
         // Если есть дети, добавляем как группу, иначе как обычный пункт
         if (section.children && section.children.length > 0) {
             return {
                 key: section.id.toString(),
-                label: section.name,
+                label: (
+                    <div
+                    >
+                        <span
+                            style={{
+                                fontWeight: 'bold',
+                                color: '#fff', // Красный цвет текста
+                            }}
+                        >
+                            {section.name}
+                        </span>
+                    </div>
+                ),
+                icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
                 type: 'group', // Главный раздел как группа
-                children: section.children.map((child) => ({
+                children: section.children.map((child, index) => ({
                     key: child.id.toString(),
-                    label: child.name,
+                    label: (
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '8px 16px',
+                                borderLeft: '2px solid #4caf50', // Зеленая граница
+                            }}
+                        >
+                            {child.name}
+                        </div>
+                    ),
+                    icon: (
+                        <span
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                backgroundColor: '#f0f0f0',
+                                color: '#555',
+                                fontSize: '12px',
+                            }}
+                        >
+                            {index + 1}
+                        </span>
+                    ),
                 })),
             };
-        } else {
-            return {
-                key: section.id.toString(),
-                label: section.name, // Отдельный пункт меню без стрелки
-            };
         }
+        return {
+            key: section.id.toString(),
+            label: (
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '8px 16px',
+                        borderLeft: '2px solid #4caf50', // Зеленая граница
+                    }}
+                >
+                    <span
+                        style={{
+                            fontWeight: 'bold',
+                            color: '#d32f2f', // Красный цвет текста
+                        }}
+                    >
+                        {section.name}
+                    </span>
+                </div>
+            ),
+            icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
+        };
     }) || [];
-    
-  
+
+
+
+
     const [collapsed, setCollapsed] = useState(false);
 
     const handleToggle = () => {
@@ -87,7 +148,7 @@ const CoursePage = () => {
                 className="fixed w-full top-0 left-0 z-50"
                 style={{
                     padding: '0 24px',
-                    backgroundColor: '#fff',
+                    backgroundColor: '#001529',
                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -96,64 +157,135 @@ const CoursePage = () => {
                 }}
             >
                 <Popover content={courseDetailsContent} placement="topLeft" title="Информация о курсе" trigger="hover">
-                    <h1 className="text-xl font-semibold text-gray-800 cursor-pointer">
+                    <h1 className="text-xl font-bold text-white cursor-pointer">
                         {courseStore.fullDetailCourse?.name || 'Название курса'}
                     </h1>
                 </Popover>
 
                 <div style={{ flex: 1, margin: '0 16px' }}>
                     <Progress
-                        percent={progress}
+                        percent={20}
                         status="active"
-                        strokeColor={{
-                            from: '#108ee9',
-                            to: '#87d068',
-                        }}
+                        strokeColor="green" // Цвет прогресса
+                        trailColor="#CCCCCC" // Цвет заднего трека (для контраста)
                         showInfo={true}
+                        format={(percent) => (
+                            <span className="text-white font-bold">{percent}%</span> // Цвет и стиль текста
+                        )}
+                        style={{
+                            color: 'green', // Цвет самого блока прогресса
+                        }}
                     />
                 </div>
-
-                {/* <Dropdown overlay={menu} trigger={['hover']}>
-                    <Button type="primary">
-                        Кнопка действия <DownOutlined />
-                    </Button>
-                </Dropdown> */}
             </Header>
 
             <Layout style={{ marginTop: 64 }}>
-            <Sider
-                collapsible
-                collapsed={collapsed}
-                width={300}
-                className="site-layout-background"
-                style={{
-                    overflowY: 'auto',
-                    height: 'calc(100vh - 64px)',
-                    position: 'fixed',
-                }}
-            >
-                <Button
-                    type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                    onClick={handleToggle}
-                    style={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 7, // Расстояние кнопки от края Sider
-                        zIndex: 1000,
-                        background: 'white',
-                        borderRadius: '50%',
-                        border: '1px solid #ddd',
-                    }}
-                />
-                <Menu
-                    mode="inline"
-                    items={items}
-                    onClick={handleMenuClick}
-                />
-            </Sider>
+                <Sider
 
-                <Layout style={{ marginLeft: 300 }}>
+                    collapsed={collapsed}
+                    width={300}
+                    className="site-layout-background"
+                    style={{
+                        height: 'calc(100vh - 64px)',
+                        position: 'fixed',
+                        overflowY: 'auto',
+                        borderTop: "1px solid white",
+                        top: 64,
+                    }}
+                >
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={handleToggle}
+                        style={{
+                            position: 'absolute',
+                            top: 10,
+                            right: 7,
+                            zIndex: 1000,
+                            background: 'white',
+                            borderRadius: '50%',
+                            border: '1px solid #ddd',
+                        }}
+                    />
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        items={items}
+                        onClick={handleMenuClick}
+                        style={{
+                            height: 'calc(100% - 60px)', // Уменьшаем высоту меню для кнопок снизу
+                            overflowY: 'auto',
+                        }}
+                    />
+                    {/* Кнопки внизу */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            width: '100%',
+                            padding: '14px',
+                            borderTop: '1px solid #ddd',
+                            background: '#fff',
+                            display: 'flex',
+                            justifyContent: collapsed ? 'center' : 'space-between', // Центрируем кнопки, если меню свернуто
+                            gap: '10px', // Промежутки между кнопками
+                        }}
+                    >
+                        {/* Меню кнопок */}
+                        {!collapsed ? (
+                            <>
+                                <Tooltip title="Сменить тему">
+                                    <Button
+                                        type="text"
+                                        icon={<SettingOutlined />}
+                                    />
+                                </Tooltip>
+
+                                <Tooltip title="Настройки">
+                                    <Button
+                                        type="text"
+                                        icon={<ToolOutlined />}
+                                    />
+                                </Tooltip>
+
+                                <Tooltip title="Выход">
+                                    <Button
+                                        type="text"
+                                        icon={<LogoutOutlined />}
+                                        onClick={() => router.push('/platform/courses')}
+                                    />
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <Dropdown
+                                trigger={['click']}
+                                overlay={
+                                    <Menu>
+                                        <Menu.Item key="theme" icon={<SettingOutlined />} >
+                                            Сменить тему
+                                        </Menu.Item>
+                                        <Menu.Item key="settings" icon={<ToolOutlined />} >
+                                            Настройки
+                                        </Menu.Item>
+                                        <Menu.Item key="logout" icon={<LogoutOutlined />} >
+                                            Выход
+                                        </Menu.Item>
+                                    </Menu>
+                                }
+                            >
+                                <Button
+                                    type="text"
+                                    icon={<EllipsisOutlined />} // Иконка троеточия
+                                />
+                            </Dropdown>
+                        )}
+                    </div>
+
+                </Sider>
+
+
+                <Layout style={{ marginLeft: collapsed ? 80 : 300 }}>
                     <Content
                         style={{
                             margin: 0,
@@ -180,23 +312,24 @@ const CoursePage = () => {
                             }
                         >
                             {
-                            courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.components.map((component) => {
+                                courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.components.map((component) => {
 
-                                if (component.type === CourseComponentType.Text) {
-                                    return  <TextComponent component={component}/>
-                                }
-                                if (component.type === CourseComponentType.Quiz) {
-                                    return <QuizComponent key={component.id} quiz={component} />;
-                                }
-                                if (component.type === CourseComponentType.MultiPlayChoice) {
-                                    return <QuizMultiComponent key={component.id} quiz={component} />;
-                                }
-                            }))}
+                                    if (component.type === CourseComponentType.Text) {
+                                        return <TextComponent component={component} />
+                                    }
+                                    if (component.type === CourseComponentType.Quiz) {
+                                        return <QuizComponent key={component.id} quiz={component} />;
+                                    }
+                                    if (component.type === CourseComponentType.MultiPlayChoice) {
+                                        return <QuizMultiComponent key={component.id} quiz={component} />;
+                                    }
+                                }))}
                         </Card>
                     </Content>
                 </Layout>
             </Layout>
         </Layout>
+
     );
 }
 
