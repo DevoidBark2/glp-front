@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import { CourseComponentType } from "@/shared/api/course/model";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 
-const typeIcons = {
+export const typeIcons = {
     [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
     [CourseComponentType.Quiz]: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
     [CourseComponentType.Coding]: <CodeOutlined style={{ color: '#ff4d4f' }} />,
