@@ -36,10 +36,10 @@ export const PostRow = ({ post }: PostProps) => {
             <div className="ml-6 flex flex-col justify-between w-full">
                 <div className="flex justify-between">
                     <div>
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-2 transition-colors duration-300 group-hover:text-gray-900">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2 transition-colors duration-300">
                             {post.name}
                         </h2>
-                        <p className="text-gray-600 line-clamp-2 group-hover:text-gray-700">
+                        <p className="text-gray-600 line-clamp-2">
                             {post.description || "Описание недоступно"}
                         </p>
                     </div>

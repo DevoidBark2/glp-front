@@ -104,7 +104,7 @@ const UserDetailsPage = () => {
                                 header={
                                     <div className="flex items-center space-x-4">
                                         <Avatar
-                                            src={course.image ? `${nextConfig.env?.API_URL} ${course.image}` : ""}
+                                            src={course.image ? `${nextConfig.env?.API_URL}${course.image}` : ""}
                                             size={64}
                                             icon={<AppstoreOutlined />}
                                             shape="square"
@@ -164,7 +164,7 @@ const UserDetailsPage = () => {
                                 header={
                                     <div className="flex items-center space-x-4">
                                         <Avatar
-                                            src={post.image ? `${nextConfig.env?.API_URL} ${post.image}` : ""}
+                                            src={post.image ? `${nextConfig.env?.API_URL}${post.image}` : ""}
                                             size={64}
                                             icon={<FileTextOutlined />}
                                             shape="square"

@@ -21,6 +21,8 @@ const CoursePage = () => {
     const [selectedSection, setSelectedSection] = useState(0);
     const [progress, setProgress] = useState(0);
 
+    const [collapsed, setCollapsed] = useState(false);
+
     const handleMenuClick = ({ key }: any) => {
         debugger
         setSelectedSection(key);
@@ -52,18 +54,30 @@ const CoursePage = () => {
             return {
                 key: section.id.toString(),
                 label: (
-                    <div
-                    >
-                        <span
+                    <Tooltip title={section.name} placement="right">
+                        <div
                             style={{
-                                fontWeight: 'bold',
-                                color: '#fff', // Красный цвет текста
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: collapsed ? 'center' : 'flex-start', // Центрируем текст, если collapsed
+                                overflow: 'hidden', // Прячем текст, если не влезает
                             }}
                         >
-                            {section.name}
-                        </span>
-                    </div>
+                            <span
+                                style={{
+                                    fontWeight: 'bold',
+                                    color: '#fff',
+                                    whiteSpace: 'nowrap', // Предотвращаем перенос
+                                    textOverflow: 'ellipsis', // Сокращаем текст, если не помещается
+                                    overflow: 'hidden', // Скрываем лишний текст
+                                }}
+                            >
+                                {section.name}
+                            </span>
+                        </div>
+                    </Tooltip>
                 ),
+
                 icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
                 type: 'group', // Главный раздел как группа
                 children: section.children.map((child, index) => ({
@@ -82,6 +96,7 @@ const CoursePage = () => {
                     ),
                     icon: (
                         <span
+                            className={``}
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -92,11 +107,13 @@ const CoursePage = () => {
                                 backgroundColor: '#f0f0f0',
                                 color: '#555',
                                 fontSize: '12px',
+                                marginTop: collapsed ? '8px' : undefined, // Применяем только если collapsed = true
+                                marginLeft: collapsed ? '-3px' : undefined, // Применяем только если collapsed = true
                             }}
                         >
                             {index + 1}
                         </span>
-                    ),
+                    )
                 })),
             };
         }
@@ -128,7 +145,7 @@ const CoursePage = () => {
 
 
 
-    const [collapsed, setCollapsed] = useState(false);
+
 
     const handleToggle = () => {
         setCollapsed(!collapsed); // Переключение состояния
@@ -193,20 +210,18 @@ const CoursePage = () => {
                         top: 64,
                     }}
                 >
-                    <Button
-                        type="text"
-                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                        onClick={handleToggle}
-                        style={{
-                            position: 'absolute',
-                            top: 10,
-                            right: 7,
-                            zIndex: 1000,
-                            background: 'white',
-                            borderRadius: '50%',
-                            border: '1px solid #ddd',
-                        }}
-                    />
+                    <div className="flex justify-end m-3">
+                        <Button
+                            type="text"
+                            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                            onClick={handleToggle}
+                            style={{
+                                background: 'white',
+                                borderRadius: '50%',
+                                border: '1px solid #ddd',
+                            }}
+                        />
+                    </div>
                     <Menu
                         theme="dark"
                         mode="inline"
