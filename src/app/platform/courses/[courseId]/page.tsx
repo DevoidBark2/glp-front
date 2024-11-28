@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Divider, Tooltip } from "antd";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeftOutlined, ArrowRightOutlined, DownOutlined, LogoutOutlined, ToolOutlined, SettingOutlined, EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Tooltip } from "antd";
+import { useParams, useRouter } from "next/navigation";
+import { LogoutOutlined, ToolOutlined, SettingOutlined, EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Header } from "antd/es/layout/layout";
-import { CourseComponentType } from "@/shared/api/course/model";
+import { Course, CourseComponentType } from "@/shared/api/course/model";
 import { QuizComponent } from "@/entities/course/ui/QuizComponent";
 import { QuizMultiComponent } from "@/entities/course/ui/QuizMultiComponent";
 import { TextComponent } from "@/entities/course/ui/TextComponent";
@@ -19,9 +19,8 @@ const CoursePage = () => {
     const { courseId } = useParams();
     const { courseStore } = useMobxStores();
     const [selectedSection, setSelectedSection] = useState(0);
-    const [progress, setProgress] = useState(0);
-
     const [collapsed, setCollapsed] = useState(false);
+    const router = useRouter()
 
     const handleMenuClick = ({ key }: any) => {
         debugger
@@ -29,22 +28,12 @@ const CoursePage = () => {
         // updateStepInUrl(key);
     };
 
-    const router = useRouter()
-
-    const menu = (
-        <Menu>
-            <Menu.Item key="1" onClick={() => router.back()}>
-                Выйти из курса
-            </Menu.Item>
-        </Menu>
-    );
-
-    const courseDetailsContent = (
+    const courseDetailsContent = () => (
         <div>
-            <p>Всего заданий: 100</p>
-            <p>Сложных заданий: 2</p>
-            <p>Легких заданий: 4</p>
-            <p>Оценочное время: не указано</p>
+            <p>Всего заданий: {courseStore.fullDetailCourse?.name}</p>
+            <p>Сложных заданий:  {courseStore.fullDetailCourse?.name}</p>
+            <p>Легких заданий:  {courseStore.fullDetailCourse?.name}</p>
+            <p>Оценочное время:  {courseStore.fullDetailCourse?.name}</p>
         </div>
     );
 
@@ -54,7 +43,7 @@ const CoursePage = () => {
             return {
                 key: section.id.toString(),
                 label: (
-                    <Tooltip title={section.name} placement="right">
+                    <Tooltip title={collapsed && section.name} placement="right">
                         <div
                             style={{
                                 display: 'flex',
@@ -327,16 +316,16 @@ const CoursePage = () => {
                             }
                         >
                             {
-                                courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.components.map((component) => {
-
-                                    if (component.type === CourseComponentType.Text) {
-                                        return <TextComponent component={component} />
+                                courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.sectionComponents.map((component) => {
+                                    debugger
+                                    if (component.componentTask.type === CourseComponentType.Text) {
+                                        return <TextComponent component={component.componentTask} />
                                     }
-                                    if (component.type === CourseComponentType.Quiz) {
-                                        return <QuizComponent key={component.id} quiz={component} />;
+                                    if (component.componentTask.type === CourseComponentType.Quiz) {
+                                        return <QuizComponent key={component.id} quiz={component.componentTask} />;
                                     }
-                                    if (component.type === CourseComponentType.MultiPlayChoice) {
-                                        return <QuizMultiComponent key={component.id} quiz={component} />;
+                                    if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
+                                        return <QuizMultiComponent key={component.id} quiz={component.componentTask} />;
                                     }
                                 }))}
                         </Card>

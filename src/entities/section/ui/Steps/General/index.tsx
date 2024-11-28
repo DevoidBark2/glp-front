@@ -19,87 +19,87 @@ export const General = () => {
 
     useEffect(() => {
         sectionCourseStore.getMainSections();
-    },[])
+    }, [])
     return {
         title: "Информация о разделе",
         content: (
             <>
-            <Modal
-                title="Добавить новый раздел"
-                open={isModalOpen}
-                onCancel={() => setIsModalOpen(false)}
-                footer={null}
-            >
-                <Form
-                  form={form}
-                  layout="vertical"
-                  onFinish={(values) => handleAddSection(values)}
+                <Modal
+                    title="Добавить новый раздел"
+                    open={isModalOpen}
+                    onCancel={() => setIsModalOpen(false)}
+                    footer={null}
                 >
-                    <Form.Item
-                        label="Название нового раздела"
-                        name="title"
-                        rules={[{ required: true, message: "Введите название нового раздела!" }]}
+                    <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={(values) => handleAddSection(values)}
                     >
-                        <Input placeholder="Введите название нового раздела..." />
-                    </Form.Item>
-
-
-                    <div className="flex justify-end">
-                        <Form.Item>
-                            <Button onClick={() => {
-                                form.resetFields();
-                                setIsModalOpen(false)
-                            }}>
-                                Отменить
-                            </Button>
+                        <Form.Item
+                            label="Название нового раздела"
+                            name="title"
+                            rules={[{ required: true, message: "Введите название нового раздела!" }]}
+                        >
+                            <Input placeholder="Введите название нового раздела..." />
                         </Form.Item>
 
-                        <Form.Item>
-                            <Button className="ml-2" type="primary" htmlType="submit">
-                                Добавить
-                            </Button>
-                        </Form.Item>
-                    </div>
-                </Form>
-            </Modal>
 
-            <Form.Item
-                name="parentSection"
-                label="Выберите раздел"
-                rules={[{ required: false, message: "Выберите раздел или добавьте новый!" }]}
-            >
-                <Select
-                    placeholder="Выберите раздел..."
-                    dropdownRender={(menu) => (
-                        <>
-                            {menu}
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    padding: 8,
-                                }}
-                            >
-                                <Button
-                                    type="text"
-                                    icon={<PlusOutlined />}
-                                    onClick={() => setIsModalOpen(true)}
-                                    style={{ width: "100%" }}
-                                >
-                                    Добавить новый раздел
+                        <div className="flex justify-end">
+                            <Form.Item>
+                                <Button onClick={() => {
+                                    form.resetFields();
+                                    setIsModalOpen(false)
+                                }}>
+                                    Отменить
                                 </Button>
-                            </div>
-                        </>
-                    )}
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Button className="ml-2" type="primary" htmlType="submit">
+                                    Добавить
+                                </Button>
+                            </Form.Item>
+                        </div>
+                    </Form>
+                </Modal>
+
+                <Form.Item
+                    name="parentSection"
+                    label="Выберите раздел"
+                    rules={[{ required: true, message: "Выберите раздел или добавьте новый!" }]}
                 >
-                    {sectionCourseStore.mainSections.map((section) => (
-                        <Select.Option key={section.id} value={section.id}>
-                            {section.title}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
+                    <Select
+                        placeholder="Выберите раздел..."
+                        dropdownRender={(menu) => (
+                            <>
+                                {menu}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        padding: 8,
+                                    }}
+                                >
+                                    <Button
+                                        type="text"
+                                        icon={<PlusOutlined />}
+                                        onClick={() => setIsModalOpen(true)}
+                                        style={{ width: "100%" }}
+                                    >
+                                        Добавить новый раздел
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    >
+                        {sectionCourseStore.mainSections.map((section) => (
+                            <Select.Option key={section.id} value={section.id}>
+                                {section.title}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                </Form.Item>
                 <Form.Item
                     name="name"
                     label="Название раздела"

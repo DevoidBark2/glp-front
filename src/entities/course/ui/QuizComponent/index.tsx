@@ -7,8 +7,8 @@ interface QuizComponentProps {
 }
 
 
-export const QuizComponent = observer(({quiz}: QuizComponentProps) => {
-    const { title, questions } = quiz;
+export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
+    const { title, description, questions } = quiz;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
 
@@ -42,15 +42,22 @@ export const QuizComponent = observer(({quiz}: QuizComponentProps) => {
         setSelectedAnswers(Array(questions.length).fill(null)); // Сбрасываем все ответы
     };
 
+    const handleCheckResult = () => {
+        const q = quiz;
+        const a = selectedAnswers;
+        debugger
+    }
+
     return (
-        <div className="quiz-container bg-white rounded-lg shadow-md p-6 mb-6 transition-transform duration-300">
+        <div className="quiz-container mb-6 transition-transform">
             <h3 className="text-2xl font-bold mb-4 text-center">{title}</h3>
+            <h6 className="text-gray-600 mb-4">{description}</h6>
             <div className="question mb-4">
                 <h4 className="text-lg font-semibold mb-2">
                     {`Вопрос ${currentQuestionIndex + 1}: ${currentQuestion.question}`}
                 </h4>
                 <div className="options space-y-3">
-                    {currentQuestion.options.map((option:any, index:any) => (
+                    {currentQuestion.options.map((option: any, index: any) => (
                         <div
                             key={index}
                             className={`border rounded-lg p-4 cursor-pointer transition duration-200 
@@ -87,10 +94,7 @@ export const QuizComponent = observer(({quiz}: QuizComponentProps) => {
                 </button>
                 {currentQuestionIndex === questions.length - 1 && (
                     <button
-                        onClick={() => {
-                            // Логика завершения квиза (можно, например, показать результаты)
-                            alert('Квиз завершён! Ваши ответы: ' + selectedAnswers.join(', '));
-                        }}
+                        onClick={() => handleCheckResult()}
                         className="btn bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2"
                     >
                         Завершить
