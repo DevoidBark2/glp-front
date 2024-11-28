@@ -8,10 +8,13 @@ import {
     Divider, Empty,
     Form, List, message, Modal,
     notification,
+    Popconfirm,
     Row,
     Select,
     Spin, Switch,
-    Tabs, Tooltip
+    Table,
+    TableColumnsType,
+    Tabs, Tag, Tooltip
 } from "antd";
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
@@ -21,13 +24,22 @@ import {Input} from "antd/lib";
 import {FORMAT_VIEW_DATE, LEVEL_COURSE} from "@/constants";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
-import {PlusCircleOutlined, SettingOutlined} from "@ant-design/icons";
+import {PlusCircleOutlined, SettingOutlined,  BookOutlined,
+    CheckCircleOutlined,
+    CodeOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    ProjectOutlined,
+    ReconciliationOutlined,} from "@ant-design/icons";
 import dayjs from "dayjs";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import { typeIcons } from "@/columnsTables/taskColumns";
+import { StatusComponentTaskEnum } from "@/shared/api/component-task";
+import { CourseComponentTypeI } from "@/stores/CourseComponent";
 
 const CoursePage = () => {
     const {courseId} = useParams();
-    const {courseStore,nomenclatureStore} = useMobxStores();
+    const {courseStore,nomenclatureStore,sectionCourseStore} = useMobxStores();
     const [courseName,setCourseName] = useState(null)
     const [form] = Form.useForm();
     const router = useRouter();
@@ -54,6 +66,78 @@ const CoursePage = () => {
         });
     };
 
+    const handleChangeSection = (id: number) => {
+        router.push(`/control-panel/sections/${id}`)
+    }
+
+    const handleDeleteSection = (id: number) => {
+        sectionCourseStore.deleteSection(id).then(response => {
+            courseStore.courseDetailsSections.filter(it => it.id !== id);
+            notification.success({message: response.message});
+        });
+    }
+
+    const columns: TableColumnsType<CourseComponentTypeI> = [
+        {
+            title: 'Название раздела',
+            dataIndex: 'name',
+            key: 'name',
+            width: '30%',
+        },
+        {
+            title: 'Описание',
+            dataIndex: 'description',
+            key: 'description',
+            width: '40%',
+            render: (text) => text || <span className="text-gray-400">Нет описания</span>,
+        },
+        {
+            title: 'Дата создания',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: '30%',
+            render: (date) => (
+                <Tooltip title="Время создания">
+                    {dayjs(date).format(FORMAT_VIEW_DATE)}
+                </Tooltip>
+            ),
+        },
+        {
+            title: "Действия",
+            align: 'start',
+            render: (_, record) => (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                    <Tooltip title="Редактировать раздел">
+                        <Button
+                            type="default"
+                            icon={<EditOutlined />}
+                            onClick={() => handleChangeSection(record.id)}
+                        />
+                    </Tooltip>
+                    <Popconfirm
+                        title="Удалить компонент?"
+                        description="Вы уверены, что хотите удалить этот компонент? Это действие нельзя будет отменить."
+                        okText="Да"
+                        onConfirm={() => handleDeleteSection(record.id)}
+                        cancelText="Нет"
+                    >
+                        <Button
+                            danger
+                            type="primary"
+                            icon={<DeleteOutlined />}
+                        />
+                    </Popconfirm>
+                </div>
+            )
+        },
+    ];
+
+    const handleDeleteComponent = (id) => {
+        // Логика удаления компонента
+        console.log("Удаление компонента с ID:", id);
+        // Вы можете вызвать API для удаления компонента или обновить состояние компонента
+    };
+
     useEffect(() => {
         nomenclatureStore.getCategories();
         courseStore.getCourseDetails(Number(courseId)).then(response => {
@@ -71,250 +155,297 @@ const CoursePage = () => {
     return (
         <PageContainerControlPanel>
             <div className="flex items-center justify-between">
-                    <Breadcrumb items={[ {
-                        title: <Link href={"/control-panel/courses"}>Доступные курсы</Link>,
-                    },{
-                        title: <p>{courseStore.loadingCourseDetails ? <Spin/> : courseName}</p>,
-                    }]}/>
-                </div>
-                <h1 className="text-center text-3xl">Редактирование курса</h1>
-                <Divider/>
-                <Tabs
-                    defaultActiveKey="1"
-                    items={[
-                        {
-                            label: 'Основное',
-                            key: '1',
-                            children: <Form
-                                form={form}
-                                layout="vertical"
-                                onFinish={(values) => courseStore.changeCourse(values).then(() => {
-                                    setCourseName(values.name)
-                                })}
-                            >
-                                {
-                                    !courseStore.loadingCourseDetails ? <>
-                                        <Row gutter={80}>
-                                            <Col span={12}>
-                                                <Form.Item name="id" hidden></Form.Item>
-                                                <Form.Item
-                                                    name="name"
-                                                    label="Название курса"
-                                                    rules={[{required: true,message:"Название курса обязательно!"}]}
-                                                >
-                                                    <Input placeholder="Введите название курса"/>
-                                                </Form.Item>
-                                            </Col>
-                                            <Col span={12}>
-                                                <Form.Item
-                                                    name="small_description"
-                                                    label="Краткое описание"
-                                                >
-                                                    <Input placeholder="Введите краткое описание курса"/>
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-
-                                        <Row gutter={80}>
-                                            <Col span={12}>
-                                                <Form.Item
-                                                    name="category"
-                                                    label="Категория"
-                                                    rules={[{ required: nomenclatureStore.categories.length > 0, message: "Категория курса обязательно!" }]}
-                                                >
-                                                    <Select loading={nomenclatureStore.loadingCategories} placeholder="Выберите категорию">
-                                                        {
-                                                            nomenclatureStore.categories.map(category => (
-                                                                <Select.Option key={category.id} value={category.id}>{category.name}</Select.Option>
-                                                            ))
-                                                        }
-                                                    </Select>
-                                                </Form.Item>
-                                            </Col>
-
-                                            <Col span={12}>
-                                                <Form.Item
-                                                    name="access_right"
-                                                    label="Права доступа"
-                                                    rules={[{required: true,message:"Права доступа курса обязательно!"}]}
-                                                >
-                                                    <Select>
-                                                        <Select.Option value={0}>Открытый</Select.Option>
-                                                        <Select.Option value={1}>Закрытый</Select.Option>
-                                                    </Select>
-                                                </Form.Item>
-                                            </Col>
-                                            {/*{accessRight === 1 && (*/}
-                                            {/*    <Col span={12}>*/}
-                                            {/*        <Form.Item*/}
-                                            {/*            name="restricted_access_detail"*/}
-                                            {/*            label="Детали закрытого доступа"*/}
-                                            {/*        >*/}
-                                            {/*            <Input placeholder="Введите детали закрытого доступа" />*/}
-                                            {/*        </Form.Item>*/}
-                                            {/*    </Col>*/}
-                                            {/*)}*/}
-                                        </Row>
-
+                <Breadcrumb items={[ {
+                    title: <Link href={"/control-panel/courses"}>Доступные курсы</Link>,
+                },{
+                    title: <p>{courseStore.loadingCourseDetails ? <Spin/> : courseName}</p>,
+                }]}/>
+            </div>
+            <h1 className="text-center text-3xl">Редактирование курса</h1>
+            <Divider/>
+            <Tabs
+                defaultActiveKey="1"
+                items={[
+                    {
+                        label: 'Основное',
+                        key: '1',
+                        children: <Form
+                        form={form}
+                        layout="vertical"
+                        style={{ overflowX: 'hidden' }} // Скрытие горизонтального скролла
+                        onFinish={(values) =>
+                            courseStore.changeCourse(values).then(() => {
+                                setCourseName(values.name);
+                            })
+                        }
+                    >
+                        {!courseStore.loadingCourseDetails ? (
+                            <>
+                                <Row gutter={24} style={{ padding: '0 16px' }}>
+                                    <Col span={12}>
+                                        <Form.Item name="id" hidden />
                                         <Form.Item
-                                            name="duration"
-                                            label="Время прохождения"
-                                            rules={[{required: true,message:"Время прохождения курса обязательно!"}]}
+                                            name="name"
+                                            label="Название курса"
+                                            rules={[{ required: true, message: 'Название курса обязательно!' }]}
                                         >
-                                            <Input placeholder="Введите время прохождения" type="number"/>
+                                            <Input placeholder="Введите название курса" style={{ width: '100%' }} />
                                         </Form.Item>
-
+                                    </Col>
+                                    <Col span={12}>
                                         <Form.Item
-                                            name="level"
-                                            label="Уровень сложности"
-                                            rules={[{required: true,message:"Уровень сложности курса обязательно!"}]}
+                                            name="small_description"
+                                            label="Краткое описание"
                                         >
-                                            <Select>
-                                                {LEVEL_COURSE.map(level => (
-                                                    <Select.Option key={level.id} value={level.id}>{level.title}</Select.Option>
+                                            <Input placeholder="Введите краткое описание курса" style={{ width: '100%' }} />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                    
+                                <Row gutter={24} style={{ padding: '0 16px' }}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="category"
+                                            label="Категория"
+                                            rules={[
+                                                {
+                                                    required: nomenclatureStore.categories.length > 0,
+                                                    message: 'Категория курса обязательно!',
+                                                },
+                                            ]}
+                                        >
+                                            <Select
+                                                loading={nomenclatureStore.loadingCategories}
+                                                placeholder="Выберите категорию"
+                                                style={{ width: '100%' }}
+                                            >
+                                                {nomenclatureStore.categories.map((category) => (
+                                                    <Select.Option key={category.id} value={category.id}>
+                                                        {category.name}
+                                                    </Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
-
+                                    </Col>
+                                    <Col span={12}>
                                         <Form.Item
-                                            name="content_description"
-                                            label="Содержание курса"
+                                            name="access_right"
+                                            label="Права доступа"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Права доступа курса обязательно!',
+                                                },
+                                            ]}
                                         >
-                                            <ReactQuill theme="snow"/>
+                                            <Select style={{ width: '100%' }}>
+                                                <Select.Option value={0}>Открытый</Select.Option>
+                                                <Select.Option value={1}>Закрытый</Select.Option>
+                                            </Select>
                                         </Form.Item>
-
-                                        <div className="flex flex-col items-center">
-                                            <Form.Item style={{marginTop: '10px'}}>
-                                                <Button type="primary" htmlType="submit" loading={courseStore.loadingCreateCourse}>Редактировать</Button>
-                                            </Form.Item>
-                                        </div>
-                                    </> : <Spin/>
-                                }
-                            </Form>
-                        },
-                        {
-                            label: 'Разделы и компоненты',
-                            key: '2',
-                            children: <div className="p-2">
-                                {
-                                    courseStore.courseDetailsSections?.length > 0
-                                        ? <Collapse size="large" ghost items={courseStore.courseDetailsSections?.map(item => (
-                                        {
-                                            key: item.id,
-                                            label: item.name,
-                                            children: <div key={item.id} className="bg-gray-100 rounded p-4">
-                                                <div className="flex justify-between items-center">
-                                                    <div className="flex flex-col">
-                                                        <div className="text-xl text-gray-800">
-                                                            <p>Описание</p>
+                                    </Col>
+                                </Row>
+                    
+                                <Form.Item
+                                    name="duration"
+                                    label="Время прохождения"
+                                    rules={[{ required: true, message: 'Время прохождения курса обязательно!' }]}
+                                >
+                                    <Input
+                                        placeholder="Введите время прохождения"
+                                        type="number"
+                                        style={{ width: '100%' }}
+                                    />
+                                </Form.Item>
+                    
+                                <Form.Item
+                                    name="level"
+                                    label="Уровень сложности"
+                                    rules={[{ required: true, message: 'Уровень сложности курса обязательно!' }]}
+                                >
+                                    <Select style={{ width: '100%' }}>
+                                        {LEVEL_COURSE.map((level) => (
+                                            <Select.Option key={level.id} value={level.id}>
+                                                {level.title}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                    
+                                <Form.Item name="content_description" label="Содержание курса">
+                                    <ReactQuill theme="snow" style={{ width: '100%' }} />
+                                </Form.Item>
+                    
+                                <div className="flex flex-col items-center">
+                                    <Form.Item style={{ marginTop: '10px' }}>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            loading={courseStore.loadingCreateCourse}
+                                        >
+                                            Редактировать
+                                        </Button>
+                                    </Form.Item>
+                                </div>
+                            </>
+                        ) : (
+                            <Spin />
+                        )}
+                    </Form>
+                    
+                    },
+                    {
+                        label: 'Разделы и компоненты',
+                        key: '2',
+                        children: <div className="p-2">
+                            {courseStore.courseDetailsSections.length > 0 ? (
+                                    <Table
+                                        dataSource={courseStore.courseDetailsSections}
+                                        columns={columns}
+                                        bordered
+                                        rowKey={record => record.id}
+                                        pagination={{ pageSize: 20 }}
+                                        expandable={{
+                                            expandedRowRender: (record) => (
+                                                <div className="bg-gray-100 rounded p-4">
+                                                    <div className="mb-4">
+                                                        <h3 className="text-lg font-semibold">Компоненты</h3>
+                                                        <Divider />
+                                                        {record.components.length > 0 ? (
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                            {record.components.map((component) => (
+                                                                <div 
+                                                                    key={component.id} 
+                                                                    className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow relative"
+                                                                >
+                                                                    <Button
+                                                                        icon={<DeleteOutlined/>}
+                                                                        type="primary"
+                                                                        danger
+                                                                        onClick={() => handleDeleteComponent(component.id)}
+                                                                        className="absolute top-2 right-2"
+                                                                    />
+                                                                    <h4 className="font-medium text-xl text-gray-800 mb-2">
+                                                                        {component.title || "Нет заголовка"}
+                                                                    </h4>
+                                                                    <p className="text-gray-600 mb-3">
+                                                                        {component.description || 'Нет описания'}
+                                                                    </p>
+                                                                    <div className="text-sm text-gray-500">
+                                                                        <span className="block mb-1">Тип: 
+                                                                            <Tag icon={typeIcons[component.type]}>
+                                                                                <span style={{ marginLeft: 8 }}>{component.type}</span>
+                                                                            </Tag>
+                                                                        </span>
+                                                                        <span className="block mb-1">Статус: 
+                                                                            <Tag color={component.status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
+                                                                                {component.status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
+                                                                            </Tag>
+                                                                        </span>
+                                                                        <span>Создано: {dayjs(component.created_at).format(FORMAT_VIEW_DATE)}</span>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
                                                         </div>
-                                                        <span className="ml-2">{item.description}</span>
+                                                        
+                                                        ) : (
+                                                            <span className="text-gray-500">Нет компонентов</span>
+                                                        )}
                                                     </div>
-                                                    <Tooltip title="Время создания">
-                                                        {dayjs(item.created_at).format(FORMAT_VIEW_DATE)}
-                                                    </Tooltip>
                                                 </div>
-                                                <Divider/>
-                                                <h1>Компоненты</h1>
-                                                <Divider/>
-                                                <Collapse items={item.components.map(component => ({
-                                                    key: component.id,
-                                                    label: component.title,
-                                                    children: <div key={component.id}>
-                                                        <div>
-                                                            {component.description}
-                                                        </div>
-                                                    </div>
-                                                }))}/>
-                                            </div>,
+                                            ),
+                                        }}
+                                    />
+                                ) : (
+                                    <Empty
+                                        description={
+                                            <div>
+                                                <p>Список пуст</p>
+                                                <Link href="/control-panel/sections/add">
+                                                    <Button
+                                                        className="mt-2 transition-transform transform hover:scale-105"
+                                                        type="primary"
+                                                        icon={<PlusCircleOutlined />}
+                                                    >
+                                                        Создать раздел
+                                                    </Button>
+                                                </Link>
+                                            </div>
                                         }
-                                    ))} />
-                                        : <Empty description={<div>
-                                            <p>Список пуст</p>
-                                            <Link href={"/control-panel/sections/add"}>
-                                                <Button
-                                                    className="mt-2 transition-transform transform hover:scale-105"
-                                                    type="primary"
-                                                    icon={<PlusCircleOutlined/>}
-                                                >Создать раздел
-                                                </Button>
-                                            </Link>
-
-                                        </div>}/>
-                                }
-                            </div>,
-                        },
-                        {
-                            label: 'Дополнительные настройки',
-                            key: '3',
-                            children: (
-                                <>
-                                    <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
-                                        <h3 style={{ marginBottom: 10 }}>⚙️ Управление доступом</h3>
-                                        <Switch
-                                            checked={isCourseLocked}
-                                            onChange={handleLockToggle}
-                                            checkedChildren="Курс заблокирован"
-                                            unCheckedChildren="Курс открыт"
+                                    />
+                                )}
+                        </div>,
+                    },
+                    {
+                        label: 'Дополнительные настройки',
+                        key: '3',
+                        children: (
+                            <>
+                                <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                                    <h3 style={{ marginBottom: 10 }}>⚙️ Управление доступом</h3>
+                                    <Switch
+                                        checked={isCourseLocked}
+                                        onChange={handleLockToggle}
+                                        checkedChildren="Курс заблокирован"
+                                        unCheckedChildren="Курс открыт"
+                                    />
+                                    <p style={{ marginTop: 10, fontStyle: 'italic' }}>
+                                        {isCourseLocked 
+                                            ? '🔒 Доступ к курсу ограничен для новых участников.' 
+                                            : '🔓 Курс открыт для регистрации и доступен всем желающим.'}
+                                    </p>
+                                </div>
+                                <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                                    <h3 style={{ marginBottom: 10 }}>🗑️ Управление участниками</h3>
+                                    <Button 
+                                        danger 
+                                        onClick={handleDeleteParticipants}
+                                        style={{ marginBottom: 10 }}
+                                    >
+                                        Удалить всех участников
+                                    </Button>
+                                    <p style={{ fontSize: '14px', color: 'gray' }}>
+                                        Это действие необратимо! Убедитесь, что вы уверены в удалении.
+                                    </p>
+                                </div>
+                                <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                                    <h3 style={{ marginBottom: 10 }}>👥 Текущие участники</h3>
+                                    {participants.length > 0 ? (
+                                        <List
+                                            bordered
+                                            dataSource={participants}
+                                            renderItem={(item, index) => (
+                                                <List.Item>
+                                                    {index + 1}. {item}
+                                                </List.Item>
+                                            )}
                                         />
-                                        <p style={{ marginTop: 10, fontStyle: 'italic' }}>
-                                            {isCourseLocked 
-                                                ? '🔒 Доступ к курсу ограничен для новых участников.' 
-                                                : '🔓 Курс открыт для регистрации и доступен всем желающим.'}
+                                    ) : (
+                                        <p style={{ fontStyle: 'italic', color: 'gray' }}>
+                                            Нет участников. Начните приглашать новых!
                                         </p>
-                                    </div>
-                                    <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
-                                        <h3 style={{ marginBottom: 10 }}>🗑️ Управление участниками</h3>
-                                        <Button 
-                                            danger 
-                                            onClick={handleDeleteParticipants}
-                                            style={{ marginBottom: 10 }}
-                                        >
-                                            Удалить всех участников
-                                        </Button>
-                                        <p style={{ fontSize: '14px', color: 'gray' }}>
-                                            Это действие необратимо! Убедитесь, что вы уверены в удалении.
-                                        </p>
-                                    </div>
-                                    <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
-                                        <h3 style={{ marginBottom: 10 }}>👥 Текущие участники</h3>
-                                        {participants.length > 0 ? (
-                                            <List
-                                                bordered
-                                                dataSource={participants}
-                                                renderItem={(item, index) => (
-                                                    <List.Item>
-                                                        {index + 1}. {item}
-                                                    </List.Item>
-                                                )}
-                                            />
-                                        ) : (
-                                            <p style={{ fontStyle: 'italic', color: 'gray' }}>
-                                                Нет участников. Начните приглашать новых!
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div style={{ padding: '10px 0' }}>
-                                        <h3 style={{ marginBottom: 10 }}>📅 Настройки расписания</h3>
-                                        <Button 
-                                            type="primary" 
-                                            
-                                            style={{ marginRight: 10 }}
-                                        >
-                                            Настроить расписание курса
-                                        </Button>
-                                        <Button 
-                                            type="default" 
-                                        >
-                                            Управление уведомлениями
-                                        </Button>
-                                    </div>
-                                </>
-                            )
-                        },
-                        
-                    ]}
-                />
+                                    )}
+                                </div>
+                                <div style={{ padding: '10px 0' }}>
+                                    <h3 style={{ marginBottom: 10 }}>📅 Настройки расписания</h3>
+                                    <Button 
+                                        type="primary" 
+                                        
+                                        style={{ marginRight: 10 }}
+                                    >
+                                        Настроить расписание курса
+                                    </Button>
+                                    <Button 
+                                        type="default" 
+                                    >
+                                        Управление уведомлениями
+                                    </Button>
+                                </div>
+                            </>
+                        )
+                    },
+                ]}
+            />
         </PageContainerControlPanel>
     )
 }
