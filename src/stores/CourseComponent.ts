@@ -3,26 +3,17 @@ import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
 import { notification } from "antd";
-import { CourseComponentType } from "@/shared/api/course/model";
+import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import { getComponentTask } from "@/shared/api/component";
+import { handleCheckUserTask } from "@/shared/api/task";
 
 export type QuestionsType = {
     question: string;
     options: string[];
     correctOption: number[]
 }
-export type CourseComponentTypeI = {
-    id: number;
-    title: string;
-    description: string;
-    type: CourseComponentType
-    questions: QuestionsType[]
-    content_description: string
-    status: StatusComponentTaskEnum
-    tags: string[]
-    created_at: Date
-}
+
 class CourseComponent {
     constructor() {
         makeAutoObservable(this)
@@ -109,6 +100,11 @@ class CourseComponent {
 
     getComponentById = action(async (id: number) => {
         return await getComponentTask(id);
+    })
+
+    handleCheckTask = action(async (task: CourseComponentTypeI,answers: number[]) => {
+        const data = handleCheckUserTask(task,answers);
+        debugger
     })
 }
 

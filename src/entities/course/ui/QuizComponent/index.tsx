@@ -1,4 +1,5 @@
 import { CourseComponentTypeI } from "@/shared/api/course/model";
+import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import { useState } from "react";
 
@@ -11,10 +12,12 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
     const { title, description, questions } = quiz;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
+    const { courseComponentStore } = useMobxStores();
 
     const currentQuestion = questions[currentQuestionIndex];
 
     const handleOptionChange = (index: any) => {
+        debugger
         const newAnswers = [...selectedAnswers];
         newAnswers[currentQuestionIndex] = index; // Сохраняем ответ для текущего вопроса
         setSelectedAnswers(newAnswers);
@@ -32,20 +35,12 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
         }
     };
 
-    const handleResetCurrent = () => {
-        const newAnswers = [...selectedAnswers];
-        newAnswers[currentQuestionIndex] = null; // Сбрасываем ответ для текущего вопроса
-        setSelectedAnswers(newAnswers);
-    };
-
-    const handleResetAll = () => {
-        setSelectedAnswers(Array(questions.length).fill(null)); // Сбрасываем все ответы
-    };
-
     const handleCheckResult = () => {
         const q = quiz;
         const a = selectedAnswers;
         debugger
+
+        courseComponentStore.handleCheckTask(quiz, selectedAnswers);
     }
 
     return (
@@ -57,7 +52,7 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
                     {`Вопрос ${currentQuestionIndex + 1}: ${currentQuestion.question}`}
                 </h4>
                 <div className="options space-y-3">
-                    {currentQuestion.options.map((option: any, index: any) => (
+                    {currentQuestion.options.map((option: string, index: number) => (
                         <div
                             key={index}
                             className={`border rounded-lg p-4 cursor-pointer transition duration-200 
@@ -70,7 +65,6 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
                                     name={`question-${currentQuestionIndex}`}
                                     value={index}
                                     checked={selectedAnswers[currentQuestionIndex] === index}
-                                    onChange={() => handleOptionChange(index)}
                                     className="mr-2"
                                 />
                                 {option}
@@ -82,38 +76,24 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
             <div className="navigation flex justify-between mt-4">
                 <button
                     onClick={handleBack}
-                    className={`btn ${currentQuestionIndex === 0 ? 'hidden' : 'block'} bg-gray-300 hover:bg-gray-400 text-black rounded px-4 py-2`}
+                    className={`btn ${currentQuestionIndex === 0 ? 'hidden' : 'block'} bg-[#001529] hover:scale-105 transition-transform transform text-white rounded px-4 py-2`}
                 >
                     Назад
                 </button>
                 <button
                     onClick={handleNext}
-                    className={`btn ${currentQuestionIndex === questions.length - 1 ? 'hidden' : 'block'} bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2`}
+                    className={`btn ${currentQuestionIndex === questions.length - 1 ? 'hidden' : 'block'} bg-[#001529] hover:scale-105 transition-transform transform text-white rounded px-4 py-2`}
                 >
                     Далее
                 </button>
                 {currentQuestionIndex === questions.length - 1 && (
                     <button
-                        onClick={() => handleCheckResult()}
-                        className="btn bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2"
-                    >
-                        Завершить
-                    </button>
+                    onClick={() => handleCheckResult()}
+                    className="btn bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2"
+                >
+                    Завершить
+                </button>
                 )}
-            </div>
-            <div className="reset-buttons flex justify-between mt-4">
-                <button
-                    onClick={handleResetCurrent}
-                    className="btn bg-yellow-400 hover:bg-yellow-500 text-black rounded px-4 py-2"
-                >
-                    Сбросить ответ на текущий вопрос
-                </button>
-                <button
-                    onClick={handleResetAll}
-                    className="btn bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2"
-                >
-                    Сбросить все ответы
-                </button>
             </div>
         </div>
     );
