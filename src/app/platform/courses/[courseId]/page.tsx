@@ -76,11 +76,19 @@ const CoursePage = () => {
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
+                                justifyContent:"space-between",
                                 padding: '8px 16px',
-                                borderLeft: '2px solid #4caf50', // Зеленая граница
+                                borderLeft: '2px solid #4caf50',
                             }}
                         >
-                            {child.name}
+                            <p>{child.name}</p>
+                            <Progress 
+                                type="circle" 
+                                size={30}
+                                strokeWidth={8}
+                                strokeColor="green"
+                                trailColor="#ddd" /* Светло-серый цвет задней линии */
+                            />
                         </div>
                     ),
                     icon: (

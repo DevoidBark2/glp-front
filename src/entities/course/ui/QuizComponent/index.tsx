@@ -40,7 +40,7 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
         const a = selectedAnswers;
         debugger
 
-        courseComponentStore.handleCheckTask(quiz, selectedAnswers);
+        courseComponentStore.handleCheckTask({task: quiz, answers:  selectedAnswers});
     }
 
     return (

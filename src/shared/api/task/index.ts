@@ -1,10 +1,12 @@
 import { CourseComponentTypeI } from "../course/model";
 import { axiosInstance, withAuth } from "../http-client";
+import { TaskAnswerUserDto } from "./model";
 
-export const handleCheckUserTask = withAuth(async (task: CourseComponentTypeI,answers: number[],config = {}) => {
+export const handleCheckUserTask = withAuth(async (task: TaskAnswerUserDto,config = {}) => {
+    debugger
     const data = (await axiosInstance.post('api/save-task-user',{
-        task: task,
-        answers: answers
+        task: task.task,
+        answers: task.answers
     },config)).data;
 
     return data.data;

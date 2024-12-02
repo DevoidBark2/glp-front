@@ -7,6 +7,7 @@ import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/m
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import { getComponentTask } from "@/shared/api/component";
 import { handleCheckUserTask } from "@/shared/api/task";
+import { TaskAnswerUserDto } from "@/shared/api/task/model";
 
 export type QuestionsType = {
     question: string;
@@ -102,8 +103,8 @@ class CourseComponent {
         return await getComponentTask(id);
     })
 
-    handleCheckTask = action(async (task: CourseComponentTypeI,answers: number[]) => {
-        const data = handleCheckUserTask(task,answers);
+    handleCheckTask = action(async (task: TaskAnswerUserDto) => {
+        const data = await handleCheckUserTask(task);
         debugger
     })
 }

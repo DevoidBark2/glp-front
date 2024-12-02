@@ -9,6 +9,7 @@ export const axiosInstance = axios.create({
 
 export const withAuth = <T>(apiCall: (...args: any[]) => Promise<T>) => {
     return async (...args: any[]): Promise<T> => {
+        debugger
         const token = getUserToken();
         const config = args[1] || {};
 
