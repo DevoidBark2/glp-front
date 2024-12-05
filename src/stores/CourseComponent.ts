@@ -104,8 +104,7 @@ class CourseComponent {
     })
 
     handleCheckTask = action(async (task: TaskAnswerUserDto) => {
-        const data = await handleCheckUserTask(task);
-        debugger
+        return await handleCheckUserTask(task);
     })
 }
 

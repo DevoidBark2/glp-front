@@ -209,16 +209,11 @@ class UserStore {
     })
 
     updateUserRole = action(async (userId: number, role: UserRole) => {
-        const data = await updateRole({ userId: userId, role: role });
-
-        return data;
+        return await updateRole({ userId: userId, role: role });
     })
 
     blockUser = action(async (id: number, status: StatusUserEnum) => {
-        const data = await handleBlockUser({ userId: id, status: status });
-
-        debugger
-        return data;
+        return await handleBlockUser({ userId: id, status: status });
     })
 }
 const usersMapper = (value: User) => {

@@ -58,6 +58,15 @@ export type CourseComponentTypeI = {
     status: StatusComponentTaskEnum
     tags: string[]
     created_at: Date
+    userAnswer?: UserAnswer[]
+}
+
+export type UserAnswer = {
+    id: string;
+    correctAnswer: number;
+    isCorrect: boolean;
+    question: string;
+    userAnswer: number
 }
 
 export type QuestionsType = {

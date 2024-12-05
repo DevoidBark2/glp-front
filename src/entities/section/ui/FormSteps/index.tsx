@@ -28,7 +28,6 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
 
     const next = async () => {
         const co = sectionCourseForm?.getFieldsValue();
-        debugger
         if (current === 0 && !courseStore.selectedCourse) {
             message.warning("Выберите курс!")
             return;
@@ -45,12 +44,10 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
 
     const onFinish = () => {
         const values = createSectionForm.getFieldsValue(true)
-        debugger
         if (!values.components || values.components.length === 0) {
             message.warning("Добавь хотя бы один компонент в раздел!")
             return;
         }
-        debugger
         sectionCourseStore.addSection(values).then((response) => {
             router.push("/control-panel/sections");
             notification.success({ message: response.message })

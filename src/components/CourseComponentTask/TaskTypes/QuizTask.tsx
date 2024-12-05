@@ -2,6 +2,7 @@ import { Button, Col, Form, Input, Row, Select, Tag } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { FormInstance } from "antd/lib";
+import { v4 as uuidv4 } from 'uuid';
 
 interface QuizTaskProps {
     form: FormInstance;
@@ -115,7 +116,19 @@ const QuizTask: FC<QuizTaskProps> = ({ form }) => {
                                 </Button>
                             </div>
                         ))}
-                        <Button className="mb-4" type="dashed" icon={<PlusOutlined />} onClick={() => add()}>
+                        <Button
+                            className="mb-4"
+                            type="dashed"
+                            icon={<PlusOutlined />}
+                            onClick={() =>
+                                add({
+                                    id: uuidv4(), // Генерация уникального id для нового вопроса
+                                    question: '',
+                                    options: [],
+                                    correctOption: null,
+                                })
+                            }
+                        >
                             Добавить вопрос
                         </Button>
                     </>

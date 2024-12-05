@@ -149,7 +149,6 @@ class PostStore {
 }
 
 export const postMapper = (post: Post) => {
-    debugger
     return {
         id: post.id,
         name: post.name,

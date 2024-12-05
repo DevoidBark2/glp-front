@@ -89,7 +89,6 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             dataIndex: "user",
             hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => {
-                debugger
                 return record.user.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                         <Tooltip title="Перейти в профиль">

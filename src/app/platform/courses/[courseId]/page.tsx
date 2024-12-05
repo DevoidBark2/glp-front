@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Tooltip } from "antd";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { LogoutOutlined, ToolOutlined, SettingOutlined, EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Header } from "antd/es/layout/layout";
@@ -20,11 +20,13 @@ const CoursePage = () => {
     const { courseStore } = useMobxStores();
     const [selectedSection, setSelectedSection] = useState(0);
     const [collapsed, setCollapsed] = useState(false);
+    const searchParams = useSearchParams();
     const router = useRouter()
 
     const handleMenuClick = ({ key }: any) => {
-        debugger
         setSelectedSection(key);
+         // Обновляем параметр step в URL, не вызывая повторный useEffect
+    router.push(`/platform/courses/${courseId}?step=${key}`);
         // updateStepInUrl(key);
     };
 
@@ -87,7 +89,10 @@ const CoursePage = () => {
                                 size={30}
                                 strokeWidth={8}
                                 strokeColor="green"
-                                trailColor="#ddd" /* Светло-серый цвет задней линии */
+                                trailColor="white" /* Светло-серый цвет задней линии */
+                                format={(value)  => (
+                                    <p className={`${child.id === Number(selectedSection) ? 'text-black' : "text-white"}`}>{value}%</p>
+                                )}
                             />
                         </div>
                     ),
@@ -116,6 +121,7 @@ const CoursePage = () => {
         }
         return {
             key: section.id.toString(),
+            
             label: (
                 <div
                     style={{
@@ -149,12 +155,17 @@ const CoursePage = () => {
     };
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
-            // debugger
-            // const stepFromUrl = Number(searchParams.get("step"));
-            // const initialSectionId = stepFromUrl || response.sections[0]?.id || 0;
-            // setSelectedSection(initialSectionId);
+            const stepFromUrl = Number(searchParams.get("step"));
+            const initialSectionId = stepFromUrl || response.sections[0]?.id || 0;
+            setSelectedSection(initialSectionId);
+    
+            // Если в URL нет параметра step, добавляем его
+            if (!stepFromUrl) {
+                router.push(`/platform/courses/${courseId}?step=${initialSectionId}`);
+            }
         });
     }, [courseId]);
+    
 
     return (
         <Layout style={{ minHeight: '100vh', overflow: 'hidden' }}>
@@ -179,7 +190,6 @@ const CoursePage = () => {
                 <div style={{ flex: 1, margin: '0 16px' }}>
                     <Progress
                         percent={20}
-                        status="active"
                         strokeColor="green" // Цвет прогресса
                         trailColor="#CCCCCC" // Цвет заднего трека (для контраста)
                         showInfo={true}
@@ -222,6 +232,7 @@ const CoursePage = () => {
                     <Menu
                         theme="dark"
                         mode="inline"
+                        selectedKeys={[selectedSection.toString()]} 
                         items={items}
                         onClick={handleMenuClick}
                         style={{
@@ -325,7 +336,6 @@ const CoursePage = () => {
                         >
                             {
                                 courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.sectionComponents.map((component) => {
-                                    debugger
                                     if (component.componentTask.type === CourseComponentType.Text) {
                                         return <TextComponent component={component.componentTask} />
                                     }
@@ -336,6 +346,11 @@ const CoursePage = () => {
                                         return <QuizMultiComponent key={component.id} quiz={component.componentTask} />;
                                     }
                                 }))}
+
+
+                                <div className="flex justify-end">
+                                    <Button type="primary">Следующий шаг</Button>
+                                </div>
                         </Card>
                     </Content>
                 </Layout>

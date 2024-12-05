@@ -16,7 +16,6 @@ const SectionDetailsPage = () => {
 
     useEffect(() => {
         sectionCourseStore.getSectionById(Number(sectionId)).then(response => {
-            debugger
             sectionCourseForm.setFieldsValue(response);
         });
     },[sectionId])

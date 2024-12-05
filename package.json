@@ -36,7 +36,8 @@
     "react-input-mask": "^2.0.4",
     "react-phone-input-2": "^2.15.1",
     "react-quill": "^2.0.0",
-    "react-spring": "^9.7.3"
+    "react-spring": "^9.7.3",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",

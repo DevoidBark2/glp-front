@@ -114,7 +114,6 @@ class PostStore {
                     this.userPosts = updatedPosts;
 
                 }
-                debugger
                 notification.success({ message: response.data.message });
             });
 

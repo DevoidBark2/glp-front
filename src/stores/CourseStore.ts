@@ -9,6 +9,7 @@ import { getAllCourses } from "@/shared/api/course";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
+import axios from "axios";
 
 class CourseStore {
     constructor() {
@@ -154,7 +155,6 @@ class CourseStore {
 
     getFullCourseById = action(async (id: number) => {
         return await GET(`/api/full-course?courseId=${id}`).then(response => {
-            debugger
             this.setFullDetailCourse(response.data);
             return response.data;
         })
