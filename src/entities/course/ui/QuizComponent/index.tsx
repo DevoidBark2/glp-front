@@ -69,13 +69,13 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
         let tooltipTitle = "";
 
         if (correctAnswersCount === totalQuestions) {
-            icon = <CheckCircleOutlined style={{ color: "green", marginRight: "8px" }} />;
+            icon = <CheckCircleOutlined sizes="large" style={{ color: "green", marginRight: "8px" }} size={110} />;
             tooltipTitle = `Все задания выполнены верно (${correctAnswersCount}/${totalQuestions})`;
         } else if (correctAnswersCount === 0) {
-            icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px" }} />;
+            icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px" }} size={111} />;
             tooltipTitle = `Все задания выполнены неверно (0/${totalQuestions})`;
         } else {
-            icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px" }} />;
+            icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px" }} size={111} />;
             tooltipTitle = `Часть заданий выполнена верно (${correctAnswersCount}/${totalQuestions})`;
         }
 
@@ -88,16 +88,7 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
 
     return (
         <div className="quiz-container mb-6 transition-transform">
-            {quiz.userAnswer && (
-                <Button
-                    onClick={handleRetryQuiz}
-                    type="default"
-                    disabled={retryDisabled}
-                    className="hover:scale-105"
-                >
-                    Попробовать еще раз
-                </Button>
-            )}
+
             <div className="flex flex-col items-center mb-4">
                 <h3 className="text-2xl font-bold">{title}</h3>
                 <h6 className="text-gray-600 mb-4">{description}</h6>
@@ -105,10 +96,24 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
 
 
             <div className="question mb-4">
-                <h4 className="text-lg font-semibold mb-2">
-                    {renderIconCountAnswerUser(quiz)}
-                    {`Вопрос ${currentQuestionIndex + 1}: ${currentQuestion.question}`}
-                </h4>
+                <div className="flex justify-between items-center mb-2">
+                    <div className="flex">
+                        {renderIconCountAnswerUser(quiz)}
+                        <h4 className="text-lg font-semibold">{`Вопрос ${currentQuestionIndex + 1}: ${currentQuestion.question}`}</h4>
+                    </div>
+
+
+                    {quiz.userAnswer && (
+                        <Button
+                            onClick={handleRetryQuiz}
+                            type="default"
+                            disabled={retryDisabled}
+                            className="hover:scale-105"
+                        >
+                            Попробовать еще раз
+                        </Button>
+                    )}
+                </div>
                 <div className="options space-y-3">
                     {currentQuestion.options.map((option: string, index: number) => {
                         const userSelectedIndex = quiz.userAnswer ? quiz.userAnswer[currentQuestionIndex]?.userAnswer : null;
@@ -144,6 +149,7 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
                                         name={`question-${currentQuestionIndex}`}
                                         value={index}
                                         checked={isUserAnswer || isSelected}
+                                        onChange={() => handleOptionChange(index)} // Добавлен обработчик
                                         disabled={!!quiz.userAnswer && retryDisabled}
                                         className="mr-2"
                                     />
@@ -151,6 +157,7 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
                                 </label>
                             </div>
                         );
+
                     })}
                 </div>
             </div>

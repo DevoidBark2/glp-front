@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Tooltip } from "antd";
+import { Menu, Layout, Card, Progress, Button, Dropdown, Popover, Tooltip, Modal, Form, Input, Checkbox, Select, InputNumber } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { LogoutOutlined, ToolOutlined, SettingOutlined, EllipsisOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { LogoutOutlined, ToolOutlined, SettingOutlined, EllipsisOutlined, ExclamationCircleOutlined, CheckCircleOutlined, CloseCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Header } from "antd/es/layout/layout";
-import { Course, CourseComponentType } from "@/shared/api/course/model";
+import { Course, CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
 import { QuizComponent } from "@/entities/course/ui/QuizComponent";
 import { QuizMultiComponent } from "@/entities/course/ui/QuizMultiComponent";
 import { TextComponent } from "@/entities/course/ui/TextComponent";
@@ -22,6 +22,30 @@ const CoursePage = () => {
     const [collapsed, setCollapsed] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter()
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [form] = Form.useForm();
+
+    // Открытие модального окна
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    // Закрытие модального окна
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    // Отправка данных из формы
+    const handleOk = () => {
+        form.validateFields()
+            .then((values) => {
+                console.log('Настройки сохранены:', values);
+                setIsModalVisible(false);
+            })
+            .catch((info) => {
+                console.log('Ошибка при сохранении настроек:', info);
+            });
+    };
 
     const handleMenuClick = ({ key }: any) => {
         setSelectedSection(key);
@@ -38,6 +62,56 @@ const CoursePage = () => {
             <p>Оценочное время:  {courseStore.fullDetailCourse?.name}</p>
         </div>
     );
+
+    const renderIconCountAnswerUser = (quiz: any) => {
+        // Проверяем, существует ли quiz и имеет ли он sectionComponents
+        if (!quiz || !quiz.sectionComponents) {
+            return null;
+        }
+
+        // Извлекаем userAnswer из всех componentTask
+        const quizItems = quiz.sectionComponents
+            .map((it) => it.componentTask?.userAnswer)
+            .filter((userAnswer) => userAnswer !== null && userAnswer !== undefined); // Убираем null и undefined
+
+        const totalQuestions = quiz.sectionComponents.length; // Общее количество заданий
+        let icon = null;
+        let tooltipTitle = "";
+
+        // Если ответы отсутствуют
+        if (quizItems.length === 0) {
+            icon = <QuestionCircleOutlined style={{ color: "gray", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Всего заданий: ${totalQuestions}. Пока нет сданных заданий.`;
+            return (
+                <Tooltip title={tooltipTitle} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                    {icon}
+                </Tooltip>
+            );
+        }
+
+        // Подсчитываем количество правильных ответов
+        const correctAnswersCount = quizItems.filter((answer) => answer.isCorrect).length;
+
+        // Выбираем иконку и сообщение в зависимости от результата
+        if (correctAnswersCount === totalQuestions) {
+            icon = <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Все задания выполнены верно (${correctAnswersCount}/${totalQuestions})`;
+        } else if (correctAnswersCount === 0) {
+            icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Все задания выполнены неверно (0/${totalQuestions})`;
+        } else {
+            icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Часть заданий выполнена верно (${correctAnswersCount}/${totalQuestions})`;
+        }
+
+        // Возвращаем результат с тултипом
+        return (
+            <Tooltip title={tooltipTitle} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                {icon}
+            </Tooltip>
+        );
+    };
+
 
     const items: MenuItem[] = courseStore.fullDetailCourse?.sections.map((section) => {
         // Если есть дети, добавляем как группу, иначе как обычный пункт
@@ -84,16 +158,7 @@ const CoursePage = () => {
                             }}
                         >
                             <p>{child.name}</p>
-                            <Progress
-                                type="circle"
-                                size={30}
-                                strokeWidth={8}
-                                strokeColor="green"
-                                trailColor="white" /* Светло-серый цвет задней линии */
-                                format={(value) => (
-                                    <p className={`${child.id === Number(selectedSection) ? 'text-black' : "text-white"}`}>{value}%</p>
-                                )}
-                            />
+                            {renderIconCountAnswerUser(child)}
                         </div>
                     ),
                     icon: (
@@ -170,6 +235,70 @@ const CoursePage = () => {
 
     return (
         <Layout style={{ minHeight: '100vh', overflow: 'hidden' }}>
+
+            {/* Модалка с настройками */}
+            <Modal
+                title="Настройки курса"
+                open={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                okText="Сохранить"
+                cancelText="Отмена"
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item
+                        name="showProgress"
+                        valuePropName="checked"
+                        initialValue={true}
+                    >
+                        <Checkbox>Показывать прогресс прохождения</Checkbox>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="enableNotifications"
+                        valuePropName="checked"
+                        initialValue={true}
+                    >
+                        <Checkbox>Включить уведомления</Checkbox>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="timerDuration"
+                        label="Таймер на вопрос (в секундах)"
+                        rules={[{ type: 'number', min: 10, max: 300, message: 'Введите значение от 10 до 300' }]}
+                    >
+                        <InputNumber min={10} max={300} placeholder="Введите время" style={{ width: '100%' }} />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="questionDifficulty"
+                        label="Сложность вопросов"
+                    >
+                        <Select placeholder="Выберите сложность">
+                            <Select.Option value="easy">Легкий</Select.Option>
+                            <Select.Option value="medium">Средний</Select.Option>
+                            <Select.Option value="hard">Сложный</Select.Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="trainingMode"
+                        valuePropName="checked"
+                        initialValue={false}
+                    >
+                        <Checkbox>Режим тренировки (показ ответов после вопроса)</Checkbox>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="retryErrorsOnly"
+                        valuePropName="checked"
+                        initialValue={false}
+                    >
+                        <Checkbox>Повторно проходить только ошибки</Checkbox>
+                    </Form.Item>
+                </Form>
+            </Modal>
+
             <Header
                 className="fixed w-full top-0 left-0 z-50"
                 style={{
@@ -259,17 +388,11 @@ const CoursePage = () => {
                         {/* Меню кнопок */}
                         {!collapsed ? (
                             <>
-                                <Tooltip title="Сменить тему">
-                                    <Button
-                                        type="text"
-                                        icon={<SettingOutlined />}
-                                    />
-                                </Tooltip>
-
                                 <Tooltip title="Настройки">
                                     <Button
                                         type="text"
                                         icon={<ToolOutlined />}
+                                        onClick={showModal}
                                     />
                                 </Tooltip>
 
@@ -286,10 +409,7 @@ const CoursePage = () => {
                                 trigger={['click']}
                                 overlay={
                                     <Menu>
-                                        <Menu.Item key="theme" icon={<SettingOutlined />} >
-                                            Сменить тему
-                                        </Menu.Item>
-                                        <Menu.Item key="settings" icon={<ToolOutlined />} >
+                                        <Menu.Item key="settings" icon={<ToolOutlined />} onClick={showModal} >
                                             Настройки
                                         </Menu.Item>
                                         <Menu.Item key="logout" icon={<LogoutOutlined />} >
@@ -338,7 +458,7 @@ const CoursePage = () => {
                             {
                                 courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.sectionComponents.map((component) => {
                                     if (component.componentTask.type === CourseComponentType.Text) {
-                                        return <TextComponent component={component.componentTask} />
+                                        return <TextComponent key={component.id} component={component.componentTask} />
                                     }
                                     if (component.componentTask.type === CourseComponentType.Quiz) {
                                         return <QuizComponent key={component.id} quiz={component.componentTask} currentSection={selectedSection} />;
