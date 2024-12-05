@@ -1,4 +1,4 @@
-import { action, makeAutoObservable } from "mobx";
+import { action, makeAutoObservable, runInAction } from "mobx";
 import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { notification } from "antd";
 import { getUserToken } from "@/lib/users";
@@ -10,6 +10,8 @@ import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import axios from "axios";
+import { TaskAnswerUserDto } from "@/shared/api/task/model";
+import { handleCheckUserTask } from "@/shared/api/task";
 
 class CourseStore {
     constructor() {
@@ -28,7 +30,7 @@ class CourseStore {
     courses: Course[] = []
     userCourses: Course[] = []
     selectedCourse: Course | null = null;
-    
+
 
     loadingSubscribeCourse: boolean = false;
 
@@ -173,6 +175,50 @@ class CourseStore {
             this.setLoadingSubscribeCourse(false)
         }
     })
+
+    handleCheckTask = action(async (task: TaskAnswerUserDto) => {
+        const data = await handleCheckUserTask(task);
+        debugger;
+
+        runInAction(() => {
+            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section) => {
+                return {
+                    ...section,
+                    children: section.children.map((child) => {
+                        if (child.id === task.currentSection) {
+                            return {
+                                ...child,
+                                sectionComponents: (child.sectionComponents || []).map((component) => {
+                                    if (component.componentTask.id === task.task.id) {
+                                        // Обновляем данные для componentTask и userAnswer
+                                        console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
+                                        console.log('Ответы:', data.answers.answer);
+                                        debugger;
+                                        return {
+                                            ...component,
+                                            componentTask: {
+                                                ...component.componentTask,
+                                                userAnswer: data.answers.answer, // Обновляем userAnswer в componentTask
+                                            },
+                                        };
+                                    }
+                                    return component; // Оставляем компонент неизменным
+                                }),
+                            };
+                        }
+                        return child; // Оставляем child неизменным
+                    }),
+                };
+            });
+        });
+
+
+        return data;
+    });
+
+
+
+
 }
 
 // export const courseMapper = (course: Course) => {

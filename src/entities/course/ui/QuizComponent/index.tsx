@@ -7,15 +7,16 @@ import { useState } from "react";
 
 interface QuizComponentProps {
     quiz: CourseComponentTypeI;
+    currentSection: number
 }
 
-export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
+export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentProps) => {
     const { title, description, questions } = quiz;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!quiz.userAnswer);
     const [retryDisabled, setRetryDisabled] = useState(false);
-    const { courseComponentStore,courseStore } = useMobxStores();
+    const { courseComponentStore, courseStore } = useMobxStores();
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -38,9 +39,10 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
     };
 
     const handleCheckResult = () => {
-      
-        courseComponentStore
-            .handleCheckTask({ task: quiz, answers: selectedAnswers })
+        const a = currentSection;
+        debugger
+        courseStore
+            .handleCheckTask({ task: quiz, answers: selectedAnswers, currentSection: Number(currentSection) })
             .then(() => {
                 setDisabledCheckResultBtn(true);
             });
@@ -87,20 +89,20 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
     return (
         <div className="quiz-container mb-6 transition-transform">
             {quiz.userAnswer && (
-                    <Button
-                        onClick={handleRetryQuiz}
-                        type="default"
-                        disabled={retryDisabled}
-                        className="hover:scale-105"
-                    >
-                        Попробовать еще раз
-                    </Button>
-                )}
+                <Button
+                    onClick={handleRetryQuiz}
+                    type="default"
+                    disabled={retryDisabled}
+                    className="hover:scale-105"
+                >
+                    Попробовать еще раз
+                </Button>
+            )}
             <div className="flex flex-col items-center mb-4">
                 <h3 className="text-2xl font-bold">{title}</h3>
                 <h6 className="text-gray-600 mb-4">{description}</h6>
             </div>
-          
+
 
             <div className="question mb-4">
                 <h4 className="text-lg font-semibold mb-2">
@@ -122,8 +124,8 @@ export const QuizComponent = observer(({ quiz }: QuizComponentProps) => {
                         const completedStyle = isCorrect
                             ? "bg-green-100 border-green-500"
                             : isWrong
-                            ? "bg-red-100 border-red-500"
-                            : "bg-gray-50 border-gray-300";
+                                ? "bg-red-100 border-red-500"
+                                : "bg-gray-50 border-gray-300";
 
                         const activeStyle = isSelected ? "bg-blue-100 border-blue-500" : "bg-gray-50 border-gray-300";
 

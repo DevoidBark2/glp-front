@@ -102,10 +102,6 @@ class CourseComponent {
     getComponentById = action(async (id: number) => {
         return await getComponentTask(id);
     })
-
-    handleCheckTask = action(async (task: TaskAnswerUserDto) => {
-        return await handleCheckUserTask(task);
-    })
 }
 
 const componentTaskMapper = (state: CourseComponentTypeI) => {

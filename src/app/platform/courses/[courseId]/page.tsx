@@ -25,8 +25,8 @@ const CoursePage = () => {
 
     const handleMenuClick = ({ key }: any) => {
         setSelectedSection(key);
-         // Обновляем параметр step в URL, не вызывая повторный useEffect
-    router.push(`/platform/courses/${courseId}?step=${key}`);
+        // Обновляем параметр step в URL, не вызывая повторный useEffect
+        router.push(`/platform/courses/${courseId}?step=${key}`);
         // updateStepInUrl(key);
     };
 
@@ -78,19 +78,19 @@ const CoursePage = () => {
                             style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent:"space-between",
+                                justifyContent: "space-between",
                                 padding: '8px 16px',
                                 borderLeft: '2px solid #4caf50',
                             }}
                         >
                             <p>{child.name}</p>
-                            <Progress 
-                                type="circle" 
+                            <Progress
+                                type="circle"
                                 size={30}
                                 strokeWidth={8}
                                 strokeColor="green"
                                 trailColor="white" /* Светло-серый цвет задней линии */
-                                format={(value)  => (
+                                format={(value) => (
                                     <p className={`${child.id === Number(selectedSection) ? 'text-black' : "text-white"}`}>{value}%</p>
                                 )}
                             />
@@ -121,7 +121,7 @@ const CoursePage = () => {
         }
         return {
             key: section.id.toString(),
-            
+
             label: (
                 <div
                     style={{
@@ -156,16 +156,17 @@ const CoursePage = () => {
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
             const stepFromUrl = Number(searchParams.get("step"));
-            const initialSectionId = stepFromUrl || response.sections[0]?.id || 0;
+            debugger
+            const initialSectionId = stepFromUrl || response.sections[0]?.children[0]?.id;
             setSelectedSection(initialSectionId);
-    
+
             // Если в URL нет параметра step, добавляем его
             if (!stepFromUrl) {
                 router.push(`/platform/courses/${courseId}?step=${initialSectionId}`);
             }
         });
     }, [courseId]);
-    
+
 
     return (
         <Layout style={{ minHeight: '100vh', overflow: 'hidden' }}>
@@ -232,7 +233,7 @@ const CoursePage = () => {
                     <Menu
                         theme="dark"
                         mode="inline"
-                        selectedKeys={[selectedSection.toString()]} 
+                        selectedKeys={[selectedSection.toString()]}
                         items={items}
                         onClick={handleMenuClick}
                         style={{
@@ -340,7 +341,7 @@ const CoursePage = () => {
                                         return <TextComponent component={component.componentTask} />
                                     }
                                     if (component.componentTask.type === CourseComponentType.Quiz) {
-                                        return <QuizComponent key={component.id} quiz={component.componentTask} />;
+                                        return <QuizComponent key={component.id} quiz={component.componentTask} currentSection={selectedSection} />;
                                     }
                                     if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
                                         return <QuizMultiComponent key={component.id} quiz={component.componentTask} />;
@@ -348,9 +349,9 @@ const CoursePage = () => {
                                 }))}
 
 
-                                <div className="flex justify-end">
-                                    <Button type="primary">Следующий шаг</Button>
-                                </div>
+                            <div className="flex justify-end">
+                                <Button type="primary">Следующий шаг</Button>
+                            </div>
                         </Card>
                     </Content>
                 </Layout>
