@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Dropdown, Tooltip, Modal, Form, Checkbox, Select, InputNumber } from "antd";
+import { Menu, Layout, Card, Progress, Button, Dropdown, Tooltip, Modal, Form, Checkbox, Select, InputNumber, Spin, Skeleton } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { LogoutOutlined, ToolOutlined, EllipsisOutlined, ExclamationCircleOutlined, CheckCircleOutlined, CloseCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
@@ -38,7 +38,7 @@ const CoursePage = () => {
             });
     };
 
-    const handleMenuClick = ({key}: any) => {
+    const handleMenuClick = ({ key }: any) => {
         setSelectedSection(key);
         courseStore.updateSectionStep(Number(selectedSection));
         router.push(`/platform/courses/${courseId}?step=${key}`);
@@ -49,43 +49,43 @@ const CoursePage = () => {
         let tooltipTitle = "";
 
         if (!menuItem.userAnswer) {
-          return (
-            <Tooltip title="Этап не пройден" overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
-              <QuestionCircleOutlined style={{ color: "gray", marginRight: "8px", fontSize: 25 }} />
-            </Tooltip>
-          );
+            return (
+                <Tooltip title="Этап не пройден" overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                    <QuestionCircleOutlined style={{ color: "gray", marginRight: "8px", fontSize: 25 }} />
+                </Tooltip>
+            );
         }
-      
+
         const { confirmedStep, totalAnswers, correctAnswers } = menuItem.userAnswer;
 
         if (confirmedStep) {
-          return (
-            <Tooltip title="Этап подтвержден" overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
-              <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />
-            </Tooltip>
-          );
+            return (
+                <Tooltip title="Этап подтвержден" overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                    <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />
+                </Tooltip>
+            );
         }
-      
+
         if (correctAnswers === totalAnswers) {
-          icon = <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />;
-          tooltipTitle = `Все задания выполнены верно (${correctAnswers}/${totalAnswers})`;
+            icon = <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Все задания выполнены верно (${correctAnswers}/${totalAnswers})`;
         } else if (correctAnswers === 0) {
-          icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px", fontSize: 25 }} />;
-          tooltipTitle = `Все задания выполнены неверно (0/${totalAnswers})`;
+            icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Все задания выполнены неверно (0/${totalAnswers})`;
         } else {
-          icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px", fontSize: 25 }} />;
-          tooltipTitle = `Часть заданий выполнена верно (${correctAnswers}/${totalAnswers})`;
+            icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px", fontSize: 25 }} />;
+            tooltipTitle = `Часть заданий выполнена верно (${correctAnswers}/${totalAnswers})`;
         }
-      
+
         return (
-          <Tooltip title={tooltipTitle} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
-            {icon}
-          </Tooltip>
+            <Tooltip title={tooltipTitle} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                {icon}
+            </Tooltip>
         );
-      };
+    };
 
 
-    const items: MenuItem[] = courseStore.courseMenuItems?.map((section) => {
+    const items: MenuItem[] = courseStore.courseMenuItems?.sections?.map((section) => {
         if (section.children && section.children.length > 0) {
             return {
                 key: section.id.toString(),
@@ -199,17 +199,24 @@ const CoursePage = () => {
     useEffect(() => {
         courseStore.getFullCourseById(Number(courseId)).then((response) => {
             const stepFromUrl = Number(searchParams.get("step"));
-
-            const initialSectionId = stepFromUrl || response.sections[0]?.children[0]?.id;
+            const initialSectionId: number = stepFromUrl || response?.sections[0].children[0]?.id;
             setSelectedSection(initialSectionId);
 
-            // Если в URL нет параметра step, добавляем его
+            courseStore.getSectionById(Number(courseId), initialSectionId)
+
             if (!stepFromUrl) {
                 router.push(`/platform/courses/${courseId}?step=${initialSectionId}`);
             }
         });
 
     }, [courseId]);
+
+    useEffect(() => {
+        if (Number(selectedSection) !== 0) {
+            courseStore.getSectionById(Number(courseId), Number(selectedSection))
+        }
+
+    }, [searchParams])
 
 
     return (
@@ -277,18 +284,24 @@ const CoursePage = () => {
             </Modal>
 
             <Header className="flex items-center fixed w-full top-0 left-0 z-50 bg-[#001529] h-16">
-                <h1 className="text-xl font-bold text-white">
-                    {courseStore.fullDetailCourse?.name || 'Название курса'}
-                </h1>
-
+                {courseStore.courseMenuLoading ? (
+                    <Spin />
+                ) : (
+                    <h1 className="text-xl font-bold text-white">
+                        {courseStore.courseMenuItems?.courseName}
+                    </h1>
+                )}
                 <div className="flex-1 mx-4">
-                    <Progress
-                        percent={20}
-                        strokeColor="green"
-                        trailColor="#CCCCCC"
-                        showInfo={true}
-                        format={(percent) => <span className="text-white font-bold">{percent}%</span>}
-                    />
+                    {
+                        courseStore.courseMenuLoading ? <Spin /> :
+                            <Progress
+                                percent={20}
+                                strokeColor="green"
+                                trailColor="#CCCCCC"
+                                showInfo={true}
+                                format={(percent) => <span className="text-white font-bold">{percent}%</span>}
+                            />
+                    }
                 </div>
             </Header>
 
@@ -304,20 +317,28 @@ const CoursePage = () => {
                     <div className="flex justify-end px-3 rounded-full">
                         <Button
                             type="text"
-                            icon={collapsed ? <MenuUnfoldOutlined size={30} style={{ color: 'white' }} /> : <MenuFoldOutlined  size={30} style={{ color: 'white' }} />}
+                            icon={collapsed ? <MenuUnfoldOutlined size={30} style={{ color: 'white' }} /> : <MenuFoldOutlined size={30} style={{ color: 'white' }} />}
                             onClick={() => setCollapsed(!collapsed)}
                         />
 
                     </div>
-                    <Menu
-                        theme="dark"
-                        mode="inline"
-                        selectedKeys={[selectedSection.toString()]}
-                        items={items}
-                        className="max-h-[calc(100vh-64px)] overflow-y-auto"
-                        onClick={handleMenuClick}
-                    />
-                    <div  className={`absolute bottom-0 left-0 w-full p-4 border-t border-gray-300 bg-white flex gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+                    {
+                        courseStore.courseMenuItems ?
+                            <Menu
+                                theme="dark"
+                                mode="inline"
+                                selectedKeys={[selectedSection.toString()]}
+                                items={items}
+                                className="max-h-[calc(100vh-64px)] overflow-y-auto"
+                                onClick={handleMenuClick}
+                            /> :
+                            <>
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
+                                    <Skeleton.Input key={it} active block style={{ width: 250, marginLeft: 10, marginTop: 10 }} />
+                                ))}
+                            </>
+                    }
+                    <div className={`absolute bottom-0 left-0 w-full p-4 border-t border-gray-300 bg-white flex gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
                         {!collapsed ? (
                             <>
                                 <Tooltip title="Настройки">
@@ -356,30 +377,27 @@ const CoursePage = () => {
 
                 <Layout className={`${collapsed ? "ml-20" : "ml-72"}`}>
                     <Content style={{
-                            margin: 0,
-                            padding: '24px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            backgroundColor: '#f5f5f5',
-                            height: 'calc(100vh - 64px)',
-                            overflowY: 'auto',
-                        }} className="flex flex-col pl-6 py-4 pr-4 max-h-[calc(100vh-64px)] overflow-y-auto">
+                        margin: 0,
+                        padding: '24px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: '#f5f5f5',
+                        height: 'calc(100vh - 64px)',
+                        overflowY: 'auto',
+                    }} className="flex flex-col pl-6 py-4 pr-4 max-h-[calc(100vh-64px)] overflow-y-auto">
                         <Card
+                            loading={courseStore.loadingSection}
                             bordered={false}
                             title={
                                 <>
                                     <h2 className="text-2xl font-semibold text-gray-800 my-4">
-                                        {
-                                            courseStore.fullDetailCourse?.sections
-                                                .flatMap(section => section.children || []) // Получаем все подразделы
-                                                .find(child => child.id === Number(selectedSection))?.name || 'Section Name'
-                                        }
+                                        {courseStore.fullDetailCourse?.name}
                                     </h2>
                                 </>
                             }
                         >
-                            {/* {
-                                courseStore.fullDetailCourse?.sections.map(it => it.children.find((s) => s.id === Number(selectedSection))?.sectionComponents.map((component) => {
+                            {
+                                courseStore.fullDetailCourse?.components.map((component) => {
                                     if (component.componentTask.type === CourseComponentType.Text) {
                                         return <TextComponent key={component.id} component={component.componentTask} />
                                     }
@@ -389,7 +407,7 @@ const CoursePage = () => {
                                     if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
                                         return <QuizMultiComponent key={component.id} quiz={component.componentTask} />;
                                     }
-                                }))} */}
+                                })}
                         </Card>
                     </Content>
                 </Layout>

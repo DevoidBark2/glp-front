@@ -11,7 +11,7 @@ import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import axios from "axios";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
-import { handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
+import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
 import { MenuItem } from "@/utils/dashboardMenu";
 
 enum CourseMenuStatus {
@@ -22,16 +22,16 @@ enum CourseMenuStatus {
 }
 
 type UserAnswer = {
-    confirmedStep? : number,
+    confirmedStep?: number,
     totalAnswers?: number,
     correctAnswers?: number
 }
 
 export type CourseMenu = {
     id: number,
-    name: string,
+    courseName: string,
     userAnswer: UserAnswer
-    children: CourseMenu[]
+    sections: CourseMenu[]
 }
 
 class CourseStore {
@@ -42,7 +42,7 @@ class CourseStore {
     loadingCourses: boolean = false;
 
     fullDetailCourse: Course | null = null
-    courseMenuItems:  CourseMenu[] = []
+    courseMenuItems: CourseMenu | null = null
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
     loadingCourseDetails: boolean = true;
@@ -52,7 +52,8 @@ class CourseStore {
     courses: Course[] = []
     userCourses: Course[] = []
     selectedCourse: Course | null = null;
-
+    loadingSection: boolean = false;
+    courseMenuLoading: boolean = false
 
     loadingSubscribeCourse: boolean = false;
 
@@ -93,6 +94,14 @@ class CourseStore {
 
     setLoadingCourses = action((value: boolean) => {
         this.loadingCourses = value;
+    })
+
+    setLoadingSection = action((value: boolean) => {
+        this.loadingSection = value
+    })
+
+    setCourseMenuLoading = action((value: boolean) => {
+        this.courseMenuLoading = value;
     })
 
     getAllCourses = action(async () => {
@@ -182,11 +191,13 @@ class CourseStore {
     })
 
     getFullCourseById = action(async (id: number) => {
+        this.setCourseMenuLoading(true);
         return await GET(`/api/full-course?courseId=${id}`).then(response => {
-           // this.setFullDetailCourse(response.data);
-           debugger
+            // this.setFullDetailCourse(response.data);
             this.setCourseMenuItems(response.data)
             return response.data;
+        }).finally(() => {
+            this.setCourseMenuLoading(false);
         })
     })
 
@@ -244,10 +255,17 @@ class CourseStore {
 
     updateSectionStep = action(async (prevSection: number) => {
         const data = await handleUpdateSectionConfirmed(prevSection);
-        debugger
     })
 
+    getSectionById = action(async (courseId: number, currentSection: number) => {
+        this.setLoadingSection(true)
+        const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
+        runInAction(() => {
+            this.setFullDetailCourse(data.data);
+        })
 
+        this.setLoadingSection(false)
+    })
 }
 
 // export const courseMapper = (course: Course) => {

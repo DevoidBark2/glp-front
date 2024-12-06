@@ -5,3 +5,8 @@ export type TaskAnswerUserDto = {
     answers: number[],
     currentSection: number
 }
+
+export type CurrentSectionDto = {
+    courseId: number,
+    currentSection: number
+}
