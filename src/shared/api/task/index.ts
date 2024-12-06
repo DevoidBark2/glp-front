@@ -11,3 +11,12 @@ export const handleCheckUserTask = withAuth(async (task: TaskAnswerUserDto, conf
 
     return data.data;
 })
+
+
+export const handleUpdateSectionConfirmed = withAuth(async (prevSection: number, config = {}) => {
+    const data = (await axiosInstance.post('api/update-step', {
+        prevSection: prevSection
+    }, config)).data;
+
+    return data.data;
+})

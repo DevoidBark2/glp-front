@@ -11,7 +11,28 @@ import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import axios from "axios";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
-import { handleCheckUserTask } from "@/shared/api/task";
+import { handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
+import { MenuItem } from "@/utils/dashboardMenu";
+
+enum CourseMenuStatus {
+    NOT_STARTED = "not_started",
+    FAILED = "failed",
+    WARNING = "warning",
+    SUCCESS = "success"
+}
+
+type UserAnswer = {
+    confirmedStep? : number,
+    totalAnswers?: number,
+    correctAnswers?: number
+}
+
+export type CourseMenu = {
+    id: number,
+    name: string,
+    userAnswer: UserAnswer
+    children: CourseMenu[]
+}
 
 class CourseStore {
     constructor() {
@@ -21,6 +42,7 @@ class CourseStore {
     loadingCourses: boolean = false;
 
     fullDetailCourse: Course | null = null
+    courseMenuItems:  CourseMenu[] = []
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
     loadingCourseDetails: boolean = true;
@@ -43,6 +65,10 @@ class CourseStore {
 
     setFullDetailCourse = action((value: Course) => {
         this.fullDetailCourse = value;
+    })
+
+    setCourseMenuItems = action((value: any) => {
+        this.courseMenuItems = value;
     })
 
     setSuccessCreateCourseModal = action((value: boolean) => {
@@ -157,7 +183,9 @@ class CourseStore {
 
     getFullCourseById = action(async (id: number) => {
         return await GET(`/api/full-course?courseId=${id}`).then(response => {
-            this.setFullDetailCourse(response.data);
+           // this.setFullDetailCourse(response.data);
+           debugger
+            this.setCourseMenuItems(response.data)
             return response.data;
         })
     })
@@ -178,7 +206,6 @@ class CourseStore {
 
     handleCheckTask = action(async (task: TaskAnswerUserDto) => {
         const data = await handleCheckUserTask(task);
-        debugger;
 
         runInAction(() => {
             this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section) => {
@@ -193,7 +220,6 @@ class CourseStore {
                                         // Обновляем данные для componentTask и userAnswer
                                         console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
                                         console.log('Ответы:', data.answers.answer);
-                                        debugger;
                                         return {
                                             ...component,
                                             componentTask: {
@@ -216,7 +242,10 @@ class CourseStore {
         return data;
     });
 
-
+    updateSectionStep = action(async (prevSection: number) => {
+        const data = await handleUpdateSectionConfirmed(prevSection);
+        debugger
+    })
 
 
 }
