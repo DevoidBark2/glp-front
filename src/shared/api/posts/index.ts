@@ -19,7 +19,7 @@ export const getPostById = async (id: number): Promise<Post> => {
 export const createPost = withAuth(async (values: PostCreateForm, config = {}) => {
     const form = new FormData();
     form.append("name", values.name);
-    form.append("description", values.description);
+    if(values.description) form.append("description", values.description);
     form.append("content", values.content);
     if (values.image?.originFileObj) form.append("image", values.image.originFileObj);
     if (typeof values.is_publish !== "undefined") form.append("is_publish", String(values.is_publish));

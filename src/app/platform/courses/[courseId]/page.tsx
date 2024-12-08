@@ -1,9 +1,35 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Menu, Layout, Card, Progress, Button, Dropdown, Tooltip, Modal, Form, Checkbox, Select, InputNumber, Spin, Skeleton } from "antd";
+import {
+    Menu,
+    Layout,
+    Card,
+    Progress,
+    Button,
+    Dropdown,
+    Tooltip,
+    Modal,
+    Form,
+    Checkbox,
+    Select,
+    InputNumber,
+    Spin,
+    Skeleton,
+    List,
+    Typography, Divider
+} from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { LogoutOutlined, ToolOutlined, EllipsisOutlined, ExclamationCircleOutlined, CheckCircleOutlined, CloseCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import {
+    LogoutOutlined,
+    ToolOutlined,
+    EllipsisOutlined,
+    ExclamationCircleOutlined,
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+    QuestionCircleOutlined,
+    FileImageOutlined, FilePdfOutlined, FileWordOutlined, FileTextOutlined, FileExcelOutlined, FileOutlined
+} from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { Header } from "antd/es/layout/layout";
 import { CourseComponentType } from "@/shared/api/course/model";
@@ -13,6 +39,9 @@ import { TextComponent } from "@/entities/course/ui/TextComponent";
 import { MenuItem } from "@/utils/dashboardMenu";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { CourseMenu } from "@/stores/CourseStore";
+import nextConfig from "../../../../../next.config.mjs";
+import Link from "next/link";
+import Image from "next/image";
 
 const { Sider, Content } = Layout;
 
@@ -40,7 +69,7 @@ const CoursePage = () => {
 
     const handleMenuClick = ({ key }: any) => {
         setSelectedSection(key);
-        courseStore.updateSectionStep(Number(selectedSection));
+        // courseStore.updateSectionStep(Number(selectedSection));
         router.push(`/platform/courses/${courseId}?step=${key}`);
     };
 
@@ -50,7 +79,7 @@ const CoursePage = () => {
 
         if (!menuItem.userAnswer) {
             return (
-                <Tooltip title="Этап не пройден" overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                <Tooltip title={!collapsed ? "Этап не пройден" : "" } overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
                     <QuestionCircleOutlined style={{ color: "gray", marginRight: "8px", fontSize: 25 }} />
                 </Tooltip>
             );
@@ -60,7 +89,7 @@ const CoursePage = () => {
 
         if (confirmedStep) {
             return (
-                <Tooltip title="Этап подтвержден" overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+                <Tooltip title={!collapsed ? "Этап подтвержден" : ""} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
                     <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />
                 </Tooltip>
             );
@@ -78,7 +107,7 @@ const CoursePage = () => {
         }
 
         return (
-            <Tooltip title={tooltipTitle} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
+            <Tooltip title={!collapsed ? tooltipTitle : ""} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
                 {icon}
             </Tooltip>
         );
@@ -90,7 +119,7 @@ const CoursePage = () => {
             return {
                 key: section.id.toString(),
                 label: (
-                    <Tooltip title={collapsed && section.name} placement="right">
+                    <Tooltip title={section.name} placement={collapsed ? "right" : "top"}>
                         <div
                             style={{
                                 display: 'flex',
@@ -112,6 +141,7 @@ const CoursePage = () => {
                             </span>
                         </div>
                     </Tooltip>
+
                 ),
 
                 icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
@@ -128,31 +158,16 @@ const CoursePage = () => {
                                 borderLeft: '2px solid #4caf50',
                             }}
                         >
-                            <p>{child.name}</p>
-                            {renderIconCountAnswerUser(child)}
+                            <p
+                            >
+                                {child.name}
+                            </p>
+
                         </div>
                     ),
-                    icon: (
-                        <span
-                            className={``}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: 24,
-                                height: 24,
-                                borderRadius: '50%',
-                                backgroundColor: '#f0f0f0',
-                                color: '#555',
-                                fontSize: '12px',
-                                marginTop: collapsed ? '8px' : undefined, // Применяем только если collapsed = true
-                                marginLeft: collapsed ? '-3px' : undefined, // Применяем только если collapsed = true
-                            }}
-                        >
-                            {index + 1}
-                        </span>
-                    )
-                })),
+                    icon: renderIconCountAnswerUser(child)
+                }))
+
             };
         }
         return {
@@ -194,6 +209,60 @@ const CoursePage = () => {
             label: 'Выход',
         },
     ];
+
+
+    const getFileIcon = (fileName: string) => {
+        const extension = fileName.split('.').pop().toLowerCase();
+
+        switch (extension) {
+            case 'pdf':
+                return <Image src="/static/pdf-icon.svg" alt={extension} width={30} height={30} />;
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'svg':
+            case 'webp':
+                return <FileImageOutlined className="text-blue-500" />;
+            case 'doc':
+            case 'docx':
+                return <FileWordOutlined className="text-green-500" />;
+            case 'xlsx':
+            case 'xls':
+                return <Image src="/static/excel-icon.svg" alt={extension} width={30} height={30} />;
+            case 'txt':
+                return <FileTextOutlined className="text-gray-600" />;
+            case 'zip':
+            case 'rar':
+            case '7z':
+            case 'tar':
+            case 'gz':
+                return <Image src="/static/zip-icon.svg" alt={extension} width={30} height={30} />;
+            case 'mp3':
+            case 'wav':
+            case 'ogg':
+            case 'flac':
+                return <Image src="/static/audio-icon.svg" alt={extension} width={30} height={30} />;
+            case 'mp4':
+            case 'mov':
+            case 'avi':
+            case 'mkv':
+                return <Image src="/static/video-icon.svg" alt={extension} width={30} height={30} />;
+            case 'exe':
+            case 'msi':
+                return <Image src="/static/exe-icon.svg" alt={extension} width={30} height={30} />;
+            case 'html':
+            case 'css':
+            case 'js':
+            case 'ts':
+            case 'json':
+            case 'xml':
+                return <Image src="/static/exe-icon.svg" alt={extension} width={30} height={30} />;
+            case 'csv':
+                return <Image src="/static/csv-icon.svg" alt={extension} width={30} height={30} />;
+            default:
+                return <FileOutlined className="text-gray-400" />;
+        }
+    };
 
 
     useEffect(() => {
@@ -293,7 +362,7 @@ const CoursePage = () => {
                 )}
                 <div className="flex-1 mx-4">
                     {
-                        courseStore.courseMenuLoading ? <Spin /> :
+                        !courseStore.courseMenuLoading &&
                             <Progress
                                 percent={20}
                                 strokeColor="green"
@@ -309,10 +378,8 @@ const CoursePage = () => {
                 <Sider
                     collapsed={collapsed}
                     width={300}
-                    className="fixed h-[calc(100vh-64px)] overflow-y-auto top-16"
-                    style={{
-                        position: 'fixed',
-                    }}
+                    className="fixed top-16"
+                    style={{position: 'fixed'}}
                 >
                     <div className="flex justify-end px-3 rounded-full">
                         <Button
@@ -320,59 +387,60 @@ const CoursePage = () => {
                             icon={collapsed ? <MenuUnfoldOutlined size={30} style={{ color: 'white' }} /> : <MenuFoldOutlined size={30} style={{ color: 'white' }} />}
                             onClick={() => setCollapsed(!collapsed)}
                         />
-
                     </div>
                     {
-                        courseStore.courseMenuItems ?
+                        courseStore.courseMenuItems ? (
                             <Menu
                                 theme="dark"
                                 mode="inline"
                                 selectedKeys={[selectedSection.toString()]}
                                 items={items}
-                                className="max-h-[calc(100vh-64px)] overflow-y-auto"
+                                style={{paddingBottom: 20}}
+                                className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
                                 onClick={handleMenuClick}
-                            /> :
+                            />
+                        ) : (
                             <>
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
                                     <Skeleton.Input key={it} active block style={{ width: 250, marginLeft: 10, marginTop: 10 }} />
                                 ))}
                             </>
+                        )
                     }
-                    <div className={`absolute bottom-0 left-0 w-full p-4 border-t border-gray-300 bg-white flex gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-                        {!collapsed ? (
-                            <>
-                                <Tooltip title="Настройки">
-                                    <Button
-                                        type="text"
-                                        icon={<ToolOutlined />}
-                                        onClick={() => setIsModalVisible(true)}
-                                    />
-                                </Tooltip>
-
-                                <Tooltip title="Выход">
-                                    <Button
-                                        type="text"
-                                        icon={<LogoutOutlined />}
-                                        onClick={() => router.push('/platform/courses')}
-                                    />
-                                </Tooltip>
-                            </>
-                        ) : (
-                            <Dropdown
-                                trigger={['click']}
-                                menu={{
-                                    items: menuItems
-                                }}
-                            >
-                                <Button
-                                    type="text"
-                                    icon={<EllipsisOutlined />}
-                                />
-                            </Dropdown>
-                        )}
-                    </div>
-
+                    {/*<div className={`absolute bottom-3 left-0 w-full p-4 border-t border-gray-300 bg-white flex gap-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>*/}
+                    {/*    {!collapsed ? (*/}
+                    {/*        <>*/}
+                    {/*            <Tooltip title="Настройки">*/}
+                    {/*                <Button*/}
+                    {/*                    type="text"*/}
+                    {/*                    icon={<ToolOutlined />}*/}
+                    {/*                    onClick={() => setIsModalVisible(true)}*/}
+                    {/*                />*/}
+                    {/*            </Tooltip>*/}
+                    {/*            <Tooltip title="Выход">*/}
+                    {/*                <Button*/}
+                    {/*                    type="text"*/}
+                    {/*                    icon={<LogoutOutlined />}*/}
+                    {/*                    onClick={() => router.push('/platform/courses')}*/}
+                    {/*                />*/}
+                    {/*            </Tooltip>*/}
+                    {/*        </>*/}
+                    {/*    ) : (*/}
+                    {/*        <Dropdown*/}
+                    {/*            trigger={['click']}*/}
+                    {/*            menu={{*/}
+                    {/*                items: menuItems,*/}
+                    {/*            }}*/}
+                    {/*        >*/}
+                    {/*            <Button*/}
+                    {/*                type="text"*/}
+                    {/*                icon={<EllipsisOutlined />}*/}
+                    {/*            />*/}
+                    {/*        </Dropdown>*/}
+                    {/*    )}*/}
+                    {/*</div>*/}
                 </Sider>
+
 
 
                 <Layout className={`${collapsed ? "ml-20" : "ml-72"}`}>
@@ -389,25 +457,116 @@ const CoursePage = () => {
                             loading={courseStore.loadingSection}
                             bordered={false}
                             title={
-                                <>
-                                    <h2 className="text-2xl font-semibold text-gray-800 my-4">
+                                <div className="space-y-2 my-4"> {/* Добавляем отступ между элементами */}
+                                    <h2 className="text-2xl font-bold text-gray-800">
                                         {courseStore.fullDetailCourse?.name}
                                     </h2>
-                                </>
+                                    <p className="text-sm text-gray-500">
+                                        {courseStore.fullDetailCourse?.small_description}
+                                    </p>
+                                </div>
                             }
                         >
                             {
                                 courseStore.fullDetailCourse?.components.map((component) => {
                                     if (component.componentTask.type === CourseComponentType.Text) {
-                                        return <TextComponent key={component.id} component={component.componentTask} />
+                                        return <TextComponent key={component.id} component={component.componentTask}/>
                                     }
                                     if (component.componentTask.type === CourseComponentType.Quiz) {
-                                        return <QuizComponent key={component.id} quiz={component.componentTask} currentSection={selectedSection} />;
+                                        return <QuizComponent key={component.id} quiz={component.componentTask}
+                                                              currentSection={selectedSection}/>;
                                     }
                                     if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
-                                        return <QuizMultiComponent key={component.id} quiz={component.componentTask} />;
+                                        return <QuizMultiComponent key={component.id} quiz={component.componentTask}/>;
                                     }
                                 })}
+
+
+                            <Divider/>
+                            <div className="space-y-12">
+                                {/* Files Section */}
+                                <div className="mt-6">
+                                    <h2 className="text-2xl font-extrabold mb-6 text-gray-900">📂 Дополнительный материал</h2>
+                                    <List
+                                        grid={{
+                                            gutter: 12,
+                                            xs: 1,
+                                            sm: 2,
+                                            md: 3,
+                                            lg: 4,
+                                            xl: 5,
+                                        }}
+                                        dataSource={courseStore.fullDetailCourse?.files || []}
+                                        renderItem={(file) => (
+                                            <List.Item>
+                                                <Card
+                                                    hoverable
+                                                    className="flex flex-col items-center text-center p-4 shadow-md rounded-lg transform transition-transform hover:scale-105 hover:shadow-lg bg-white border border-gray-200"
+                                                    style={{
+                                                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.08)',
+                                                    }}
+                                                >
+                                                    <div
+                                                        className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 text-blue-500 mb-3">
+                                                        {getFileIcon(file.fileName)}
+                                                    </div>
+                                                    <Typography.Text
+                                                        className="text-sm font-medium text-gray-700 truncate">
+                                                        <Link href={`${nextConfig.env?.API_URL}${file.filePath}`}
+                                                              className="hover:text-blue-400 transition-colors">
+                                                            {file.fileName}
+                                                        </Link>
+                                                    </Typography.Text>
+                                                </Card>
+                                            </List.Item>
+                                        )}
+                                    />
+
+                                </div>
+
+                                {/* External Links Section */}
+                                <div className="mt-6">
+                                    <h2 className="text-2xl font-extrabold mb-6 text-gray-900">🔗 Полезные ссылки</h2>
+                                    <List
+                                        grid={{
+                                            gutter: 16,
+                                            xs: 1,
+                                            sm: 2,
+                                            md: 3,
+                                            lg: 3,
+                                            xl: 4,
+                                        }}
+                                        dataSource={courseStore.fullDetailCourse?.links || []}
+                                        renderItem={(link) => (
+                                            <List.Item>
+                                                <Card
+                                                    hoverable
+                                                    className="p-6 shadow-md rounded-xl transform transition-transform hover:scale-105 hover:shadow-lg bg-gradient-to-b from-white to-green-50"
+                                                    style={{
+                                                        boxShadow: '0 6px 14px rgba(0, 0, 0, 0.1)',
+                                                    }}
+                                                >
+                                                    <div className="flex items-center space-x-3">
+                                                        <div
+                                                            className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-600">
+                                                            🌐
+                                                        </div>
+                                                        <Typography.Text
+                                                            className="text-lg font-semibold text-blue-700 truncate">
+                                                            <a href={link.link} target="_blank"
+                                                               rel="noopener noreferrer"
+                                                               className="hover:text-blue-500 transition-colors">
+                                                                {link.link}
+                                                            </a>
+                                                        </Typography.Text>
+                                                    </div>
+                                                </Card>
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
                         </Card>
                     </Content>
                 </Layout>

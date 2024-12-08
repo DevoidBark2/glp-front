@@ -1,12 +1,12 @@
-import { Button, Form, Input, message, Modal, Select } from "antd"
+import { Button, Form, Input, message, Modal, Select, Upload } from "antd"
 import TextArea from "antd/es/input/TextArea"
 import { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { MainSection } from "@/stores/SectionCourse";
 
 export const General = () => {
-    const { sectionCourseStore } = useMobxStores();
+    const { sectionCourseStore, generalSettingsStore } = useMobxStores();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm<MainSection>();
 
@@ -18,6 +18,7 @@ export const General = () => {
     };
 
     useEffect(() => {
+        generalSettingsStore.getGeneralSettings();
         sectionCourseStore.getMainSections();
     }, [])
     return {
@@ -73,14 +74,7 @@ export const General = () => {
                         dropdownRender={(menu) => (
                             <>
                                 {menu}
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        padding: 8,
-                                    }}
-                                >
+                                <div className="flex justify-between items-center p-2">
                                     <Button
                                         type="text"
                                         icon={<PlusOutlined />}
@@ -100,6 +94,7 @@ export const General = () => {
                         ))}
                     </Select>
                 </Form.Item>
+
                 <Form.Item
                     name="name"
                     label="Название раздела"
@@ -118,13 +113,13 @@ export const General = () => {
                     />
                 </Form.Item>
 
-                {/* {generalSettingsStore.generalSettings?.allow_extra_materials && <>
+                {generalSettingsStore.generalSettings?.allow_extra_materials && <>
                     <Form.Item
                         name="uploadFile"
                         label="Дополнительные материалы"
                         tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
                     >
-                        <Upload beforeUpload={() => false}>
+                        <Upload beforeUpload={() => false} multiple>
                             <Button icon={<UploadOutlined />}>Загрузить файл</Button>
                         </Upload>
                     </Form.Item>
@@ -137,7 +132,7 @@ export const General = () => {
                             {(fields, { add, remove }) => (
                                 <>
                                     {fields.map(({ key, name, ...restField }) => (
-                                        <div key={key} className="flex items-center mb-4">
+                                        <div key={key} className="flex mb-4">
                                             <Form.Item
                                                 {...restField}
                                                 name={[name]}
@@ -168,7 +163,7 @@ export const General = () => {
                             )}
                         </Form.List>
                     </Form.Item>
-                </>} */}
+                </>}
             </>
         )
     }

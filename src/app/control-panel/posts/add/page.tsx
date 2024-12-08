@@ -76,18 +76,24 @@ const CreatePostPage = () => {
                 <Form.Item
                     name="name"
                     label="Заголовок"
-                    rules={[{ required: true, message: 'Введите заголовок поста!' }]}
+                    rules={[
+                        { required: true, message: 'Введите заголовок поста!' },
+                        { max: 100, message: 'Заголовок не должен превышать 100 символов!' }
+                    ]}
                 >
-                    <Input placeholder="Введите название поста" />
+                    <Input placeholder="Введите название поста" maxLength={100} />
                 </Form.Item>
 
                 <Form.Item
                     name="description"
                     label="Описание"
-                    rules={[{ required: true, message: 'Введите описание поста!' }]}
+                    rules={[
+                        { max: 255, message: 'Описание не должно превышать 255 символов!' }
+                    ]}
                 >
-                    <Input placeholder="Введите описание поста" />
+                    <Input placeholder="Введите описание поста" maxLength={255} />
                 </Form.Item>
+
 
                 <Form.Item
                     name="image"

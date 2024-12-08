@@ -33,8 +33,10 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             dataIndex: 'name',
             width: '20%',
             render: (text) => (
-                <Tooltip title={text}>
-                    <span className="dark:text-white">{text}</span>
+                <Tooltip title={text.length > 30 ? text : ''}>
+                    <span className="dark:text-white truncate" style={{ maxWidth: 'calc(30ch)' }}>
+                        {text.length > 30 ? text.substring(0, 30) + '...' : text}
+                    </span>
                 </Tooltip>
             ),
         },

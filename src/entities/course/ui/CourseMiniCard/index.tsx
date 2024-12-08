@@ -16,8 +16,8 @@ export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniC
     const router = useRouter();
 
     const handleSelectCourse = (course:Course) => {
-        courseStore.setSelectedCourse(course)
-        createSectionForm.setFieldsValue({ course: course });
+        courseStore.setSelectedCourse(course.id)
+        createSectionForm.setFieldsValue({ course: course.id });
     }
 
     const renderLevelCourse = (levelCourse: number) => {
@@ -52,18 +52,17 @@ export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniC
                     hoverable
                     onClick={() => handleSelectCourse(course)}
                     style={{
-                        width: 240,
-                        margin: 8,
-                        border: courseStore.selectedCourse?.id === course.id ? '2px solid #1890ff' : '2px solid #f0f0f0',
-                        backgroundColor: courseStore.selectedCourse?.id === course.id ? '#e6f7ff' : '#fff',
+                        border: courseStore.selectedIdCourse === course.id ? '2px solid #1890ff' : '2px solid #f0f0f0',
+                        backgroundColor: courseStore.selectedIdCourse === course.id ? '#e6f7ff' : '#fff',
                         transition: 'all 0.3s ease',
                     }}
+                    className="w-60 m-2"
                 >
                     <Card.Meta
                         description={
                             <div>
                                 <p><ClockCircleOutlined /> {course.duration} ч.</p>
-                                <p>Категория: {course.category?.name ?? "Категория отсутствует"}</p>
+                                <p>Категория: <br/> {course.category?.name ?? "Категория отсутствует"}</p>
                                 <p>Уровень: {renderLevelCourse(course.level)}</p>
                                 <p>Дата публикации: {new Date(course.publish_date).toLocaleDateString()}</p>
                             </div>

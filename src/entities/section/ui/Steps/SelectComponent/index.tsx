@@ -59,16 +59,17 @@ export const SelectComponent = ({createSectionForm} : SelectComponentProps) => {
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
         if (selectedComponent) {
             courseComponentStore.addComponentToTable(selectedComponent);
-            const currentComponents = createSectionForm.getFieldValue('components') || [];
+            const currentComponentIds = createSectionForm.getFieldValue('components') || [];
 
-            // Добавляем новый компонент к текущим
-            const updatedComponents = [...currentComponents, selectedComponent];
+            // Добавляем ID нового компонента к текущим ID
+            const updatedComponentIds = [...currentComponentIds, selectedComponent.id];
 
-            // Обновляем значение в форме
-            createSectionForm.setFieldsValue({ components: updatedComponents });
+            // Обновляем значение в форме только с массивом ID
+            createSectionForm.setFieldsValue({ components: updatedComponentIds });
         }
     };
-    
+
+
 
     const columns: TableColumnsType<CourseComponentTypeI> = [
         {

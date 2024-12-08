@@ -7,6 +7,7 @@ import { useMobxStores } from "@/stores/stores";
 import { FormInstance } from "antd/lib";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
+import Link from "next/link";
 
 interface SelectCourseProps {
     createSectionForm: FormInstance
@@ -28,16 +29,15 @@ export const SelectCourse = observer(({createSectionForm}: SelectCourseProps) =>
                 locale={{
                     emptyText: <Empty description="Список пуст">
                         <Button
-                            className="flex items-center justify-center transition-transform transform hover:scale-105"
+                            className="transition-opacity hover:opacity-80"
                             type="primary"
                             icon={<PlusCircleOutlined />}
-                            onClick={() => router.push('/control-panel/courses/add')}
                         >
-                            Создать курс
+                            <Link href="/control-panel/courses/add">Создать курс</Link>
                         </Button>
                     </Empty>
                 }}
-                grid={{ gutter: 16, column: 5 }}
+                grid={{ gutter: 20, column: 6 }}
                 loading={courseStore.loadingCourses}
                 dataSource={courseStore.userCourses}
                 renderItem={(course) => (

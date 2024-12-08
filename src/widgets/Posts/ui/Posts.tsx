@@ -8,7 +8,7 @@ export const Posts = observer(() => {
     return (
         <div className="container mx-auto">
             <div className="px-6">
-                <p className="mt-6 text-gray-800 text-4xl mb-6">Новости</p>
+                <p className="mt-6 text-3xl font-semibold text-gray-800 mb-6">Новости</p>
                 <PostList loading={postStore.loading} posts={postStore.allPosts} />
             </div>
         </div>

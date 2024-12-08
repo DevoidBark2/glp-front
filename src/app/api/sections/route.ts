@@ -21,12 +21,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     const token = req.headers.get('authorization');
-    const body = await req.json();
+    const body = await req.formData();
+
+    body.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+    });
 
     try {
         const { data } = await axios.post(nextConfig.env?.API_URL + 'api/sections', body, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             }
         });
 

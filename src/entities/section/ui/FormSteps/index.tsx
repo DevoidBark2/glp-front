@@ -27,8 +27,7 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
     ];
 
     const next = async () => {
-        const co = sectionCourseForm?.getFieldsValue();
-        if (current === 0 && !courseStore.selectedCourse) {
+        if (current === 0 && !courseStore.selectedIdCourse) {
             message.warning("Выберите курс!")
             return;
         }
@@ -51,6 +50,7 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
         sectionCourseStore.addSection(values).then((response) => {
             router.push("/control-panel/sections");
             notification.success({ message: response.message })
+            courseStore.setSelectedCourse(null);
             courseComponentStore.setSearchResult([]);
             courseComponentStore.setSelectedComponent([]);
             sectionCourseStore.setCreateSectionLoading(false);

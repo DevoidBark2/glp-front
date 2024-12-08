@@ -30,7 +30,8 @@ type UserAnswer = {
 export type CourseMenu = {
     id: number,
     courseName: string,
-    userAnswer: UserAnswer
+    userAnswer: UserAnswer,
+    children: CourseMenu[],
     sections: CourseMenu[]
 }
 
@@ -51,20 +52,20 @@ class CourseStore {
     courseDetailsSections: SectionCourseItem[] = [];
     courses: Course[] = []
     userCourses: Course[] = []
-    selectedCourse: Course | null = null;
+    selectedIdCourse: number | null = null;
     loadingSection: boolean = false;
     courseMenuLoading: boolean = false
 
     loadingSubscribeCourse: boolean = false;
 
-    setSelectedCourse = action((value: Course) => {
-        this.selectedCourse = value;
+    setSelectedCourse = action((value: number | null) => {
+        this.selectedIdCourse = value;
     })
     setLoadingSubscribeCourse = action((value: boolean) => {
         this.loadingSubscribeCourse = value;
     })
 
-    setFullDetailCourse = action((value: Course) => {
+    setFullDetailCourse = action((value: Course | null) => {
         this.fullDetailCourse = value;
     })
 
@@ -259,8 +260,10 @@ class CourseStore {
 
     getSectionById = action(async (courseId: number, currentSection: number) => {
         this.setLoadingSection(true)
+        this.setFullDetailCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
         runInAction(() => {
+            debugger
             this.setFullDetailCourse(data.data);
         })
 

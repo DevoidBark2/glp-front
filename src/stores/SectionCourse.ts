@@ -3,8 +3,13 @@ import { Course } from "@/shared/api/course/model";
 import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { GET, POST } from "@/lib/fetcher";
 import { StatusSectionEnum } from "@/shared/api/section/model";
-import { createMainSection, deleteSectionCourse, getMainCourseSection, getSectionCourseById } from "@/shared/api/section";
-import { axiosInstance } from "@/shared/api/http-client";
+import {
+    createMainSection,
+    createSection,
+    deleteSectionCourse,
+    getMainCourseSection,
+    getSectionCourseById
+} from "@/shared/api/section";
 
 export type SectionCourseItem = {
     id: number;
@@ -56,7 +61,10 @@ class SectionCourse {
 
     addSection = action(async (values: SectionCourseItem) => {
         this.setCreateSectionLoading(true);
-        return await POST(`/api/sections`, values);
+        debugger
+        return await createSection(values).finally(() => {
+            this.setLoadingSectionsCourse(false)
+        });
     })
 
     deleteSection = action(async (id: number) => {
