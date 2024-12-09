@@ -1,4 +1,4 @@
-export type ChnagePasswordType = {
+export type ChangePasswordType = {
     currentPassword: string;
     newPassword: string;
     confirmNewPassword: string;

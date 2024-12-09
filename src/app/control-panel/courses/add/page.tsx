@@ -101,7 +101,9 @@ const CourseAddPage = () => {
                         <Form.Item
                             name="name_course"
                             label="Название курса"
-                            rules={[{ required: true, message: "Название курса обязательно!" }]}
+                            rules={[{ required: true, message: "Название курса обязательно!" },
+                                { max: 64,message: 'Название курса превышает допустимую длину 64' }
+                            ]}
                         >
                             <Input placeholder="Введите название курса" />
                         </Form.Item>
@@ -110,6 +112,7 @@ const CourseAddPage = () => {
                         <Form.Item
                             name="description"
                             label="Краткое описание"
+                            rules={[{ max: 255, message: 'Краткое описание превышает допустимую длину 255' }]}
                         >
                             <Input placeholder="Введите краткое описание курса" />
                         </Form.Item>

@@ -16,3 +16,10 @@ export const confirmLeaveCourse = withAuth(async (courseId: number,config = {}) 
 
     return data.data;
 })
+
+export const getCourseById = withAuth(async (courseId: number, config = {}) => {
+    const data = (await axiosInstance.get(`/api/course/${courseId}`,config)).data;
+
+
+    return data.data;
+})

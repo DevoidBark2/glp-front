@@ -6,6 +6,7 @@ import { FORMAT_VIEW_DATE } from "@/constants";
 import { message } from "antd";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { getUserById, handleBlockUser, updateRole } from "@/shared/api/user";
+import { UserProfile } from "./UserProfileStore";
 
 class UserStore {
     constructor() {
@@ -23,6 +24,11 @@ class UserStore {
     loadingSearchUser: boolean = false;
     selectedGroupAction: StatusUserEnum | null = null;
     selectedRowsUser: number[] = []
+    userProfile: UserProfile | null = null;
+
+    setUserProfile = action(async (value: UserProfile) => {
+        this.userProfile = value;
+    })
 
     setSelectedRowsUsers = action((value: number[]) => {
         this.selectedRowsUser = value;
@@ -133,12 +139,16 @@ class UserStore {
                 footerContent: response.response.data.pagination_size
             }
 
+            debugger
             window.localStorage.setItem('user_settings', JSON.stringify(settingUser));
+            debugger
+            this.setUserProfile(response.response.data);
             signInUser({
                 id: response.response.data.id,
                 token: response.response.data.token,
                 email: response.response.data.email,
                 role: response.response.data.role,
+                userAvatar: response.response.data.userAvatar,
                 user_name: response.response.data.user_name,
             });
             this.setOpenLoginModal(false);

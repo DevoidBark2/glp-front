@@ -95,4 +95,5 @@ export type Course = {
     progress: any
     enrolledAt: Date
     children: any
+    isUserEnrolled: boolean
 }

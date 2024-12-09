@@ -4,6 +4,8 @@ import { useMobxStores } from "@/stores/stores";
 import React, { useEffect } from "react";
 import { Divider, Spin } from "antd";
 import { CourseList } from "@/entities/course/ui";
+import Image from "next/image";
+import { EmptyContent } from "@/shared/ui/emptyContent";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores();
@@ -20,15 +22,17 @@ const CoursesPage = () => {
                 </div>
             </div>
             <Divider className="my-6" />
-            {
-                !courseStore.loadingCourses ? (
+            {!courseStore.loadingCourses ? (
+                courseStore.courses.length > 0 ? (
                     <CourseList courses={courseStore.courses} />
                 ) : (
-                    <div className="flex justify-center items-center h-60">
-                        <Spin size="large" />
-                    </div>
+                    <EmptyContent image="/static/empty-icon.svg" title="Курсы не найдены" description="Не переживайте, контент скоро появится. Пожалуйста, вернитесь позже!"/>
                 )
-            }
+            ) : (
+                <div className="flex justify-center items-center h-60">
+                    <Spin size="large" />
+                </div>
+            )}
         </div>
     );
 }

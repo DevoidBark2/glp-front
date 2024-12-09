@@ -14,6 +14,8 @@ export type UserProfile = {
     birth_day: Date
     city: string;
     about_me: string;
+    userAvatar: string;
+    user_name: string;
     pagination_size: number;
 }
 

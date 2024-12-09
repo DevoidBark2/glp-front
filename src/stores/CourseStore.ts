@@ -5,7 +5,7 @@ import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
 import { SectionCourseItem } from "@/stores/SectionCourse";
-import { getAllCourses } from "@/shared/api/course";
+import { getAllCourses, getCourseById } from "@/shared/api/course";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
@@ -81,7 +81,7 @@ class CourseStore {
         this.loadingCourseDetails = value
     })
 
-    setSelectedCourseForDetailModal = action((course: Course) => {
+    setSelectedCourseForDetailModal = action((course: Course | null) => {
         this.selectedCourseForDetailModal = course;
     })
 
@@ -115,14 +115,6 @@ class CourseStore {
         } finally {
             this.setLoadingCourses(false)
         }
-
-        // await GET('/api/courses').then(response => {
-        //     this.courses = response.response.data.map(courseMapper)
-        // }).catch(e => {
-        //     notification.error({ message: e.response.data.message })
-        // }).finally(() => {
-        //     this.setLoadingCourses(false);
-        // })
     })
 
     createCourse = action(async (values: any) => {
@@ -138,7 +130,7 @@ class CourseStore {
         form.append('duration', values.duration)
         form.append('level', values.level)
         form.append('publish_date', dayjs().format(FORMAT_VIEW_DATE))
-        form.append("content_description", values.content_description)
+        if(values.content_description) form.append("content_description", values.content_description)
 
         return await POST(`/api/courses`, form).catch(e => {
             notification.error({ message: e.response.data.message })
@@ -170,6 +162,10 @@ class CourseStore {
         const response = await GET(`/api/course-details?courseId=${courseId}`)
         this.courseDetailsSections = response.data.sections;
         return response;
+    })
+
+    getCourseDetailsById = action(async(courseId: number) => {
+        return await getCourseById(courseId);
     })
 
     changeCourse = action(async (values: Course) => {

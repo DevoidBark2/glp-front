@@ -1,47 +1,31 @@
-import { LevelCourseEnum } from "@/shared/api/course/model";
-import Image from "next/image";
 import React from "react";
+import { TrophyOutlined } from "@ant-design/icons";
+import { LevelCourseEnum } from "@/shared/api/course/model";
 
 type CourseLevelComponentProps = {
     level: LevelCourseEnum;
 };
 
 const CourseLevelComponent: React.FC<CourseLevelComponentProps> = ({ level }) => {
-    const getLevelDetails = (level: LevelCourseEnum) => {
+    const getLevelDescription = (level: LevelCourseEnum) => {
         switch (level) {
             case LevelCourseEnum.LIGHT:
-                return {
-                    icon: "/static/light_level_icon.svg",
-                    altText: "Легкий уровень",
-                    description: <>
-                        Легкий уровень <br /> сложности
-                    </>
-                };
+                return "Легкий";
             case LevelCourseEnum.MIDDLE:
-                return {
-                    icon: "/static/middle_level_icon.svg",
-                    altText: "Средний уровень",
-                    description: <>
-                        Средний уровень <br /> сложности
-                    </>
-                };
+                return "Средний";
             case LevelCourseEnum.HARD:
-                return {
-                    icon: "/static/hard_level_icon.svg",
-                    altText: "Сложный уровень",
-                    description:<>
-                        Сложный уровень <br /> сложности
-                    </>
-                };
+                return "Сложный";
+            default:
+                return "Неизвестный уровень";
         }
     };
 
-    const { icon, altText, description } = getLevelDetails(level);
-
     return (
         <div className="flex items-center">
-            <Image src={icon} alt={altText} width={50} height={50} />
-            <p className="ml-2">{description}</p>
+            <TrophyOutlined style={{ fontSize: 30, color: "#faad14" }} />
+            <span className="ml-4 text-gray-700 text-base font-medium">
+                Уровень: {getLevelDescription(level)}
+            </span>
         </div>
     );
 };

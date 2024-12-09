@@ -154,7 +154,7 @@ const PostPage = () => {
                 })}
                 footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
-                locale={postTable({ setShowModal: () => postStore.setCreatePostModal(true) })}
+                locale={postTable()}
             />
         </PageContainerControlPanel>
     );

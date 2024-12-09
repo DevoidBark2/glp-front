@@ -12,6 +12,8 @@ import RegisterComponent from "@/components/RegisterComponent/RegisterComponent"
 import ForgotPasswordComponent from "@/components/ForgotPasswordComponent/ForgotPasswordComponent";
 import { platformMenu } from "@/constants";
 import { UserRole } from "@/shared/api/user/model";
+import nextConfig from "next.config.mjs";
+import { UserOutlined } from "@ant-design/icons";
 
 export type UserType = {
     user: { user_name: string; role: UserRole, avatar: string };
@@ -81,7 +83,12 @@ const HeaderBlock = () => {
 
     useEffect(() => {
         const user = getCookieUserDetails();
-        setCurrentUser(user);
+        debugger
+        if(user) {
+            userStore.setUserProfile(user.user);
+            setCurrentUser(user);
+        }
+       
 
         if (user) {
             configureMenuItems(user.user.role);
@@ -135,11 +142,11 @@ const HeaderBlock = () => {
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
                                     <Avatar
                                         size={40}
-                                        src={userProfileStore.userAvatar || undefined}
-                                        icon={!userProfileStore.userAvatar}
+                                        src={`${nextConfig.env?.API_URL}${userStore.userProfile?.userAvatar}` || undefined}
+                                        icon={!userStore.userProfile?.userAvatar && <UserOutlined />}
                                     />
                                     <div className="text-white font-semibold ml-3">
-                                        {`${userProfileStore.userProfile?.second_name ?? ""} ${userProfileStore.userProfile?.first_name ?? ""} ${userProfileStore.userProfile?.last_name ?? ""}`}
+                                        {`${userStore.userProfile?.user_name ?? ""}`}
                                     </div>
                                 </div>
                             </Dropdown>

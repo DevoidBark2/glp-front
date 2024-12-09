@@ -1,15 +1,15 @@
 "use client"
 import React from "react";
-import { ChnagePasswordType } from "@/shared/api/auth/model";
+import { ChangePasswordType } from "@/shared/api/auth/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import {Button, Form, Input, notification, Tabs, TabsProps} from "antd";
 import {observer} from "mobx-react";
 
 const SettingsPage = () => {
     const {authStore} = useMobxStores()
-    const [form] = Form.useForm<ChnagePasswordType>();
+    const [form] = Form.useForm<ChangePasswordType>();
 
-    const handleChangePassword = (values:ChnagePasswordType) => {
+    const handleChangePassword = (values:ChangePasswordType) => {
         authStore.changePassword(values).then((response) => {
             notification.success({message: response.message})
             form.resetFields();
@@ -18,10 +18,10 @@ const SettingsPage = () => {
         });
     };
 
-
+    
     const items: TabsProps['items'] = [
         {
-          key: "2",
+          key: "1",
           label: "Безопасность",
           children: (
             <div className="space-y-4 w-1/3">
@@ -32,49 +32,48 @@ const SettingsPage = () => {
                     onFinish={handleChangePassword}
                 >
                     <Form.Item
-                    name="currentPassword"
-                    label="Текущий пароль"
-                    rules={[
-                        { required: true, message: 'Введите текущий пароль' },
-                    ]}
+                        name="currentPassword"
+                        label="Текущий пароль"
+                        rules={[
+                            { required: true, message: 'Введите текущий пароль' },
+                        ]}
                     >
-                    <Input.Password placeholder="Текущий пароль" />
+                        <Input.Password placeholder="Текущий пароль" />
                     </Form.Item>
 
                     <Form.Item
-                    name="newPassword"
-                    label="Новый пароль"
-                    rules={[
-                        { required: true, message: 'Введите новый пароль' },
-                        { min: 8, message: 'Пароль должен содержать минимум 8 символов' },
-                    ]}
+                        name="newPassword"
+                        label="Новый пароль"
+                        rules={[
+                            { required: true, message: 'Введите новый пароль' }
+                        ]}
                     >
-                    <Input.Password placeholder="Новый пароль" />
+                        <Input.Password placeholder="Новый пароль" />
                     </Form.Item>
 
                     <Form.Item
-                    name="confirmNewPassword"
-                    label="Подтвердите новый пароль"
-                    dependencies={['newPassword']}
-                    rules={[
-                        { required: true, message: 'Подтвердите новый пароль' },
-                        ({ getFieldValue }) => ({
-                        validator(_, value) {
-                            if (!value || getFieldValue('newPassword') === value) {
-                            return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('Пароли не совпадают'));
-                        },
-                        }),
-                    ]}
+                        name="confirmNewPassword"
+                        label="Подтвердите новый пароль"
+                        dependencies={['newPassword']}
+                        rules={[
+                            { required: true, message: 'Подтвердите новый пароль' },
+                            ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('newPassword') === value) {
+                                return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('Пароли не совпадают'));
+                            },
+                            }),
+                        ]}
                     >
-                    <Input.Password placeholder="Подтвердите новый пароль" />
+                        <Input.Password placeholder="Подтвердите новый пароль" />
                     </Form.Item>
 
                     <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Сохранить новый пароль
-                    </Button>
+                        <Button type="primary" htmlType="submit">
+                            Сохранить новый пароль
+                        </Button>
                     </Form.Item>
                 </Form>
             </div>
@@ -84,8 +83,8 @@ const SettingsPage = () => {
 
     return(
         <div className="container mx-auto">
-            <h1 className="text-4xl my-5">Настройки</h1>
-            <Tabs defaultActiveKey="1" items={items} />
+            <h1 className="mt-6 text-3xl font-semibold text-gray-800 mb-6">Настройки</h1>
+            <Tabs items={items} />
         </div>
     )
 }

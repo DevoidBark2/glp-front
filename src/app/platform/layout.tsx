@@ -55,14 +55,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <MaintenanceMode serviceModeText={footerInfo?.service_mode_text} />
             ) : (
                 <>
-                    {!pathName.includes('/courses/') && <HeaderBlock />}
+                    {!pathName.includes('/lessons/') && <HeaderBlock />}
                     <div style={{ flex: 1 }}>{children}</div>
-                    {!pathName.includes('/courses/') && (
+                    {!pathName.includes('/lessons/') && (
                         <footer className="bg-gray-800 text-white py-10 mt-10">
                             <div className="container mx-auto px-6">
                                 <div className="flex flex-wrap sm:flex-nowrap justify-around items-start">
 
-                                    {/* О проекте */}
                                     <div className="w-full sm:w-1/3 mb-6 sm:mb-0 text-left">
                                         <h4 className="text-lg font-semibold mb-3">О проекте</h4>
                                         <p className="text-gray-300 text-sm leading-relaxed">
@@ -70,7 +69,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                         </p>
                                     </div>
 
-                                    {/* Контакты */}
                                     <div className="w-full sm:w-1/3 mb-6 sm:mb-0 text-left sm:text-center">
                                         <h4 className="text-lg font-semibold mb-3">Контакты</h4>
                                         <p className="text-gray-300 text-sm">
@@ -87,7 +85,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                         </p>
                                     </div>
 
-                                    {/* Полезные ссылки */}
                                     <div className="w-full sm:w-1/3 text-left sm:text-center">
                                         <h4 className="text-lg font-semibold mb-3">Полезные ссылки</h4>
                                         <ul className="text-gray-300 text-sm space-y-2">
@@ -105,7 +102,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                     </div>
                                 </div>
 
-                                {/* Подпись внизу */}
                                 <div className="mt-8 text-center border-t border-gray-700 pt-4 text-gray-400 text-xs">
                                     <p>
                                         &copy; {new Date().getFullYear()} Проект {footerInfo?.platform_name}. Все права защищены.
@@ -113,8 +109,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                 </div>
                             </div>
                         </footer>
-
-
                     )}
                 </>
             )}
