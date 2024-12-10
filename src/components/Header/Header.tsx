@@ -135,9 +135,7 @@ const HeaderBlock = () => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {userProfileStore.loading ? (
-                            <Spin size="large" />
-                        ) : currentUser ? (
+                        {currentUser ? (
                             <Dropdown menu={{ items }} placement="bottomLeft">
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
                                     <Avatar

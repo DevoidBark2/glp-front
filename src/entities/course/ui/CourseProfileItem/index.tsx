@@ -13,10 +13,10 @@ type CourseProfileItemProps = {
 
 export const CourseProfileItem: FC<CourseProfileItemProps> = ({course} ) => {
     const router = useRouter();
-    const {courseStore,userProfileStore} = useMobxStores();
+    const { userProfileStore } = useMobxStores();
 
     return (
-        <div key={course.id} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md hover:bg-white hover:shadow-lg transition-all duration-300">
+        <div key={course.courseId} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md hover:bg-white hover:shadow-lg transition-all duration-300">
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                     <img src={`${nextConfig.env!.API_URL}${course?.image}`} alt={course.name} width={100} height={100} className="mr-4" />
@@ -28,7 +28,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({course} ) => {
                 <div className="flex items-center">
                     <Tooltip title={`Перейти к курсу "${course.name}"`}>
                         <Button type="primary" onClick={() => {
-                            router.push(`/platform/courses/${course.id}`)
+                            router.push(`/platform/lessons/${course.courseId}`)
                         }}>Продолжить</Button>
                     </Tooltip>
                     <Popconfirm
