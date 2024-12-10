@@ -25,7 +25,15 @@ const CoursePage = () => {
             userStore.setOpenLoginModal(true);
             return;
         }
-        () => router.push(`/platform/lessons/${courseId}`)
+
+        if(currentCourse && currentCourse.isUserEnrolled) {
+            router.push(`/platform/lessons/${courseId}`)
+            return;
+        }
+
+        courseStore.subscribeCourse(Number(courseId),user.user.id).then(response => {
+            router.push(`/platform/lessons/${courseId}`)
+        })
     }
 
     useEffect(() => {
@@ -55,6 +63,7 @@ const CoursePage = () => {
                                 type="primary"
                                 size="large"
                                 className="px-12 py-2 rounded-lg font-medium"
+                                loading={courseStore.subscribeCourseLoading}
                                 onClick={handleClick}
                             >
                                 {currentCourse.isUserEnrolled ? "Перейти к курсу" : "Записаться на курс"}

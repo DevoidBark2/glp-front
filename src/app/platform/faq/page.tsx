@@ -11,6 +11,7 @@ const FaqPage = () => {
     useEffect(() => {
         faqStore.getAll();
     }, [])
+
     return (
         <div className="container mx-auto py-6">
              <div className="flex items-center justify-between mb-6">

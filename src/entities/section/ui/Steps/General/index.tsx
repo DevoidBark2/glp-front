@@ -98,7 +98,9 @@ export const General = () => {
                 <Form.Item
                     name="name"
                     label="Название раздела"
-                    rules={[{ required: true, message: "Введите название раздела!" }]}
+                    rules={[{ required: true, message: "Введите название раздела!" },
+                        { max: 64, message: "Название раздела превышает допустимую длину 64" }
+                    ]}
                 >
                     <Input placeholder="Введите название раздела..." />
                 </Form.Item>
@@ -106,6 +108,9 @@ export const General = () => {
                 <Form.Item
                     name="description"
                     label="Описание раздела"
+                    rules={[{ required: false, message: "Введите описание раздела!" },
+                        { max: 100, message: "Описание раздела превышает допустимую длину 100" }
+                    ]}
                 >
                     <TextArea
                         placeholder="Введите описание раздела..."

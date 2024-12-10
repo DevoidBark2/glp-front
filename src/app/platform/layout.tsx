@@ -93,11 +93,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                                     Вопросы и ответы (FAQ)
                                                 </Link>
                                             </li>
-                                            <li>
+                                            {/* <li>
                                                 <Link href="/platform/support" className="hover:underline">
                                                     Поддержка
                                                 </Link>
-                                            </li>
+                                            </li> */}
                                         </ul>
                                     </div>
                                 </div>

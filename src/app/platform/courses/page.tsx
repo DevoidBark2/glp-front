@@ -4,7 +4,6 @@ import { useMobxStores } from "@/stores/stores";
 import React, { useEffect } from "react";
 import { Divider, Spin } from "antd";
 import { CourseList } from "@/entities/course/ui";
-import Image from "next/image";
 import { EmptyContent } from "@/shared/ui/emptyContent";
 
 const CoursesPage = () => {

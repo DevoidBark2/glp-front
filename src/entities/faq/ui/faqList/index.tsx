@@ -14,7 +14,7 @@ export const FaqList: FC<{ faqs: Faq[] }> = ({ faqs }) => (
         {faqs.map((faq) => (
             <Panel
                 header={
-                    <span className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition duration-200">
+                    <span className="text-lg font-semibold text-gray-800 hover:cursor-pointer">
                         {faq.question}
                     </span>
                 }

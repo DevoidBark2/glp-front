@@ -53,6 +53,9 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
             courseStore.setSelectedCourse(null);
             courseComponentStore.setSearchResult([]);
             courseComponentStore.setSelectedComponent([]);
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
+        }).finally(() => {
             sectionCourseStore.setCreateSectionLoading(false);
         })
     };

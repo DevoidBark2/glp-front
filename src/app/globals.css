@@ -18,20 +18,39 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background-color: #7c7b7b;
-    border-radius: 10px; /* Закругленные края ползунка */
+    border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: #808080; /* Цвет "ползунка" при наведении */
+    background-color: #808080;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f0f0f0; /* Цвет дорожки */
-    border-radius: 10px; /* Закругленные края дорожки */
-    margin: 2px; /* Уменьшение видимости скроллбара у границ */
+    background: #f0f0f0;
+    border-radius: 10px;
+    margin: 2px;
 }
 
-/* Убираем стрелки */
 .custom-scrollbar::-webkit-scrollbar-button {
-    display: none; /* Полностью убирает стрелки */
+    display: none; 
+}
+
+
+.confirmed-icon {
+    display: inline-block;
+    animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
 }

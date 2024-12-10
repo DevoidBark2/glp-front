@@ -106,7 +106,7 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
                         <Button
                             onClick={handleRetryQuiz}
                             type="default"
-                            disabled={retryDisabled}
+                            disabled
                             className="hover:scale-105"
                         >
                             Попробовать еще раз

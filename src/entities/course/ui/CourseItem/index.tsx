@@ -12,7 +12,7 @@ export const CourseItem = observer(({ course }: CourseItemProps) => {
     return (
         <Link
             href={`courses/${course.id}`}
-            className="block rounded-lg shadow hover:shadow-lg bg-white overflow-hidden transition-transform duration-150 ease-out transform-gpu"
+            className="block rounded-lg shadow hover:shadow-lg hover:cursor-pointer bg-white overflow-hidden transition-transform duration-150 ease-out transform-gpu"
         >
             <div className="relative w-full h-48">
                 <img

@@ -72,7 +72,7 @@ class SectionCourse {
         return await deleteSectionCourse(id);
     })
 
-    getSectionById = action (async (id: number) => {
+    getMenuSections = action (async (id: number) => {
         return await getSectionCourseById(id);
     })
 

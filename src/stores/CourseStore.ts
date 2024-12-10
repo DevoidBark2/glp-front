@@ -13,6 +13,7 @@ import axios from "axios";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
 import { MenuItem } from "@/utils/dashboardMenu";
+import { SectionCourse } from "@/shared/api/section/model";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",
@@ -29,6 +30,7 @@ type UserAnswer = {
 
 export type CourseMenu = {
     id: number,
+    name: string,
     courseName: string,
     userAnswer: UserAnswer,
     children: CourseMenu[],
@@ -42,7 +44,7 @@ class CourseStore {
 
     loadingCourses: boolean = false;
 
-    fullDetailCourse: Course | null = null
+    fullDetailCourse: SectionCourse | null = null
     courseMenuItems: CourseMenu | null = null
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
@@ -54,9 +56,9 @@ class CourseStore {
     userCourses: Course[] = []
     selectedIdCourse: number | null = null;
     loadingSection: boolean = false;
-    courseMenuLoading: boolean = false
-
-    loadingSubscribeCourse: boolean = false;
+    courseMenuLoading: boolean = false;
+    subscribeCourseLoading: boolean = false;
+    loadingSubscribeCourse: boolean = false
 
     setSelectedCourse = action((value: number | null) => {
         this.selectedIdCourse = value;
@@ -65,7 +67,7 @@ class CourseStore {
         this.loadingSubscribeCourse = value;
     })
 
-    setFullDetailCourse = action((value: Course | null) => {
+    setFullDetailCourse = action((value: SectionCourse | null) => {
         this.fullDetailCourse = value;
     })
 
@@ -215,6 +217,10 @@ class CourseStore {
     handleCheckTask = action(async (task: TaskAnswerUserDto) => {
         const data = await handleCheckUserTask(task);
 
+        debugger
+
+        // обновить копмонент + обновить меню
+
         runInAction(() => {
             this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section) => {
                 return {
@@ -240,10 +246,31 @@ class CourseStore {
                                 }),
                             };
                         }
-                        return child; // Оставляем child неизменным
+                        return child;
                     }),
                 };
             });
+
+            const updatedSections = this.courseMenuItems?.sections.map(section => {
+                return {
+                    ...section,
+                    children: section.children.map(child => {
+                        if (child.id === data.section.id) {
+                            return {
+                                ...child,
+                                userAnswer: data.answer, // Обновляем userAnswer
+                            };
+                        }
+                        return child;
+                    }),
+                };
+            });
+
+            // Заменяем sections новым массивом
+            this.courseMenuItems = {
+                ...this.courseMenuItems,
+                sections: updatedSections,
+            };
         });
 
 
@@ -252,9 +279,35 @@ class CourseStore {
 
     updateSectionStep = action(async (prevSection: number) => {
         const data = await handleUpdateSectionConfirmed(prevSection);
-    })
+        if (data) {
+            runInAction(() => {
+                // Создаём новый массив с изменёнными значениями
+                const updatedSections = this.courseMenuItems?.sections.map(section => {
+                    return {
+                        ...section,
+                        children: section.children.map(child => {
+                            if (child.id === prevSection) {
+                                return {
+                                    ...child,
+                                    userAnswer: data.answer, // Обновляем userAnswer
+                                };
+                            }
+                            return child;
+                        }),
+                    };
+                });
+    
+                // Заменяем sections новым массивом
+                this.courseMenuItems = {
+                    ...this.courseMenuItems,
+                    sections: updatedSections,
+                };
+            });
+        }
+    });
+    
 
-    getSectionById = action(async (courseId: number, currentSection: number) => {
+    getMenuSections = action(async (courseId: number, currentSection: number) => {
         this.setLoadingSection(true)
         this.setFullDetailCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
