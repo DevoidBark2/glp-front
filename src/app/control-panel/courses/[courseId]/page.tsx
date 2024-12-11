@@ -35,7 +35,7 @@ import dayjs from "dayjs";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { typeIcons } from "@/columnsTables/taskColumns";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
-import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import {CourseComponentTypeI} from "@/shared/api/course/model";
 
 const CoursePage = () => {
     const {courseId} = useParams();
@@ -312,7 +312,7 @@ const CoursePage = () => {
                             {courseStore.courseDetailsSections.length > 0 ? (
                                     <Table
                                         dataSource={courseStore.courseDetailsSections}
-                                        columns={columns}
+                                        columns={columns as any}
                                         bordered
                                         rowKey={record => record.id}
                                         pagination={{ pageSize: 20 }}
@@ -325,7 +325,7 @@ const CoursePage = () => {
                                                     <Divider />
                                                     {record.sectionComponents.length > 0 ? (
                                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                                        {record.sectionComponents.map((component) => (
+                                                        {record.sectionComponents.map((component:any) => (
                                                             <div 
                                                                 key={component.id} 
                                                                 className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow relative"
@@ -345,9 +345,9 @@ const CoursePage = () => {
                                                                 </p>
                                                                 <div className="text-sm text-gray-500">
                                                                     <span className="block mb-1">Тип: 
-                                                                        <Tag icon={typeIcons[component.type]}>
-                                                                            <span style={{ marginLeft: 8 }}>{component.type}</span>
-                                                                        </Tag>
+                                                                        {/*<Tag icon={typeIcons[component.type]}>*/}
+                                                                        {/*    <span style={{ marginLeft: 8 }}>{component.type}</span>*/}
+                                                                        {/*</Tag>*/}
                                                                     </span>
                                                                     <span className="block mb-1">Статус: 
                                                                         <Tag color={component.status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>

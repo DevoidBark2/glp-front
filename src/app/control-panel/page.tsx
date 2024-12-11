@@ -31,7 +31,7 @@ import { UserRole } from "@/shared/api/user/model";
 
 const ControlPanel = () => {
   const { statisticsStore } = useMobxStores();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState<string | null>(null);
 
@@ -81,7 +81,7 @@ const ControlPanel = () => {
       </div>
       <Divider />
       <Typography.Title className="text-gray-800">
-        {currentUser && (currentUser?.user.role === UserRole.MODERATOR ? "Панель модератора" : currentUser?.user.role === UserRole.TEACHER ? "Панель Учителя" : "Админ-панель")}
+        {currentUser && (currentUser?.user?.role === UserRole.MODERATOR ? "Панель модератора" : currentUser?.user?.role === UserRole.TEACHER ? "Панель Учителя" : "Админ-панель")}
       </Typography.Title>
 
       <Row gutter={16}>

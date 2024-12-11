@@ -25,7 +25,7 @@ export const SupportBlock = () => {
                     title="Письмо успешно отправлено!"
                     subTitle="Спасибо за обращение в службу поддержки. Наши специалисты свяжутся с вами в ближайшее время по указанному в сообщении адресу электронной почты."
                     extra={[
-                        <Button onClick={onCancelModal}>Закрыть</Button>,
+                        <Button key="asd" onClick={onCancelModal}>Закрыть</Button>,
                     ]}
                 />
             </Modal>

@@ -1,6 +1,5 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-import { Course } from "@/shared/api/course/model";
-import { CourseComponentTypeI } from "@/stores/CourseComponent";
+import {Course, CourseComponentTypeI} from "@/shared/api/course/model";
 import { GET, POST } from "@/lib/fetcher";
 import { StatusSectionEnum } from "@/shared/api/section/model";
 import {
@@ -19,7 +18,8 @@ export type SectionCourseItem = {
     course: Course;
     uploadFile: File[];
     components: CourseComponentTypeI[];
-    status: StatusSectionEnum
+    status: StatusSectionEnum;
+    sectionComponents: any
     created_at: Date
 }
 
@@ -88,7 +88,7 @@ class SectionCourse {
 }
 
 const sectionMapper = (section: SectionCourseItem) => {
-    const sectionItem: SectionCourseItem = {
+    const sectionItem: any = {
         id: section.id,
         name: section.name,
         description: section.description,

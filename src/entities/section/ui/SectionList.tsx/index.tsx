@@ -116,7 +116,7 @@ export const SectionList = observer(() => {
         <Table
             rowKey={(record) => record.id}
             loading={sectionCourseStore.loadingSectionsCourse}
-            columns={columns}
+            columns={columns as any}
             dataSource={sectionCourseStore.sectionCourse}
             pagination={{ pageSize: 10 }}
             locale={sectionsTable}

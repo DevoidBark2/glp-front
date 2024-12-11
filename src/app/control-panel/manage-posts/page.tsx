@@ -7,95 +7,95 @@ import { useMobxStores } from "@/stores/stores";
 import { Post } from "@/stores/PostStore";
 import { PostStatusEnum } from "@/shared/api/posts/model";
 
-const ManagePostModal = ({
-    selectedPost,
-    setSelectedPost,
-    comment,
-    handleCommentChange,
-    handleStatusChange,
-    handleSubmit,
-    form,
-    fieldComments,
-    handleFieldCommentChange
-}) => {
-    return (
-        <Modal
-            title={
-                <div className="flex items-center">
-                    <InfoCircleOutlined className="mr-2 text-blue-500" />
-                    <span>Проверка поста: {selectedPost?.name}</span>
-                </div>
-            }
-            open={!!selectedPost}
-            onCancel={() => setSelectedPost(null)}
-            footer={null}
-            width="70%"
-        >
-            <Form form={form} layout="vertical">
-                <Form.Item label="Название" name="name">
-                    <Input disabled />
-                </Form.Item>
-
-                <Input.TextArea
-                    title="Комментарий для Названия"
-                    rows={2}
-                    value={fieldComments.name}
-                    onChange={(e) => handleFieldCommentChange("name", e.target.value)}
-                    placeholder="Введите комментарий"
-                />
-
-                <Form.Item label="Описание" name="description">
-                    <Input.TextArea rows={3} disabled />
-                </Form.Item>
-
-                <Input.TextArea
-                    title="Комментарий для Описания"
-                    rows={2}
-                    value={fieldComments.description}
-                    onChange={(e) => handleFieldCommentChange("description", e.target.value)}
-                    placeholder="Введите комментарий"
-                />
-
-                <Form.Item label="Контент" name="content">
-                    <Input.TextArea rows={6} disabled />
-                </Form.Item>
-
-                <Input.TextArea
-                    title="Комментарий для Контента"
-                    rows={2}
-                    value={fieldComments.content}
-                    onChange={(e) => handleFieldCommentChange("content", e.target.value)}
-                    placeholder="Введите комментарий"
-                />
-
-                <Form.Item label="Общий комментарий для автора">
-                    <Input.TextArea
-                        rows={4}
-                        value={comment}
-                        onChange={handleCommentChange}
-                        placeholder="Введите комментарий, если есть замечания"
-                    />
-                </Form.Item>
-
-                <Form.Item label="Статус">
-                    <Select onChange={handleStatusChange}>
-                        <Select.Option value={PostStatusEnum.APPROVED}>Approved</Select.Option>
-                        <Select.Option value={PostStatusEnum.REJECT}>Rejected</Select.Option>
-                    </Select>
-                </Form.Item>
-
-                <Divider />
-
-                <div className="flex justify-end gap-4">
-                    <Button onClick={() => setSelectedPost(null)}>Отменить</Button>
-                    <Button type="primary" onClick={handleSubmit}>
-                        Отправить
-                    </Button>
-                </div>
-            </Form>
-        </Modal>
-    );
-};
+// const ManagePostModal = ({
+//     selectedPost,
+//     setSelectedPost,
+//     comment,
+//     handleCommentChange,
+//     handleStatusChange,
+//     handleSubmit,
+//     form,
+//     fieldComments,
+//     handleFieldCommentChange
+// }) => {
+//     return (
+//         <Modal
+//             title={
+//                 <div className="flex items-center">
+//                     <InfoCircleOutlined className="mr-2 text-blue-500" />
+//                     <span>Проверка поста: {selectedPost?.name}</span>
+//                 </div>
+//             }
+//             open={!!selectedPost}
+//             onCancel={() => setSelectedPost(null)}
+//             footer={null}
+//             width="70%"
+//         >
+//             <Form form={form} layout="vertical">
+//                 <Form.Item label="Название" name="name">
+//                     <Input disabled />
+//                 </Form.Item>
+//
+//                 <Input.TextArea
+//                     title="Комментарий для Названия"
+//                     rows={2}
+//                     value={fieldComments.name}
+//                     onChange={(e) => handleFieldCommentChange("name", e.target.value)}
+//                     placeholder="Введите комментарий"
+//                 />
+//
+//                 <Form.Item label="Описание" name="description">
+//                     <Input.TextArea rows={3} disabled />
+//                 </Form.Item>
+//
+//                 <Input.TextArea
+//                     title="Комментарий для Описания"
+//                     rows={2}
+//                     value={fieldComments.description}
+//                     onChange={(e) => handleFieldCommentChange("description", e.target.value)}
+//                     placeholder="Введите комментарий"
+//                 />
+//
+//                 <Form.Item label="Контент" name="content">
+//                     <Input.TextArea rows={6} disabled />
+//                 </Form.Item>
+//
+//                 <Input.TextArea
+//                     title="Комментарий для Контента"
+//                     rows={2}
+//                     value={fieldComments.content}
+//                     onChange={(e) => handleFieldCommentChange("content", e.target.value)}
+//                     placeholder="Введите комментарий"
+//                 />
+//
+//                 <Form.Item label="Общий комментарий для автора">
+//                     <Input.TextArea
+//                         rows={4}
+//                         value={comment}
+//                         onChange={handleCommentChange}
+//                         placeholder="Введите комментарий, если есть замечания"
+//                     />
+//                 </Form.Item>
+//
+//                 <Form.Item label="Статус">
+//                     <Select onChange={handleStatusChange}>
+//                         <Select.Option value={PostStatusEnum.APPROVED}>Approved</Select.Option>
+//                         <Select.Option value={PostStatusEnum.REJECT}>Rejected</Select.Option>
+//                     </Select>
+//                 </Form.Item>
+//
+//                 <Divider />
+//
+//                 <div className="flex justify-end gap-4">
+//                     <Button onClick={() => setSelectedPost(null)}>Отменить</Button>
+//                     <Button type="primary" onClick={handleSubmit}>
+//                         Отправить
+//                     </Button>
+//                 </div>
+//             </Form>
+//         </Modal>
+//     );
+// };
 
 export interface Comments {
     name: string,
@@ -207,17 +207,17 @@ const ManagePostPage = () => {
                 rowKey={(record) => record.id}
             />
 
-            <ManagePostModal
-                selectedPost={selectedPost}
-                setSelectedPost={setSelectedPost}
-                comment={comment}
-                handleCommentChange={handleCommentChange}
-                handleStatusChange={handleStatusChange}
-                handleSubmit={handleSubmit}
-                form={form}
-                fieldComments={fieldComments}
-                handleFieldCommentChange={handleFieldCommentChange}
-            />
+            {/*<ManagePostModal*/}
+            {/*    selectedPost={selectedPost}*/}
+            {/*    setSelectedPost={setSelectedPost}*/}
+            {/*    comment={comment}*/}
+            {/*    handleCommentChange={handleCommentChange}*/}
+            {/*    handleStatusChange={handleStatusChange}*/}
+            {/*    handleSubmit={handleSubmit}*/}
+            {/*    form={form}*/}
+            {/*    fieldComments={fieldComments}*/}
+            {/*    handleFieldCommentChange={handleFieldCommentChange}*/}
+            {/*/>*/}
         </div>
     );
 };

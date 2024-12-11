@@ -1,8 +1,6 @@
 import { action, makeAutoObservable } from "mobx";
 import { GET, POST, PUT, DELETE } from "@/lib/fetcher";
-import { getUserToken } from "@/lib/users";
 import { notification } from "antd";
-import { Course, courseMapper } from "@/stores/CourseStore";
 export type NomenclatureItem = {
     id: number;
     name: string;

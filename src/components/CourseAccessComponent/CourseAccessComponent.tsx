@@ -6,6 +6,7 @@ type CourseAccessComponentProps = {
     access_level: AccessRightEnum;
 };
 
+// eslint-disable-next-line react/display-name
 const CourseAccessComponent: React.FC<CourseAccessComponentProps> = React.memo(({ access_level }) => {
     const getAccessDetails = (access_level: AccessRightEnum) => {
         switch (access_level) {

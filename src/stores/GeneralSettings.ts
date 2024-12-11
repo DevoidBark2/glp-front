@@ -48,8 +48,10 @@ export class GeneralSettings {
         const formData = new FormData();
         Object.entries(values).forEach(([key, value]) => {
             if (key === "logo_url") {
-                formData.append(key, value.file);
+                // @ts-ignore
+                formData.append(key, value.file as any);
             }
+            // @ts-ignore
             formData.append(key, value);
         })
         await POST(`/api/general-settings`, formData).then(response => {

@@ -1,21 +1,23 @@
 "use client"
-import React, { useState } from "react";
-import { Divider, Input, Modal, Rate } from "antd";
+import React, {useState} from "react";
+import {Divider, Input, Modal, Rate} from "antd";
 import Image from "next/image"
 import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
 import CourseAccessComponent from "@/components/CourseAccessComponent/CourseAccessComponent";
-import { useRouter } from "next/navigation";
-import { getCookieUserDetails } from "@/lib/users";
-import { useMobxStores } from "@/stores/stores";
-import { observer } from "mobx-react";
+import {useRouter} from "next/navigation";
+import {getCookieUserDetails} from "@/lib/users";
+import {useMobxStores} from "@/stores/stores";
+import {observer} from "mobx-react";
 import nextConfig from "next.config.mjs";
-import { AccessRightEnum, Course } from "@/shared/api/course/model";
+import {AccessRightEnum} from "@/shared/api/course/model";
 
 const CourseDetails = () => {
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState<boolean>(false)
     const router = useRouter();
     const { userStore, courseStore } = useMobxStores();
 
+    // @ts-ignore
+    // @ts-ignore
     return <>
         <Modal
             open={courseStore.openCourseDetailsModal}
@@ -73,7 +75,7 @@ const CourseDetails = () => {
                 </div>
             </div>
             <div className="flex items-center">
-                <CourseLevelComponent level={courseStore.selectedCourseForDetailModal && courseStore.selectedCourseForDetailModal.level} />
+                <CourseLevelComponent level={courseStore.selectedCourseForDetailModal ? courseStore.selectedCourseForDetailModal.level :  AccessRightEnum.PRIVATE} />
                 <div className="flex items-center ml-2">
                     <Image
                         className="mr-2"
@@ -90,11 +92,11 @@ const CourseDetails = () => {
                         width={50} height={50} />
                     {courseStore.selectedCourseForDetailModal && <p className="ml-2">Категория: <br /> {courseStore.selectedCourseForDetailModal.category?.name}</p>}
                 </div>
-                <CourseAccessComponent access_level={courseStore.selectedCourseForDetailModal && courseStore.selectedCourseForDetailModal!.access_right} />
+                <CourseAccessComponent access_level={courseStore.selectedCourseForDetailModal ? courseStore.selectedCourseForDetailModal!.access_right : AccessRightEnum.PRIVATE} />
             </div>
             <Divider />
             <h2>Описание курса</h2>
-            <div dangerouslySetInnerHTML={{ __html: courseStore.selectedCourseForDetailModal && courseStore.selectedCourseForDetailModal!.content_description }}></div>
+            <div dangerouslySetInnerHTML={{ __html: courseStore.selectedCourseForDetailModal ? courseStore.selectedCourseForDetailModal!.content_description : "" }}></div>
         </Modal>
     </>
 }

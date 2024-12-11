@@ -27,7 +27,7 @@ export const CourseControlList = observer(() => {
         show_footer_table: boolean
     } | null>(null);
     
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState<any>(null);
 
     const publishCourse = (id: number) => courseStore.publishCourse(id)
 

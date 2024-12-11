@@ -9,7 +9,7 @@ const { TextArea } = Input;
 
 const SupportPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
   const [response, setResponse] = useState("");
 
   // Sample data for the table
@@ -53,7 +53,7 @@ const SupportPage = () => {
     {
       title: 'Действия',
       key: 'action',
-      render: (_, record) => (
+      render: (_:any, record:any) => (
         <Space size="middle">
           <Button
             type="primary"

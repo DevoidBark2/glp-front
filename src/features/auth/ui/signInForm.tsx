@@ -1,5 +1,7 @@
-import { useMobxStores } from "@/shared/store/RootStore";
-import { Form, Input, Modal, notification } from "antd";
+
+import {Button, Form, Input, Modal, notification} from "antd";
+import {useMobxStores} from "@/stores/stores";
+import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
 
 const signInForm = () => {
     const {userStore} = useMobxStores();

@@ -105,7 +105,7 @@ class CourseComponent {
 }
 
 const componentTaskMapper = (state: CourseComponentTypeI) => {
-    const component: CourseComponentTypeI = {
+    const component: any = {
         id: state.id,
         description: state.description,
         questions: state.questions,

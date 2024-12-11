@@ -1,5 +1,4 @@
 import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE } from "@/constants";
-import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import { Button, Popconfirm, TableColumnsType, Tag, Tooltip } from "antd";
 import {
     BookOutlined,
@@ -11,7 +10,7 @@ import {
     ReconciliationOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { CourseComponentType } from "@/shared/api/course/model";
+import {CourseComponentType, CourseComponentTypeI} from "@/shared/api/course/model";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 
 export const typeIcons = {

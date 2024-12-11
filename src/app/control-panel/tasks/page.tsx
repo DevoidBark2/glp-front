@@ -3,12 +3,12 @@ import React, { useEffect } from "react";
 import { Table } from "antd";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
-import { CourseComponentTypeI } from "@/stores/CourseComponent";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
 import { taskColumns } from "@/columnsTables/taskColumns";
 import { taskTable } from "@/shared/config";
 import { useRouter } from "next/navigation";
+import {CourseComponentTypeI} from "@/shared/api/course/model";
 
 const TaskPage = () => {
     const { courseComponentStore } = useMobxStores()

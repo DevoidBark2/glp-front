@@ -10,7 +10,7 @@ export const CourseProfileList = observer(() => {
     return (
         <div>
             {userProfileStore.userProfileCourses.length > 0 ?  userProfileStore.userProfileCourses.map(course => (
-                    <CourseProfileItem course={course}/>
+                    <CourseProfileItem key={course.id} course={course}/>
                 )) : <div className="flex items-center justify-center h-3/4">
                     <Empty description={<div className="flex flex-col">
                         <span>Список пуст</span>

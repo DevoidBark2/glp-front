@@ -22,7 +22,7 @@ export const CommentsBlock = ({ comments, handleCommentSubmit }: CommentsBlockPr
                     className="comment-list"
                     itemLayout="horizontal"
                     dataSource={comments}
-                    renderItem={(item) => (
+                    renderItem={(item:any) => (
                         <li>
                             {item.author} {item.content}
                         </li>

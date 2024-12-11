@@ -19,10 +19,10 @@ const SuccessfulCreateCourseModal: FC<SuccessfulCreateCourseModalProps> = ({ ope
                 title="Курс успешно создан!"
                 subTitle="Для успешного публикования курса необходимо создать, как минимум 1 раздел."
                 extra={[
-                    <Link href="/control-panel/sections/add">
+                    <Link key="asd" href="/control-panel/sections/add">
                     <Button type="primary"> Перейти к созданию</Button>
                     </Link>,
-                    <Button onClick={onCancel}>Закрыть</Button>,
+                    <Button key="sad" onClick={onCancel}>Закрыть</Button>,
                 ]}
             />
         </Modal>

@@ -1,9 +1,9 @@
 import { action, makeAutoObservable } from "mobx";
-import { User } from "./UserStore";
 import { GET, POST } from "@/lib/fetcher";
 import { notification, UploadFile } from "antd";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/constants";
+import {User} from "@/shared/api/user/model";
 
 export type FeedBackItem = {
     id: string,
@@ -31,7 +31,7 @@ class FeedBacksStore {
         formData.append('message', data.message);
 
         this.fileListForFeedback.forEach(file => {
-            formData.append('files', file.originFileObj)
+            formData.append('files', file.originFileObj as any)
         })
         await POST("/api/send-feedback", formData).then(response => {
             this.setFileForFeedBack([]);

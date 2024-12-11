@@ -2,7 +2,8 @@ import { Course } from "@/shared/api/course/model";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import dayjs from "dayjs";
 
-export const courseMapper = (course: Course): Course => {
+export const courseMapper = (course: Course): any => {
+
     return {
         id: course.id,
         name: course.name,

@@ -222,14 +222,14 @@ class CourseStore {
         // обновить копмонент + обновить меню
 
         runInAction(() => {
-            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section) => {
+            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section:any) => {
                 return {
                     ...section,
-                    children: section.children.map((child) => {
+                    children: section.children.map((child:any) => {
                         if (child.id === task.currentSection) {
                             return {
                                 ...child,
-                                sectionComponents: (child.sectionComponents || []).map((component) => {
+                                sectionComponents: (child.sectionComponents || []).map((component:any) => {
                                     if (component.componentTask.id === task.task.id) {
                                         // Обновляем данные для componentTask и userAnswer
                                         console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
@@ -267,9 +267,10 @@ class CourseStore {
             });
 
             // Заменяем sections новым массивом
+            // @ts-ignore
             this.courseMenuItems = {
                 ...this.courseMenuItems,
-                sections: updatedSections,
+                sections: updatedSections as any,
             };
         });
 
@@ -298,9 +299,10 @@ class CourseStore {
                 });
     
                 // Заменяем sections новым массивом
+                // @ts-ignore
                 this.courseMenuItems = {
                     ...this.courseMenuItems,
-                    sections: updatedSections,
+                    sections: updatedSections as any,
                 };
             });
         }

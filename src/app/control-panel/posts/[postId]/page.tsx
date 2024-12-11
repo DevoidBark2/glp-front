@@ -28,7 +28,7 @@ const postPage = () => {
     const { postId } = useParams();
     const router = useRouter();
     const [form] = Form.useForm<Post>();
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState<any>(null);
 
     const [currentPost, setCurrentPost] = useState<Post | null>(null);
 

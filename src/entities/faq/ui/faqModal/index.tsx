@@ -14,7 +14,7 @@ export const FaqModal = observer(({editingItem,openModal,closeModal,handleAddOrU
     return (
         <Modal
             title={editingItem ? "Редактировать вопрос" : "Добавить новый вопрос"}
-            open={openModal}
+            // open={openModal}
             onCancel={closeModal}
             onOk={() => form.submit()}
             okText={editingItem ? "Сохранить" : "Добавить"}

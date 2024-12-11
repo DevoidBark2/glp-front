@@ -38,7 +38,7 @@ const ProfilePage = () => {
   const [formSettings] = Form.useForm();
   const [avatar, setAvatar] = useState<string | null>(null);
   const { userProfileStore, avatarIconsStore } = useMobxStores();
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   const [showFooterOptions, setShowFooterOptions] = useState(false);
 

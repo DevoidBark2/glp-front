@@ -38,9 +38,9 @@ export const FaqControlList = observer(() => {
             key: "actions",
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    <Tooltip title="Редактировать">
-                        <Button type="default" icon={<EditOutlined />} onClick={() => openModal(record)} />
-                    </Tooltip>
+                    {/*<Tooltip title="Редактировать">*/}
+                    {/*    <Button type="default" icon={<EditOutlined />} onClick={() => openModal(record)} />*/}
+                    {/*</Tooltip>*/}
                     <Tooltip title="Удалить">
                         <Popconfirm
                             title="Удалить этот вопрос?"

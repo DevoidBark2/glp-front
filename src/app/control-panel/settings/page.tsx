@@ -122,9 +122,10 @@ const SettingsControlPage = () => {
                                         },
                                     ]}
                                 >
-                                    <InputMask mask="+7 (999) 999-99-99" maskChar=" ">
-                                        {(inputProps) => <Input {...inputProps} placeholder="+7 (___) ___-__-__" />}
-                                    </InputMask>
+                                    <Input/>
+                                    {/*<InputMask mask="+7 (999) 999-99-99" maskChar=" ">*/}
+                                    {/*    {(inputProps) => <Input {...inputProps} placeholder="+7 (___) ___-__-__" />}*/}
+                                    {/*</InputMask>*/}
                                 </Form.Item>
 
                                 <Form.Item

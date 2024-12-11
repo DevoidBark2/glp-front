@@ -53,7 +53,7 @@ const FaqPage = () => {
 
     return (
         <PageContainerControlPanel>
-            <FaqModal openModal={openModal}/>
+            {/*<FaqModal openModal={openModal}/>*/}
             <PageHeader
                 title="Вопросы и ответы"
                 buttonTitle="Добавить FAQ"

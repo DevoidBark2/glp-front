@@ -32,7 +32,7 @@ const feedBackPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
 
     // Открытие модального окна с чатом
-    const openChatModal = (chat) => {
+    const openChatModal = (chat:any) => {
         setCurrentChat(chat);
         setIsModalVisible(true);
     };
@@ -49,10 +49,10 @@ const feedBackPage = () => {
             // Логика для добавления сообщения в чат
             console.log("Новое сообщение:", newMessage);
             setNewMessage("");
-            notification.success({
-                message: 'Сообщение отправлено',
-                description: `Ваше сообщение было отправлено ${currentChat.user.name}.`,
-            });
+            // notification.success({
+            //     message: 'Сообщение отправлено',
+            //     description: `Ваше сообщение было отправлено ${currentChat?.user?.name}.`,
+            // });
         }
     };
     // Фильтрация чатов по поиску
@@ -64,7 +64,7 @@ const feedBackPage = () => {
             title: "Пользователь",
             dataIndex: "user",
             key: "user",
-            render: (user) => (
+            render: (user:any) => (
                 <div className="flex items-center">
                     <Badge dot={user.status === "online"} offset={[-5, 5]} color={user.status === "online" ? "green" : "gray"}>
                         <Avatar src={user.avatar} alt={user.name} />
@@ -77,7 +77,7 @@ const feedBackPage = () => {
             title: "Последнее сообщение",
             dataIndex: "lastMessage",
             key: "lastMessage",
-            render: (text) => (
+            render: (text:string) => (
                 <span>{text.length > 30 ? `${text.slice(0, 30)}...` : text}</span>
             )
         },
@@ -94,7 +94,7 @@ const feedBackPage = () => {
         {
             title: "Действия",
             key: "actions",
-            render: (_, chat) => (
+            render: (_:any, chat:any) => (
                 <Button type="primary" onClick={() => openChatModal(chat)}>
                     Открыть чат
                 </Button>
@@ -129,18 +129,18 @@ const feedBackPage = () => {
             {/* Модальное окно с чатом */}
 {currentChat && (
     <Modal
-        title={
-            <div className="flex items-center">
-                <Avatar src={currentChat.user.avatar} alt={currentChat.user.name} size={40} />
-                <div className="ml-3">
-                    <h2 className="text-lg font-bold">{currentChat.user.name}</h2>
-                    <p className={`text-sm ${currentChat.user.status === "online" ? "text-green-500" : "text-gray-400"}`}>
-                        {currentChat.user.status === "online" ? "В сети" : "Оффлайн"}
-                    </p>
-                </div>
-            </div>
-        }
-        visible={isModalVisible}
+        // title={
+        //     <div className="flex items-center">
+        //         <Avatar src={currentChat.user.avatar} alt={currentChat.user.name} size={40} />
+        //         <div className="ml-3">
+        //             <h2 className="text-lg font-bold">{currentChat.user.name}</h2>
+        //             <p className={`text-sm ${currentChat.user.status === "online" ? "text-green-500" : "text-gray-400"}`}>
+        //                 {currentChat.user.status === "online" ? "В сети" : "Оффлайн"}
+        //             </p>
+        //         </div>
+        //     </div>
+        // }
+        open={isModalVisible}
         onCancel={closeModal}
         footer={[
             <Button key="close" onClick={closeModal}>Закрыть</Button>,
@@ -163,9 +163,9 @@ const feedBackPage = () => {
 
                 <div className="message message-user">
                     <div className="message-bubble">
-                        <strong>{currentChat.user.name}</strong>
-                        <p>{currentChat.lastMessage}</p>
-                        <span className="text-xs text-gray-500">10:05</span>
+                        {/*<strong>{currentChat.user.name}</strong>*/}
+                        {/*<p>{currentChat.lastMessage}</p>*/}
+                        {/*<span className="text-xs text-gray-500">10:05</span>*/}
                     </div>
                 </div>
             </div>
