@@ -83,13 +83,24 @@ const CoursePage = () => {
             dataIndex: 'name',
             key: 'name',
             width: '30%',
+            render: (value) => {
+                return value.length > 30 ? `${value.slice(0, 30)}...` : value
+            }
         },
         {
             title: 'Описание',
             dataIndex: 'description',
             key: 'description',
             width: '40%',
-            render: (text) => text || <span className="text-gray-400">Нет описания</span>,
+            render: (description) => {
+                if (!description || description.trim().length === 0) {
+                    return <span className="text-gray-400">Нет описания</span>;
+                }
+            
+                return description.length > 30 
+                    ? `${description.slice(0, 30)}...` 
+                    : description;
+            }
         },
         {
             title: 'Дата создания',
@@ -306,54 +317,55 @@ const CoursePage = () => {
                                         rowKey={record => record.id}
                                         pagination={{ pageSize: 20 }}
                                         expandable={{
-                                            expandedRowRender: (record) => (
-                                                <div className="bg-gray-100 rounded p-4">
-                                                    <div className="mb-4">
-                                                        <h3 className="text-lg font-semibold">Компоненты</h3>
-                                                        <Divider />
-                                                        {record.components.length > 0 ? (
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                                            {record.components.map((component) => (
-                                                                <div 
-                                                                    key={component.id} 
-                                                                    className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow relative"
-                                                                >
-                                                                    <Button
-                                                                        icon={<DeleteOutlined/>}
-                                                                        type="primary"
-                                                                        danger
-                                                                        onClick={() => handleDeleteComponent(component.id)}
-                                                                        className="absolute top-2 right-2"
-                                                                    />
-                                                                    <h4 className="font-medium text-xl text-gray-800 mb-2">
-                                                                        {component.title || "Нет заголовка"}
-                                                                    </h4>
-                                                                    <p className="text-gray-600 mb-3">
-                                                                        {component.description || 'Нет описания'}
-                                                                    </p>
-                                                                    <div className="text-sm text-gray-500">
-                                                                        <span className="block mb-1">Тип: 
-                                                                            <Tag icon={typeIcons[component.type]}>
-                                                                                <span style={{ marginLeft: 8 }}>{component.type}</span>
-                                                                            </Tag>
-                                                                        </span>
-                                                                        <span className="block mb-1">Статус: 
-                                                                            <Tag color={component.status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
-                                                                                {component.status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
-                                                                            </Tag>
-                                                                        </span>
-                                                                        <span>Создано: {dayjs(component.created_at).format(FORMAT_VIEW_DATE)}</span>
-                                                                    </div>
+                                            expandedRowRender: (record) => {
+                                                debugger
+                                                return <div className="bg-gray-100 rounded p-4">
+                                                <div className="mb-4">
+                                                    <h3 className="text-lg font-semibold">Компоненты</h3>
+                                                    <Divider />
+                                                    {record.sectionComponents.length > 0 ? (
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                        {record.sectionComponents.map((component) => (
+                                                            <div 
+                                                                key={component.id} 
+                                                                className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow relative"
+                                                            >
+                                                                <Button
+                                                                    icon={<DeleteOutlined/>}
+                                                                    type="primary"
+                                                                    danger
+                                                                    onClick={() => handleDeleteComponent(component.id)}
+                                                                    className="absolute top-2 right-2"
+                                                                />
+                                                                <h4 className="font-medium text-xl text-gray-800 mb-2">
+                                                                    {component.title || "Нет заголовка"}
+                                                                </h4>
+                                                                <p className="text-gray-600 mb-3">
+                                                                    {component.description || 'Нет описания'}
+                                                                </p>
+                                                                <div className="text-sm text-gray-500">
+                                                                    <span className="block mb-1">Тип: 
+                                                                        <Tag icon={typeIcons[component.type]}>
+                                                                            <span style={{ marginLeft: 8 }}>{component.type}</span>
+                                                                        </Tag>
+                                                                    </span>
+                                                                    <span className="block mb-1">Статус: 
+                                                                        <Tag color={component.status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
+                                                                            {component.status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
+                                                                        </Tag>
+                                                                    </span>
+                                                                    <span>Создано: {dayjs(component.created_at).format(FORMAT_VIEW_DATE)}</span>
                                                                 </div>
-                                                            ))}
-                                                        </div>
-                                                        
-                                                        ) : (
-                                                            <span className="text-gray-500">Нет компонентов</span>
-                                                        )}
+                                                            </div>
+                                                        ))}
                                                     </div>
+                                                    
+                                                    ) : (
+                                                        <span className="text-gray-500">Нет компонентов</span>
+                                                    )}
                                                 </div>
-                                            ),
+                                            </div>
+                                            }
                                         }}
                                     />
                                 ) : (

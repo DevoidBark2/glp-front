@@ -1,14 +1,17 @@
 import { CourseComponentTypeI } from "@/shared/api/course/model";
+import { useMobxStores } from "@/stores/stores";
+import { Button } from "antd";
 import { observer } from "mobx-react";
 import { useState } from "react";
 
 interface QuizMultiComponentProps {
-    quiz: CourseComponentTypeI
+    quiz: CourseComponentTypeI,
+    currentSection: number
 }
 
-export const QuizMultiComponent = observer(({quiz} :QuizMultiComponentProps) => {
+export const QuizMultiComponent = observer(({quiz,currentSection} :QuizMultiComponentProps) => {
+    const {courseStore} = useMobxStores();
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-    const [showResults, setShowResults] = useState<boolean>(false);
 
     const handleOptionChange = (index: number) => {
         setSelectedAnswers((prevAnswers) => {
@@ -20,17 +23,17 @@ export const QuizMultiComponent = observer(({quiz} :QuizMultiComponentProps) => 
     };
 
     const checkAnswers = () => {
-        setShowResults(true);
+        courseStore.handleCheckTask({ task: quiz, answers: selectedAnswers, currentSection: Number(currentSection) })
     };
 
     return (
         <div className="quiz-component bg-white">
-            {quiz.title && <h2 className="text-2xl font-bold mb-4 text-gray-800">{quiz.title}</h2>}
-            {quiz.description && <p className="text-gray-600 mb-4">{quiz.description}</p>}
+            {quiz.title && <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">{quiz.title}</h2>}
+            {quiz.description && <p className="text-gray-600 mb-4 text-center">{quiz.description}</p>}
 
             {quiz.questions.map((questionItem, questionIndex) => (
                 <div key={questionIndex} className="mb-6">
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">{questionItem.question}</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Вопрос: {questionItem.question}</h3>
 
                     <div className="options">
                         {questionItem.options.map((option, optionIndex) => (
@@ -55,38 +58,15 @@ export const QuizMultiComponent = observer(({quiz} :QuizMultiComponentProps) => 
                 </div>
             ))}
 
-            <button
-                onClick={checkAnswers}
-                className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
-            >
-                Check Answers
-            </button>
-
-            {showResults && (
-                <div className="mt-6">
-                    {quiz.questions.map((questionItem, questionIndex) => (
-                        <div key={questionIndex} className="mb-4">
-                            <h4 className="text-lg font-medium text-gray-800">{questionItem.question}</h4>
-                            {questionItem.options.map((option, optionIndex) => {
-                                const isCorrect = questionItem.correctOptions.includes(optionIndex);
-                                const isSelected = selectedAnswers.includes(optionIndex);
-                                const className = isCorrect
-                                    ? 'text-green-600'
-                                    : isSelected && !isCorrect
-                                        ? 'text-red-600'
-                                        : 'text-gray-800';
-
-                                return (
-                                    <p key={optionIndex} className={`mt-2 ${className}`}>
-                                        {option} {isCorrect && '(Correct)'}
-                                        {isSelected && !isCorrect && '(Your answer)'}
-                                    </p>
-                                );
-                            })}
-                        </div>
-                    ))}
-                </div>
-            )}
+            <div className="flex justify-end">
+                <Button
+                    type="primary"
+                    onClick={checkAnswers}
+                    className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
+                >
+                    Завершить
+                </Button>
+            </div>
         </div>
     );
 })

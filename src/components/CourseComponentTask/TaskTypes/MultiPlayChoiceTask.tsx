@@ -3,28 +3,24 @@ import { Button, Checkbox, Col, Form, FormInstance, Input, Row, Select, Tag } fr
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 interface MultiPlayChoiseProps {
-    form: FormInstance
+    form: FormInstance;
 }
-
 
 const MultiPlayChoise: FC<MultiPlayChoiseProps> = ({ form }) => {
     return (
         <>
-            <Form.Item
-                label="Заголовок"
-                name="title"
-            >
+            <Form.Item label="Заголовок" name="title">
                 <Input placeholder="Введите заголовок" />
             </Form.Item>
 
             <Form.Item
                 name="tags"
                 label="Теги"
-                rules={[{ required: true, message: 'Пожалуйста, добавьте хотя бы один тег!' }]}
+                rules={[{ required: true, message: "Пожалуйста, добавьте хотя бы один тег!" }]}
             >
                 <Select
                     mode="tags"
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                     placeholder="Введите тег и нажмите Enter"
                     tagRender={({ label, closable, onClose }) => (
                         <Tag closable={closable} onClose={onClose} style={{ margin: 2 }}>
@@ -35,31 +31,33 @@ const MultiPlayChoise: FC<MultiPlayChoiseProps> = ({ form }) => {
                 />
             </Form.Item>
 
-            <Form.Item
-                label="Описание компонента"
-                name="description"
-            >
+            <Form.Item label="Описание компонента" name="description">
                 <Input.TextArea placeholder="Введите описание компонента" />
             </Form.Item>
 
-            <Form.List name={['questions']}>
+            <Form.List name={["questions"]}>
                 {(fields, { add, remove }) => (
                     <>
                         {fields.map(({ key, name, ...restField }, qIndex) => (
                             <div
                                 key={key}
-                                style={{ marginBottom: 16, padding: 10, border: '1px solid #d9d9d9', borderRadius: 4 }}
+                                style={{
+                                    marginBottom: 16,
+                                    padding: 10,
+                                    border: "1px solid #d9d9d9",
+                                    borderRadius: 4,
+                                }}
                             >
                                 <Form.Item
                                     {...restField}
-                                    name={[name, 'question']}
+                                    name={[name, "question"]}
                                     label={`Вопрос ${qIndex + 1}`}
-                                    rules={[{ required: true, message: 'Введите вопрос' }]}
+                                    rules={[{ required: true, message: "Введите вопрос" }]}
                                 >
                                     <Input placeholder="Введите вопрос" />
                                 </Form.Item>
 
-                                <Form.List name={[name, 'options']}>
+                                <Form.List name={[name, "options"]}>
                                     {(optionFields, { add: addOption, remove: removeOption }) => (
                                         <>
                                             {optionFields.map((optionField, oIndex) => {
@@ -70,7 +68,9 @@ const MultiPlayChoise: FC<MultiPlayChoiseProps> = ({ form }) => {
                                                             <Form.Item
                                                                 {...fieldProps}
                                                                 name={[optionField.name]}
-                                                                rules={[{ required: true, message: "Введите вариант ответа" }]}
+                                                                rules={[
+                                                                    { required: true, message: "Введите вариант ответа" },
+                                                                ]}
                                                             >
                                                                 <Input placeholder={`Вариант ответа ${oIndex + 1}`} />
                                                             </Form.Item>
@@ -100,18 +100,22 @@ const MultiPlayChoise: FC<MultiPlayChoiseProps> = ({ form }) => {
 
                                 <Form.Item
                                     label="Правильный ответ(ы)"
-                                    name={[name, 'correctOptions']}
-                                    rules={[{ required: true, message: 'Пожалуйста, выберите правильный ответ(ы)' }]}
+                                    name={[name, "correctOptions"]}
+                                    rules={[
+                                        { required: true, message: "Пожалуйста, выберите правильный ответ(ы)" },
+                                    ]}
                                 >
                                     <Checkbox.Group>
                                         <div className="flex flex-col">
-                                            {form.getFieldValue(['questions', qIndex, 'options'])?.map((option: string, index: number) => (
-                                                <Checkbox key={index} value={index}>
-                                                    <div className="option-box">
-                                                        <span className="option-text">{option}</span>
-                                                    </div>
-                                                </Checkbox>
-                                            ))}
+                                            {form
+                                                .getFieldValue(["questions", qIndex, "options"])
+                                                ?.map((option: string, index: number) => (
+                                                    <Checkbox key={index} value={index}>
+                                                        <div className="option-box">
+                                                            <span className="option-text">{option}</span>
+                                                        </div>
+                                                    </Checkbox>
+                                                ))}
                                         </div>
                                     </Checkbox.Group>
                                 </Form.Item>
@@ -127,19 +131,21 @@ const MultiPlayChoise: FC<MultiPlayChoiseProps> = ({ form }) => {
                             </div>
                         ))}
 
-                        <Button
-                            className="mb-4"
-                            type="dashed"
-                            icon={<PlusOutlined />}
-                            onClick={() => add()}
-                        >
-                            Добавить вопрос
-                        </Button>
+                        {fields.length === 0 && (
+                            <Button
+                                className="mb-4"
+                                type="dashed"
+                                icon={<PlusOutlined />}
+                                onClick={() => add()}
+                            >
+                                Добавить вопрос
+                            </Button>
+                        )}
                     </>
                 )}
             </Form.List>
         </>
-    )
-}
+    );
+};
 
 export default MultiPlayChoise;

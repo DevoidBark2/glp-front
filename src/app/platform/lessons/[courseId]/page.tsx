@@ -25,7 +25,6 @@ import { CourseComponentType } from "@/shared/api/course/model";
 import { QuizComponent } from "@/entities/course/ui/QuizComponent";
 import { QuizMultiComponent } from "@/entities/course/ui/QuizMultiComponent";
 import { TextComponent } from "@/entities/course/ui/TextComponent";
-import { MenuItem } from "@/utils/dashboardMenu";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { CourseMenu } from "@/stores/CourseStore";
 import Image from "next/image";
@@ -53,7 +52,9 @@ const LessonPage = () => {
         if (!menuItem.userAnswer) {
             return (
                 <Tooltip title={!collapsed ? "Этап не пройден" : "" } overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
-                    <QuestionCircleOutlined style={{ color: "gray", marginRight: "8px", fontSize: 25 }} />
+                    <div className="confirmed-icon">
+                        <QuestionCircleOutlined style={{ color: "gray", marginRight: "8px", fontSize: 25,marginBottom: collapsed ? 16 : undefined, marginLeft: collapsed ? -4: undefined}} />
+                    </div>
                 </Tooltip>
             );
         }
@@ -64,7 +65,7 @@ const LessonPage = () => {
             return (
                 <Tooltip title={!collapsed ? "Этап пройден" : ""} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
                     <div className="confirmed-icon">
-                        <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />
+                        <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25,marginBottom: collapsed ? 16 : undefined, marginLeft: collapsed ? -4: undefined }} />
                     </div>
                 </Tooltip>
             );
@@ -74,19 +75,21 @@ const LessonPage = () => {
         let tooltipTitle = "";
 
         if (correctAnswers === totalAnswers) {
-            icon = <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25 }} />;
+            icon = <CheckCircleOutlined style={{ color: "green", marginRight: "8px", fontSize: 25,marginBottom: collapsed ? 16 : undefined, marginLeft: collapsed ? -4: undefined  }} />;
             tooltipTitle = `Все задания выполнены верно (${correctAnswers}/${totalAnswers})`;
         } else if (correctAnswers === 0) {
-            icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px", fontSize: 25 }} />;
+            icon = <CloseCircleOutlined style={{ color: "red", marginRight: "8px", fontSize: 25,marginBottom: collapsed ? 16 : undefined, marginLeft: collapsed ? -4: undefined  }} />;
             tooltipTitle = `Все задания выполнены неверно (0/${totalAnswers})`;
         } else {
-            icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px", fontSize: 25 }} />;
+            icon = <ExclamationCircleOutlined style={{ color: "orange", marginRight: "8px", fontSize: 25,marginBottom: collapsed ? 16 : undefined, marginLeft: collapsed ? -4: undefined  }} />;
             tooltipTitle = `Часть заданий выполнена верно (${correctAnswers}/${totalAnswers})`;
         }
 
         return (
             <Tooltip title={!collapsed ? tooltipTitle : ""} overlayInnerStyle={{ whiteSpace: "pre-wrap" }}>
-                {icon}
+                <div className="confirmed-icon">
+                    {icon}
+                </div>
             </Tooltip>
         );
     };
@@ -209,11 +212,8 @@ const LessonPage = () => {
                                             children: section.children.map((child) => ({
                                                 key: child.id.toString(),
                                                 label: (
-                                                    <div
+                                                    <div className="flex items-center justify-between"
                                                         style={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: "space-between",
                                                             padding: '8px 16px',
                                                             borderLeft: '2px solid #4caf50',
                                                         }}
@@ -265,7 +265,7 @@ const LessonPage = () => {
                                                               currentSection={selectedSection}/>;
                                     }
                                     if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
-                                        return <QuizMultiComponent key={component.id} quiz={component.componentTask}/>;
+                                        return <QuizMultiComponent key={component.id} quiz={component.componentTask} currentSection={selectedSection}/>;
                                     }
                                 })}
 
