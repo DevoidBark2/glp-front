@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Modal } from "antd";
 import nextConfig from "next.config.mjs";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { Course } from "@/shared/api/course/model";
 import { Post } from "@/shared/api/posts/model";
 import { showUserStatus } from "@/utils/showUserStatus";

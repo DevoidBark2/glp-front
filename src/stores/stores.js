@@ -5,16 +5,15 @@ import CourseStore from "@/stores/CourseStore";
 import GraphStore from "@/stores/GraphStore";
 import NomenclatureStore from "@/stores/NomenclatureStore";
 import EventStore from "@/stores/EventStore";
-import { GeneralSettings } from "@/stores/GeneralSettings";
 import CourseComponent from "@/stores/CourseComponent";
 import SectionCourse from "@/stores/SectionCourse";
 import StatisticsStore from "@/stores/statisticsStore";
-import AvatarIconsStore from "@/stores/AvatarIconsStore";
 import UserProfileStore from "./UserProfileStore";
 import FeedBacksStore from "./FeedBacksStore";
 import AchievementsStore from "./AchievementsStore";
 import ModeratorStore from "./ModeratorStore";
 import UserStore from "./UserStore";
+import {GeneralSettings} from "@/entities/general-settings";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -26,7 +25,6 @@ const eventStore = new EventStore();
 const generalSettingsStore = new GeneralSettings();
 const courseComponentStore = new CourseComponent();
 const sectionCourseStore = new SectionCourse();
-const avatarIconsStore = new AvatarIconsStore();
 const userProfileStore = new UserProfileStore();
 const feedBacksStore = new FeedBacksStore();
 const statisticsStore = new StatisticsStore();
@@ -45,7 +43,6 @@ export const RootStore = {
     courseComponentStore,
     sectionCourseStore,
     statisticsStore,
-    avatarIconsStore,
     userProfileStore,
     feedBacksStore,
     achievementsStore,

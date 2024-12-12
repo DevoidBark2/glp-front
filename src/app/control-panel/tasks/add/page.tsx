@@ -1,15 +1,13 @@
 "use client"
-import MultiPlayChoise from "@/components/CourseComponentTask/TaskTypes/MultiPlayChoiceTask"
-import QuizTask from "@/components/CourseComponentTask/TaskTypes/QuizTask"
-import TextTask from "@/components/CourseComponentTask/TaskTypes/TextTask"
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel"
+import {PageContainerControlPanel} from "@/shared/ui";
 import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model"
 import { useMobxStores } from "@/stores/stores"
-import { Breadcrumb, Button, Divider, Form, message, Select, Tag } from "antd"
+import { Breadcrumb, Button, Divider, Form, message, Select } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()
@@ -75,7 +73,7 @@ const TaskAddPage = () => {
 
                 {typeTask === CourseComponentType.Text && <TextTask />}
                 {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
-                {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoise form={form} />}
+                {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">Добавить</Button>

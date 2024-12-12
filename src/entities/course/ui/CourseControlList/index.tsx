@@ -1,21 +1,21 @@
-import { UserHoverCard } from "@/components/PostPage/UserHoverCard";
 import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/constants";
 import { isEditedCourse } from "@/selectors/courseSelectors";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
-import { UserRole } from "@/shared/api/user/model";
+import {UserRole} from "@/shared/api/user/model";
 import { coursesTable } from "@/shared/config/tableConfig";
 import { statusCourseLabels, statusCourses } from "@/shared/constants";
 import { useMobxStores } from "@/stores/stores";
 import { showCourseStatus } from "@/utils/showCourseStatusInTable";
-import { Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
+import {Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import dayjs from "dayjs";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import { getCookieUserDetails } from "@/lib/users";
+import {UserHoverCard} from "@/widgets";
 
 export const CourseControlList = observer(() => {
 

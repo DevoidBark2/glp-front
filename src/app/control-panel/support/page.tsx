@@ -1,9 +1,8 @@
-// SupportPage.js
 'use client'
 import { useState } from "react";
-import { Table, Button, Space, Modal, Input, Tag } from "antd";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-import PageHeader from "@/components/PageHeader/PageHeader";
+import { Table, Button, Space, Modal, Input } from "antd";
+import {PageContainerControlPanel} from "@/shared/ui";
+import {PageHeader} from "@/shared/ui/PageHeader";
 
 const { TextArea } = Input;
 

@@ -1,8 +1,8 @@
 "use client"
 import { Table } from "antd";
 import { useRouter } from "next/navigation";
-import PageHeader from "@/components/PageHeader/PageHeader";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageHeader} from "@/shared/ui/PageHeader";
+import {PageContainerControlPanel} from "@/shared/ui";
 
 const AchievementsPage = () => {
     const router = useRouter()

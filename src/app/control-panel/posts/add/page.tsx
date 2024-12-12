@@ -1,5 +1,5 @@
 "use client"
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { observer } from "mobx-react";
 import { Breadcrumb, Button, Divider, Form, FormInstance, Input, Modal, notification, Select, Tag, Tooltip, UploadProps } from "antd";
 import dynamic from "next/dynamic";
@@ -167,6 +167,7 @@ const CreatePostPage = () => {
                 <Form.Item
                     name="content"
                     label="Контент поста"
+                    rules={[{ required: true, message: "Пожалуйста, введите содержание!" }]}
                 >
                     <ReactQuill theme="snow" />
                 </Form.Item>

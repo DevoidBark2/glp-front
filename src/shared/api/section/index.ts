@@ -31,8 +31,6 @@ export const createMainSection = withAuth(async (values: MainSection,config = {}
 })
 
 export const createSection = withAuth(async (values:any, config = {}) => {
-
-    debugger
     const formData = new FormData();
 
     Object.keys(values).forEach((key) => {

@@ -29,15 +29,20 @@ class UserProfileStore {
     saveProfile: boolean = false;
     userProfile: UserProfile | null = null;
     userAvatar: string | null = "";
-
     userProfileCourses: Course[] = [];
+
+    uploadingProfileImage: boolean = false;
+
+    setUploadingProfileImage = action((value: boolean) => {
+        this.uploadingProfileImage = value;
+    });
 
     setUserAvatar = action((value: string) => {
         this.userAvatar = value ? `${nextConfig.env?.API_URL}${value}` : null;
     })
 
     confirmLeaveCourse = action(async (courseId: number) => {
-        const data = await confirmLeaveCourse(courseId);
+        await confirmLeaveCourse(courseId);
         this.userProfileCourses = this.userProfileCourses.filter(it => it.courseId !== courseId);
     })
 

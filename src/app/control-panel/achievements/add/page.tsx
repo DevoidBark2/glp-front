@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import { UploadOutlined } from "@ant-design/icons";
 import Image from "next/image"
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 
 const AchievementsPage = () => {
     const [form] = Form.useForm();

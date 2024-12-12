@@ -1,8 +1,8 @@
 "use client"
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel"
-import { Post, PostStatusEnum } from "@/shared/api/posts/model";
+import {PageContainerControlPanel} from "@/shared/ui";
+import { Post } from "@/shared/api/posts/model";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Tooltip, UploadProps } from "antd";
+import { Breadcrumb, Button, Divider, Form, Input, notification, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { observer } from "mobx-react";
 import Link from "next/link";

@@ -17,15 +17,13 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={roboto.className}>
-                <ThemeProviders>
-                    <ConfigProvider theme={themeConfig}>
-                        <StoresProvider>
-                            <AntdRegistry>
-                                {children}
-                            </AntdRegistry>
-                        </StoresProvider>
-                    </ConfigProvider>
-                </ThemeProviders>
+            <ConfigProvider theme={themeConfig}>
+                <StoresProvider>
+                    <AntdRegistry>
+                        {children}
+                    </AntdRegistry>
+                </StoresProvider>
+            </ConfigProvider>
             </body>
         </html>
     );

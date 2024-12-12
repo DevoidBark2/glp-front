@@ -1,10 +1,10 @@
 "use client"
 import React from "react";
 import { observer } from "mobx-react";
-import PageHeader from "@/components/PageHeader/PageHeader";
+import {PageHeader} from "@/shared/ui/PageHeader";
 import { useRouter } from "next/navigation";
 import { SectionList } from "@/entities/section/ui/SectionList.tsx";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 
 const SectionPage = () => {
     const router = useRouter();

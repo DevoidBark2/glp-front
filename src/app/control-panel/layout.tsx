@@ -102,11 +102,6 @@ let dashboardMenuItems: MenuItem[] = [
                 label: <Link href={"/control-panel/category"}>Категории</Link>,
                 icon: <BarsOutlined />,
             },
-            // {
-            //     key: 'avatar_icons',
-            //     label: <Link href={"/control-panel/avatar-icons"}>Иконки пользователя</Link>,
-            //     icon: <BarsOutlined />,
-            // },
         ]
     },
     // {
@@ -175,7 +170,7 @@ let dashboardMenuItems: MenuItem[] = [
 
 const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { resolvedTheme } = useTheme()
-    const { avatarIconsStore, userProfileStore } = useMobxStores()
+    const { userProfileStore } = useMobxStores()
 
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
     const pathName = usePathname();
@@ -262,7 +257,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                                 defaultSelectedKeys={[selectedKey]}
                                 mode="vertical"
                                 items={dashboardMenuItems}
-                                theme={resolvedTheme === "light" ? "light" : "dark"}
+                                theme="light"
                             />
                         ) : (
                             <>

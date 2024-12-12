@@ -3,11 +3,11 @@ import { observer } from "mobx-react";
 import { Empty, Table } from "antd";
 import React, { useEffect } from "react";
 import { useMobxStores } from "@/stores/stores";
-import PageHeader from "@/components/PageHeader/PageHeader";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageHeader} from "@/shared/ui/PageHeader";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { getCategoryColumns } from "@/columnsTables/categoryColumns";
-import CreateCategoryModal from "@/components/CategoryPage/CategoryModals/CreateCategoryModal";
-import ChangeCategoryModal from "@/components/CategoryPage/CategoryModals/ChangeCategoryModal";
+import {CreateCategoryModal} from "@/entities/category/ui/CreateCategoryModal";
+import {ChangeCategoryModal} from "@/entities/category/ui/ChangeCategoryModal";
 
 const CategoryPage = () => {
     const { nomenclatureStore } = useMobxStores();

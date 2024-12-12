@@ -2,7 +2,7 @@
 import React from "react";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { FormSteps } from "@/entities/section/ui";
 
 const SectionAddPage = () => {

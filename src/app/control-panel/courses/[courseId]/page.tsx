@@ -25,7 +25,7 @@ import {PlusCircleOutlined,
     DeleteOutlined,
     EditOutlined,} from "@ant-design/icons";
 import dayjs from "dayjs";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import {CourseComponentTypeI} from "@/shared/api/course/model";
 
@@ -315,7 +315,6 @@ const CoursePage = () => {
                                         pagination={{ pageSize: 20 }}
                                         expandable={{
                                             expandedRowRender: (record) => {
-                                                debugger
                                                 return <div className="bg-gray-100 rounded p-4">
                                                 <div className="mb-4">
                                                     <h3 className="text-lg font-semibold">Компоненты</h3>

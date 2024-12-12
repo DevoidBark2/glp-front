@@ -25,7 +25,11 @@ const CoursesPage = () => {
                 courseStore.courses.length > 0 ? (
                     <CourseList courses={courseStore.courses} />
                 ) : (
-                    <EmptyContent image="/static/empty-icon.svg" title="Курсы не найдены" description="Не переживайте, контент скоро появится. Пожалуйста, вернитесь позже!"/>
+                    <EmptyContent
+                        image="/static/empty-icon.svg"
+                        title="Курсы не найдены"
+                        description="Не переживайте, контент скоро появится. Пожалуйста, вернитесь позже!"
+                    />
                 )
             ) : (
                 <div className="flex justify-center items-center h-60">

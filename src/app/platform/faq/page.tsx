@@ -1,5 +1,5 @@
 "use client"
-import { FaqList } from "@/entities/faq"
+import  { FaqList } from "@/entities/faq"
 import { useMobxStores } from "@/shared/store/RootStore"
 import { Divider } from "antd";
 import { observer } from "mobx-react"

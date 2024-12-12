@@ -8,7 +8,7 @@ export const CourseProfileList = observer(() => {
     const {userProfileStore} = useMobxStores();
     const router = useRouter();
     return (
-        <div>
+        <>
             {userProfileStore.userProfileCourses.length > 0 ?  userProfileStore.userProfileCourses.map(course => (
                     <CourseProfileItem key={course.id} course={course}/>
                 )) : <div className="flex items-center justify-center h-3/4">
@@ -17,6 +17,6 @@ export const CourseProfileList = observer(() => {
                         <Button type="primary" className="mt-2" onClick={() => router.push('/platform/courses')}>Перейти к списку</Button>
                     </div>} />
                 </div>}
-        </div>
+        </>
     )
 })

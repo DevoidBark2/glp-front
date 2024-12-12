@@ -31,13 +31,13 @@ import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
 import { UserRole } from "@/shared/api/user/model";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 
 const ProfilePage = () => {
   const [formProfile] = Form.useForm();
   const [formSettings] = Form.useForm();
   const [avatar, setAvatar] = useState<string | null>(null);
-  const { userProfileStore, avatarIconsStore } = useMobxStores();
+  const { userProfileStore } = useMobxStores();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   const [showFooterOptions, setShowFooterOptions] = useState(false);
@@ -77,8 +77,6 @@ const ProfilePage = () => {
     }).finally(() => {
       userProfileStore.setLoading(false)
     });
-
-    avatarIconsStore.getAllAvatarIcons();
   }, []);
 
   const profileTitle = (role: UserRole) => {

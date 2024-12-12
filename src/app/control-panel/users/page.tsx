@@ -10,13 +10,13 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/constants";
-import GroupActionComponent from "@/components/GroupActionComponent/GroupActionComponent";
 import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
 import { usersTable } from "@/shared/config";
-import PageHeader from "@/components/PageHeader/PageHeader";
 import { User } from "@/shared/api/user/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
+import {PageHeader} from "@/shared/ui/PageHeader";
+import {GroupActionComponent} from "@/widgets";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();

@@ -6,23 +6,40 @@ import dayjs from "dayjs"
 import nextConfig from "next.config.mjs"
 import { useRouter } from "next/navigation"
 import { FC } from "react"
+import Image from "next/image";
+import {BookOutlined} from "@ant-design/icons";
 
-type CourseProfileItemProps = {
+interface CourseProfileItemProps {
     course: Course
 }
 
 export const CourseProfileItem: FC<CourseProfileItemProps> = ({course} ) => {
-    const router = useRouter();
     const { userProfileStore } = useMobxStores();
+    const router = useRouter();
 
     return (
-        <div key={course.courseId} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md hover:bg-white hover:shadow-lg transition-all duration-300">
+        <div key={course.courseId} className="p-4 bg-gray-50 mt-4 rounded-md shadow-md">
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
-                    <img src={`${nextConfig.env!.API_URL}${course?.image}`} alt={course.name} width={100} height={100} className="mr-4" />
+                    {
+                        course.image ?
+                            <Image src={`${nextConfig.env!.API_URL}${course?.image}`} alt={course.name} width={100}
+                                   height={60} className="mr-4"/>
+                            : <div
+                                style={{
+                                    width: 100,
+                                    height: 60,
+                                    borderRadius: 4,
+                                }}
+                                className="mr-4 flex items-center justify-center bg-[#f0f0f0]"
+                            >
+                                <BookOutlined style={{fontSize: 30, color: '#8c8c8c'}}/>
+                            </div>
+                    }
                     <div>
                         <h3 className="text-xl font-semibold">{course.name}</h3>
-                        <p className="text-gray-600">Дата записи: {dayjs(course.enrolledAt).format(FORMAT_VIEW_DATE)}</p>
+                        <p className="text-gray-600">Дата
+                            записи: {dayjs(course.enrolledAt).format(FORMAT_VIEW_DATE)}</p>
                     </div>
                 </div>
                 <div className="flex items-center">
@@ -32,15 +49,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({course} ) => {
                         }}>Продолжить</Button>
                     </Tooltip>
                     <Popconfirm
-                        title={
-                            <span className="text-gray-700">
-                            <strong>Покинуть данный курс?</strong>
-                            <br />
-                            <span className="text-sm text-gray-500">
-                                Вы можете в любой момент присоединиться снова.
-                            </span>
-                            </span>
-                        }
+                        title="Это действие нельзя отменить. Все сохранные данные будут удалены, Вы согласны?"
                         onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)}
                         placement="leftBottom"
                         okText="Да"

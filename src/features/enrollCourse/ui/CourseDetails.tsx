@@ -2,14 +2,13 @@
 import React, {useState} from "react";
 import {Divider, Input, Modal, Rate} from "antd";
 import Image from "next/image"
-import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
-import CourseAccessComponent from "@/components/CourseAccessComponent/CourseAccessComponent";
 import {useRouter} from "next/navigation";
 import {getCookieUserDetails} from "@/lib/users";
 import {useMobxStores} from "@/stores/stores";
 import {observer} from "mobx-react";
 import nextConfig from "next.config.mjs";
 import {AccessRightEnum} from "@/shared/api/course/model";
+import {CourseAccessComponent, CourseLevelComponent} from "@/entities/course/ui";
 
 const CourseDetails = () => {
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState<boolean>(false)

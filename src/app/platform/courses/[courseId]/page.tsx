@@ -1,38 +1,44 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Breadcrumb, Button, Divider, notification, Rate, Spin } from "antd";
+import { Breadcrumb, Button, Divider, notification, Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import CourseLevelComponent from "@/components/CourseLevelComponent/CourseLevelComponent";
 import nextConfig from "next.config.mjs";
 import { Course } from "@/shared/api/course/model";
-import {ClockCircleOutlined,BarsOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, BarsOutlined, BookOutlined} from "@ant-design/icons";
 import { getCookieUserDetails } from "@/lib/users";
+import Image from "next/image";
+import {CourseLevelComponent} from "@/entities/course/ui";
 
 const CoursePage = () => {
-    const { courseId } = useParams();
-    const router = useRouter();
     const { courseStore, userStore } = useMobxStores();
     const [currentCourse,setCurrentCourse] = useState<Course | null>(null);
+    const { courseId } = useParams();
+    const router = useRouter();
 
     const handleClick = () => {
+        courseStore.setSubscribeCourseLoading(true);
         const user = getCookieUserDetails();
 
         if(!user) {
             userStore.setOpenLoginModal(true);
+            courseStore.setSubscribeCourseLoading(false);
             return;
         }
 
         if(currentCourse && currentCourse.isUserEnrolled) {
             router.push(`/platform/lessons/${courseId}`)
+            courseStore.setSubscribeCourseLoading(false);
             return;
         }
 
         courseStore.subscribeCourse(Number(courseId),user.user.id).then(response => {
             router.push(`/platform/lessons/${courseId}`)
+        }).finally(() => {
+            courseStore.setSubscribeCourseLoading(false);
         })
     }
 
@@ -44,7 +50,6 @@ const CoursePage = () => {
             notification.error({ message: e.response.data.message });
         });
     }, [courseId]);
- 
 
     return (
         <div className="container mx-auto">
@@ -65,6 +70,7 @@ const CoursePage = () => {
                                 className="px-12 py-2 rounded-lg font-medium"
                                 loading={courseStore.subscribeCourseLoading}
                                 onClick={handleClick}
+                                disabled={courseStore.subscribeCourseLoading}
                             >
                                 {currentCourse.isUserEnrolled ? "Перейти к курсу" : "Записаться на курс"}
                             </Button>
@@ -82,13 +88,21 @@ const CoursePage = () => {
                                 </p>
                             </div>
                             <div className="w-full lg:w-1/4 lg:ml-6 mt-6 lg:mt-0 flex justify-center">
-                                <img
-                                    src={`${nextConfig.env?.API_URL}${currentCourse.image}`}
-                                    alt="Course Image"
-                                    className="rounded-lg shadow-lg object-cover"
-                                    width={200}
-                                    height={200}
-                                />
+                                {currentCourse.image ? (
+                                    <Image
+                                        src={`${nextConfig.env!.API_URL}${currentCourse.image}`}
+                                        alt={currentCourse.name}
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
+                                        style={{width: '100%', height: 'auto'}}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-80 h-48 flex items-center justify-center bg-gray-200">
+                                        <BookOutlined style={{fontSize: '48px', color: '#8c8c8c'}}/>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

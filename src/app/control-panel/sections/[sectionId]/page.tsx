@@ -1,5 +1,5 @@
 "use client"
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel"
+import {PageContainerControlPanel} from "@/shared/ui";
 import { Breadcrumb, Form } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"

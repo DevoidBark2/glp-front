@@ -61,7 +61,6 @@ class SectionCourse {
 
     addSection = action(async (values: SectionCourseItem) => {
         this.setCreateSectionLoading(true);
-        debugger
         return await createSection(values).finally(() => {
             this.setLoadingSectionsCourse(false)
         });

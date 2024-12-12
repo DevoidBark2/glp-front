@@ -10,9 +10,9 @@ import {
     UploadOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import { UserHoverCard } from "@/components/PostPage/UserHoverCard";
 import { UserRole } from "@/shared/api/user/model";
 import { PostStatusEnum } from "@/shared/api/posts/model";
+import {UserHoverCard} from "@/widgets";
 
 interface getPostColumnsProps {
     getStatusTag: (status: PostStatusEnum, rejectReason?: ModeratorFeedback) => React.JSX.Element;

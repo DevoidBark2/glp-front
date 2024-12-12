@@ -8,13 +8,6 @@ import { useEffect, useState } from "react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { PostCard } from "@/entities/post";
 
-export type Comment = {
-    author: string;
-    content: string;
-    datetime: number;
-    avatar: string;
-}
-
 const PostPage = () => {
     const { postId } = useParams();
     const { postStore } = useMobxStores();
@@ -37,7 +30,7 @@ const PostPage = () => {
                             title: <Link href={"/platform"}>Главная</Link>,
                         },
                         {
-                            title: <p>{currentPost?.name || "Пост"}</p>,
+                            title: <p>{currentPost?.name}</p>,
                         }
                     ]} />
                 </div>

@@ -4,7 +4,11 @@ import { FC } from "react";
 
 const { Panel } = Collapse;
 
-export const FaqList: FC<{ faqs: Faq[] }> = ({ faqs }) => (
+interface FaqListProps {
+    faqs: Faq[];
+}
+
+export const FaqList: FC<FaqListProps> = ({ faqs }) => (
     <Collapse
         accordion
         className="bg-white w-full rounded-lg shadow-lg overflow-hidden"

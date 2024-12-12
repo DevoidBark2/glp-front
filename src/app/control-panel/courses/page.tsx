@@ -3,10 +3,10 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
-import SuccessfulCreateCourseModal from "@/components/SuccessfulCreateCourseModal/SuccessfulCreateCourseModal";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-import PageHeader from "@/components/PageHeader/PageHeader";
+import {PageContainerControlPanel} from "@/shared/ui";
+import {PageHeader} from "@/shared/ui/PageHeader";
 import { CourseControlList } from "@/entities/course/ui";
+import {SuccessfulCreateCourseModal} from "@/widgets";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores()

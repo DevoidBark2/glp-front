@@ -135,6 +135,11 @@ const LessonPage = () => {
             notification.error({message: e.response.data.message})
         });
 
+        return () => {
+            courseStore.setFullDetailCourse(null);
+            courseStore.setCourseMenuItems(null);
+        }
+
     }, [courseId]);
 
     useEffect(() => {

@@ -139,9 +139,7 @@ class UserStore {
                 footerContent: response.response.data.pagination_size
             }
 
-            debugger
             window.localStorage.setItem('user_settings', JSON.stringify(settingUser));
-            debugger
             this.setUserProfile(response.response.data);
             signInUser({
                 id: response.response.data.id,

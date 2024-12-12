@@ -14,10 +14,10 @@ import {
     SyncOutlined,
 } from "@ant-design/icons";
 
-import PageHeader from "@/components/PageHeader/PageHeader";
+import {PageHeader} from "@/shared/ui/PageHeader";
 import { getCookieUserDetails } from "@/lib/users";
 import { getPostColumns } from "@/columnsTables/postColumns";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { postTable } from "@/shared/config";
 import { PostStatusEnum } from "@/shared/api/posts/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";

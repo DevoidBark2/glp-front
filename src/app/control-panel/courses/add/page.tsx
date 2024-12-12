@@ -22,8 +22,7 @@ import { observer } from "mobx-react";
 import Link from "next/link";
 import { LEVEL_COURSE } from "@/constants";
 import Image from "next/image"
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-
+import {PageContainerControlPanel} from "@/shared/ui";
 
 const ReactQuill = dynamic(
     () => import('react-quill'),

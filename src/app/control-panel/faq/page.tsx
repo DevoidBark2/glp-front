@@ -1,15 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Button, Modal, Form, Input, Table, Popconfirm, TableColumnsType, Tooltip } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import { Form } from "antd";
+import {PageContainerControlPanel} from "@/shared/ui";
 import { Faq } from "@/shared/api/faq/model";
 import { useMobxStores } from "@/shared/store/RootStore";
-import PageHeader from "@/components/PageHeader/PageHeader";
-import { faqTable } from "@/shared/config/tableConfig";
+import {PageHeader} from "@/shared/ui/PageHeader";
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import { FaqControlList, FaqModal } from "@/entities/faq";
+import { FaqControlList } from "@/entities/faq";
 
 const FaqPage = () => {
     const { faqStore } = useMobxStores();

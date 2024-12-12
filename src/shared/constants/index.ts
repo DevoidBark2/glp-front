@@ -6,7 +6,6 @@ import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/stores/Achi
 import { CourseComponentType, StatusCourseEnum } from "../api/course/model";
 import { StatusUserEnum, UserRole } from "../api/user/model";
 import { PostStatusEnum } from "../api/posts/model";
-import { StatusAvatarIconEnum } from "../api/avatar-icon";
 import { StatusComponentTaskEnum } from "../api/component-task";
 import { ActionEvent } from "../api/action-user";
 
@@ -26,12 +25,6 @@ export const FILTER_STATUS_POST = [
     { id: 2, text: 'Подтвержден', value: PostStatusEnum.APPROVED },
     { id: 4, text: 'Отклонен', value: PostStatusEnum.REJECT },
 ]
-
-export const FILTER_STATUS_AVATAR_ICONS = [
-    { id: 1, text: 'Активный', value: StatusAvatarIconEnum.ACTIVE },
-    { id: 2, text: 'Не активный', value: StatusAvatarIconEnum.DISABLED },
-]
-
 
 export const FILTER_ROLE_USER = [
     { id: 1, text: 'Пользователь', value: UserRole.STUDENT },

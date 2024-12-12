@@ -23,7 +23,7 @@ import {
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import { getCookieUserDetails } from "@/lib/users";
-import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+import {PageContainerControlPanel} from "@/shared/ui";
 import dayjs from "dayjs";
 import { SmileOutlined, CloudOutlined, MoonOutlined } from "@ant-design/icons";
 import { welcomeTextRender } from "@/utils/welcomeText";

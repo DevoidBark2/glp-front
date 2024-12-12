@@ -31,13 +31,10 @@ export const PostCard = ({ post }: PostCardProps) => {
                 <div className="flex-grow">
                     <h1 className="text-3xl font-bold mb-2">{post?.name}</h1>
                     <p className="text-gray-600 mb-4">{post?.description}</p>
-
-
                     <p className="absolute right-5 text-sm text-gray-500 mt-4">
                         Опубликовано: {dayjs(post?.created_at).format(FORMAT_VIEW_DATE)}
                     </p>
                 </div>
-
 
             </div>
             <Divider/>

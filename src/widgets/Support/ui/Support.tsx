@@ -25,13 +25,12 @@ export const SupportBlock = () => {
                     title="Письмо успешно отправлено!"
                     subTitle="Спасибо за обращение в службу поддержки. Наши специалисты свяжутся с вами в ближайшее время по указанному в сообщении адресу электронной почты."
                     extra={[
-                        <Button key="asd" onClick={onCancelModal}>Закрыть</Button>,
+                        <Button key="close_modal" onClick={onCancelModal}>Закрыть</Button>,
                     ]}
                 />
             </Modal>
-            <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-                Поддержка
-            </h1>
+
+            <h1 className="mt-6 text-3xl font-semibold text-gray-800 mb-6">Поддержка</h1>
             <div className="bg-white shadow-md rounded-lg p-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                     Как мы можем вам помочь?
@@ -44,7 +43,7 @@ export const SupportBlock = () => {
                     <Form.Item
                         name="email"
                         rules={[{required: true, message: "Email обязательно!"},
-                            {type: "email", message:"Неверный формат email!"}
+                            {type: "email", message: "Неверный формат email!"}
                         ]}
                     >
                         <Input
@@ -61,7 +60,7 @@ export const SupportBlock = () => {
                         />
                     </Form.Item>
 
-                   
+
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="ml-2">Отправить</Button>
                     </Form.Item>

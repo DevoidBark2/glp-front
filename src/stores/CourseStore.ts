@@ -60,6 +60,10 @@ class CourseStore {
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
 
+    setSubscribeCourseLoading = action((value: boolean) => {
+        this.subscribeCourseLoading = value;
+    })
+
     setSelectedCourse = action((value: number | null) => {
         this.selectedIdCourse = value;
     })
@@ -217,7 +221,6 @@ class CourseStore {
     handleCheckTask = action(async (task: TaskAnswerUserDto) => {
         const data = await handleCheckUserTask(task);
 
-        debugger
 
         // обновить копмонент + обновить меню
 
@@ -314,7 +317,6 @@ class CourseStore {
         this.setFullDetailCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
         runInAction(() => {
-            debugger
             this.setFullDetailCourse(data.data);
         })
 
