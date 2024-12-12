@@ -4,14 +4,13 @@ import {
     Breadcrumb,
     Button,
     Col,
-    Collapse,
     Divider, Empty,
     Form, List, message, Modal,
     notification,
     Popconfirm,
     Row,
     Select,
-    Spin, Switch,
+    Spin,
     Table,
     TableColumnsType,
     Tabs, Tag, Tooltip
@@ -22,20 +21,20 @@ import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {Input} from "antd/lib";
 import {FORMAT_VIEW_DATE, LEVEL_COURSE} from "@/constants";
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
-import {PlusCircleOutlined, SettingOutlined,  BookOutlined,
-    CheckCircleOutlined,
-    CodeOutlined,
+import {PlusCircleOutlined,
     DeleteOutlined,
-    EditOutlined,
-    ProjectOutlined,
-    ReconciliationOutlined,} from "@ant-design/icons";
+    EditOutlined,} from "@ant-design/icons";
 import dayjs from "dayjs";
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
-import { typeIcons } from "@/columnsTables/taskColumns";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import {CourseComponentTypeI} from "@/shared/api/course/model";
+
+const ReactQuill = dynamic(
+    () => import('react-quill'),
+    { ssr: false }
+)
+import 'react-quill/dist/quill.snow.css';
+import dynamic from "next/dynamic";
 
 const CoursePage = () => {
     const {courseId} = useParams();
@@ -144,9 +143,7 @@ const CoursePage = () => {
     ];
 
     const handleDeleteComponent = (id: number) => {
-        // Логика удаления компонента
         console.log("Удаление компонента с ID:", id);
-        // Вы можете вызвать API для удаления компонента или обновить состояние компонента
     };
 
     useEffect(() => {
@@ -169,7 +166,7 @@ const CoursePage = () => {
                 <Breadcrumb items={[ {
                     title: <Link href={"/control-panel/courses"}>Доступные курсы</Link>,
                 },{
-                    title: <p>{courseStore.loadingCourseDetails ? <Spin/> : courseName}</p>,
+                    title: <p>{courseName}</p>,
                 }]}/>
             </div>
             <h1 className="text-center text-3xl">Редактирование курса</h1>
@@ -230,11 +227,11 @@ const CoursePage = () => {
                                                 placeholder="Выберите категорию"
                                                 style={{ width: '100%' }}
                                             >
-                                                {nomenclatureStore.categories.map((category) => (
+                                                {!nomenclatureStore.loadingCategories && nomenclatureStore.categories.length > 0 ? nomenclatureStore.categories.map((category) => (
                                                     <Select.Option key={category.id} value={category.id}>
                                                         {category.name}
                                                     </Select.Option>
-                                                ))}
+                                                )) : <Spin/>}
                                             </Select>
                                         </Form.Item>
                                     </Col>
@@ -284,7 +281,7 @@ const CoursePage = () => {
                                 </Form.Item>
                     
                                 <Form.Item name="content_description" label="Содержание курса">
-                                    <ReactQuill theme="snow" style={{ width: '100%' }} />
+                                {typeof window !== 'undefined' && <ReactQuill theme="snow" />}
                                 </Form.Item>
                     
                                 <div className="flex flex-col items-center">

@@ -19,12 +19,18 @@ import Dragger from "antd/es/upload/Dragger";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
 import Link from "next/link";
 import { LEVEL_COURSE } from "@/constants";
 import Image from "next/image"
 import PageContainerControlPanel from "@/components/PageContainerControlPanel/PageContainerControlPanel";
+
+
+const ReactQuill = dynamic(
+    () => import('react-quill'),
+    { ssr: false }
+)
+import 'react-quill/dist/quill.snow.css';
+import dynamic from "next/dynamic";
 
 const CourseAddPage = () => {
 
@@ -220,7 +226,7 @@ const CourseAddPage = () => {
                     name="content_description"
                     label="Содержание курса"
                 >
-                    <ReactQuill theme="snow" />
+                   {typeof window !== 'undefined' && <ReactQuill theme="snow" />}
                 </Form.Item>
 
                 <div className="flex flex-col items-center">
