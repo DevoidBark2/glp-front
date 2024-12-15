@@ -27,7 +27,7 @@ const CategoryPage = () => {
             <ChangeCategoryModal
                 openModal={nomenclatureStore.changeCategoryModal}
                 setOpenModal={nomenclatureStore.setChangeCategoryModal}
-                handleSubmit={nomenclatureStore.handleChangeCategoryName}
+                handleSubmit={nomenclatureStore.changeCategory}
                 initialValue={nomenclatureStore.selectedCategory}
             />
 

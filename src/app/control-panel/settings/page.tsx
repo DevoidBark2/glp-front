@@ -24,6 +24,7 @@ const SettingsControlPage = () => {
 
     useEffect(() => {
         generalSettingsStore.getGeneralSettings().then((response) => {
+            debugger
             formForSec.setFieldsValue(response.data[0])
             formForGeneral.setFieldsValue(response.data[0])
             setUploadedLogo(response.data[0].logo_url ? `${nextConfig.env?.API_URL}${response.data[0].logo_url}` : null)

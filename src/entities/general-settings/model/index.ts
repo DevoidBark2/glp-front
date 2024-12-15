@@ -23,7 +23,7 @@ export class GeneralSettings {
            this.setLoading(true);
            const response = await GET(`/api/general-settings`)
            this.setGeneralSetting(response.data[0])
-           return response[0]?.service_mode
+           return response
        }finally {
            this.setLoading(false);
        }
