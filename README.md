@@ -33,6 +33,20 @@ Learnify — это образовательная платформа,наход
   - Проект постепенно переносится на архитектуру Feature-Sliced Design (FSD) для улучшения модульности и масштабируемости кода.
 ---
 
+## Скриншоты приложения
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-beetwen gap: 20px;">
+   <img src="public/static/screenshot_9.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_1.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_2.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_3.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_4.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_5.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_6.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_7.jpg" alt="Скриншот 1" height="300">
+   <img src="public/static/screenshot_8.jpg" alt="Скриншот 1" height="300">
+</div>
+
 ## Начало работы
 1. Склонируйте репозиторий:
    ```bash
