@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Learnify
 
-## Getting Started
+Learnify — это образовательная платформа,находящаяся в стадии активной разработки. Она предлагает широкие возможности для студентов, преподавателей и администраторов, обеспечивая эффективное управление курсами и интерактивное обучение.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Возможности
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Для студентов
+- **Запись на курсы**: Изучайте и записывайтесь на разнообразные курсы, подходящие под ваши интересы.
+- **Интерактивное обучение**: Работайте с материалами курсов, выполняйте задания и отслеживайте свой прогресс.
+- **Удобный интерфейс**: Простая и интуитивно понятная система для комфортного обучения.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Для преподавателей
+- **Создание курсов**: Разрабатывайте и управляйте курсами с помощью удобных инструментов.
+- **Управление студентами**: Отслеживайте успехи студентов, общайтесь напрямую и давайте персонализированную обратную связь.
+- **Полный контроль**: Модерируйте обсуждения, загружайте ресурсы и управляйте заданиями легко и удобно.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Для администраторов
+- **Контроль платформы**: Следите за активностью, управляйте пользователями и обеспечивайте стабильную работу платформы.
+- **Управление ролями пользователей**: Назначайте и изменяйте роли (студент, преподаватель, администратор).
+- **Аналитика**: Получайте данные о производительности платформы и вовлеченности пользователей.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Технологический стек
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend**: 
+  - [Next.js](https://nextjs.org/) — фреймворк на базе React для создания быстрых и масштабируемых веб-приложений.
+  - [Tailwind CSS](https://tailwindcss.com/) — CSS-фреймворк для быстрой разработки пользовательского интерфейса.
+  - [MobX](https://mobx.js.org/) — управление состоянием приложения.
+- **Архитектура**:
+  - Проект постепенно переносится на архитектуру Feature-Sliced Design (FSD) для улучшения модульности и масштабируемости кода.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Начало работы
+1. Склонируйте репозиторий:
+   ```bash
+   git clone https://github.com/DevoidBark2/glp-front
+   cd glp-front
+   ```
 
-## Deploy on Vercel
+2. Установите зависимости:
+   ```bash
+   npm install
+   # или
+   yarn install
+   # или
+   pnpm install
+   # или
+   bun install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Запустите сервер разработки:
+   ```bash
+   npm run dev
+   # или
+   yarn dev
+   # или
+   pnpm dev
+   # или
+   bun dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Откройте [http://localhost:3000](http://localhost:3000) в браузере, чтобы увидеть приложение в действии.
