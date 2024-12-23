@@ -2,8 +2,8 @@ import { useMobxStores } from "@/stores/stores";
 import { Button, Form, Input, notification } from "antd";
 import React from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { MAIN_COLOR } from "@/constants";
 import {observer} from "mobx-react";
+import { MAIN_COLOR } from "@/shared/constants";
 
 export const RegisterComponent = observer(() => {
     const { userStore } = useMobxStores();

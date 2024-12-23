@@ -2,7 +2,7 @@ import { action, makeAutoObservable, runInAction } from "mobx";
 import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { notification } from "antd"
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/constants";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { createPost } from "@/shared/api/posts";
 import { User } from "@/shared/api/user/model";

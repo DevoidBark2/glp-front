@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useMobxStores } from "@/stores/stores";
 import { getCookieUserDetails } from "@/lib/users";
-import { platformMenu } from "@/constants";
+import { platformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "next.config.mjs";
 import { UserOutlined } from "@ant-design/icons";

@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Button, Form, Input } from "antd";
 import { useMobxStores } from "@/stores/stores";
-import { MAIN_COLOR } from "@/constants";
+import { MAIN_COLOR } from "@/shared/constants";
 
 export const ForgotPasswordComponent = observer(() => {
     const { userStore } = useMobxStores();

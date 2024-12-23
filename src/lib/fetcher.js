@@ -1,6 +1,6 @@
 import axios from "axios"
 import {delete_cookie_by_name, getUserToken} from "@/lib/users";
-import {UNAUTHORIZED_STATUS_CODE} from "@/constants";
+import {UNAUTHORIZED_STATUS_CODE} from "@/shared/constants";
 
 const logoutUser = () => {
     delete_cookie_by_name("userToken")

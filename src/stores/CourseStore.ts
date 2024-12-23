@@ -3,17 +3,15 @@ import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
 import { notification } from "antd";
 import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/constants";
 import { SectionCourseItem } from "@/stores/SectionCourse";
 import { getAllCourses, getCourseById } from "@/shared/api/course";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
-import axios from "axios";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
-import { MenuItem } from "@/utils/dashboardMenu";
 import { SectionCourse } from "@/shared/api/section/model";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",

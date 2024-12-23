@@ -1,8 +1,8 @@
 import { action, makeAutoObservable } from "mobx";
 import { GET } from "@/lib/fetcher";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/constants";
 import { ActionEvent } from "@/shared/api/action-user";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 
 export type EventUser = {
     id: number;

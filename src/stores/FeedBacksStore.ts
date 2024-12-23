@@ -2,8 +2,8 @@ import { action, makeAutoObservable } from "mobx";
 import { GET, POST } from "@/lib/fetcher";
 import { notification, UploadFile } from "antd";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/constants";
 import {User} from "@/shared/api/user/model";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 
 export type FeedBackItem = {
     id: string,

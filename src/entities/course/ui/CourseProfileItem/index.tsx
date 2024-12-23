@@ -1,4 +1,3 @@
-import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/constants"
 import { Course } from "@/shared/api/course/model"
 import { useMobxStores } from "@/stores/stores"
 import { Button, Popconfirm, Progress, Tooltip } from "antd"
@@ -8,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { FC } from "react"
 import Image from "next/image";
 import {BookOutlined} from "@ant-design/icons";
+import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants"
 
 interface CourseProfileItemProps {
     course: Course

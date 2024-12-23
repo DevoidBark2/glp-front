@@ -1,13 +1,12 @@
-export const MAIN_COLOR = "#00b96b";
-export const UNAUTHORIZED_STATUS_CODE = 401;
-export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"
-
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/stores/AchievementsStore";
-import { CourseComponentType, StatusCourseEnum } from "../api/course/model";
-import { StatusUserEnum, UserRole } from "../api/user/model";
-import { PostStatusEnum } from "../api/posts/model";
-import { StatusComponentTaskEnum } from "../api/component-task";
 import { ActionEvent } from "../api/action-user";
+import { StatusComponentTaskEnum } from "../api/component-task";
+import { CourseComponentType, StatusCourseEnum } from "../api/course/model";
+import { PostStatusEnum } from "../api/posts/model";
+import { StatusUserEnum, UserRole } from "../api/user/model";
+
+export const MAIN_COLOR = "#00b96b"
+export const UNAUTHORIZED_STATUS_CODE = 401
 
 export type PlatformMenu = {
     key: number;
@@ -216,6 +215,9 @@ export const GeneralSettingTooltips = {
         PLACEHOLDER: "Выберите сложность пароля"
     }
 }
+
+export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"
+
 
 export const conditionForAchievements: Condition[] = [
     { id: 1, condition: ConditionTypeEnum.COMPLETE_COURSES, title: "Пройди N курсов", type: AchievementTypeEnum.LEARNING },
