@@ -1,3 +1,4 @@
+"use client"
 import { Button, Empty } from "antd";
 import { CourseProfileItem } from "../CourseProfileItem";
 import { useMobxStores } from "@/stores/stores";

@@ -1,11 +1,17 @@
+"use client"
 import { PostList } from "@/entities/post/ui/postList"
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Divider } from "antd";
 import { observer } from "mobx-react";
+import {useEffect} from "react";
 
 export const Posts = observer(() => {
     const { postStore } = useMobxStores();
-    
+
+    useEffect(() => {
+        postStore.getAllPosts()
+    }, [])
+
     return (
         <div className="container mx-auto">
             <div className="px-6">

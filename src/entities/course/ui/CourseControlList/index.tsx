@@ -1,3 +1,4 @@
+"use client"
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import {UserRole} from "@/shared/api/user/model";
 import { coursesTable } from "@/shared/config/tableConfig";

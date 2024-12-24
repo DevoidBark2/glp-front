@@ -1,17 +1,12 @@
-"use client";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
-import React, { useEffect } from "react";
+import React from "react";
 import { Divider, Spin } from "antd";
 import { CourseList } from "@/entities/course/ui";
 import { EmptyContent } from "@/shared/ui/emptyContent";
 
 const CoursesPage = () => {
     const { courseStore } = useMobxStores();
-
-    useEffect(() => {
-        courseStore.getAllCourses();
-    }, []);
 
     return (
         <div className="container mx-auto py-6">

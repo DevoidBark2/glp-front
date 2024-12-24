@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import { notification, Button, Form, Input, Modal } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { GoogleOutlined } from '@ant-design/icons';
 
 export const LoginComponent = observer(() => {
     const { userStore } = useMobxStores();
@@ -83,6 +84,25 @@ export const LoginComponent = observer(() => {
                                     Зарегистрируйся
                                 </span>
                             </p>
+                        </div>
+
+                        <div className="flex flex-col items-center mt-6 space-y-3">
+                            <Button
+                                type="default"
+                                icon={<GoogleOutlined />}
+                                className="w-full flex items-center justify-center py-2 bg-[#db4437] text-white rounded-md hover:bg-[#c23322] transition-all"
+                                // onClick={() => userStore.loginWithGoogle()}
+                            >
+                                Войти через Google
+                            </Button>
+                            <Button
+                                type="default"
+                                // icon={<YandexOutlined />}
+                                className="w-full flex items-center justify-center py-2 bg-[#ffcc00] text-black rounded-md hover:bg-[#e6b800] transition-all"
+                                // onClick={() => userStore.loginWithYandex()}
+                            >
+                                Войти через Yandex
+                            </Button>
                         </div>
                     </Form>
                 </div>

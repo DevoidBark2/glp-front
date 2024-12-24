@@ -1,3 +1,4 @@
+"use client"
 import { Course } from "@/shared/api/course/model"
 import { useMobxStores } from "@/stores/stores"
 import { Button, Popconfirm, Progress, Tooltip } from "antd"

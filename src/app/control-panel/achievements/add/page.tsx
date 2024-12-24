@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { Form, Input, Select, Button, InputNumber, message, Upload, Breadcrumb } from "antd";
-import { conditionForAchievements, typesConsitions } from "@/constants";
+import { conditionForAchievements, typesConsitions } from "@/shared/constants";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";

@@ -1,24 +1,23 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Button, Divider, Menu, MenuProps, Modal, Skeleton } from "antd";
+import { Divider, Menu, MenuProps, Skeleton } from "antd";
 import Link from "next/link";
-import Image from "next/image"
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import { UserType } from "@/components/Header/Header";
 import { getCookieUserDetails } from "@/lib/users";
 import {
     AppstoreOutlined,
     BarsOutlined,
     BookOutlined, LogoutOutlined,
-    PartitionOutlined, SettingOutlined,
+SettingOutlined,
     SolutionOutlined,
-    ToolOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined
+    ToolOutlined, UserOutlined
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
+import {UserType} from "@/widgets";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';
