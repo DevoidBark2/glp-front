@@ -7,6 +7,7 @@ import { message } from "antd";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { getUserById, handleBlockUser, updateRole } from "@/shared/api/user";
 import { UserProfile } from "./UserProfileStore";
+import {login, register} from "@/shared/api/auth";
 
 class UserStore {
     constructor() {
@@ -131,7 +132,7 @@ class UserStore {
     loginUser = action(async (values: any) => {
         this.setLoading(true);
         try {
-            const response = await POST("/api/login", values);
+            const response = await login(values);
             const settingUser = {
                 pagination_size: response.response.data.pagination_size,
                 table_size: response.response.data.pagination_size,
@@ -150,21 +151,24 @@ class UserStore {
                 user_name: response.response.data.user_name,
             });
             this.setOpenLoginModal(false);
-            return response;
         } catch (error) {
             throw error;
         } finally {
             this.setLoading(false);
+
         }
     });
 
     registerUser = action(async (values: any) => {
         this.setLoading(true)
-        return await POST("/api/register", { reqBody: values }).then(response => {
-            return response
-        }).finally(() => {
+        return await register(values).finally(() => {
             this.setLoading(false)
-        })
+        });
+        // return await POST("/api/register", { reqBody: values }).then(response => {
+        //     return response
+        // }).finally(() => {
+        //     this.setLoading(false)
+        // })
     })
 
     logout = action(async () => {

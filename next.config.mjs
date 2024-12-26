@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    env:{
-        API_URL: "http://localhost:4200/"
+    env: {
+        API_URL: process.env.API_URL,
+        GOOGLE_RECAPTCHA_SITE_KEY: process.env.GOOGLE_RECAPTCHA_SITE_KEY,
     },
     reactStrictMode: false,
     images: {

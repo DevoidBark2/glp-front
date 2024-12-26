@@ -1,13 +1,32 @@
-import React from "react";
+import React, {useState} from "react";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import { notification, Button, Form, Input, Modal } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { GoogleOutlined } from '@ant-design/icons';
+import nextConfig from "../../../../../next.config.mjs";
+import ReCAPTCHA from "react-google-recaptcha"
+import {useRouter} from "next/navigation";
 
 export const LoginComponent = observer(() => {
+    const [recaptcha, setRecaptcha] = useState<ReCAPTCHA | null>(null);
+    const router = useRouter()
     const { userStore } = useMobxStores();
     const [form] = Form.useForm();
+
+    const onSubmit = (values: any) => {
+        if (!recaptcha) {
+            notification.error({message: "Пожалуйста, завершите reCAPTCHA"})
+            return;
+        }
+
+        userStore.loginUser(values).then(() => {
+            form.resetFields();
+            router.push("/platform/profile")
+        }).catch((e) => {
+            notification.error({ message: e.response.data.message })
+        })
+    }
 
     return (
         <div className="flex justify-center items-center h-full">
@@ -21,15 +40,8 @@ export const LoginComponent = observer(() => {
                     <Form
                         form={form}
                         layout="vertical"
-                        className="w-[350px]"
-                        onFinish={(values) =>
-                            userStore
-                                .loginUser(values)
-                                .then(() => {
-                                    form.resetFields();
-                                })
-                                .catch((e) => notification.error({ message: e.response.data.message }))
-                        }
+                        style={{ width: 300 }}
+                        onFinish={onSubmit}
                     >
                         <Form.Item
                             label="Email"
@@ -55,7 +67,12 @@ export const LoginComponent = observer(() => {
                             />
                         </Form.Item>
 
-                        <div className="flex justify-end mb-4">
+                        <ReCAPTCHA
+                            sitekey={nextConfig.env?.GOOGLE_RECAPTCHA_SITE_KEY}
+                            onChange={setRecaptcha}
+                        />
+
+                        <div className="flex justify-end mb-4 mt-4">
                             <span
                                 className="hover:cursor-pointer text-primary-color text-[#00b96b]"
                                 onClick={() => userStore.setOpenForgotPasswordModal(true)}

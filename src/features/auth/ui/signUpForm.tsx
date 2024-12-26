@@ -11,6 +11,7 @@ type SignUpFormType = {
 }
 
 export const SignUpForm = () => {
+    const [recaptha,setRecaptha] = useState<string | null>(null);
     const { userStore } = useMobxStores();
     const [form] = Form.useForm<SignUpFormType>();
 

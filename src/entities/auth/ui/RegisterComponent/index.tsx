@@ -1,13 +1,27 @@
 import { useMobxStores } from "@/stores/stores";
 import { Button, Form, Input, notification } from "antd";
-import React from "react";
+import React, {useState} from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import {observer} from "mobx-react";
 import { MAIN_COLOR } from "@/shared/constants";
+import nextConfig from "../../../../../next.config.mjs";
+import ReCAPTCHA from "react-google-recaptcha"
 
 export const RegisterComponent = observer(() => {
+    const [recaptcha, setRecaptcha] = useState<ReCAPTCHA | null>(null);
     const { userStore } = useMobxStores();
     const [form] = Form.useForm();
+
+    const onSubmit = (values: any) => {
+        if (!recaptcha) {
+            notification.error({message: "Пожалуйста, завершите reCAPTCHA"})
+            return;
+        }
+        userStore.registerUser(values).then(response => {
+            userStore.setOpenRegisterModal(false);
+            notification.success({ message: response.response.data.message })
+        }).catch(e => notification.error({ message: e.response.data.message }))
+    }
 
     return (
         <div className="flex">
@@ -17,10 +31,7 @@ export const RegisterComponent = observer(() => {
                         form={form}
                         layout="vertical"
                         style={{ width: 300 }}
-                        onFinish={(values) => userStore.registerUser(values).then(response => {
-                            userStore.setOpenRegisterModal(false);
-                            notification.success({ message: response.response.data.message })
-                        }).catch(e => notification.error({ message: e.response.data.message }))}
+                        onFinish={onSubmit}
                     >
                         <Form.Item
                             label="Имя"
@@ -29,24 +40,6 @@ export const RegisterComponent = observer(() => {
                         >
                             <Input
                                 placeholder="Введите ваше имя"
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Фамилия"
-                            name="second_name"
-                        >
-                            <Input
-                                placeholder="Введите вашу фамилию"
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Отчество"
-                            name="last_name"
-                        >
-                            <Input
-                                placeholder="Введите ваше отчество"
                             />
                         </Form.Item>
 
@@ -99,6 +92,10 @@ export const RegisterComponent = observer(() => {
                             />
                         </Form.Item>
 
+                        <ReCAPTCHA
+                            sitekey={nextConfig.env?.GOOGLE_RECAPTCHA_SITE_KEY}
+                            onChange={setRecaptcha}
+                        />
 
                         <div className="flex flex-col items-center">
                             <Form.Item style={{ marginTop: '22px' }}>
