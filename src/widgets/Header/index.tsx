@@ -84,6 +84,8 @@ export const Header = observer(() => {
             userStore.setUserProfile(response);
             setCurrentUser(response);
             configureMenuItems(response.role);
+        }).catch(e => {
+            debugger
         })
     }, []);
 

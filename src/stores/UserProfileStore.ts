@@ -51,7 +51,7 @@ class UserProfileStore {
         this.fileListForFeedback = files;
     });
 
-    setUserProfile = action(async (value: UserProfile) => {
+    setUserProfile = action((value: UserProfile) => {
         this.userProfile = value;
     })
 
@@ -63,24 +63,21 @@ class UserProfileStore {
         this.loading = value
     })
 
-    setUserProfileCourses = action(async (courses: Course[]) => {
+    setUserProfileCourses = action((courses: Course[]) => {
         this.userProfileCourses = courses
     })
 
     getUserProfile = action(async () => {
-        try {
-            this.setLoading(true)
-            const data = await getUserProfile();
-            debugger
-            this.setUserProfileCourses(data.userCourses);
-            this.setUserAvatar(data.image)
-            this.setUserProfile(data)
-            return data;
-        } catch (e) {
+        this.setLoading(true)
+        return await getUserProfile().then(response => {
+            this.setUserProfileCourses(response.userCourses);
+            this.setUserAvatar(response.image)
+            this.setUserProfile(response)
 
-        } finally {
+            return response;
+        }).finally(() => {
             this.setLoading(false)
-        }
+        });
     })
 
     logout = action( async () => {
