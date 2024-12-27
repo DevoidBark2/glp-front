@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Avatar, Button, Dropdown, MenuProps } from "antd";
+import {Avatar, Button, Dropdown, MenuProps, Spin} from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useMobxStores } from "@/stores/stores";
-import { getCookieUserDetails } from "@/lib/users";
 import { platformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "next.config.mjs";
@@ -79,14 +78,16 @@ export const Header = observer(() => {
     };
 
     useEffect(() => {
-        userProfileStore.getUserProfile().then(response => {
-            debugger
-            userStore.setUserProfile(response);
-            setCurrentUser(response);
-            configureMenuItems(response.role);
-        }).catch(e => {
-            debugger
-        })
+        userProfileStore.getUserProfile()
+            .then((response) => {
+                debugger;
+                userStore.setUserProfile(response);
+                setCurrentUser(response);
+                configureMenuItems(response.role);
+            })
+            .catch((error) => {
+                console.log('sad')
+            }).finally(() => userProfileStore.setLoading(false));
     }, []);
 
     return (
@@ -108,24 +109,28 @@ export const Header = observer(() => {
                     </div>
 
                     <div className="flex items-center space-x-4">
-                        {currentUser ? (
+                        {userProfileStore.loading ? ( // Показываем лоадер, если данные загружаются
+                            <div className="flex items-center justify-center">
+                                <Spin size="large" /> {/* Ant Design лоадер */}
+                            </div>
+                        ) : currentUser && !userProfileStore.loading ? ( // Если загрузка завершена и пользователь существует
                             <Dropdown menu={{ items }} placement="bottomLeft">
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
-                                <Avatar
-                                    size={40}
-                                    src={
-                                        userStore.userProfile?.image
-                                            ? `${nextConfig.env?.API_URL}${userStore.userProfile.image}`
-                                            : undefined
-                                    }
-                                    icon={!userStore.userProfile?.image && <UserOutlined />}
-                                />
-                                <div className="text-white font-semibold ml-3">
-                                    {`${userStore.userProfile?.second_name ?? ""} ${userStore.userProfile?.first_name ?? ""} ${userStore.userProfile?.last_name ?? ""}`}
-                                </div>
+                                    <Avatar
+                                        size={40}
+                                        src={
+                                            userStore.userProfile?.image
+                                                ? `${nextConfig.env?.API_URL}${userStore.userProfile.image}`
+                                                : undefined
+                                        }
+                                        icon={!userStore.userProfile?.image && <UserOutlined />}
+                                    />
+                                    <div className="text-white font-semibold ml-3">
+                                        {`${userStore.userProfile?.second_name ?? ""} ${userStore.userProfile?.first_name ?? ""} ${userStore.userProfile?.last_name ?? ""}`}
+                                    </div>
                                 </div>
                             </Dropdown>
-                        ) : (
+                        ) : ( // Если пользователь не авторизован
                             <Button
                                 type="default"
                                 onClick={() => router.push('/platform/auth/login')}
@@ -134,6 +139,7 @@ export const Header = observer(() => {
                                 Войти в профиль
                             </Button>
                         )}
+
                     </div>
                 </div>
         </div>

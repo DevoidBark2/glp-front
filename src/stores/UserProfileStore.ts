@@ -68,17 +68,15 @@ class UserProfileStore {
     })
 
     getUserProfile = action(async () => {
-        this.setLoading(true)
-        return await getUserProfile().then(response => {
-            this.setUserProfileCourses(response.userCourses);
-            this.setUserAvatar(response.image)
-            this.setUserProfile(response)
+        this.setLoading(true);
 
-            return response;
-        }).finally(() => {
-            this.setLoading(false)
-        });
-    })
+        const response = await getUserProfile();
+        this.setUserProfileCourses(response.userCourses);
+        this.setUserAvatar(response.image);
+        this.setUserProfile(response);
+        return response;
+    });
+
 
     logout = action( async () => {
 
