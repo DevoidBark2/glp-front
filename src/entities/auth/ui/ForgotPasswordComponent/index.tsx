@@ -1,21 +1,42 @@
-import { observer } from "mobx-react";
-import React from "react";
-import { Button, Form, Input } from "antd";
-import { useMobxStores } from "@/stores/stores";
+"use client"
+import React, { useState } from "react";
+import { Button, Form, Input, notification } from "antd";
 import { MAIN_COLOR } from "@/shared/constants";
+import { useRouter } from "next/navigation";
+import { useMobxStores } from "@/shared/store/RootStore";
+import ReCAPTCHA from "react-google-recaptcha";
+import nextConfig from "next.config.mjs";
+import { observer } from "mobx-react";
 
 export const ForgotPasswordComponent = observer(() => {
-    const { userStore } = useMobxStores();
+    const [recaptcha, setRecaptcha] = useState<string | null>(null);
+    const router = useRouter()
+    const { authStore } = useMobxStores();
     const [form] = Form.useForm();
 
+    const onSubmit = (values: any) => {
+        if(!recaptcha) {
+            notification.error({message: "Пожалуйста, завершите reCAPTCHA"})
+            return;
+        }
+        authStore.resetPassword(values).then(response => {
+            notification.success({message: "На почут отправдлено письмо для сброса пароля!"})
+        }).catch(e => {
+            notification.error({message: e.response.data.message})
+        })
+    }
+
     return (
-        <div className="flex">
+        <div className="flex mt-8">
             <div className="m-auto">
+                <h1 className="text-3xl font-bold text-gray-900">Сброс пароля</h1>
+                <p className="text-sm text-gray-600 mt-2 mb-4">
+                    Введите вашу почту, и мы отправим вам письмо для сброса пароля.
+                </p>
                 <Form
                     form={form}
                     layout="vertical"
-                    style={{ width: 300 }}
-                    onFinish={userStore.sendEmailForgotPassword}
+                    onFinish={onSubmit}
                 >
                     <Form.Item
                         label="Email"
@@ -28,6 +49,13 @@ export const ForgotPasswordComponent = observer(() => {
                         <Input placeholder="Введите Email" />
                     </Form.Item>
 
+                    <div className="flex justify-center">
+                        <ReCAPTCHA
+                            sitekey={nextConfig.env?.GOOGLE_RECAPTCHA_SITE_KEY ?? ''}
+                            onChange={setRecaptcha}
+                        />
+                    </div>
+
                     <div className="flex flex-col items-center">
                         <Form.Item style={{ marginTop: '22px' }}>
                             <Button type="primary" htmlType="submit"
@@ -37,10 +65,11 @@ export const ForgotPasswordComponent = observer(() => {
                         </Form.Item>
 
                         <span className="hover:cursor-pointer"
-                              onClick={() => {
-                                  userStore.setOpenForgotPasswordModal(false)
-                                  form.resetFields();
-                              }} style={{ color: MAIN_COLOR }}>Войти в аккаунт</span>
+                            onClick={() => {
+                                router.push('login')
+                                form.resetFields();
+                            }} 
+                            style={{ color: MAIN_COLOR }}>Войти в аккаунт</span>
                     </div>
 
                 </Form>

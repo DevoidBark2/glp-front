@@ -1,5 +1,5 @@
 "use client";
-import {Divider, Spin} from "antd";
+import {Button, Divider, Spin} from "antd";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import React, { useEffect } from "react";
@@ -8,6 +8,10 @@ import { UserProfileBlock } from "@/widgets/UserProfile";
 
 const ProfilePage = () => {
     const { userProfileStore } = useMobxStores();
+
+    const logout = () => {
+        userProfileStore.logout();
+    }
 
     useEffect(() => {
         userProfileStore.getUserProfile();
@@ -19,6 +23,7 @@ const ProfilePage = () => {
                 <h1 className="mt-6 text-3xl font-semibold text-gray-800 mb-6">Профиль пользователя</h1>
                 <Divider />
 
+                <Button danger type="primary" onClick={logout}>Выйти</Button>
                 <div className="flex gap-6 mt-2">
                     <UserProfileBlock/>
                     <CourseUserProfile/>

@@ -23,6 +23,12 @@ export const updateRole = withAuth(async (body: ChangeUserRoleDto, config = {}) 
 
 })
 
+export const getUserProfile = async () => {
+    const data = (await axiosInstance.get('/api/profile-user')).data
+
+    return data.data;
+}
+
 export const handleBlockUser = withAuth(async (body: ChangeBlockUserDto, config = {}) => {
     const data = (await axiosInstance.put('/api/block-user', {
         userId: body.userId,

@@ -1,4 +1,4 @@
-import { changePassword } from "@/shared/api/auth";
+import { changePassword, newPassword, resetPassword, verificationEmail } from "@/shared/api/auth";
 import { ChangePasswordType } from "@/shared/api/auth/model";
 import { action, makeAutoObservable } from "mobx";
 
@@ -7,10 +7,21 @@ class AuthStore {
         makeAutoObservable(this)
     }
 
-
     changePassword = action(async (values: ChangePasswordType) => {
         const { confirmNewPassword, ...passwordData } = values;
         return await changePassword(passwordData);
+    })
+
+    resetPassword = action(async (email:string) => {
+        return await resetPassword(email)
+    })
+
+    newPassword = action(async (password: string,token: string | null) => {
+        return await newPassword(password, token);
+    })
+
+    verification = action(async (token: string | null) => {
+        return await verificationEmail(token)
     })
 }
 

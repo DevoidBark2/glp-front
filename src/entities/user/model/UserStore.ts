@@ -1,10 +1,10 @@
 import { action, makeAutoObservable } from "mobx"
 import { DELETE, GET, POST } from "@/lib/fetcher";
-import { delete_cookie, getCookieUserDetails, getUserToken, signInUser } from "@/lib/users";
+import { delete_cookie, getUserToken, signInUser } from "@/lib/users";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/constants";
 import { message } from "antd";
 import { StatusUserEnum, UserRole } from "@/shared/api/user/model";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
 
 export type User = {
     id: number;

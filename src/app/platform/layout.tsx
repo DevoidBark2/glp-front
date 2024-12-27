@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { useMobxStores } from '@/shared/store/RootStore';
+// import { useMobxStores } from '@/shared/store/RootStore';
+import { useMobxStores } from '@/stores/stores';
 import { Spin } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
 import {Footer} from "@/widgets/Footer";
@@ -13,27 +14,30 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const { generalStore } = useMobxStores();
+   // const { generalStore } = useMobxStores();
+    const  {userProfileStore} = useMobxStores()
     const pathName = usePathname();
     const router = useRouter();
 
     useEffect(() => {
-        generalStore.getGeneralSettings().then(response => {
-            if (response) router.push('/platform');
-        })
+        
+        // generalStore.getGeneralSettings().then(response => {
+        //     // if (response) router.push('/platform');
+        // })
+        userProfileStore.getUserProfile()
     }, []);
 
-    if (generalStore.loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <Spin size="large" />
-            </div>
-        );
-    }
+    // if (generalStore.loading) {
+    //     return (
+    //         <div className="flex justify-center items-center h-screen">
+    //             <Spin size="large" />
+    //         </div>
+    //     );
+    // }
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            {generalStore.generalSettings?.service_mode ? (
+            {/* {generalStore.generalSettings?.service_mode ? (
                 <MaintenanceModeComponent serviceModeText={generalStore.generalSettings?.service_mode_text} />
             ) : (
                 <>
@@ -41,7 +45,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     <div style={{ flex: 1 }}>{children}</div>
                     {!pathName.includes('/lessons/') &&  <Footer />}
                 </>
-            )}
+            )} */}
+            <>
+                    {!pathName.includes('/lessons/') && <Header />}
+                    <div style={{ flex: 1 }}>{children}</div>
+                    {!pathName.includes('/lessons/') &&  <Footer />}
+                </>
         </div>
     );
 };

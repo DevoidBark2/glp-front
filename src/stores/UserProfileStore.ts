@@ -1,6 +1,7 @@
 import { GET, POST, PUT } from "@/lib/fetcher";
 import { confirmLeaveCourse } from "@/shared/api/course";
 import { Course } from "@/shared/api/course/model";
+import { getUserProfile } from "@/shared/api/user";
 import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 import nextConfig from "next.config.mjs";
@@ -14,7 +15,7 @@ export type UserProfile = {
     birth_day: Date
     city: string;
     about_me: string;
-    userAvatar: string;
+    image: string;
     user_name: string;
     pagination_size: number;
 }
@@ -68,18 +69,22 @@ class UserProfileStore {
 
     getUserProfile = action(async () => {
         try {
-
             this.setLoading(true)
-            const data = await GET(`/api/get-user`)
-            this.setUserProfileCourses(data.data.userCourses);
-            this.setUserAvatar(data.data.image)
-            this.setUserProfile(data.data)
+            const data = await getUserProfile();
+            debugger
+            this.setUserProfileCourses(data.userCourses);
+            this.setUserAvatar(data.image)
+            this.setUserProfile(data)
             return data;
         } catch (e) {
 
         } finally {
             this.setLoading(false)
         }
+    })
+
+    logout = action( async () => {
+
     })
 
     updateProfile = action(async (values: UserProfile) => {

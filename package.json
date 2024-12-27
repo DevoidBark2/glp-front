@@ -13,6 +13,7 @@
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.0",
     "@testing-library/user-event": "^14.5.2",
+    "@types/react-google-recaptcha": "^2.1.9",
     "@uiw/react-codemirror": "^4.23.0",
     "antd": "^5.18.0",
     "antd-input-otp": "^2.1.0",

@@ -1,3 +1,4 @@
+"use client"
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import React from "react";

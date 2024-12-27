@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Avatar, Modal, Button, Dropdown, MenuProps } from "antd";
+import { Avatar, Button, Dropdown, MenuProps } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useMobxStores } from "@/stores/stores";
@@ -10,7 +10,6 @@ import { platformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "next.config.mjs";
 import { UserOutlined } from "@ant-design/icons";
-import {ForgotPasswordComponent, LoginComponent, RegisterComponent} from "@/entities/auth";
 import {observer} from "mobx-react";
 
 export type UserType = {
@@ -18,7 +17,7 @@ export type UserType = {
 };
 
 export const Header = observer(() => {
-    const { userStore } = useMobxStores();
+    const { userStore,userProfileStore } = useMobxStores();
     const pathName = usePathname();
     const router = useRouter();
     const [currentUser, setCurrentUser] = useState<UserType | null>(null);
@@ -80,41 +79,16 @@ export const Header = observer(() => {
     };
 
     useEffect(() => {
-        const user = getCookieUserDetails();
-        if(user) {
-            userStore.setUserProfile(user.user);
-            setCurrentUser(user);
-        }
-
-
-        if (user) {
-            configureMenuItems(user.user.role);
-        }
-    }, [userStore.openLoginModal]);
+        userProfileStore.getUserProfile().then(response => {
+            debugger
+            userStore.setUserProfile(response);
+            setCurrentUser(response);
+            configureMenuItems(response.role);
+        })
+    }, []);
 
     return (
-        <>
-            <LoginComponent />
-
-            <Modal
-                open={userStore.openRegisterModal}
-                title="Регистрация"
-                onCancel={() => userStore.setOpenRegisterModal(false)}
-                footer={null}
-            >
-                <RegisterComponent />
-            </Modal>
-
-            <Modal
-                open={userStore.openForgotPasswordModal}
-                title="Восстановление пароля"
-                onCancel={() => userStore.setOpenForgotPasswordModal(false)}
-                footer={null}
-            >
-                <ForgotPasswordComponent />
-            </Modal>
-
-            <div className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 p-6 shadow-lg">
+        <div className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 p-6 shadow-lg">
                 <div className="flex justify-between container mx-auto items-center">
                     <div className="flex items-center">
                         <span className="text-white text-2xl font-bold ml-2">Learnify</span>
@@ -135,20 +109,24 @@ export const Header = observer(() => {
                         {currentUser ? (
                             <Dropdown menu={{ items }} placement="bottomLeft">
                                 <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
-                                    <Avatar
-                                        size={40}
-                                        src={`${nextConfig.env?.API_URL}${userStore.userProfile?.userAvatar}` || undefined}
-                                        icon={!userStore.userProfile?.userAvatar && <UserOutlined />}
-                                    />
-                                    <div className="text-white font-semibold ml-3">
-                                        {`${userStore.userProfile?.user_name ?? ""}`}
-                                    </div>
+                                <Avatar
+                                    size={40}
+                                    src={
+                                        userStore.userProfile?.image
+                                            ? `${nextConfig.env?.API_URL}${userStore.userProfile.image}`
+                                            : undefined
+                                    }
+                                    icon={!userStore.userProfile?.image && <UserOutlined />}
+                                />
+                                <div className="text-white font-semibold ml-3">
+                                    {`${userStore.userProfile?.second_name ?? ""} ${userStore.userProfile?.first_name ?? ""} ${userStore.userProfile?.last_name ?? ""}`}
+                                </div>
                                 </div>
                             </Dropdown>
                         ) : (
                             <Button
                                 type="default"
-                                onClick={() => userStore.setOpenLoginModal(true)}
+                                onClick={() => router.push('/platform/auth/login')}
                                 className="bg-white text-green-500 hover:bg-green-600 hover:text-white transition-transform duration-300 transform hover:scale-105"
                             >
                                 Войти в профиль
@@ -156,7 +134,6 @@ export const Header = observer(() => {
                         )}
                     </div>
                 </div>
-            </div>
-        </>
+        </div>
     );
 });

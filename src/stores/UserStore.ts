@@ -7,7 +7,7 @@ import { message } from "antd";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { getUserById, handleBlockUser, updateRole } from "@/shared/api/user";
 import { UserProfile } from "./UserProfileStore";
-import {login, register} from "@/shared/api/auth";
+import {login, oauthByProvider, register} from "@/shared/api/auth";
 
 class UserStore {
     constructor() {
@@ -132,25 +132,25 @@ class UserStore {
     loginUser = action(async (values: any) => {
         this.setLoading(true);
         try {
-            const response = await login(values);
-            const settingUser = {
-                pagination_size: response.response.data.pagination_size,
-                table_size: response.response.data.pagination_size,
-                show_footer_table: response.response.data.pagination_size,
-                footerContent: response.response.data.pagination_size
-            }
+            return await login(values);
+            // const settingUser = {
+            //     pagination_size: response.response.data.pagination_size,
+            //     table_size: response.response.data.pagination_size,
+            //     show_footer_table: response.response.data.pagination_size,
+            //     footerContent: response.response.data.pagination_size
+            // }
 
-            window.localStorage.setItem('user_settings', JSON.stringify(settingUser));
-            this.setUserProfile(response.response.data);
-            signInUser({
-                id: response.response.data.id,
-                token: response.response.data.token,
-                email: response.response.data.email,
-                role: response.response.data.role,
-                userAvatar: response.response.data.userAvatar,
-                user_name: response.response.data.user_name,
-            });
-            this.setOpenLoginModal(false);
+            // window.localStorage.setItem('user_settings', JSON.stringify(settingUser));
+            // this.setUserProfile(response.response.data);
+            // signInUser({
+            //     id: response.response.data.id,
+            //     token: response.response.data.token,
+            //     email: response.response.data.email,
+            //     role: response.response.data.role,
+            //     userAvatar: response.response.data.userAvatar,
+            //     user_name: response.response.data.user_name,
+            // });
+            // this.setOpenLoginModal(false);
         } catch (error) {
             throw error;
         } finally {
@@ -158,6 +158,10 @@ class UserStore {
 
         }
     });
+
+    oauthByProvider = action(async (provider: 'google' | 'yandex') => {
+        return oauthByProvider(provider)
+    })
 
     registerUser = action(async (values: any) => {
         this.setLoading(true)

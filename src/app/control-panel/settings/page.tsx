@@ -3,7 +3,6 @@ import { Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Chec
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
-import { GeneralSettingTooltips } from "@/constants";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
@@ -11,6 +10,7 @@ import { useState } from "react";
 import Image from "next/image"
 import nextConfig from "next.config.mjs";
 import InputMask from 'react-input-mask';
+import { GeneralSettingTooltips } from "@/shared/constants";
 
 const SettingsControlPage = () => {
     const { TabPane } = Tabs;
@@ -24,7 +24,6 @@ const SettingsControlPage = () => {
 
     useEffect(() => {
         generalSettingsStore.getGeneralSettings().then((response) => {
-            debugger
             formForSec.setFieldsValue(response.data[0])
             formForGeneral.setFieldsValue(response.data[0])
             setUploadedLogo(response.data[0].logo_url ? `${nextConfig.env?.API_URL}${response.data[0].logo_url}` : null)
