@@ -8,6 +8,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { MathfieldElement } from 'mathlive';
+import TaskWithFormula from "@/entities/course/ui/CreateTask/TaslWithFormula";
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()
@@ -35,7 +38,13 @@ const TaskAddPage = () => {
         });
     }
 
-
+    const latexFormula = `
+    \\[
+    \\int_{a}^{b} \\left( \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}} \\right) dx = 
+    \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} e^{i n x}
+    \\]
+    `;
+    
     return (
         <PageContainerControlPanel>
             <Breadcrumb
@@ -63,17 +72,26 @@ const TaskAddPage = () => {
                         onChange={(value: CourseComponentType) => setTypeTask(value)}
                     >
                         <Select.Option value={CourseComponentType.Text}>Текст</Select.Option>
+                        <Select.Option value={CourseComponentType.SimpleTask}>Простая задача</Select.Option>
                         <Select.Option value={CourseComponentType.Quiz}>Квиз</Select.Option>
                         <Select.Option value={CourseComponentType.MultiPlayChoice}>Множестенный выбор</Select.Option>
-                        {/* <Select.Option value={CourseComponentType.Coding}>Программирование</Select.Option> */}
-                        {/*<Select.Option value={CourseComponentType.Matching}>Соответствие</Select.Option>*/}
-                        {/*<Select.Option value={CourseComponentType.Sequencing}>Последовательность</Select.Option>*/}
                     </Select>
                 </Form.Item>
 
                 {typeTask === CourseComponentType.Text && <TextTask />}
                 {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
                 {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
+                {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula />}
+
+                {/* <MathJaxContext>
+                    <div>
+                        <h1>Математическая формула:</h1>
+                        <MathJax>{latexFormula}</MathJax>
+                    </div>
+                </MathJaxContext>
+
+
+                <math-field>f(x)=</math-field> */}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">Добавить</Button>

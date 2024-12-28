@@ -11,6 +11,7 @@ import {
     Row,
     Select,
     Spin,
+    Switch,
     Table,
     TableColumnsType,
     Tabs, Tag, Tooltip
@@ -20,14 +21,14 @@ import Link from "next/link";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
 import {Input} from "antd/lib";
-import {FORMAT_VIEW_DATE, LEVEL_COURSE} from "@/constants";
+import {FORMAT_VIEW_DATE, LEVEL_COURSE} from "@/shared/constants";
 import {PlusCircleOutlined,
     DeleteOutlined,
     EditOutlined,} from "@ant-design/icons";
 import dayjs from "dayjs";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
-import {CourseComponentTypeI} from "@/shared/api/course/model";
+import {CourseComponentTypeI, StatusCourseEnum, statusLabels} from "@/shared/api/course/model";
 
 const ReactQuill = dynamic(
     () => import('react-quill'),
@@ -148,10 +149,11 @@ const CoursePage = () => {
 
     useEffect(() => {
         nomenclatureStore.getCategories();
-        courseStore.getCourseDetails(Number(courseId)).then(response => {
-            form.setFieldsValue(response.data);
-            form.setFieldValue("category",response.data.category?.id);
-            setCourseName(response.data.name)
+        courseStore.getCourseDetailsById(Number(courseId)).then(response => {
+            debugger
+            form.setFieldsValue(response);
+            form.setFieldValue("category",response.category?.id);
+            setCourseName(response.name)
         }).catch(e => {
             router.push('/control-panel/courses')
             notification.warning({message: e.response.data.result})
@@ -189,7 +191,7 @@ const CoursePage = () => {
                     >
                         {!courseStore.loadingCourseDetails ? (
                             <>
-                                <Row gutter={24} style={{ padding: '0 16px' }}>
+                                <Row gutter={24}>
                                     <Col span={12}>
                                         <Form.Item name="id" hidden />
                                         <Form.Item
@@ -210,7 +212,7 @@ const CoursePage = () => {
                                     </Col>
                                 </Row>
                     
-                                <Row gutter={24} style={{ padding: '0 16px' }}>
+                                <Row gutter={24}>
                                     <Col span={12}>
                                         <Form.Item
                                             name="category"
@@ -254,31 +256,61 @@ const CoursePage = () => {
                                     </Col>
                                 </Row>
                     
-                                <Form.Item
-                                    name="duration"
-                                    label="Время прохождения"
-                                    rules={[{ required: true, message: 'Время прохождения курса обязательно!' }]}
-                                >
-                                    <Input
-                                        placeholder="Введите время прохождения"
-                                        type="number"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Form.Item>
-                    
-                                <Form.Item
-                                    name="level"
-                                    label="Уровень сложности"
-                                    rules={[{ required: true, message: 'Уровень сложности курса обязательно!' }]}
-                                >
-                                    <Select style={{ width: '100%' }}>
-                                        {LEVEL_COURSE.map((level) => (
-                                            <Select.Option key={level.id} value={level.id}>
-                                                {level.title}
-                                            </Select.Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                                <Row gutter={24}>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="duration"
+                                            label="Время прохождения"
+                                            rules={[{ required: true, message: "Время прохождения курса обязательно!" }]}
+                                        >
+                                            <Input placeholder="Введите время прохождения" type="number" />
+                                        </Form.Item>
+                                    </Col>
+
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name="level"
+                                            label="Уровень сложности"
+                                            rules={[{ required: true, message: "Уровень сложности курса обязательно!" }]}
+                                        >
+                                            <Select>
+                                                {LEVEL_COURSE.map(level => (
+                                                    <Select.Option key={level.id} value={level.id}>{level.title}</Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+
+                                <Row gutter={24}>
+                                   <Col span={12}>
+                                    <Form.Item
+                                            name="has_certificate"
+                                            label="Курс с сертификатом"
+                                            valuePropName="checked"
+                                        >
+                                            <Switch
+                                                checkedChildren="Да"
+                                                unCheckedChildren="Нет"
+                                            />
+                                        </Form.Item>
+                                   </Col>
+                                    <Col span={12}>
+                                    <Form.Item
+                                        name="status"
+                                        label="Статус курса"
+                                        rules={[{ required: true, message: "Пожалуйста, выберите статус курса!" }]}
+                                    >
+                                            <Select>
+                                                {Object.entries(StatusCourseEnum).map(([key, value]) => (
+                                                    <Select.Option key={value} value={value}>
+                                                        {statusLabels[value as StatusCourseEnum]} {/* Отображаем читаемое название */}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                    </Form.Item>
+                                    </Col>
+                                </Row>
                     
                                 <Form.Item name="content_description" label="Содержание курса">
                                 {typeof window !== 'undefined' && <ReactQuill theme="snow" />}

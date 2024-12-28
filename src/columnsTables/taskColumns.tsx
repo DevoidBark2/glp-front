@@ -1,4 +1,4 @@
-import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE } from "@/constants";
+import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE } from "@/shared/constants";
 import { Button, Popconfirm, TableColumnsType, Tag, Tooltip } from "antd";
 import {
     BookOutlined,

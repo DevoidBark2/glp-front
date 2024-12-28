@@ -83,11 +83,9 @@ const TaskDetailsPage = () => {
                         onChange={(value: CourseComponentType) => setTypeTask(value)}
                     >
                         <Select.Option value={CourseComponentType.Text}>Текст</Select.Option>
+                        <Select.Option value={CourseComponentType.SimpleTask}>Простая задача</Select.Option>
                         <Select.Option value={CourseComponentType.Quiz}>Квиз</Select.Option>
                         <Select.Option value={CourseComponentType.MultiPlayChoice}>Множестенный выбор</Select.Option>
-                        {/* <Select.Option value={CourseComponentType.Coding}>Программирование</Select.Option> */}
-                        {/*<Select.Option value={CourseComponentType.Matching}>Соответствие</Select.Option>*/}
-                        {/*<Select.Option value={CourseComponentType.Sequencing}>Последовательность</Select.Option>*/}
                     </Select>
                 </Form.Item>
 

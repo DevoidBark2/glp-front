@@ -7,9 +7,10 @@ import { useMobxStores } from "@/stores/stores";
 import {
     EditOutlined,
     DeleteOutlined,
+    CheckOutlined, CloseOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/constants";
+import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/shared/constants";
 import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
 import { usersTable } from "@/shared/config";
@@ -32,7 +33,7 @@ const UsersPage = () => {
             dataIndex: "first_name",
             title: "Полное имя",
             sorter: (a, b) => a.first_name.localeCompare(b.first_name),
-            render: (_, record) => `${record.first_name} ${record.second_name} ${record.last_name}`
+            render: (_, record) => `${record.first_name} ${record?.second_name} ${record?.last_name}`
         },
         {
             dataIndex: "role",
@@ -51,9 +52,21 @@ const UsersPage = () => {
         {
             dataIndex: "email",
             title: "Email",
-            render: (email) => (
+            render: (value, record) => (
                 <Tooltip title="Нажмите, чтобы скопировать">
-                    <span className="cursor-pointer" onClick={() => navigator.clipboard.writeText(email)}>{email}</span>
+                    <span
+                        className="cursor-pointer"
+                        onClick={() => navigator.clipboard.writeText(value)}
+                    >
+                        {value}
+                    </span>
+                    <span style={{ marginLeft: 8 }}>
+                        {record.isVerified ? (
+                            <CheckOutlined style={{ color: "green", fontSize: "16px" }} />
+                        ) : (
+                            <CloseOutlined style={{ color: "red", fontSize: "16px" }} />
+                        )}
+                    </span>
                 </Tooltip>
             ),
         },

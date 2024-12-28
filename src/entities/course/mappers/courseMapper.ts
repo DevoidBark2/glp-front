@@ -3,7 +3,6 @@ import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import dayjs from "dayjs";
 
 export const courseMapper = (course: Course): any => {
-
     return {
         id: course.id,
         name: course.name,
@@ -15,7 +14,7 @@ export const courseMapper = (course: Course): any => {
         content_description: course.content_description,
         duration: course.duration,
         status: course.status,
-        publish_date: dayjs(course.publish_date, FORMAT_VIEW_DATE).toDate(),
+        created_at: dayjs(course.created_at, FORMAT_VIEW_DATE).toDate(),
         user: course.user,
         sections: course.sections,
         courseUsers: course.courseUsers

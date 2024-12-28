@@ -248,7 +248,8 @@ const usersMapper = (value: User) => {
         courses: value.courses,
         posts: value.posts,
         city: value.city,
-        profile_url: value.profile_url
+        profile_url: value.profile_url,
+        isVerified: value.isVerified
     }
 
     return user;

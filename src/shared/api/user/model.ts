@@ -31,4 +31,5 @@ export type User = {
     created_at: Date;
     courses: Course[];
     posts: Post[]
+    isVerified: boolean
 }

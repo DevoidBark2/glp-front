@@ -22,6 +22,7 @@ const ReactQuill = dynamic(
 )
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
+import nextConfig from "next.config.mjs";
 
 const postPage = () => {
     const { postStore } = useMobxStores();
@@ -31,20 +32,38 @@ const postPage = () => {
     const [currentUser, setCurrentUser] = useState<any>(null);
 
     const [currentPost, setCurrentPost] = useState<Post | null>(null);
+    const [fileList, setFileList] = useState<any[]>([]);
+
 
     const props: UploadProps = {
         name: 'file',
         multiple: false,
-        onChange(info: any) {
+        fileList,
+        onChange(info) {
             const { status } = info.file;
+    
+            setFileList(info.fileList);
+    
             if (status === 'done') {
-                notification.success({ message: `${info.file.name} загружен успешно.` });
-                form.setFieldValue("image", info.file);
+                notification.success({
+                    message: `${info.file.name} загружен успешно.`,
+                });
+    
+                // Сохраняем загруженный файл в форму
+                form.setFieldValue('image', `${nextConfig.env?.API_URL}${info.file.response?.url}`); // Пример: ожидаем, что сервер вернёт URL
             } else if (status === 'error') {
-                notification.error({ message: `${info.file.name} ошибка загрузки.` });
+                notification.error({
+                    message: `${info.file.name} ошибка загрузки.`,
+                });
             }
-        }
+        },
+        onRemove(file) {
+            // Удаляем файл из состояния и сбрасываем значение в форме
+            setFileList([]);
+            form.setFieldValue('image', null);
+        },
     };
+    
 
     useEffect(() => {
         const user = getCookieUserDetails();
@@ -52,6 +71,17 @@ const postPage = () => {
         postStore.getPostById(Number(postId)).then(response => {
             setCurrentPost(response!)
             form.setFieldsValue(response!)
+
+            if (response?.image) {
+                setFileList([
+                    {
+                        uid: '-1', // Уникальный идентификатор файла
+                        name: response?.image.split('/')[1],
+                        status: 'done', // Статус успешной загрузки
+                        url: `${nextConfig.env?.API_URL}${response.image}`, // URL текущего изображения
+                    },
+                ]);
+            }
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         });
@@ -96,20 +126,22 @@ const postPage = () => {
                     <Input disabled={currentUser?.user.role === UserRole.SUPER_ADMIN} placeholder="Введите описание поста" />
                 </Form.Item>
 
-                <Form.Item
-                    name="image"
-                    label="Изображение поста"
-                >
+                <Form.Item name="image" label="Изображение поста">
                     <Dragger {...props} disabled={currentUser?.user.role === UserRole.SUPER_ADMIN}>
-                        <p className="ant-upload-drag-icon">
-                            <InboxOutlined />
-                        </p>
-                        <p className="ant-upload-text">Нажмите или перетащите файл в эту область для загрузки</p>
-                        <p className="ant-upload-hint">
-                            Поддержка одиночной или массовой загрузки. Запрещено загружать конфиденциальные данные.
-                        </p>
+                    <>
+                                <p className="ant-upload-drag-icon">
+                                    <InboxOutlined />
+                                </p>
+                                <p className="ant-upload-text">
+                                    Нажмите или перетащите файл в эту область для загрузки
+                                </p>
+                                <p className="ant-upload-hint">
+                                    Поддержка одиночной или массовой загрузки. Запрещено загружать конфиденциальные данные.
+                                </p>
+                            </>
                     </Dragger>
                 </Form.Item>
+
 
                 {/* {
                     currentUser?.user.role === UserRole.SUPER_ADMIN && <Form.Item

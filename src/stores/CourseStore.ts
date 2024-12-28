@@ -4,7 +4,7 @@ import { notification } from "antd";
 import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
 import { SectionCourseItem } from "@/stores/SectionCourse";
-import { getAllCourses, getCourseById } from "@/shared/api/course";
+import { changeCourse, createCourse, deleteCourseById, getAllCourses, getCourseById, getCPAllCourse, sendToReviewCourse } from "@/shared/api/course";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
@@ -123,28 +123,16 @@ class CourseStore {
 
     createCourse = action(async (values: any) => {
         this.setLoadingCreateCourse(true)
-        const form = new FormData();
-        form.append('name', values.name_course)
-        form.append('small_description', values.description)
-        // form.append('image',values.image.originFileObj)
-        if (values.category) {
-            form.append('category', values.category.toString());
-        }
-        form.append('access_right', values.access_right)
-        form.append('duration', values.duration)
-        form.append('level', values.level)
-        form.append('publish_date', dayjs().format(FORMAT_VIEW_DATE))
-        if(values.content_description) form.append("content_description", values.content_description)
-
-        return await POST(`/api/courses`, form).catch(e => {
+        
+        return await createCourse(values).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => this.setLoadingCreateCourse(false))
     })
 
     getCoursesForCreator = action(async () => {
         this.setLoadingCourses(true)
-        await GET(`/api/get-user-courses`).then((response) => {
-            this.userCourses = response.data.courses.map(courseMapper)
+        await getCPAllCourse().then((response) => {
+            this.userCourses = response.courses.map(courseMapper)
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => {
@@ -153,7 +141,7 @@ class CourseStore {
     })
 
     publishCourse = action(async (courseId: number) => {
-        await POST(`/api/courses-publish`, { courseId: courseId }).then(response => {
+        await sendToReviewCourse(courseId).then(response => {
             notification.success({ message: response.message })
             this.userCourses = this.userCourses.map(course => course.id === courseId ? { ...course, status: StatusCourseEnum.IN_PROCESSING } : course)
         }).catch(e => {
@@ -161,20 +149,13 @@ class CourseStore {
         })
     })
 
-    getCourseDetails = action(async (courseId: number) => {
-        this.setLoadingCourseDetails(true);
-        const response = await GET(`/api/course-details?courseId=${courseId}`)
-        this.courseDetailsSections = response.data.sections;
-        return response;
-    })
-
     getCourseDetailsById = action(async(courseId: number) => {
         return await getCourseById(courseId);
     })
 
     changeCourse = action(async (values: Course) => {
-        const token = getUserToken();
-        await PUT(`/api/courses?token=${token}`, values).then(response => {
+        debugger
+        await changeCourse(values).then(response => {
             notification.success({ message: response.message })
         }).catch(e => {
             notification.error({ message: e.response.data.message })
@@ -182,10 +163,9 @@ class CourseStore {
     })
 
     deleteCourse = action(async (courseId: number) => {
-        await DELETE(`/api/courses?courseId=${courseId}`).then(response => {
+        await deleteCourseById(courseId).then(response => {
             notification.success({ message: response.message })
             this.userCourses = this.userCourses.filter(course => courseId !== course.id)
-
         }).catch(e => {
             notification.warning({ message: e.response.data.message })
         })

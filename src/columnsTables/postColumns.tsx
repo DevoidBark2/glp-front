@@ -1,4 +1,3 @@
-import { FILTER_STATUS_POST, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/constants";
 import { ModeratorFeedback, Post } from "@/stores/PostStore";
 import { Button, Popconfirm, Popover, Switch, TableColumnsType, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
@@ -13,6 +12,7 @@ import {
 import { UserRole } from "@/shared/api/user/model";
 import { PostStatusEnum } from "@/shared/api/posts/model";
 import {UserHoverCard} from "@/widgets";
+import { FILTER_STATUS_POST, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 
 interface getPostColumnsProps {
     getStatusTag: (status: PostStatusEnum, rejectReason?: ModeratorFeedback) => React.JSX.Element;

@@ -5,6 +5,7 @@ import { GET } from "@/lib/fetcher";
 import { getUserToken } from "@/lib/users";
 import { Course } from "@/shared/api/course/model";
 import {User} from "@/shared/api/user/model";
+import { getStatistics } from "@/shared/api/statistics";
 
 export type StatisticsData = {
     countUsers: number;
@@ -62,7 +63,7 @@ class StatisticsStore {
 
     getAllStatisticsData = action(async () => {
         this.setLoadingStatisticsData(true)
-        await GET(`/api/statistics`).then(response => {
+        await getStatistics().then(response => {
             this.statisticsData = response.response.data as StatisticsData;
         }).catch(e => { }).finally(() => {
             this.setLoadingStatisticsData(false)

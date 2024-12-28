@@ -30,7 +30,7 @@ import { welcomeTextRender } from "@/utils/welcomeText";
 import { UserRole } from "@/shared/api/user/model";
 
 const ControlPanel = () => {
-  const { statisticsStore } = useMobxStores();
+  const { statisticsStore, userProfileStore } = useMobxStores();
   const [currentUser, setCurrentUser] = useState<any>(null);
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState<string | null>(null);
@@ -57,8 +57,9 @@ const ControlPanel = () => {
   }, []);
 
   useEffect(() => {
-    const currentUser = getCookieUserDetails();
-    setCurrentUser(currentUser);
+    userProfileStore.getUserProfile().then(response => {
+      setCurrentUser(response)
+    })
 
     statisticsStore.getAllStatisticsData();
   }, [])
@@ -81,12 +82,12 @@ const ControlPanel = () => {
       </div>
       <Divider />
       <Typography.Title className="text-gray-800">
-        {currentUser && (currentUser?.user?.role === UserRole.MODERATOR ? "Панель модератора" : currentUser?.user?.role === UserRole.TEACHER ? "Панель Учителя" : "Админ-панель")}
+        {currentUser && (currentUser?.role === UserRole.MODERATOR ? "Панель модератора" : currentUser?.role === UserRole.TEACHER ? "Панель Учителя" : "Админ-панель")}
       </Typography.Title>
 
       <Row gutter={16}>
         {
-          currentUser?.user.role === UserRole.SUPER_ADMIN && <Col span={8}>
+          currentUser?.role  === UserRole.SUPER_ADMIN && <Col span={8}>
             <Card title="Активные пользователи" extra={
               <Tooltip title="Перейти к пользователям">
                 <UnorderedListOutlined onClick={() => router.push('/control-panel/users')} />
@@ -102,7 +103,7 @@ const ControlPanel = () => {
           </Col>
         }
         {
-          (currentUser?.user.role === UserRole.SUPER_ADMIN || currentUser?.user.role === UserRole.TEACHER) && <Col span={8}>
+          (currentUser?.role  === UserRole.SUPER_ADMIN || currentUser?.role  === UserRole.TEACHER) && <Col span={8}>
             <Card title="Всего постов" extra={
               <Tooltip title="Перейти к постам">
                 <UnorderedListOutlined onClick={() => router.push('/control-panel/posts')} />
@@ -119,7 +120,7 @@ const ControlPanel = () => {
             </Card>
           </Col>
         }
-        {(currentUser?.user.role === UserRole.SUPER_ADMIN || currentUser?.user.role === UserRole.TEACHER) && <Col span={8}>
+        {(currentUser?.role  === UserRole.SUPER_ADMIN || currentUser?.role  === UserRole.TEACHER) && <Col span={8}>
           <Card title="Всего курсов" extra={
             <Tooltip title="Перейти к курсам">
               <UnorderedListOutlined onClick={() => router.push('/control-panel/courses')} />
@@ -138,10 +139,10 @@ const ControlPanel = () => {
       </Row>
 
       {
-        (currentUser?.user.role === UserRole.SUPER_ADMIN || currentUser?.user.role === UserRole.TEACHER) && <Divider />
+        (currentUser?.role  === UserRole.SUPER_ADMIN || currentUser?.role  === UserRole.TEACHER) && <Divider />
       }
       <Row gutter={16}>
-        {currentUser?.user.role !== UserRole.MODERATOR && <Col span={12}>
+        {currentUser?.role !== UserRole.MODERATOR && <Col span={12}>
           <Card title="Статистика курсов">
             <div className="flex justify-between">
               <Skeleton active loading={statisticsStore.loadingStatisticsData}>
@@ -203,7 +204,7 @@ const ControlPanel = () => {
           </Card>
         </Col>}
 
-        {currentUser?.user.role !== UserRole.MODERATOR && <Col span={12}>
+        {currentUser?.role !== UserRole.MODERATOR && <Col span={12}>
           <Card title="Статистика постов">
             <div className="flex justify-between">
               <Skeleton active loading={statisticsStore.loadingStatisticsData}>
@@ -265,7 +266,7 @@ const ControlPanel = () => {
           </Card>
         </Col>}
 
-        {currentUser?.user.role === UserRole.MODERATOR && (
+        {currentUser?.role === UserRole.MODERATOR && (
           <Col span={12}>
             <Card title="Статистика курсов">
               <div className="flex justify-between space-x-4">

@@ -38,7 +38,7 @@ export const GET = async (url) => {
         return data
     }catch (e){
         if(e.response.status === UNAUTHORIZED_STATUS_CODE){
-            logoutUser();
+            // logoutUser();
         }
         else{
             throw e

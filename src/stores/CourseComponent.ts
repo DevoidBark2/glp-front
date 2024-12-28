@@ -4,7 +4,7 @@ import { getUserToken } from "@/lib/users";
 import dayjs from "dayjs";
 import { notification } from "antd";
 import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
-import { StatusComponentTaskEnum } from "@/shared/api/component-task";
+import { getAllComponents, StatusComponentTaskEnum } from "@/shared/api/component-task";
 import { getComponentTask } from "@/shared/api/component";
 import { handleCheckUserTask } from "@/shared/api/task";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
@@ -48,10 +48,8 @@ class CourseComponent {
 
     getAllComponent = action(async () => {
         this.setLoadingCourseComponent(true)
-        await GET(`/api/component-task`).then(response => {
-            runInAction(() => {
-                this.courseComponents = response.data.map(componentTaskMapper)
-            })
+        await getAllComponents().then(response => {
+            this.courseComponents = response.map(componentTaskMapper)
         }).finally(() => {
             this.setLoadingCourseComponent(false)
         })

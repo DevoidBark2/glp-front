@@ -62,27 +62,6 @@ class CourseStore {
             this.setLoadingCourses(false)
         }
     })
-
-    // createCourse = action(async (values: any) => {
-    //     this.setLoadingCreateCourse(true)
-    //     const form = new FormData();
-    //     form.append('name', values.name_course)
-    //     form.append('small_description', values.description)
-    //     // form.append('image',values.image.originFileObj)
-    //     if (values.category) {
-    //         form.append('category', values.category.toString());
-    //     }
-    //     form.append('access_right', values.access_right)
-    //     form.append('duration', values.duration)
-    //     form.append('level', values.level)
-    //     form.append('publish_date', dayjs().format(FORMAT_VIEW_DATE))
-    //     form.append("content_description", values.content_description)
-
-    //     return await POST(`/api/courses`, form).catch(e => {
-    //         notification.error({ message: e.response.data.message })
-    //     }).finally(() => this.setLoadingCreateCourse(false))
-    // })
-
 }
 
 

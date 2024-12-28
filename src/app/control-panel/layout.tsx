@@ -178,35 +178,38 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
 
-        const user = getCookieUserDetails();
-        setCurrentUser(user);
-        if (user.user.role === UserRole.SUPER_ADMIN) {
-            dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
-        }
+        userProfileStore.getUserProfile().then(response => {
+            setCurrentUser(response)
+            if (response.role === UserRole.SUPER_ADMIN) {
+                dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
+            }
+    
+            if (response.role === UserRole.TEACHER) {
+                dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
+                    menuItem?.key !== "moderators_items"
+                    && menuItem?.key !== "settings"
+                    && menuItem?.key !== "nomenclature"
+                    && menuItem?.key !== "logging"
+                    && menuItem?.key !== "users"
+                    && menuItem?.key !== "general"
+                )
+            }
+    
+            if (response.role === UserRole.MODERATOR) {
+                dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
+                    menuItem?.key !== "settings"
+                    && menuItem?.key !== "nomenclature"
+                    && menuItem?.key !== "logging"
+                    && menuItem?.key !== "users"
+                    && menuItem?.key !== "courses-parent"
+                    && menuItem?.key !== "posts"
+                    && menuItem?.key !== "feedbacks"
+                    && menuItem?.key !== "general"
+                )
+            }
+        })
 
-        if (user.user.role === UserRole.TEACHER) {
-            dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
-                menuItem?.key !== "moderators_items"
-                && menuItem?.key !== "settings"
-                && menuItem?.key !== "nomenclature"
-                && menuItem?.key !== "logging"
-                && menuItem?.key !== "users"
-                && menuItem?.key !== "general"
-            )
-        }
-
-        if (user.user.role === UserRole.MODERATOR) {
-            dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
-                menuItem?.key !== "settings"
-                && menuItem?.key !== "nomenclature"
-                && menuItem?.key !== "logging"
-                && menuItem?.key !== "users"
-                && menuItem?.key !== "courses-parent"
-                && menuItem?.key !== "posts"
-                && menuItem?.key !== "feedbacks"
-                && menuItem?.key !== "general"
-            )
-        }
+       
         setLoading(false)
     }, [])
 
@@ -239,9 +242,9 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
 
                         <Skeleton loading={loading} active>
                             <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
-                                <h1 className="text-lg font-bold mb-1 text-center">{currentUser?.user?.user_name}</h1>
+                                <h1 className="text-lg font-bold mb-1 text-center">{currentUser?.first_name}</h1>
                                 <div className="flex items-center gap-2 mb-4">
-                                    <span className="text-gray-300 text-sm">{currentUser?.user.role}</span>
+                                    <span className="text-gray-300 text-sm">{currentUser?.role}</span>
                                     <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
                                 </div>
                             </div>

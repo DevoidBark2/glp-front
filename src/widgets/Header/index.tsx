@@ -12,7 +12,10 @@ import { UserOutlined } from "@ant-design/icons";
 import {observer} from "mobx-react";
 
 export type UserType = {
-    user: { user_name: string; role: UserRole, avatar: string };
+    role: UserRole,
+    first_name: string,
+    second_name: string,
+    last_name: string
 };
 
 export const Header = observer(() => {
@@ -80,7 +83,6 @@ export const Header = observer(() => {
     useEffect(() => {
         userProfileStore.getUserProfile()
             .then((response) => {
-                debugger;
                 userStore.setUserProfile(response);
                 setCurrentUser(response);
                 configureMenuItems(response.role);

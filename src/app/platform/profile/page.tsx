@@ -14,7 +14,9 @@ const ProfilePage = () => {
     }
 
     useEffect(() => {
-        userProfileStore.getUserProfile();
+        userProfileStore.getUserProfile().finally(() => {
+            userProfileStore.setLoading(false)
+        });
     }, []);
 
     return (

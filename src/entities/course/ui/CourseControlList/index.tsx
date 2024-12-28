@@ -19,7 +19,7 @@ import { isEditedCourse } from "../../selectors";
 
 export const CourseControlList = observer(() => {
 
-    const { courseStore } = useMobxStores()
+    const { courseStore, userProfileStore } = useMobxStores()
     const router = useRouter();
     const [settings, setSettings] = useState<{
         pagination_size: number,
@@ -51,8 +51,8 @@ export const CourseControlList = observer(() => {
         },
         {
             title: 'Дата создания',
-            dataIndex: 'publish_date',
-            sorter: (a, b) => dayjs(a.publish_date).valueOf() - dayjs(b.publish_date).valueOf(),
+            dataIndex: 'created_at',
+            sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
             showSorterTooltip: false,
             render: (value) => (
                 <Tooltip title="Дата создания курса">
@@ -85,9 +85,9 @@ export const CourseControlList = observer(() => {
         {
             title: "Создатель",
             dataIndex: "user",
-            hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
+            hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => (
-                record.user.role === UserRole.SUPER_ADMIN ? (
+                record.user?.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                         <Tooltip title="Перейти в профиль">
                             <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
@@ -98,8 +98,8 @@ export const CourseControlList = observer(() => {
                 ) : (
                     <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
                         <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
-                        <Link href={`/control-panel/users/${record.user.id}`} className="hover:text-blue-500">
-                            {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`}
+                        <Link href={`/control-panel/users/${record.user?.id}`} className="hover:text-blue-500">
+                            {`${record.user?.second_name} ${record.user?.first_name} ${record.user?.last_name}`}
                         </Link>
                     </Popover>
                 )
@@ -110,7 +110,7 @@ export const CourseControlList = observer(() => {
             align: 'start',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    <Tooltip title={
+                    {currentUser?.role !== UserRole.SUPER_ADMIN && <Tooltip title={
                         !isEditedCourse(record)
                             ? "Опубликовать курс"
                             : "В данный момент курс не может быть опубликован, попробуйте позже"
@@ -121,12 +121,12 @@ export const CourseControlList = observer(() => {
                             type="default"
                             icon={<UploadOutlined />}
                         />
-                    </Tooltip>
-                    <Tooltip title={isEditedCourse(record) ? "В данный момент курс нельзя изменить, попробуйте позже" : "Редактировать курс"}>
+                    </Tooltip>}
+                    <Tooltip title={isEditedCourse(record) && currentUser?.role !== UserRole.SUPER_ADMIN  ? "В данный момент курс нельзя изменить, попробуйте позже" : "Редактировать курс"}>
                         <Button
                             type="default"
                             shape="circle"
-                            disabled={isEditedCourse(record)}
+                            disabled={isEditedCourse(record) && currentUser?.role !== UserRole.SUPER_ADMIN}
                             onClick={() => forwardCourse(record.id)}
                             icon={<EditOutlined />}
                         />
@@ -142,7 +142,7 @@ export const CourseControlList = observer(() => {
                         >
                             <Button
                                 danger
-                                disabled={isEditedCourse(record)}
+                                disabled={isEditedCourse(record) && currentUser?.role !== UserRole.SUPER_ADMIN}
                                 type="primary"
                                 icon={<DeleteOutlined />}
                             />
@@ -157,10 +157,11 @@ export const CourseControlList = observer(() => {
     useEffect(() => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
-        const currentUser = getCookieUserDetails();
-        
-        setCurrentUser(currentUser);
 
+        userProfileStore.getUserProfile().then(response => {
+            setCurrentUser(response);
+        })
+       
         courseStore.getCoursesForCreator()
 
     }, [])

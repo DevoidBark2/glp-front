@@ -15,6 +15,14 @@ export enum StatusCourseEnum {
     REJECTED = 'rejected',
 }
 
+export const statusLabels: Record<StatusCourseEnum, string> = {
+    [StatusCourseEnum.NEW]: "Новый",
+    [StatusCourseEnum.ACTIVE]: "Активный",
+    [StatusCourseEnum.CLOSED]: "Закрыт",
+    [StatusCourseEnum.IN_PROCESSING]: "В обработке",
+    [StatusCourseEnum.REJECTED]: "Отклонен",
+};
+
 export enum AccessRightEnum {
     PUBLIC = 0,
     PRIVATE = 1
@@ -45,7 +53,8 @@ export enum CourseComponentType {
     Coding = "coding",
     MultiPlayChoice = "multiple-choice",
     Matching = "matching",
-    Sequencing = "sequencing"
+    Sequencing = "sequencing",
+    SimpleTask = "simple-task"
 }
 
 export type CourseComponentTypeI = {
@@ -89,6 +98,7 @@ export type Course = {
     content_description: string;
     duration: number
     publish_date: Date
+    created_at: Date
     user: User
     status: StatusCourseEnum
     sections: SectionCourseItem[]

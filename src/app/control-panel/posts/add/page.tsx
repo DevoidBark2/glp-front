@@ -1,19 +1,13 @@
 "use client"
 import {PageContainerControlPanel} from "@/shared/ui";
 import { observer } from "mobx-react";
-import { Breadcrumb, Button, Divider, Form, FormInstance, Input, Modal, notification, Select, Tag, Tooltip, UploadProps } from "antd";
+import { Breadcrumb, Button, Divider, Form, Input, notification, UploadProps } from "antd";
 import dynamic from "next/dynamic";
-import {
-    CheckCircleOutlined,
-    ClockCircleOutlined,
-    InboxOutlined,
-    SyncOutlined,
-} from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 
 import Dragger from "antd/es/upload/Dragger";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
-import { UserRole } from "@/shared/api/user/model";
 import { useMobxStores } from "@/stores/stores";
 import { getCookieUserDetails } from "@/lib/users";
 import Link from "next/link";
@@ -23,6 +17,7 @@ const ReactQuill = dynamic(
     { ssr: false }
 )
 import 'react-quill/dist/quill.snow.css';
+
 
 const CreatePostPage = () => {
     const { postStore } = useMobxStores();
@@ -109,60 +104,6 @@ const CreatePostPage = () => {
                         </p>
                     </Dragger>
                 </Form.Item>
-
-                {/* {
-                    currentUser?.user.role === UserRole.SUPER_ADMIN && <Form.Item
-                        label="Статус"
-                        name="status"
-                    >
-                        <Select
-                            placeholder="Выберите статус"
-                            style={{ width: '100%' }}
-
-                        >
-                            <Select.Option value={PostStatusEnum.NEW}>
-                                <Tag icon={<ClockCircleOutlined />} color="blue">
-                                    Новый
-                                </Tag>
-                            </Select.Option>
-
-                            <Select.Option value={PostStatusEnum.APPROVED}>
-                                <Tooltip title="Подтвержден">
-                                    <Tag icon={<CheckCircleOutlined />} color="green">
-                                        Подтвержден
-                                    </Tag>
-                                </Tooltip>
-                            </Select.Option>
-
-
-
-                            <Select.Option value={PostStatusEnum.IN_PROCESSING}>
-                                <Tooltip title="В обработке">
-                                    <Tag icon={<SyncOutlined spin />} color="yellow">
-                                        В обработке
-                                    </Tag>
-                                </Tooltip>
-                            </Select.Option>
-                            <Select.Option value={PostStatusEnum.MODIFIED}>
-                                <Tooltip title="Изменен">
-                                    <Tag icon={<ClockCircleOutlined />} color="gray">
-                                        Изменен
-                                    </Tag>
-                                </Tooltip>
-                            </Select.Option>
-
-                            <Select.Option value={PostStatusEnum.REJECT}>
-                                <Tooltip
-                                    title="Отклонен"
-                                    color="red"
-                                >
-                                    <Tag color="red">Отклонен</Tag>
-                                </Tooltip>
-                            </Select.Option>
-                        </Select>
-                    </Form.Item>
-
-                } */}
 
                 <Form.Item
                     name="content"
