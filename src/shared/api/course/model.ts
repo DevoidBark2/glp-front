@@ -68,6 +68,7 @@ export type CourseComponentTypeI = {
     componentTask: any
     tags: string[]
     created_at: Date
+    user: User
     userAnswer?: UserAnswer[]
 }
 

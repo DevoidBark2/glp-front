@@ -1,6 +1,7 @@
 import { FC } from "react";
-import { Button, Checkbox, Col, Form, FormInstance, Input, Row, Select, Tag } from "antd";
+import { Button, Checkbox, Col, Form, FormInstance, Input, Row } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { v4 as uuidv4 } from 'uuid';
 
 interface MultiPlayChoiceProps {
     form: FormInstance;
@@ -9,11 +10,15 @@ interface MultiPlayChoiceProps {
 export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
     return (
         <>
-            <Form.Item label="Заголовок" name="title">
+            <Form.Item 
+                label="Заголовок" 
+                name="title"
+                tooltip="Укажите заголовок, чтобы легко идентифицировать компонент, относящийся к разделу."
+            >
                 <Input placeholder="Введите заголовок" />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
                 name="tags"
                 label="Теги"
                 rules={[{ required: true, message: "Пожалуйста, добавьте хотя бы один тег!" }]}
@@ -29,7 +34,7 @@ export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
                     )}
                     options={[]}
                 />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item label="Описание компонента" name="description">
                 <Input.TextArea placeholder="Введите описание компонента" />
@@ -136,7 +141,11 @@ export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
                                 className="mb-4"
                                 type="dashed"
                                 icon={<PlusOutlined />}
-                                onClick={() => add()}
+                                onClick={() => add({
+                                    id: uuidv4(),
+                                    question: '',
+                                    options: []
+                                })}
                             >
                                 Добавить вопрос
                             </Button>

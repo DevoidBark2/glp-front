@@ -1,14 +1,10 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
-import { getUserToken } from "@/lib/users";
+import { GET, PUT } from "@/lib/fetcher";
 import dayjs from "dayjs";
 import { notification } from "antd";
-import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
-import { getAllComponents, StatusComponentTaskEnum } from "@/shared/api/component-task";
+import { CourseComponentTypeI } from "@/shared/api/course/model";
+import { changeComponent, createComponent, deleteComponent, getAllComponents } from "@/shared/api/component-task";
 import { getComponentTask } from "@/shared/api/component";
-import { handleCheckUserTask } from "@/shared/api/task";
-import { TaskAnswerUserDto } from "@/shared/api/task/model";
-
 export type QuestionsType = {
     question: string;
     options: string[];
@@ -24,7 +20,11 @@ class CourseComponent {
     courseComponents: CourseComponentTypeI[] = []
     searchResults: CourseComponentTypeI[] = [];
     selectedComponents: CourseComponentTypeI[] = [];
+    createLoading: boolean = false
 
+    setCreateLoading = action((value: boolean) => {
+        this.createLoading = value
+    })
 
     setSearchResult = action((value: CourseComponentTypeI[]) => {
         this.searchResults = value;
@@ -38,11 +38,14 @@ class CourseComponent {
     })
 
     addComponentCourse = action(async (values: CourseComponentTypeI) => {
-        await POST(`/api/component-task`, values).then(response => {
-            this.courseComponents = [...this.courseComponents, componentTaskMapper(response.data.component)]
-            notification.success({ message: response.data.message })
+        this.setCreateLoading(true)
+        await createComponent(values).then(response => {
+            this.courseComponents = [...this.courseComponents, componentTaskMapper(response.component)]
+            notification.success({ message: response.message })
         }).catch(e => {
             notification.error({ message: e.response.data.message })
+        }).finally(() => {
+            this.setCreateLoading(true)
         })
     })
 
@@ -56,7 +59,8 @@ class CourseComponent {
     })
 
     changeComponent = action(async (values: CourseComponentTypeI) => {
-        await PUT(`/api/component-task`, values).then(response => {
+        await changeComponent(values).then(response => {
+            debugger
             notification.success({ message: response.message })
             const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
             this.courseComponents[changedComponentIndex] = values;
@@ -67,10 +71,9 @@ class CourseComponent {
     })
 
     deleteComponent = action(async (componentId: number) => {
-        const token = getUserToken();
-        await DELETE(`/api/component-task?token=${token}&componentId=${componentId}`).then(response => {
+        await deleteComponent(componentId).then(response => {
             this.courseComponents = this.courseComponents.filter(component => component.id !== componentId);
-            notification.success({ message: response.response.message })
+            notification.success({ message: response.message })
         });
     })
 
@@ -98,7 +101,10 @@ class CourseComponent {
     }
 
     getComponentById = action(async (id: number) => {
-        return await getComponentTask(id);
+        this.setLoadingCourseComponent(true)
+        return await getComponentTask(id).finally(() => {
+            this.setLoadingCourseComponent(false)
+        });
     })
 }
 
@@ -112,6 +118,7 @@ const componentTaskMapper = (state: CourseComponentTypeI) => {
         title: state.title,
         status: state.status,
         tags: state.tags,
+        user: state.user,
         created_at: dayjs(state.created_at).toDate()
     }
 

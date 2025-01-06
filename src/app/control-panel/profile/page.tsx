@@ -38,7 +38,7 @@ const ProfilePage = () => {
   const [formSettings] = Form.useForm();
   const [avatar, setAvatar] = useState<string | null>(null);
   const { userProfileStore } = useMobxStores();
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentRole, setCurrentRole] = useState<UserRole | null>(null);
 
   const [showFooterOptions, setShowFooterOptions] = useState(false);
 
@@ -58,19 +58,16 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    const currentUser = getCookieUserDetails();
-    setCurrentUser(currentUser);
-
     userProfileStore.getUserProfile().then((response) => {
-      const userData = response.data;
-      setAvatar(`${nextConfig.env?.API_URL}${userData.image}`);
+      setCurrentRole(response.role)
+      setAvatar(response.image ? `${nextConfig.env?.API_URL}${response.image}` : null);
 
-      if (userData.birth_day) {
-        userData.birth_day = dayjs(userData.birth_day)
+      if (response.birth_day) {
+        response.birth_day = dayjs(response.birth_day)
       }
-      formProfile.setFieldsValue(userData);
-      formSettings.setFieldsValue(userData);
-      if (userData.show_footer_table) {
+      formProfile.setFieldsValue(response);
+      formSettings.setFieldsValue(response);
+      if (response.show_footer_table) {
         setShowFooterOptions(true)
       }
 
@@ -131,7 +128,7 @@ const ProfilePage = () => {
           </Upload>
           <div className="ml-6">
             <h2 className="text-2xl font-bold text-gray-800">
-              {profileTitle(currentUser?.user?.role as UserRole)}
+              {profileTitle(currentRole!)}
             </h2>
             <p className="text-gray-600">
               Здесь вы можете обновить ваши личные данные и настройки.

@@ -1,11 +1,10 @@
-import { Form, Input, Select, Tag } from "antd"
+import { Form, Input } from "antd"
 import dynamic from "next/dynamic"
+import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
 )
-import 'react-quill/dist/quill.snow.css';
-
 
 export const TextTask = () => {
     return (
@@ -13,25 +12,9 @@ export const TextTask = () => {
             <Form.Item
                 name="title"
                 label="Заголовок"
+                tooltip="Укажите заголовок, чтобы легко идентифицировать компонент, относящийся к разделу."
             >
                 <Input placeholder="Введите заголовок" />
-            </Form.Item>
-
-            <Form.Item
-                name="tags"
-                label="Теги"
-                rules={[{ required: true, message: 'Пожалуйста, добавьте хотя бы один тег!' }]}
-            >
-                <Select
-                    mode="tags"
-                    style={{ width: '100%' }}
-                    placeholder="Введите тег и нажмите Enter"
-                    tagRender={({ label, closable, onClose }) => (
-                        <Tag closable={closable} onClose={onClose} style={{ margin: 2 }}>
-                            {label}
-                        </Tag>
-                    )}
-                />
             </Form.Item>
 
             <Form.Item

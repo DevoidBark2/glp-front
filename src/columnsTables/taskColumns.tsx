@@ -1,17 +1,22 @@
-import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE } from "@/shared/constants";
-import { Button, Popconfirm, TableColumnsType, Tag, Tooltip } from "antd";
+import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
+import { Button, Popconfirm, Popover, TableColumnsType, Tag, Tooltip } from "antd";
 import {
     BookOutlined,
     CheckCircleOutlined,
     CodeOutlined,
+    CrownOutlined,
     DeleteOutlined,
     EditOutlined,
     ProjectOutlined,
     ReconciliationOutlined,
+    UserOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import {CourseComponentType, CourseComponentTypeI} from "@/shared/api/course/model";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
+import Link from "next/link";
+import { UserRole } from "@/shared/api/user/model";
+import { UserHoverCard, UserType } from "@/widgets";
 
 export const typeIcons = {
     [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
@@ -25,11 +30,11 @@ export const typeIcons = {
 
 interface TaskColumnsProps {
     handleChangeComponent: (record: CourseComponentTypeI) => void,
-    handleDeleteComponent: (recordId: number) => void
-
+    handleDeleteComponent: (recordId: number) => void,
+    currentUser: UserType | null
 }
 
-export const taskColumns = ({ handleChangeComponent, handleDeleteComponent }: TaskColumnsProps): TableColumnsType<CourseComponentTypeI> => [
+export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, currentUser }: TaskColumnsProps): TableColumnsType<CourseComponentTypeI> => [
     {
         title: 'Название',
         dataIndex: 'title',
@@ -76,6 +81,29 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent }: Ta
                 {status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
             </Tag>
         ),
+    },
+    {
+        title: "Создатель",
+        dataIndex: "user",
+        hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
+        render: (_, record) => {
+            return record.user.role === UserRole.SUPER_ADMIN ? (
+                <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
+                    <Tooltip title="Перейти в профиль">
+                        <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
+                            Администратор
+                        </Tag>
+                    </Tooltip>
+                </Link>
+            ) : (
+                <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
+                    <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
+                    <Link href={`/control-panel/users/${record.user.id}`} className="hover:text-blue-500">
+                        {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`}
+                    </Link>
+                </Popover>
+            )
+        },
     },
     {
         title: "Действия",

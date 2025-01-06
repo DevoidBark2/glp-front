@@ -7,10 +7,8 @@ import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
-import { MathJax, MathJaxContext } from "better-react-mathjax";
-import { MathfieldElement } from 'mathlive';
-import TaskWithFormula from "@/entities/course/ui/CreateTask/TaslWithFormula";
+import { MultiPlayChoice, QuizTask, TextTask } from "@/entities/course/ui";
+import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()
@@ -35,6 +33,7 @@ const TaskAddPage = () => {
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
             router.push('/control-panel/tasks')
+            courseComponentStore.setCreateLoading(false)
         });
     }
 
@@ -83,18 +82,8 @@ const TaskAddPage = () => {
                 {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
                 {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula />}
 
-                {/* <MathJaxContext>
-                    <div>
-                        <h1>Математическая формула:</h1>
-                        <MathJax>{latexFormula}</MathJax>
-                    </div>
-                </MathJaxContext>
-
-
-                <math-field>f(x)=</math-field> */}
-
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">Добавить</Button>
+                    <Button type="primary" htmlType="submit" loading={courseComponentStore.createLoading}>Добавить</Button>
                 </Form.Item>
             </Form>
         </PageContainerControlPanel>

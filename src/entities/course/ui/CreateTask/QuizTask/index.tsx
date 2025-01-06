@@ -11,25 +11,12 @@ interface QuizTaskProps {
 export const QuizTask: FC<QuizTaskProps> = ({ form }) => {
     return (
         <>
-            <Form.Item label="Заголовок" name="title">
-                <Input placeholder="Введите заголовок" />
-            </Form.Item>
-
-            <Form.Item
-                name="tags"
-                label="Теги"
-                rules={[{ required: true, message: "Пожалуйста, добавьте хотя бы один тег!" }]}
+            <Form.Item 
+                label="Заголовок" 
+                name="title"
+                tooltip="Укажите заголовок, чтобы легко идентифицировать компонент, относящийся к разделу."
             >
-                <Select
-                    mode="tags"
-                    style={{ width: "100%" }}
-                    placeholder="Введите тег и нажмите Enter"
-                    tagRender={({ label, closable, onClose }) => (
-                        <Tag closable={closable} onClose={onClose} style={{ margin: 2 }}>
-                            {label}
-                        </Tag>
-                    )}
-                />
+                <Input placeholder="Введите заголовок" />
             </Form.Item>
 
             <Form.Item label="Описание компонента" name="description">
