@@ -1,4 +1,4 @@
-import { createFaq, deleteFaq, getAllFaq, updateFaq } from "@/shared/api/faq";
+import { createFaq, deleteFaq, getAllFaq, getFaqById, updateFaq } from "@/shared/api/faq";
 import { Faq } from "@/shared/api/faq/model";
 import { action, makeAutoObservable } from "mobx";
 
@@ -11,7 +11,7 @@ class FaqStore {
     faqs: Faq[] = [];
     loading: boolean = false;
 
-    setLoading = action((value:boolean) => {
+    setLoading = action((value: boolean) => {
         this.loading = value;
     })
 
@@ -25,6 +25,8 @@ class FaqStore {
     create = action(async (faq: Faq) => {
         const data = await createFaq(faq);
         this.faqs = [...this.faqs, data];
+
+        return data;
     })
 
     updatedFaq = action(async (faq: Faq) => {
@@ -37,6 +39,12 @@ class FaqStore {
                 return item;
             }
         })
+
+        return data
+    })
+
+    getFaqById = action(async (id: number) => {
+        return await getFaqById(id)
     })
 
     delete = action(async (id: number) => {

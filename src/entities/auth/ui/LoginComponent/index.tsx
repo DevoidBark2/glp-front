@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+"use client"
+import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import { notification, Button, Form, Input, Modal, Divider } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image"
 
 export const LoginComponent = observer(() => {
@@ -21,7 +22,7 @@ export const LoginComponent = observer(() => {
 
     const onSubmit = (values: any) => {
         if (!recaptcha) {
-            notification.error({message: "Пожалуйста, завершите reCAPTCHA"})
+            notification.error({ message: "Пожалуйста, завершите reCAPTCHA" })
             return;
         }
 
@@ -30,8 +31,8 @@ export const LoginComponent = observer(() => {
             code: values.code
         } : values
         userStore.loginUser(body).then((response) => {
-            if(response.message) {
-                notification.success({message: response.message})
+            if (response.message) {
+                notification.success({ message: response.message })
                 setIsShowTwoFacor(true);
                 setCredentials({
                     email: values.email,
@@ -102,41 +103,41 @@ export const LoginComponent = observer(() => {
                     <Form.Item
                         name="code"
                         label="Код"
-                        rules={[{required:true, message:"Введите код!"}]}
+                        rules={[{ required: true, message: "Введите код!" }]}
                     >
-                        <Input.OTP/>
+                        <Input.OTP />
                     </Form.Item>
                 )}
 
                 {!isShowTwoFactor && (
                     <>
                         <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        { required: true, message: "Поле обязательно!" },
-                        { type: "email", message: "Формат email должен быть верным!" },
-                    ]}
-                >
-                    <Input placeholder="Введите Email" />
-                </Form.Item>
+                            label="Email"
+                            name="email"
+                            rules={[
+                                { required: true, message: "Поле обязательно!" },
+                                { type: "email", message: "Формат email должен быть верным!" },
+                            ]}
+                        >
+                            <Input placeholder="Введите Email" />
+                        </Form.Item>
 
-                <Form.Item
-                    label="Пароль"
-                    name="password"
-                    rules={[{ required: true, message: "Поле обязательно!" }]}
-                >
-                <Input.Password
-                    placeholder="Введите пароль"
-                    iconRender={(visible) =>
-                        visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                    }
-                />
-                </Form.Item>
+                        <Form.Item
+                            label="Пароль"
+                            name="password"
+                            rules={[{ required: true, message: "Поле обязательно!" }]}
+                        >
+                            <Input.Password
+                                placeholder="Введите пароль"
+                                iconRender={(visible) =>
+                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                }
+                            />
+                        </Form.Item>
                     </>
                 )}
 
-                
+
 
                 <div className="flex justify-center">
                     <ReCAPTCHA
