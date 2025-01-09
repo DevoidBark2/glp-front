@@ -25,10 +25,10 @@ const TaskAddPage = () => {
         setOptions(updatedOptions);
     };
     const onFinish = (values: CourseComponentTypeI) => {
-        if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
-            message.warning("Вопрос должен быть хотя бы 1!");
-            return;
-        }
+        // if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
+        //     message.warning("Вопрос должен быть хотя бы 1!");
+        //     return;
+        // }
 
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
@@ -80,7 +80,7 @@ const TaskAddPage = () => {
                 {typeTask === CourseComponentType.Text && <TextTask />}
                 {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
                 {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
-                {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula />}
+                {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula form={form} />}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={courseComponentStore.createLoading}>Добавить</Button>

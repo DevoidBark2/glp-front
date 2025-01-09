@@ -5,3 +5,9 @@ export const getComponentTask = withAuth(async (id: number, config = {}): Promis
     const data = (await axiosInstance.get(`api/component-task/${id}`, config)).data;
     return data.data;
 })
+
+export const searchComponentByTitle = async (query: string) => {
+    const data = (await axiosInstance.get(`api/search-components?query=${query}`)).data
+
+    return data.data
+}

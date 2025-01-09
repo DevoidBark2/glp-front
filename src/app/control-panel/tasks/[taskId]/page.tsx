@@ -6,9 +6,10 @@ import { useMobxStores } from "@/stores/stores"
 import { Breadcrumb, Button, Divider, Form, message, Select, Spin, Tag } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
+import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
 
 const TaskDetailsPage = () => {
     const { courseComponentStore } = useMobxStores()
@@ -17,13 +18,12 @@ const TaskDetailsPage = () => {
     const [changedComponent, setChangedComponent] = useState<CourseComponentTypeI | null>(null)
     const [options, setOptions] = useState<Record<number, string[]>>({});
     const { taskId } = useParams();
-    const router = useRouter();
 
     const onFinish = (values: CourseComponentTypeI) => {
-        if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
-            message.warning("Вопрос должен быть хотя бы 1!");
-            return;
-        }
+        // if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
+        //     message.warning("Вопрос должен быть хотя бы 1!");
+        //     return;
+        // }
 
         courseComponentStore.changeComponent(values)
     }
@@ -37,7 +37,6 @@ const TaskDetailsPage = () => {
     };
 
     useEffect(() => {
-
         const fetchData = async () => {
             const component = await courseComponentStore.getComponentById(Number(taskId));
             form.setFieldsValue(component!);
@@ -108,6 +107,7 @@ const TaskDetailsPage = () => {
                 {typeTask === CourseComponentType.Text && <TextTask />}
                 {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
                 {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
+                {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula form={form} />}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">Изменить</Button>

@@ -1,10 +1,9 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
-import { GET, PUT } from "@/lib/fetcher";
+import { action, makeAutoObservable } from "mobx";
 import dayjs from "dayjs";
 import { notification } from "antd";
 import { CourseComponentTypeI } from "@/shared/api/course/model";
 import { changeComponent, createComponent, deleteComponent, getAllComponents } from "@/shared/api/component-task";
-import { getComponentTask } from "@/shared/api/component";
+import {getComponentTask, searchComponentByTitle} from "@/shared/api/component";
 export type QuestionsType = {
     question: string;
     options: string[];
@@ -60,7 +59,6 @@ class CourseComponent {
 
     changeComponent = action(async (values: CourseComponentTypeI) => {
         await changeComponent(values).then(response => {
-            debugger
             notification.success({ message: response.message })
             const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
             this.courseComponents[changedComponentIndex] = values;
@@ -79,8 +77,8 @@ class CourseComponent {
 
     // Метод для выполнения поиска к
     searchComponents = action(async (query: string) => {
-        await GET(`/api/search-components?query=${query}`).then(response => {
-            this.searchResults = response.data;
+        await searchComponentByTitle(query).then(response => {
+            this.setSearchResult(response);
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         });

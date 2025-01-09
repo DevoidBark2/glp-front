@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import nextConfig from "next.config.mjs";
 import { Course } from "@/shared/api/course/model";
-import {ClockCircleOutlined, BarsOutlined, BookOutlined} from "@ant-design/icons";
+import {ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined} from "@ant-design/icons";
 import { getCookieUserDetails } from "@/lib/users";
 import Image from "next/image";
 import {CourseLevelComponent} from "@/entities/course/ui";
@@ -80,8 +80,15 @@ const CoursePage = () => {
                     <>
                         <div className="bg-white shadow-md rounded-lg p-6 mt-6 flex flex-col lg:flex-row items-start lg:items-center">
                             <div className="lg:w-3/4">
-                                <h1 className="font-bold text-4xl text-gray-800">
+                                <h1 className="font-bold text-4xl text-gray-800 flex items-center">
                                     {currentCourse.name}
+                                    <Image
+                                        src="/static/certificate_icon.svg"
+                                        alt="Certificate"
+                                        width={40}
+                                        height={40}
+                                        className="ml-3"
+                                    />
                                 </h1>
                                 <p className="mt-4 text-lg text-gray-600 leading-relaxed">
                                     {currentCourse.small_description}
@@ -95,36 +102,53 @@ const CoursePage = () => {
                                         width={0}
                                         height={0}
                                         sizes="100vw"
-                                        style={{width: '100%', height: 'auto'}}
+                                        style={{ width: '100%', height: 'auto' }}
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
                                     <div className="w-80 h-48 flex items-center justify-center bg-gray-200">
-                                        <BookOutlined style={{fontSize: '48px', color: '#8c8c8c'}}/>
+                                        <BookOutlined style={{ fontSize: '48px', color: '#8c8c8c' }} />
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
                             <div className="flex items-center bg-gray-100 p-4 rounded-lg">
-                                <CourseLevelComponent level={currentCourse.level} />
+                                <CourseLevelComponent level={currentCourse.level}/>
                             </div>
                             <div className="flex items-center bg-gray-100 p-4 rounded-lg">
-                                <ClockCircleOutlined style={{fontSize:30}}/>
+                                {currentCourse.access_right === 0 ? (
+                                    <>
+                                        <UnlockOutlined style={{fontSize: 30, color: 'green'}}/>
+                                        <span className="ml-4 text-gray-700 text-base font-medium">
+                Уровень допуска: <span className="text-green-600 font-semibold">Открытый</span>
+            </span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <LockOutlined style={{fontSize: 30, color: 'red'}}/>
+                                        <span className="ml-4 text-gray-700 text-base font-medium">
+                Уровень допуска: <span className="text-red-600 font-semibold">Закрытый</span>
+            </span>
+                                    </>
+                                )}
+                            </div>
+                            <div className="flex items-center bg-gray-100 p-4 rounded-lg">
+                                <ClockCircleOutlined style={{fontSize: 30}}/>
                                 <span className="ml-4 text-gray-700 text-base font-medium">
-                                    Продолжительность: {currentCourse.duration} ч.
-                                </span>
+                Продолжительность: {currentCourse.duration} ч.
+            </span>
                             </div>
                             <div className="flex items-center bg-gray-100 p-4 rounded-lg">
                                 <BarsOutlined style={{fontSize: 30}}/>
                                 <span className="ml-4 text-gray-700 text-base font-medium">
-                                    Категория: {currentCourse.category?.name}
-                                </span>
+                Категория: {currentCourse.category?.name}
+            </span>
                             </div>
                         </div>
 
-                        <Divider />
+                        <Divider/>
                         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                             Описание курса
                         </h2>
@@ -135,9 +159,10 @@ const CoursePage = () => {
                             }}
                         ></div>
                     </>
+
                 ) : (
                     <div className="text-center py-20">
-                        <Spin size="large" />
+                        <Spin size="large"/>
                         <p className="text-gray-500 mt-4">Загрузка информации о курсе...</p>
                     </div>
                 )}

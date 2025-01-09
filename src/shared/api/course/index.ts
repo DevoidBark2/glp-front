@@ -58,3 +58,9 @@ export const changeCourse = async (course: Course) => {
 export const sendToReviewCourse = async (id: number) => {
     return (await axiosInstance.post('/api/publish-course',{ courseId: id })).data;
 }
+
+export const getCourseDetailsSections = async (courseId: number) => {
+    const data = (await axiosInstance.get(`/api/course-sections/${courseId}`)).data
+
+    return data.data
+}

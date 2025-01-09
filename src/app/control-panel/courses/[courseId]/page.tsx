@@ -36,6 +36,7 @@ const ReactQuill = dynamic(
 )
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
+import {typeIcons} from "@/columnsTables/taskColumns";
 
 const CoursePage = () => {
     const {courseId} = useParams();
@@ -45,26 +46,12 @@ const CoursePage = () => {
     const router = useRouter();
 
     const [isCourseLocked, setIsCourseLocked] = useState(false);
-    const [participants, setParticipants] = useState(['John Doe', 'Jane Smith']);
 
     const handleLockToggle = (checked:boolean) => {
         setIsCourseLocked(checked);
         message.success(`Курс ${checked ? 'заблокирован' : 'разблокирован'}`);
     };
 
-    const handleDeleteParticipants = () => {
-        Modal.confirm({
-            title: 'Удалить всех участников?',
-            content: 'Вы уверены, что хотите удалить всех участников курса? Это действие необратимо.',
-            onOk() {
-                setParticipants([]);
-                message.success('Все участники курса были удалены');
-            },
-            onCancel() {
-                message.info('Удаление участников отменено');
-            },
-        });
-    };
 
     const handleChangeSection = (id: number) => {
         router.push(`/control-panel/sections/${id}`)
@@ -147,10 +134,16 @@ const CoursePage = () => {
         console.log("Удаление компонента с ID:", id);
     };
 
+    const handleChangeStep = (step: string) => {
+        if(Number(step) === 2)
+            courseStore.getCourseDetailsSections(Number(courseId));
+        else if (Number(step) === 3)
+            courseStore.getAllMembersCourse(Number(courseId));
+    }
+
     useEffect(() => {
         nomenclatureStore.getCategories();
         courseStore.getCourseDetailsById(Number(courseId)).then(response => {
-            debugger
             form.setFieldsValue(response);
             form.setFieldValue("category",response.category?.id);
             setCourseName(response.name)
@@ -174,6 +167,7 @@ const CoursePage = () => {
             <h1 className="text-center text-3xl">Редактирование курса</h1>
             <Divider/>
             <Tabs
+                onChange={handleChangeStep}
                 defaultActiveKey="1"
                 items={[
                     {
@@ -182,7 +176,6 @@ const CoursePage = () => {
                         children: <Form
                         form={form}
                         layout="vertical"
-                        style={{ overflowX: 'hidden' }} // Скрытие горизонтального скролла
                         onFinish={(values) =>
                             courseStore.changeCourse(values).then(() => {
                                 setCourseName(values.name);
@@ -356,26 +349,25 @@ const CoursePage = () => {
                                                         {record.sectionComponents.map((component:any) => (
                                                             <div 
                                                                 key={component.id} 
-                                                                className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow relative"
+                                                                className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow"
                                                             >
-                                                                <Button
-                                                                    icon={<DeleteOutlined/>}
-                                                                    type="primary"
-                                                                    danger
-                                                                    onClick={() => handleDeleteComponent(component.id)}
-                                                                    className="absolute top-2 right-2"
-                                                                />
-                                                                <h4 className="font-medium text-xl text-gray-800 mb-2">
-                                                                    {component.title || "Нет заголовка"}
-                                                                </h4>
-                                                                <p className="text-gray-600 mb-3">
-                                                                    {component.description || 'Нет описания'}
-                                                                </p>
+                                                               <div className="flex items-center justify-between">
+                                                                   <h4 className="font-medium text-xl text-gray-800 mb-2">
+                                                                       {component.componentTask.title || "Нет заголовка"}
+                                                                   </h4>
+                                                                   <Button
+                                                                       icon={<DeleteOutlined/>}
+                                                                       type="primary"
+                                                                       danger
+                                                                       onClick={() => handleDeleteComponent(component.id)}
+                                                                       className=""
+                                                                   />
+                                                               </div>
                                                                 <div className="text-sm text-gray-500">
-                                                                    <span className="block mb-1">Тип: 
-                                                                        {/*<Tag icon={typeIcons[component.type]}>*/}
-                                                                        {/*    <span style={{ marginLeft: 8 }}>{component.type}</span>*/}
-                                                                        {/*</Tag>*/}
+                                                                    <span className="block mb-1">Тип:
+                                                                        <Tag className="ml-2" icon={typeIcons[component.componentTask.type]}>
+                                                                            <span >{component.componentTask.type}</span>
+                                                                        </Tag>
                                                                     </span>
                                                                     <span className="block mb-1">Статус: 
                                                                         <Tag color={component.status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
@@ -422,10 +414,10 @@ const CoursePage = () => {
                         children: (
                             <div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
                                     <h3 style={{ marginBottom: 10 }}>👥 Текущие участники</h3>
-                                    {participants.length > 0 ? (
+                                    {[].length > 0 ? (
                                         <List
                                             bordered
-                                            dataSource={participants}
+                                            dataSource={[]}
                                             renderItem={(item, index) => (
                                                 <List.Item>
                                                     {index + 1}. {item}

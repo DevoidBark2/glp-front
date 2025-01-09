@@ -25,6 +25,7 @@ export const typeIcons = {
     [CourseComponentType.MultiPlayChoice]: <ProjectOutlined style={{ color: '#faad14' }} />,
     [CourseComponentType.Matching]: <ReconciliationOutlined style={{ color: '#2f54eb' }} />,
     [CourseComponentType.Sequencing]: <EditOutlined style={{ color: '#13c2c2' }} />,
+    [CourseComponentType.SimpleTask]: <EditOutlined style={{ color: '#13c2c2' }} />,
 };
 
 

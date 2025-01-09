@@ -1,17 +1,23 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
+import { GET } from "@/lib/fetcher";
 import { notification } from "antd";
-import { getUserToken } from "@/lib/users";
-import dayjs from "dayjs";
 import { SectionCourseItem } from "@/stores/SectionCourse";
-import { changeCourse, createCourse, deleteCourseById, getAllCourses, getCourseById, getCPAllCourse, sendToReviewCourse } from "@/shared/api/course";
+import {
+    changeCourse,
+    createCourse,
+    deleteCourseById,
+    getAllCourses,
+    getCourseById,
+    getCourseDetailsSections,
+    getCPAllCourse,
+    sendToReviewCourse
+} from "@/shared/api/course";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
 import { SectionCourse } from "@/shared/api/section/model";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",
@@ -85,6 +91,9 @@ class CourseStore {
         this.loadingCourseDetails = value
     })
 
+    setCourseDetailsSections = action((value: SectionCourseItem[])=> {
+        this.courseDetailsSections = value
+    })
     setSelectedCourseForDetailModal = action((course: Course | null) => {
         this.selectedCourseForDetailModal = course;
     })
@@ -153,8 +162,18 @@ class CourseStore {
         return await getCourseById(courseId);
     })
 
+    getCourseDetailsSections = action(async (courseId: number) => {
+        await getCourseDetailsSections(courseId).then(response => {
+            this.setCourseDetailsSections(response);
+        })
+
+    })
+
+    getAllMembersCourse = action(async (courseId: number) => {
+
+    })
+
     changeCourse = action(async (values: Course) => {
-        debugger
         await changeCourse(values).then(response => {
             notification.success({ message: response.message })
         }).catch(e => {

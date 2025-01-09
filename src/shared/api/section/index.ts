@@ -1,6 +1,11 @@
-import {MainSection, SectionCourseItem} from "@/stores/SectionCourse";
+import {MainSection} from "@/stores/SectionCourse";
 import { axiosInstance, withAuth } from "../http-client";
-import {POST} from "@/lib/fetcher";
+
+export const getCPAllSection = async () => {
+    const data = (await axiosInstance.get('api/sections')).data
+
+    return data.data
+}
 
 export const deleteSectionCourse = withAuth(async (id: number,config = {}) => {
     return (await axiosInstance.delete(`api/sections/${id}`,config)).data;
@@ -24,13 +29,13 @@ export const getMainCourseSection = withAuth(async (id: number,config = {}) => {
     return data.data;
 })
 
-export const createMainSection = withAuth(async (values: MainSection,config = {}): Promise<MainSection> => {
-    const data = (await axiosInstance.post('api/main-section', values, config)).data;
+export const createMainSection = async (values: MainSection): Promise<MainSection> => {
+    const data = (await axiosInstance.post('api/main-section', values)).data;
 
     return data.data;
-})
+}
 
-export const createSection = withAuth(async (values:any, config = {}) => {
+export const createSection = async (values:any) => {
     const formData = new FormData();
 
     Object.keys(values).forEach((key) => {
@@ -45,5 +50,5 @@ export const createSection = withAuth(async (values:any, config = {}) => {
         }
     });
 
-    return await(await axiosInstance.post('/api/sections', formData, config)).data
-})
+    return await(await axiosInstance.post('api/sections', formData)).data
+}

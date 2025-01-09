@@ -34,7 +34,8 @@ export const FILTER_ROLE_USER = [
 export const FILTER_TYPE_COMPONENT_COURSE = [
     { id: 1, text: 'Текст', value: CourseComponentType.Text },
     { id: 2, text: 'Квиз', value: CourseComponentType.Quiz },
-    { id: 3, text: 'Программирование', value: CourseComponentType.Coding },
+    { id: 3, text: 'Множественный выбор', value: CourseComponentType.MultiPlayChoice },
+    { id: 4, text: 'Простая задача', value: CourseComponentType.SimpleTask },
 ]
 
 export const FILTER_STATUS_COMPONENT_COURSE = [

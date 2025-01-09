@@ -1,11 +1,10 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
 import {Course, CourseComponentTypeI} from "@/shared/api/course/model";
-import { GET, POST } from "@/lib/fetcher";
 import { StatusSectionEnum } from "@/shared/api/section/model";
 import {
     createMainSection,
     createSection,
-    deleteSectionCourse,
+    deleteSectionCourse, getCPAllSection,
     getMainCourseSection,
     getSectionCourseById
 } from "@/shared/api/section";
@@ -50,9 +49,9 @@ class SectionCourse {
 
     getAllSectionCourse = async () => {
         this.setLoadingSectionsCourse(true)
-        await GET(`/api/sections`).then(response => {
+        await getCPAllSection().then(response => {
             runInAction(() => {
-                this.sectionCourse = response.data.map(sectionMapper);
+                this.sectionCourse = response.map(sectionMapper);
             })
         }).finally(() => {
             this.setLoadingSectionsCourse(false)
