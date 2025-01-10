@@ -1,4 +1,3 @@
-"use client"
 import { useMobxStores } from "@/stores/stores";
 import { Button, Form, message, notification, Steps } from "antd"
 import { useRouter } from "next/navigation";

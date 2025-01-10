@@ -1,13 +1,15 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
+import {action, makeAutoObservable, runInAction} from "mobx";
 import {Course, CourseComponentTypeI} from "@/shared/api/course/model";
-import { StatusSectionEnum } from "@/shared/api/section/model";
+import {StatusSectionEnum} from "@/shared/api/section/model";
 import {
     createMainSection,
     createSection,
-    deleteSectionCourse, getCPAllSection,
+    deleteSectionCourse,
+    getCPAllSection,
     getMainCourseSection,
     getSectionCourseById
 } from "@/shared/api/section";
+import {User} from "@/shared/api/user/model";
 
 export type SectionCourseItem = {
     id: number;
@@ -17,6 +19,7 @@ export type SectionCourseItem = {
     course: Course;
     uploadFile: File[];
     components: CourseComponentTypeI[];
+    user: User
     status: StatusSectionEnum;
     sectionComponents: any
     created_at: Date
@@ -75,13 +78,13 @@ class SectionCourse {
     })
 
     getMainSections = action(async () => {
-        const data = await getMainCourseSection();
-        this.mainSections = data;
+        this.mainSections = await getMainCourseSection();
     })
 
     addMainSection = action(async (values: MainSection) => {
         const data = await createMainSection(values)
-        this.mainSections = [...this.mainSections, data];
+        this.mainSections = [...this.mainSections, data.data];
+        return data
     })
 }
 
@@ -95,7 +98,8 @@ const sectionMapper = (section: SectionCourseItem) => {
         uploadFile: section.uploadFile,
         components: section.components,
         created_at: section.created_at,
-        status: section.status
+        status: section.status,
+        user: section.user,
     }
 
     return sectionItem;

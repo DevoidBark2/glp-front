@@ -1,15 +1,8 @@
 import { action, makeAutoObservable } from "mobx";
-import { GET } from "@/lib/fetcher";
 import dayjs from "dayjs";
-import { ActionEvent } from "@/shared/api/action-user";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
-
-export type EventUser = {
-    id: number;
-    action: ActionEvent;
-    description: string;
-    createdAt: Date;
-}
+import {EventUser} from "@/shared/api/events/model";
+import {getAllEvents} from "@/shared/api/events";
 
 class EventStore {
     constructor() {
@@ -25,7 +18,7 @@ class EventStore {
 
     getAllEvents = action(async () => {
         this.setLoadingEvents(true)
-        return await GET(`/api/events`).then((response) => {
+        return await getAllEvents().then((response) => {
             this.userEvents = response.data.map(eventMapper)
         });
     })

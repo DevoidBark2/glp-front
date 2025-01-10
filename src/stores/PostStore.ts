@@ -4,7 +4,7 @@ import { notification } from "antd"
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
-import { createPost } from "@/shared/api/posts";
+import {createPost, publishPost} from "@/shared/api/posts";
 import { User } from "@/shared/api/user/model";
 
 
@@ -109,7 +109,7 @@ class PostStore {
     })
 
     publishPost = action(async (postId: number, checked: boolean) => {
-        await POST('/api/publish-post', { id: postId, checked: checked }).then(response => {
+        await publishPost(postId,checked).then(response => {
             const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {

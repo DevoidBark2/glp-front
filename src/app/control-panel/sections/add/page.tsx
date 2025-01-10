@@ -1,11 +1,19 @@
 "use client";
-import React from "react";
+import React, {useEffect} from "react";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { FormSteps } from "@/entities/section/ui";
+import {useMobxStores} from "@/stores/stores";
 
 const SectionAddPage = () => {
+    const {courseStore} = useMobxStores()
+
+    useEffect(() =>{
+        return () => {
+            courseStore.setSelectedCourse(null);
+        }
+    })
     return (
         <PageContainerControlPanel>
             <Breadcrumb

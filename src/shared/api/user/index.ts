@@ -37,3 +37,9 @@ export const handleBlockUser = withAuth(async (body: ChangeBlockUserDto, config 
 
     return data.data;
 })
+
+export const searchUsers = async (query: string) => {
+    const data = (await axiosInstance.get(`api/search-users?query=${query}`)).data;
+
+    return data.data;
+}

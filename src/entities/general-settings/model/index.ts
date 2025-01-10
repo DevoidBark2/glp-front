@@ -1,7 +1,7 @@
-import { action, makeAutoObservable } from "mobx";
-import { GET, POST } from "@/lib/fetcher";
-import { notification } from "antd";
-import {GeneralSettingsType} from "@/shared/api/general-settings";
+import {action, makeAutoObservable} from "mobx";
+import {notification} from "antd";
+import {GeneralSettingsType} from "@/shared/api/general-settings/model";
+import {changeGeneralSettings, getGeneralSettings} from "@/shared/api/general-settings";
 
 export class GeneralSettings {
     constructor() {
@@ -21,9 +21,9 @@ export class GeneralSettings {
     getGeneralSettings = action(async () => {
        try {
            this.setLoading(true);
-           const response = await GET(`/api/general-settings`)
-           this.setGeneralSetting(response.data[0])
-           return response
+           return await getGeneralSettings().then(response => {
+               this.setGeneralSetting(response.data[0])
+           })
        }finally {
            this.setLoading(false);
        }
@@ -39,7 +39,7 @@ export class GeneralSettings {
             // @ts-ignore
             formData.append(key, value);
         })
-        await POST(`/api/general-settings`, formData).then(response => {
+        await changeGeneralSettings(formData).then(response => {
             notification.success({ message: response.data.message });
         }).catch(e => {
             notification.error({ message: e.response.data.message })

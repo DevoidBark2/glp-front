@@ -1,7 +1,7 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
-import { GET } from "@/lib/fetcher";
-import { notification } from "antd";
-import { SectionCourseItem } from "@/stores/SectionCourse";
+import {action, makeAutoObservable, runInAction} from "mobx";
+import {GET} from "@/lib/fetcher";
+import {notification} from "antd";
+import {SectionCourseItem} from "@/stores/SectionCourse";
 import {
     changeCourse,
     createCourse,
@@ -9,15 +9,15 @@ import {
     getAllCourses,
     getCourseById,
     getCourseDetailsSections,
-    getCPAllCourse,
+    getCPAllCourse, getFullCourse,
     sendToReviewCourse
 } from "@/shared/api/course";
-import { Course, StatusCourseEnum } from "@/shared/api/course/model";
-import { courseMapper } from "@/entities/course/mappers/courseMapper";
-import { axiosInstance } from "@/shared/api/http-client";
-import { TaskAnswerUserDto } from "@/shared/api/task/model";
-import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
-import { SectionCourse } from "@/shared/api/section/model";
+import {Course, StatusCourseEnum} from "@/shared/api/course/model";
+import {courseMapper} from "@/entities/course/mappers/courseMapper";
+import {axiosInstance} from "@/shared/api/http-client";
+import {TaskAnswerUserDto} from "@/shared/api/task/model";
+import {getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed} from "@/shared/api/task";
+import {SectionCourse} from "@/shared/api/section/model";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",
@@ -192,7 +192,7 @@ class CourseStore {
 
     getFullCourseById = action(async (id: number) => {
         this.setCourseMenuLoading(true);
-        return await GET(`/api/full-course?courseId=${id}`).then(response => {
+        return await getFullCourse(id).then(response => {
             // this.setFullDetailCourse(response.data);
             this.setCourseMenuItems(response.data)
             return response.data;
@@ -204,12 +204,10 @@ class CourseStore {
     subscribeCourse = action(async (courseId: number, userId: number) => {
         this.setLoadingSubscribeCourse(true)
         try {
-            const data = await axiosInstance.post('api/subscribe-course', {
+            return await axiosInstance.post('api/subscribe-course', {
                 courseId: courseId,
                 userId: userId
             })
-
-            return data
         } finally {
             this.setLoadingSubscribeCourse(false)
         }

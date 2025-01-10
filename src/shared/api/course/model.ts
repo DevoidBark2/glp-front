@@ -44,6 +44,7 @@ export type SectionCourseItem = {
     components: CourseComponentTypeI[];
     status: StatusSectionEnum
     created_at: Date
+    user: User
     children: any;
 }
 

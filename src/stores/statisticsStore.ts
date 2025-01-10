@@ -34,32 +34,12 @@ class StatisticsStore {
     }
 
     loadingStatisticsData: boolean = true;
-    resultGlobalSearch: ResultSearchItems[] = [];
-    searchGlobalText: string = "";
-    visibleResultModal: boolean = false;
     statisticsData: StatisticsData | null = null;
 
     setLoadingStatisticsData = action((value: boolean) => {
         this.loadingStatisticsData = value;
     })
 
-    setVisibleResultModal = action((value: boolean) => {
-        this.visibleResultModal = value;
-    })
-
-    setSearchGlobalText = action(async (value: string) => {
-        this.searchGlobalText = value;
-        if (value === "") {
-            this.setVisibleResultModal(false);
-            this.resultGlobalSearch = [];
-            return;
-        }
-        this.setVisibleResultModal(true);
-        const token = getUserToken();
-        await GET(`/api/global-search?token=${token}&text=${value}`).then(response => {
-            this.resultGlobalSearch = globalSearchMapper(response.response.data);
-        }).catch(e => { })
-    })
 
     getAllStatisticsData = action(async () => {
         this.setLoadingStatisticsData(true)

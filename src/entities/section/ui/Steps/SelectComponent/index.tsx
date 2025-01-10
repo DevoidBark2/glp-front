@@ -61,8 +61,7 @@ export const SelectComponent = ({createSectionForm} : SelectComponentProps) => {
             courseComponentStore.addComponentToTable(selectedComponent);
             const currentComponentIds = createSectionForm.getFieldValue('components') || [];
 
-            // Добавляем ID нового компонента к текущим ID
-            const updatedComponentIds = [...currentComponentIds, selectedComponent.id];
+            const updatedComponentIds = [...currentComponentIds, selectedComponent];
 
             // Обновляем значение в форме только с массивом ID
             createSectionForm.setFieldsValue({ components: updatedComponentIds });

@@ -1,5 +1,6 @@
 import { axiosInstance, withAuth } from "../http-client"
-import { Post, PostCreateForm } from "./model";
+import {Post, PostCreateForm, PostStatusEnum} from "./model";
+import {Comments} from "@/app/control-panel/manage-posts/page";
 
 export const getAllPost = async (): Promise<Post[]> => {
     const data = (await axiosInstance.get('api/posts')).data;
@@ -34,3 +35,15 @@ export const changePost = withAuth(async (post: Post, config = {}) => (await axi
 export const deletePost = async (id: number) => (await axiosInstance.delete(`/api/posts/${id}`)).data;
 
 export const submitReviewPost = withAuth(async (id: number, config = {}) => (await axiosInstance.put(`/api/submit-preview?postId=${id}`, {}, config)).data);
+
+
+export const updatePostStatus = async (postId: number, status: PostStatusEnum, comment: string, comments: Comments) => {
+    const data = (await axiosInstance.post('api/update-post-status', {
+        postId: postId,
+        status: status,
+        comment: comment,
+        comments: comments
+    })).data
+
+    return data.data;
+}

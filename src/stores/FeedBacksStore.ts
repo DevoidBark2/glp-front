@@ -4,6 +4,7 @@ import { notification, UploadFile } from "antd";
 import dayjs from "dayjs";
 import {User} from "@/shared/api/user/model";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
+import {sendFeedBack} from "@/shared/api/feedback";
 
 export type FeedBackItem = {
     id: string,
@@ -33,7 +34,7 @@ class FeedBacksStore {
         this.fileListForFeedback.forEach(file => {
             formData.append('files', file.originFileObj as any)
         })
-        await POST("/api/send-feedback", formData).then(response => {
+        await sendFeedBack(formData).then(response => {
             this.setFileForFeedBack([]);
             this.feedBackItems = [...this.feedBackItems, feedBackMapper(response.data)]
             notification.success({ message: response.message })

@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { message } from "antd";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
-import { getUserById, handleBlockUser, updateRole } from "@/shared/api/user";
+import {getUserById, handleBlockUser, searchUsers, updateRole} from "@/shared/api/user";
 import { UserProfile } from "./UserProfileStore";
 import {login, oauthByProvider, register} from "@/shared/api/auth";
 
@@ -50,59 +50,13 @@ class UserStore {
 
     searchUsers = action(async () => {
         this.setLoadingSearchUser(true)
-        await GET(`/api/search-users?query=${this.searchUserText}`).then(response => {
+
+        await searchUsers(this.searchUserText).then(response => {
             this.allUsers = response.data.map(usersMapper);
         }).finally(() => {
             this.setLoadingSearchUser(false)
         })
     })
-
-    submitSelectedAction = action(async () => {
-        const token = getUserToken();
-
-        if (this.selectedRowsUser.length < 1) {
-            message.warning("Выберите пользователей!")
-            return;
-        }
-
-        if (!this.selectedGroupAction) {
-            message.warning("Выберите групповое действие!")
-            return;
-        }
-
-        await POST(`/api/global-action?token=${token}`,
-            {
-                action: this.selectedGroupAction,
-                usersIds: this.selectedRowsUser
-            }).then(response => {
-                this.allUsers = this.allUsers.map((user) => {
-                    if (this.selectedRowsUser.includes(user.id)) {
-                        return {
-                            ...user,
-                            status: this.getNewStatusBasedOnAction(this.selectedGroupAction!),
-                        };
-                    }
-                    return user;
-                });
-                this.selectedRowsUser = []
-                this.setSelectedGroupAction(null)
-            }).catch(e => { })
-    })
-
-    getNewStatusBasedOnAction(action: string) {
-        switch (action) {
-            case 'activate':
-                return StatusUserEnum.ACTIVATED;
-            case 'deactivated':
-                return StatusUserEnum.DEACTIVATED;
-            case 'deleted':
-                return StatusUserEnum.DELETED;
-            case 'blocked':
-                return StatusUserEnum.BLOCKED;
-            default:
-                return StatusUserEnum.ACTIVATED; // По умолчанию
-        }
-    }
 
     setCreateUserLoading = action((value: boolean) => {
         this.createUserLoading = value;

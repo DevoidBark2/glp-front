@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { message } from "antd";
 import { StatusUserEnum, UserRole } from "@/shared/api/user/model";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
+import {searchUsers} from "@/shared/api/user";
 
 export type User = {
     id: number;
@@ -31,65 +32,19 @@ class UserStore {
     createUserLoading: boolean = false;
     searchUserText: string = ""
     loadingSearchUser: boolean = false;
-    selectedGroupAction: StatusUserEnum | null = null;
-    selectedRowsUser: number[] = []
-
-    setSelectedRowsUsers = action((value: number[]) => {
-        this.selectedRowsUser = value;
-    })
-
-    setSelectedGroupAction = action((value: StatusUserEnum | null) => {
-        this.selectedGroupAction = value;
-    })
 
     setLoadingSearchUser = action((value: boolean) => {
         this.loadingSearchUser = value;
     })
 
-    setSearchUserText = action((value: string) => {
-        this.searchUserText = value;
-        this.searchUsers();
-    })
-
     searchUsers = action(async () => {
         this.setLoadingSearchUser(true)
-        await GET(`/api/search-users?query=${this.searchUserText}`).then(response => {
+
+        await searchUsers(this.searchUserText).then(response => {
             this.allUsers = response.data.map(usersMapper);
         }).finally(() => {
             this.setLoadingSearchUser(false)
         })
-    })
-
-    submitSelectedAction = action(async () => {
-        const token = getUserToken();
-
-        if (this.selectedRowsUser.length < 1) {
-            message.warning("Выберите пользователей!")
-            return;
-        }
-
-        if (!this.selectedGroupAction) {
-            message.warning("Выберите групповое действие!")
-            return;
-        }
-
-        await POST(`/api/global-action?token=${token}`,
-            {
-                action: this.selectedGroupAction,
-                usersIds: this.selectedRowsUser
-            }).then(response => {
-                this.allUsers = this.allUsers.map((user) => {
-                    if (this.selectedRowsUser.includes(user.id)) {
-                        return {
-                            ...user,
-                            status: this.getNewStatusBasedOnAction(this.selectedGroupAction!),
-                        };
-                    }
-                    return user;
-                });
-                this.selectedRowsUser = []
-                this.setSelectedGroupAction(null)
-            }).catch(e => { })
     })
 
     getNewStatusBasedOnAction(action: string) {

@@ -1,4 +1,4 @@
-import { Button, Form, Input, message, Modal, Select, Upload } from "antd"
+import {Button, Col, Form, Input, Modal, notification, Row, Select, Spin, Upload} from "antd"
 import TextArea from "antd/es/input/TextArea"
 import { useEffect, useState } from "react";
 import { DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
@@ -11,10 +11,11 @@ export const General = () => {
     const [form] = Form.useForm<MainSection>();
 
     const handleAddSection = (values: MainSection) => {
-        sectionCourseStore.addMainSection(values)
-
-        setIsModalOpen(false);
-        message.success(`Раздел "${values.title}" добавлен!`);
+        sectionCourseStore.addMainSection(values).then(response => {
+            notification.success({message: response.message})
+        }).finally(() => {
+            setIsModalOpen(false);
+        })
     };
 
     useEffect(() => {
@@ -64,46 +65,56 @@ export const General = () => {
                     </Form>
                 </Modal>
 
-                <Form.Item
-                    name="parentSection"
-                    label="Выберите раздел"
-                    rules={[{ required: true, message: "Выберите раздел или добавьте новый!" }]}
-                >
-                    <Select
-                        placeholder="Выберите раздел..."
-                        dropdownRender={(menu) => (
-                            <>
-                                {menu}
-                                <div className="flex justify-between items-center p-2">
-                                    <Button
-                                        type="text"
-                                        icon={<PlusOutlined />}
-                                        onClick={() => setIsModalOpen(true)}
-                                        style={{ width: "100%" }}
-                                    >
-                                        Добавить новый раздел
-                                    </Button>
-                                </div>
-                            </>
-                        )}
-                    >
-                        {sectionCourseStore.mainSections.map((section) => (
-                            <Select.Option key={section.id} value={section.id}>
-                                {section.title}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
+                <Row gutter={16}>
+                    <Col xs={24} md={12}>
+                        <Form.Item
+                            name="parentSection"
+                            label="Выберите раздел"
+                            rules={[{ required: true, message: "Выберите раздел или добавьте новый!" }]}
+                        >
+                            <Select
 
-                <Form.Item
-                    name="name"
-                    label="Название раздела"
-                    rules={[{ required: true, message: "Введите название раздела!" },
-                        { max: 64, message: "Название раздела превышает допустимую длину 64" }
-                    ]}
-                >
-                    <Input placeholder="Введите название раздела..." />
-                </Form.Item>
+                                placeholder="Выберите раздел..."
+                                dropdownRender={(menu) => (
+                                    <>
+                                        {menu}
+                                        <div className="flex justify-between items-center p-2">
+                                            <Button
+                                                type="text"
+                                                icon={<PlusOutlined />}
+                                                onClick={() => setIsModalOpen(true)}
+                                                style={{ width: "100%" }}
+                                            >
+                                                Добавить новый раздел
+                                            </Button>
+                                        </div>
+                                    </>
+                                )}
+                                dropdownStyle={{ maxHeight: '300px', overflowY: 'auto' }}
+                            >
+                                {sectionCourseStore.mainSections.map((section) => (
+                                    <Select.Option key={section.id} value={section.id}>
+                                        {section.title}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+
+                    <Col xs={24} md={12}>
+                        <Form.Item
+                            name="name"
+                            label="Название раздела"
+                            rules={[
+                                { required: true, message: "Введите название раздела!" },
+                                { max: 64, message: "Название раздела превышает допустимую длину 64" }
+                            ]}
+                        >
+                            <Input placeholder="Введите название раздела..." />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
 
                 <Form.Item
                     name="description"
@@ -118,7 +129,7 @@ export const General = () => {
                     />
                 </Form.Item>
 
-                {generalSettingsStore.generalSettings?.allow_extra_materials && <>
+                {generalSettingsStore.loading ? <Spin/> : generalSettingsStore.generalSettings?.allow_extra_materials && <>
                     <Form.Item
                         name="uploadFile"
                         label="Дополнительные материалы"

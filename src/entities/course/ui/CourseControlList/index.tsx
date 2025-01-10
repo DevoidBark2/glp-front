@@ -1,4 +1,3 @@
-"use client"
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import {UserRole} from "@/shared/api/user/model";
 import { coursesTable } from "@/shared/config/tableConfig";
@@ -13,12 +12,10 @@ import Link from "next/link";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
-import { getCookieUserDetails } from "@/lib/users";
 import {UserHoverCard} from "@/widgets";
 import { isEditedCourse } from "../../selectors";
 
 export const CourseControlList = observer(() => {
-
     const { courseStore, userProfileStore } = useMobxStores()
     const router = useRouter();
     const [settings, setSettings] = useState<{
@@ -26,7 +23,6 @@ export const CourseControlList = observer(() => {
         table_size: SizeType,
         show_footer_table: boolean
     } | null>(null);
-    
     const [currentUser, setCurrentUser] = useState<any>(null);
 
     const publishCourse = (id: number) => courseStore.publishCourse(id)
@@ -163,7 +159,6 @@ export const CourseControlList = observer(() => {
         })
        
         courseStore.getCoursesForCreator()
-
     }, [])
     return (
         <Table

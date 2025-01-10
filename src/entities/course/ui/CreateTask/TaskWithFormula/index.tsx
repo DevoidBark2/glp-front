@@ -135,20 +135,20 @@ const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
           <Input placeholder="Введите ответ (например, число или формулу в формате MathLax)" />
         </Form.Item>
 
-        <Divider />
+        {/*<Divider />*/}
 
-        <Title level={4}>Предпросмотр задачи</Title>
-        <div style={{ marginBottom: "16px" }}>
-          <strong>Описание задачи:</strong>
-          <div>{parsedDescription}</div>
-        </div>
+        {/*<Title level={4}>Предпросмотр задачи</Title>*/}
+        {/*<div style={{ marginBottom: "16px" }}>*/}
+        {/*  <strong>Описание задачи:</strong>*/}
+        {/*  <div>{parsedDescription}</div>*/}
+        {/*</div>*/}
 
-        <Divider />
+        {/*<Divider />*/}
 
-        <div>
-          <strong>Формула:</strong>
-          <MathJax>{`\\(${formula}\\)`}</MathJax>
-        </div>
+        {/*<div>*/}
+        {/*  <strong>Формула:</strong>*/}
+        {/*  <MathJax>{`\\(${formula}\\)`}</MathJax>*/}
+        {/*</div>*/}
       </MathJaxContext>
   );
 };

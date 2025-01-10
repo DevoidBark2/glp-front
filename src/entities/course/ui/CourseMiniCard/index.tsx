@@ -1,7 +1,6 @@
 import { Course } from "@/shared/api/course/model"
-import { Badge, Button, Card, List, Tag } from "antd";
-import { ClockCircleOutlined, ExportOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import {Badge, Card, List, Tag, Tooltip} from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import { FormInstance } from "antd/lib";
@@ -13,7 +12,6 @@ interface CourseMiniCardProps {
 
 export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniCardProps) => {
     const { courseStore } = useMobxStores();
-    const router = useRouter();
 
     const handleSelectCourse = (course:Course) => {
         courseStore.setSelectedCourse(course.id)
@@ -39,15 +37,9 @@ export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniC
                 <Card
                     key={course.id}
                     title={<div className="flex justify-between">
-                        <p>{course.name}</p>
-                        <Button
-                            icon={<ExportOutlined />}
-                            title="Перейти к курсу"
-                            onClick={(event) => {
-                                event.preventDefault();
-                                router.push(`/control-panel/courses/${course.id}`)
-                            }}
-                        />
+                        <Tooltip title={course.name}>
+                            <p>{course.name}</p>
+                        </Tooltip>
                     </div>}
                     hoverable
                     onClick={() => handleSelectCourse(course)}
@@ -64,7 +56,7 @@ export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniC
                                 <p><ClockCircleOutlined /> {course.duration} ч.</p>
                                 <p>Категория: <br/> {course.category?.name ?? "Категория отсутствует"}</p>
                                 <p>Уровень: {renderLevelCourse(course.level)}</p>
-                                <p>Дата публикации: {new Date(course.publish_date).toLocaleDateString()}</p>
+                                <p>Дата публикации: {new Date(course.created_at).toLocaleDateString()}</p>
                             </div>
                         }
                         style={{ textAlign: 'left' }}
