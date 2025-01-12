@@ -9,7 +9,7 @@ type ChangeBlockUserDto = {
     userId: number;
     status: StatusUserEnum
 }
-export const getUserById = async (userId: number) => {
+export const getUserById = async (userId: string) => {
     const data = (await axiosInstance.get(`api/users/${userId}`)).data;
 
     return data.data;

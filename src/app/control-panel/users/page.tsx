@@ -16,8 +16,8 @@ import { useRouter } from "next/navigation";
 import { usersTable } from "@/shared/config";
 import { User } from "@/shared/api/user/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import {PageHeader} from "@/shared/ui/PageHeader";
-import {GroupActionComponent} from "@/widgets";
+import { PageHeader } from "@/shared/ui/PageHeader";
+import { GroupActionComponent } from "@/widgets";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
@@ -33,7 +33,8 @@ const UsersPage = () => {
             dataIndex: "first_name",
             title: "Полное имя",
             sorter: (a, b) => a.first_name.localeCompare(b.first_name),
-            render: (_, record) => `${record.first_name} ${record?.second_name} ${record?.last_name}`
+            render: (_, record) =>
+                `${record?.first_name || ''} ${record?.second_name || ''} ${record?.last_name || ''}`
         },
         {
             dataIndex: "role",

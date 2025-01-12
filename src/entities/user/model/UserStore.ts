@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { message } from "antd";
 import { StatusUserEnum, UserRole } from "@/shared/api/user/model";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
-import {searchUsers} from "@/shared/api/user";
+import { searchUsers } from "@/shared/api/user";
 
 export type User = {
     id: number;
@@ -41,7 +41,7 @@ class UserStore {
         this.setLoadingSearchUser(true)
 
         await searchUsers(this.searchUserText).then(response => {
-            this.allUsers = response.data.map(usersMapper);
+            this.allUsers = response.map(usersMapper);
         }).finally(() => {
             this.setLoadingSearchUser(false)
         })

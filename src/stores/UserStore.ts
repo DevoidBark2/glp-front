@@ -5,9 +5,9 @@ import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { message } from "antd";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
-import {getUserById, handleBlockUser, searchUsers, updateRole} from "@/shared/api/user";
+import { getUserById, handleBlockUser, searchUsers, updateRole } from "@/shared/api/user";
 import { UserProfile } from "./UserProfileStore";
-import {login, oauthByProvider, register} from "@/shared/api/auth";
+import { login, oauthByProvider, register } from "@/shared/api/auth";
 
 class UserStore {
     constructor() {
@@ -52,7 +52,7 @@ class UserStore {
         this.setLoadingSearchUser(true)
 
         await searchUsers(this.searchUserText).then(response => {
-            this.allUsers = response.data.map(usersMapper);
+            this.allUsers = response.map(usersMapper);
         }).finally(() => {
             this.setLoadingSearchUser(false)
         })
@@ -174,7 +174,7 @@ class UserStore {
         }
     })
 
-    getUserById = action(async (userId: number): Promise<User> => {
+    getUserById = action(async (userId: string): Promise<User> => {
         return await getUserById(userId);
     })
 

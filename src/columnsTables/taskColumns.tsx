@@ -12,7 +12,7 @@ import {
     UserOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import {CourseComponentType, CourseComponentTypeI} from "@/shared/api/course/model";
+import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import Link from "next/link";
 import { UserRole } from "@/shared/api/user/model";
@@ -100,7 +100,7 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, curr
                 <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
                     <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
                     <Link href={`/control-panel/users/${record.user.id}`} className="hover:text-blue-500">
-                        {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`}
+                        {`${record.user?.second_name ?? ''} ${record.user?.first_name ?? ''} ${record.user?.last_name ?? ''}`}
                     </Link>
                 </Popover>
             )

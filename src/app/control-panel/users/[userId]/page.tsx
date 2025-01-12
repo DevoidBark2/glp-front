@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Modal } from "antd";
 import nextConfig from "next.config.mjs";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
-import {PageContainerControlPanel} from "@/shared/ui";
+import { PageContainerControlPanel } from "@/shared/ui";
 import { Course } from "@/shared/api/course/model";
 import { Post } from "@/shared/api/posts/model";
 import { showUserStatus } from "@/utils/showUserStatus";
@@ -31,7 +31,7 @@ const UserDetailsPage = () => {
 
     useEffect(() => {
         if (userId) {
-            userStore.getUserById(Number(userId))
+            userStore.getUserById(String(userId))
                 .then(setUser)
                 .catch((e) => {
                     notification.error({ message: e.response.data.message });
@@ -236,7 +236,7 @@ const UserDetailsPage = () => {
 
             <Breadcrumb items={[
                 { title: <Link href="/control-panel/users">Пользователи</Link> },
-                { title: `${user?.second_name} ${user?.first_name} ${user?.last_name}` || "Пользователь" },
+                { title: `${user?.second_name || ''} ${user?.first_name || ''} ${user?.last_name || ''}` },
             ]} />
             <Title level={2} className="text-center my-5">Информация о пользователе</Title>
 
