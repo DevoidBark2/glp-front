@@ -10,6 +10,7 @@ import {
     getSectionCourseById
 } from "@/shared/api/section";
 import {User} from "@/shared/api/user/model";
+import dayjs from "dayjs";
 
 export type SectionCourseItem = {
     id: number;
@@ -97,7 +98,7 @@ const sectionMapper = (section: SectionCourseItem) => {
         course: section.course,
         uploadFile: section.uploadFile,
         components: section.components,
-        created_at: section.created_at,
+        created_at: dayjs(section.created_at).toDate(),
         status: section.status,
         user: section.user,
     }

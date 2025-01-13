@@ -1,10 +1,9 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-import { DELETE, GET, POST, PUT } from "@/lib/fetcher";
+import { DELETE, GET, PUT } from "@/lib/fetcher";
 import { notification } from "antd"
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
-import {createPost, publishPost} from "@/shared/api/posts";
+import {createPost, getCPAllPost, publishPost} from "@/shared/api/posts";
 import { User } from "@/shared/api/user/model";
 
 
@@ -55,12 +54,15 @@ class PostStore {
     })
 
     getUserPosts = action(async () => {
-        this.setLoading(true);
-        await GET(`/api/posts-user`).then(response => {
-            this.userPosts = response.data.map(postMapper)
-        }).catch(e => { }).finally(() => {
-            this.setLoading(false);
-        })
+        try {
+            this.setLoading(true);
+            const data = await getCPAllPost();
+            this.userPosts = data.map(postMapper);
+        } catch (e) {
+
+        } finally {
+            this.setLoading(false)
+        }
     })
 
     createPost = action(async (values: PostCreateForm) => {
@@ -157,7 +159,7 @@ export const postMapper = (post: Post) => {
         content: post.content,
         status: post.status,
         is_publish: post.is_publish,
-        created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
+        created_at: dayjs(post.created_at).toDate(),
         user: post.user,
         moderatorFeedBack: post.moderatorFeedBack
     };

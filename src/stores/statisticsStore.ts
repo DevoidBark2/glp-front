@@ -44,7 +44,7 @@ class StatisticsStore {
     getAllStatisticsData = action(async () => {
         this.setLoadingStatisticsData(true)
         await getStatistics().then(response => {
-            this.statisticsData = response.response.data as StatisticsData;
+            this.statisticsData = response as StatisticsData;
         }).catch(e => { }).finally(() => {
             this.setLoadingStatisticsData(false)
         });

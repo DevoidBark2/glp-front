@@ -1,15 +1,11 @@
 "use client"
-import { Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, Radio, Slider, InputNumber, TimePicker } from "antd";
+import { Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, InputNumber } from "antd";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/stores/stores";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import Image from "next/image"
 import nextConfig from "next.config.mjs";
-import InputMask from 'react-input-mask';
 import { GeneralSettingTooltips } from "@/shared/constants";
 
 const SettingsControlPage = () => {
@@ -20,15 +16,14 @@ const SettingsControlPage = () => {
     const [formForCourseManagement] = Form.useForm()
     const [formForSec] = Form.useForm()
     const [uploadedLogo, setUploadedLogo] = useState<string | null>(null)
-    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         generalSettingsStore.getGeneralSettings().then((response) => {
-            formForSec.setFieldsValue(response.data[0])
-            formForGeneral.setFieldsValue(response.data[0])
-            setUploadedLogo(response.data[0].logo_url ? `${nextConfig.env?.API_URL}${response.data[0].logo_url}` : null)
-            formForUserManagement.setFieldsValue(response.data[0])
-            formForCourseManagement.setFieldsValue(response.data[0])
+            formForSec.setFieldsValue(response[0])
+            formForGeneral.setFieldsValue(response[0])
+            setUploadedLogo(response[0].logo_url ? `${nextConfig.env?.API_URL}${response[0].logo_url}` : null)
+            formForUserManagement.setFieldsValue(response[0])
+            formForCourseManagement.setFieldsValue(response[0])
         }).finally(() => {
             generalSettingsStore.setLoading(false)
         });
@@ -333,33 +328,33 @@ const SettingsControlPage = () => {
                             </Form>
                         </TabPane>
 
-                        <TabPane tab="Управление модераторами" key="6">
-                            <Form
-                                layout="vertical"
-                                form={formForUserManagement}
-                                onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}
-                            >
-                                <Form.Item name="id" hidden></Form.Item>
-                                <Form.Item
-                                    name="moderationAccess"
-                                    label="Права доступа модераторов"
-                                    tooltip="Настройте права доступа модераторов к разным типам контента."
-                                >
-                                    <Checkbox.Group
-                                        options={[
-                                            { label: 'Модерация постов', value: 'moderate_posts' },
-                                            { label: 'Модерация курсов', value: 'moderate_courses' },
-                                            { label: 'Редактирование комментариев', value: 'edit_comments' },
-                                            { label: 'Блокировка пользователей', value: 'block_users' },
-                                        ]}
-                                    />
-                                </Form.Item>
+                        {/*<TabPane tab="Управление модераторами" key="6">*/}
+                        {/*    <Form*/}
+                        {/*        layout="vertical"*/}
+                        {/*        form={formForUserManagement}*/}
+                        {/*        onFinish={(values) => generalSettingsStore.saveGeneralSetting(values)}*/}
+                        {/*    >*/}
+                        {/*        <Form.Item name="id" hidden></Form.Item>*/}
+                        {/*        <Form.Item*/}
+                        {/*            name="moderationAccess"*/}
+                        {/*            label="Права доступа модераторов"*/}
+                        {/*            tooltip="Настройте права доступа модераторов к разным типам контента."*/}
+                        {/*        >*/}
+                        {/*            <Checkbox.Group*/}
+                        {/*                options={[*/}
+                        {/*                    { label: 'Модерация постов', value: 'moderate_posts' },*/}
+                        {/*                    { label: 'Модерация курсов', value: 'moderate_courses' },*/}
+                        {/*                    { label: 'Редактирование комментариев', value: 'edit_comments' },*/}
+                        {/*                    { label: 'Блокировка пользователей', value: 'block_users' },*/}
+                        {/*                ]}*/}
+                        {/*            />*/}
+                        {/*        </Form.Item>*/}
 
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit">Сохранить изменения</Button>
-                                </Form.Item>
-                            </Form>
-                        </TabPane>
+                        {/*        <Form.Item>*/}
+                        {/*            <Button type="primary" htmlType="submit">Сохранить изменения</Button>*/}
+                        {/*        </Form.Item>*/}
+                        {/*    </Form>*/}
+                        {/*</TabPane>*/}
 
                     </Tabs>
                 }

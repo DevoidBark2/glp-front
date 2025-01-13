@@ -65,10 +65,11 @@ export const Header = observer(() => {
                     <div
                         className="flex items-center"
                         onClick={() => {
-                            userStore.logout();
-                            setCurrentUser(null);
-                            setItems([]);
-                            router.push('/platform')
+                            userStore.logout().then(() => {
+                                setCurrentUser(null);
+                                setItems([]);
+                                router.push('/platform')
+                            });
                         }}
                     >
                         <Image src="/static/logout_icon.svg" alt="Выйти из аккаунта" width={20} height={20} />

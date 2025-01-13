@@ -1,7 +1,7 @@
 "use client"
 import {PageContainerControlPanel} from "@/shared/ui";
 import { observer } from "mobx-react";
-import { Breadcrumb, Button, Divider, Form, Input, notification, UploadProps } from "antd";
+import {Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, UploadProps} from "antd";
 import dynamic from "next/dynamic";
 import { InboxOutlined } from "@ant-design/icons";
 
@@ -68,27 +68,32 @@ const CreatePostPage = () => {
                 })}
                 initialValues={{ status: PostStatusEnum.NEW }}
             >
-                <Form.Item
-                    name="name"
-                    label="Заголовок"
-                    rules={[
-                        { required: true, message: 'Введите заголовок поста!' },
-                        { max: 100, message: 'Заголовок не должен превышать 100 символов!' }
-                    ]}
-                >
-                    <Input placeholder="Введите название поста" maxLength={100} />
-                </Form.Item>
+                <Row gutter={24}>
+                    <Col span={12}>
+                     <Form.Item
+                         name="name"
+                         label="Заголовок"
+                         rules={[
+                             { required: true, message: 'Введите заголовок поста!' },
+                             { max: 100, message: 'Заголовок не должен превышать 100 символов!' }
+                         ]}
+                     >
+                         <Input placeholder="Введите название поста" maxLength={100} />
+                     </Form.Item>
+                 </Col>
 
-                <Form.Item
-                    name="description"
-                    label="Описание"
-                    rules={[
-                        { max: 255, message: 'Описание не должно превышать 255 символов!' }
-                    ]}
-                >
-                    <Input placeholder="Введите описание поста" maxLength={255} />
-                </Form.Item>
-
+                    <Col span={12}>
+                        <Form.Item
+                            name="description"
+                            label="Описание"
+                            rules={[
+                                { max: 255, message: 'Описание не должно превышать 255 символов!' }
+                            ]}
+                        >
+                            <Input placeholder="Введите описание поста" maxLength={255} />
+                        </Form.Item>
+                    </Col>
+                </Row>
 
                 <Form.Item
                     name="image"
@@ -100,7 +105,7 @@ const CreatePostPage = () => {
                         </p>
                         <p className="ant-upload-text">Нажмите или перетащите файл в эту область для загрузки</p>
                         <p className="ant-upload-hint">
-                            Поддержка одиночной или массовой загрузки. Запрещено загружать конфиденциальные данные.
+                            Запрещено загружать конфиденциальные данные.
                         </p>
                     </Dragger>
                 </Form.Item>

@@ -21,9 +21,7 @@ export class GeneralSettings {
     getGeneralSettings = action(async () => {
        try {
            this.setLoading(true);
-           return await getGeneralSettings().then(response => {
-               this.setGeneralSetting(response.data[0])
-           })
+           return await getGeneralSettings()
        }finally {
            this.setLoading(false);
        }
@@ -40,7 +38,7 @@ export class GeneralSettings {
             formData.append(key, value);
         })
         await changeGeneralSettings(formData).then(response => {
-            notification.success({ message: response.data.message });
+            notification.success({ message: response.message });
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         });

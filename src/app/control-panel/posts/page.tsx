@@ -5,7 +5,6 @@ import {
     Tooltip,
 } from "antd";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/shared/store/RootStore";
 import React, { useEffect, useState } from "react";
 import { ModeratorFeedback, Post } from "@/stores/PostStore";
 import {
@@ -15,16 +14,16 @@ import {
 } from "@ant-design/icons";
 
 import {PageHeader} from "@/shared/ui/PageHeader";
-import { getCookieUserDetails } from "@/lib/users";
 import { getPostColumns } from "@/columnsTables/postColumns";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { postTable } from "@/shared/config";
 import { PostStatusEnum } from "@/shared/api/posts/model";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { useRouter } from "next/navigation";
+import {useMobxStores} from "@/stores/stores";
 
 const PostPage = () => {
-    const { postStore } = useMobxStores();
+    const { postStore, userProfileStore } = useMobxStores();
     const [currentUser, setCurrentUser] = useState(null);
     const router = useRouter();
 
@@ -123,8 +122,9 @@ const PostPage = () => {
 
 
     useEffect(() => {
-        const user = getCookieUserDetails();
-        setCurrentUser(user);
+        userProfileStore.getUserProfile().then(response => {
+            setCurrentUser(response)
+        })
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
         postStore.getUserPosts();
@@ -141,6 +141,8 @@ const PostPage = () => {
             <Table
                 rowKey={(record) => record.id}
                 size={(settings && settings.table_size) ?? "middle"}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 loading={postStore.loading}
                 dataSource={postStore.userPosts}
                 columns={getPostColumns({
@@ -152,8 +154,6 @@ const PostPage = () => {
                     deletePost: postStore.deletePost,
                     handleChangePost: handelChangePost
                 })}
-                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
-                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 locale={postTable()}
             />
         </PageContainerControlPanel>

@@ -40,3 +40,10 @@ export const resetPassword = async (email: string) => {
 export const changePassword = withAuth(async (values: ChangePasswordType, config = {}) => {
     return (await axiosInstance.post('/api/change-password',values,config)).data;
 })
+
+
+export const logoutUser = async () => {
+    const data = (await axiosInstance.post('/api/logout')).data
+
+    return data.data;
+}

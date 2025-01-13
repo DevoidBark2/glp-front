@@ -1,13 +1,10 @@
 import { action, makeAutoObservable } from "mobx"
 import { DELETE, GET, POST } from "@/lib/fetcher";
-import { delete_cookie, getUserToken, signInUser } from "@/lib/users";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
-import { message } from "antd";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { getUserById, handleBlockUser, searchUsers, updateRole } from "@/shared/api/user";
 import { UserProfile } from "./UserProfileStore";
-import { login, oauthByProvider, register } from "@/shared/api/auth";
+import {login, logoutUser, oauthByProvider, register} from "@/shared/api/auth";
 
 class UserStore {
     constructor() {
@@ -122,19 +119,11 @@ class UserStore {
         return await register(values).finally(() => {
             this.setLoading(false)
         });
-        // return await POST("/api/register", { reqBody: values }).then(response => {
-        //     return response
-        // }).finally(() => {
-        //     this.setLoading(false)
-        // })
     })
 
     logout = action(async () => {
-        delete_cookie();
-    })
-
-    sendEmailForgotPassword = action(async (values: any) => {
-
+        // delete_cookie();
+        return await logoutUser();
     })
 
     setAllUsers = action((values: User[]) => {
@@ -196,7 +185,7 @@ const usersMapper = (value: User) => {
         phone: value.phone,
         role: value.role,
         email: value.email,
-        created_at: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
+        created_at: dayjs(value.created_at).toDate(),
         about_me: value.about_me,
         birth_day: value.birth_day,
         courses: value.courses,

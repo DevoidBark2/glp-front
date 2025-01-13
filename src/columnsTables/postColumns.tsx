@@ -60,7 +60,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             title: "Опубликован",
             dataIndex: "is_publish",
             render: (_, record) => {
-                const isSuperAdmin = currentUser?.user.role === UserRole.SUPER_ADMIN;
+                const isSuperAdmin = currentUser?.role === UserRole.SUPER_ADMIN;
                 const isUnderReview = record.status !== PostStatusEnum.APPROVED;
                 const isDisabled =
                     (isSuperAdmin && isUnderReview) || // Суперадмин и статус "В проверке"
@@ -85,11 +85,10 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
                 );
             },
         },
-
         {
             title: "Создатель",
             dataIndex: "user",
-            hidden: currentUser?.user.role !== UserRole.SUPER_ADMIN,
+            hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => {
                 return record.user.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
@@ -115,7 +114,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             align: 'center',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    {(currentUser && currentUser.user.role !== UserRole.SUPER_ADMIN) && <Tooltip title="Отправить на проверку">
+                    {(currentUser && currentUser.role !== UserRole.SUPER_ADMIN) && <Tooltip title="Отправить на проверку">
                         <Button
                             type="default"
                             disabled={record.status === PostStatusEnum.IN_PROCESSING || record.status === PostStatusEnum.APPROVED}
