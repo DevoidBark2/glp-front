@@ -19,6 +19,7 @@ import {
   Checkbox,
 } from "antd";
 import {
+  CameraOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
@@ -29,7 +30,7 @@ import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
 import { UserRole } from "@/shared/api/user/model";
-import {PageContainerControlPanel} from "@/shared/ui";
+import { PageContainerControlPanel } from "@/shared/ui";
 
 const ProfilePage = () => {
   const { userProfileStore } = useMobxStores();
@@ -110,7 +111,7 @@ const ProfilePage = () => {
               ) : null}
               <Avatar
                 size={100}
-                src={userProfileStore.userProfile?.image || undefined}
+                src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile?.image}` || undefined}
                 icon={!userProfileStore.userProfile?.image && <UserOutlined />}
                 className="cursor-pointer"
                 style={{
@@ -118,6 +119,15 @@ const ProfilePage = () => {
                   transition: 'opacity 0.3s ease',
                 }}
               />
+
+              <div
+                className="absolute bottom-5 right-5 bg-white rounded-full shadow-lg p-2 flex items-center justify-center"
+                style={{
+                  transform: 'translate(50%, 50%)',
+                }}
+              >
+                <CameraOutlined style={{ fontSize: 18, color: '#595959' }} />
+              </div>
             </div>
           </Upload>
           <div className="ml-6">

@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import {Divider, Menu, MenuProps, Skeleton, Spin} from "antd";
+import { Avatar, Divider, Menu, MenuProps, Skeleton } from "antd";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { usePathname } from "next/navigation";
@@ -8,13 +8,12 @@ import {
     AppstoreOutlined,
     BarsOutlined,
     BookOutlined, LogoutOutlined,
-SettingOutlined,
+    SettingOutlined,
     SolutionOutlined,
     ToolOutlined, UserOutlined
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { UserRole } from "@/shared/api/user/model";
-import Image from "next/image";
 import nextConfig from "../../../next.config.mjs";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
@@ -177,7 +176,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
             if (response.role === UserRole.SUPER_ADMIN) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
             }
-    
+
             if (userProfileStore.userProfile?.role === UserRole.TEACHER) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                     menuItem?.key !== "moderators_items"
@@ -188,7 +187,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                     && menuItem?.key !== "general"
                 )
             }
-    
+
             if (userProfileStore.userProfile?.role === UserRole.MODERATOR) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                     menuItem?.key !== "settings"
@@ -203,7 +202,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
             }
         })
 
-       
+
         setLoading(false)
     }, [])
 
@@ -214,23 +213,22 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                     <div className="flex flex-col items-center justify-center mb-2">
                         <div className="relative mb-4 flex items-center justify-center">
                             <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg bg-gray-200">
-                                {userProfileStore.userProfile?.image ? (
-                                    <Image
-                                        src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile.image}`}
-                                        alt="User Profile"
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-full"
-                                    />
-                                ) : <div className="flex items-center justify-center h-full">
-                                    <Spin/>
-                                </div>}
+                                <Avatar
+                                    size={100}
+                                    src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile?.image}`}
+                                    icon={!userProfileStore.userProfile?.image && <UserOutlined />}
+                                    className="cursor-pointer"
+                                    style={{
+                                        opacity: loading ? 0.5 : 1,
+                                        transition: 'opacity 0.3s ease',
+                                    }}
+                                />
                             </div>
                         </div>
 
 
                         <Skeleton loading={loading} active>
-                            <div className="flex flex-col items-center justify-center" style={{width: 250}}>
+                            <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
                                 <h1 className="text-lg font-bold mb-1 text-center">{`${userProfileStore.userProfile?.second_name ?? ''} ${userProfileStore.userProfile?.first_name ?? ''} ${userProfileStore.userProfile?.last_name ?? ''}`}</h1>
                                 <div className="flex items-center gap-2 mb-4">
                                     <span className="text-gray-300 text-sm">{userProfileStore.userProfile?.role}</span>
@@ -240,11 +238,11 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                         </Skeleton>
                     </div>
 
-                    <Divider className="bg-gray-600 dark:bg-white"/>
+                    <Divider className="bg-gray-600 dark:bg-white" />
                     {
                         !loading ? (
                             <Menu
-                                style={{width: 240}}
+                                style={{ width: 240 }}
                                 defaultSelectedKeys={[selectedKey]}
                                 mode="vertical"
                                 items={dashboardMenuItems}
@@ -253,7 +251,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                         ) : (
                             <>
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
-                                    <Skeleton.Input key={it} active block style={{width: 250, marginTop: 10}}/>
+                                    <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
                                 ))}
                             </>
                         )

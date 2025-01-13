@@ -1,9 +1,9 @@
 import { Avatar, message, notification, Spin, Upload } from "antd";
-import {CameraOutlined,UserOutlined} from "@ant-design/icons";
+import { CameraOutlined, UserOutlined } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import "react-phone-input-2/lib/bootstrap.css";
-import {ProfileForm} from "@/entities/user-profile/ui/ProfileForm";
+import { ProfileForm } from "@/entities/user-profile/ui/ProfileForm";
 import nextConfig from "../../../next.config.mjs";
 
 export const UserProfileBlock = observer(() => {
@@ -46,8 +46,8 @@ export const UserProfileBlock = observer(() => {
                         ) : null}
                         <Avatar
                             size={130}
-                            src={userProfileStore.userAvatar || undefined}
-                            icon={!userProfileStore.userAvatar && <UserOutlined/>}
+                            src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile?.image}` || undefined}
+                            icon={!userProfileStore.userAvatar && <UserOutlined />}
                             className="cursor-pointer"
                             style={{
                                 opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1,
@@ -61,13 +61,13 @@ export const UserProfileBlock = observer(() => {
                                 transform: 'translate(50%, 50%)',
                             }}
                         >
-                            <CameraOutlined style={{fontSize: 18, color: '#595959'}}/>
+                            <CameraOutlined style={{ fontSize: 18, color: '#595959' }} />
                         </div>
                     </div>
                 </Upload>
             </div>
 
-            <ProfileForm/>
+            <ProfileForm />
         </div>
     )
 })

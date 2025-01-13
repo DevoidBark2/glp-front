@@ -1,11 +1,10 @@
-import { PUT } from "@/lib/fetcher";
 import { confirmLeaveCourse } from "@/shared/api/course";
 import { Course } from "@/shared/api/course/model";
-import {getUserProfile, updateProfile, uploadProfileAvatar} from "@/shared/api/user";
+import { getUserProfile, updateProfile, uploadProfileAvatar } from "@/shared/api/user";
 import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 import nextConfig from "next.config.mjs";
-import {UserRole} from "@/shared/api/user/model";
+import { UserRole } from "@/shared/api/user/model";
 
 export type UserProfile = {
     first_name: string
@@ -53,7 +52,7 @@ class UserProfileStore {
         this.fileListForFeedback = files;
     });
 
-    setUserProfile = action((value: UserProfile) => {
+    setUserProfile = action((value: UserProfile | null) => {
         this.userProfile = value;
     })
 
