@@ -4,6 +4,7 @@ import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import "react-phone-input-2/lib/bootstrap.css";
 import {ProfileForm} from "@/entities/user-profile/ui/ProfileForm";
+import nextConfig from "../../../next.config.mjs";
 
 export const UserProfileBlock = observer(() => {
     const { userProfileStore } = useMobxStores();
@@ -12,7 +13,7 @@ export const UserProfileBlock = observer(() => {
         userProfileStore.setUploadingProfileImage(true);
         try {
             const response = await userProfileStore.uploadAvatar(file);
-            userProfileStore.setUserAvatar(response.data);
+            userProfileStore.setUserAvatar(`${nextConfig.env?.API_URL}${response.data}`);
             notification.success({ message: response.message });
         } catch (error) {
             message.error('Ошибка загрузки аватара');

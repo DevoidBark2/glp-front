@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   Divider,
@@ -26,14 +26,9 @@ import { UserRole } from "@/shared/api/user/model";
 
 const ControlPanel = () => {
   const { statisticsStore, userProfileStore } = useMobxStores();
-  const [currentUser, setCurrentUser] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
-    userProfileStore.getUserProfile().then(response => {
-      setCurrentUser(response)
-    })
-
     statisticsStore.getAllStatisticsData();
   }, [])
 
@@ -43,22 +38,22 @@ const ControlPanel = () => {
             className="flex flex-col items-center justify-center p-6 bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 rounded-xl shadow-lg">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-white">
-              Добро пожаловать{`, ${currentUser?.first_name ?? ''}`}!
+              Добро пожаловать{`, ${userProfileStore.userProfile?.first_name ?? ''}`}!
             </h1>
             <p className="text-lg text-gray-100 mt-2">
               Вы вошли
-              как {currentUser?.role === UserRole.MODERATOR ? 'Модератор' : currentUser?.role === UserRole.TEACHER ? 'Учитель' : 'Администратор'}.
+              как {userProfileStore.userProfile?.role === UserRole.MODERATOR ? 'Модератор' : userProfileStore.userProfile?.role === UserRole.TEACHER ? 'Учитель' : 'Администратор'}.
             </p>
           </div>
         </div>
         <Divider/>
         <Typography.Title className="text-gray-800">
-          {currentUser && (currentUser?.role === UserRole.MODERATOR ? "Панель модератора" : currentUser?.role === UserRole.TEACHER ? "Панель Учителя" : "Админ-панель")}
+          {userProfileStore.userProfile && (userProfileStore.userProfile?.role === UserRole.MODERATOR ? "Панель модератора" : userProfileStore.userProfile?.role === UserRole.TEACHER ? "Панель Учителя" : "Админ-панель")}
         </Typography.Title>
 
         <Row gutter={16}>
           {
-              currentUser?.role === UserRole.SUPER_ADMIN && <Col span={8}>
+              userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN && <Col span={8}>
                 <Card title="Активные пользователи" extra={
                   <Tooltip title="Перейти к пользователям">
                     <UnorderedListOutlined onClick={() => router.push('/control-panel/users')}/>
@@ -74,7 +69,7 @@ const ControlPanel = () => {
               </Col>
           }
           {
-              (currentUser?.role === UserRole.SUPER_ADMIN || currentUser?.role === UserRole.TEACHER) && <Col span={8}>
+              (userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN || userProfileStore.userProfile?.role === UserRole.TEACHER) && <Col span={8}>
                 <Card title="Всего постов" extra={
                   <Tooltip title="Перейти к постам">
                     <UnorderedListOutlined onClick={() => router.push('/control-panel/posts')}/>
@@ -91,7 +86,7 @@ const ControlPanel = () => {
                 </Card>
               </Col>
           }
-          {(currentUser?.role === UserRole.SUPER_ADMIN || currentUser?.role === UserRole.TEACHER) && <Col span={8}>
+          {(userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN || userProfileStore.userProfile?.role === UserRole.TEACHER) && <Col span={8}>
             <Card title="Всего курсов" extra={
               <Tooltip title="Перейти к курсам">
                 <UnorderedListOutlined onClick={() => router.push('/control-panel/courses')}/>
@@ -110,10 +105,10 @@ const ControlPanel = () => {
         </Row>
 
         {
-            (currentUser?.role === UserRole.SUPER_ADMIN || currentUser?.role === UserRole.TEACHER) && <Divider/>
+            (userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN || userProfileStore.userProfile?.role === UserRole.TEACHER) && <Divider/>
         }
         <Row gutter={16}>
-          {currentUser?.role !== UserRole.MODERATOR && <Col span={12}>
+          {userProfileStore.userProfile?.role !== UserRole.MODERATOR && <Col span={12}>
             <Card title="Статистика курсов">
               <div className="flex justify-between">
                 <Skeleton active loading={statisticsStore.loadingStatisticsData}>
@@ -175,7 +170,7 @@ const ControlPanel = () => {
             </Card>
           </Col>}
 
-          {currentUser?.role !== UserRole.MODERATOR && <Col span={12}>
+          {userProfileStore.userProfile?.role !== UserRole.MODERATOR && <Col span={12}>
             <Card title="Статистика постов">
               <div className="flex justify-between">
                 <Skeleton active loading={statisticsStore.loadingStatisticsData}>
@@ -237,7 +232,7 @@ const ControlPanel = () => {
             </Card>
           </Col>}
 
-          {currentUser?.role === UserRole.MODERATOR && (
+          {userProfileStore.userProfile?.role === UserRole.MODERATOR && (
               <Col span={12}>
                 <Card title="Статистика курсов">
                   <div className="flex justify-between space-x-4">

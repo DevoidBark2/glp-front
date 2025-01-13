@@ -23,7 +23,6 @@ export const CourseControlList = observer(() => {
         table_size: SizeType,
         show_footer_table: boolean
     } | null>(null);
-    const [currentUser, setCurrentUser] = useState<any>(null);
 
     const publishCourse = (id: number) => courseStore.publishCourse(id)
 
@@ -81,7 +80,7 @@ export const CourseControlList = observer(() => {
         {
             title: "Создатель",
             dataIndex: "user",
-            hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
+            hidden: userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => (
                 record.user?.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
@@ -106,7 +105,7 @@ export const CourseControlList = observer(() => {
             align: 'start',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    {currentUser?.role !== UserRole.SUPER_ADMIN && <Tooltip title={
+                    {userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN && <Tooltip title={
                         !isEditedCourse(record)
                             ? "Опубликовать курс"
                             : "В данный момент курс не может быть опубликован, попробуйте позже"
@@ -118,11 +117,11 @@ export const CourseControlList = observer(() => {
                             icon={<UploadOutlined />}
                         />
                     </Tooltip>}
-                    <Tooltip title={isEditedCourse(record) && currentUser?.role !== UserRole.SUPER_ADMIN  ? "В данный момент курс нельзя изменить, попробуйте позже" : "Редактировать курс"}>
+                    <Tooltip title={isEditedCourse(record) && userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN  ? "В данный момент курс нельзя изменить, попробуйте позже" : "Редактировать курс"}>
                         <Button
                             type="default"
                             shape="circle"
-                            disabled={isEditedCourse(record) && currentUser?.role !== UserRole.SUPER_ADMIN}
+                            disabled={isEditedCourse(record) && userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN}
                             onClick={() => forwardCourse(record.id)}
                             icon={<EditOutlined />}
                         />
@@ -138,7 +137,7 @@ export const CourseControlList = observer(() => {
                         >
                             <Button
                                 danger
-                                disabled={isEditedCourse(record) && currentUser?.role !== UserRole.SUPER_ADMIN}
+                                disabled={isEditedCourse(record) && userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN}
                                 type="primary"
                                 icon={<DeleteOutlined />}
                             />
@@ -153,10 +152,6 @@ export const CourseControlList = observer(() => {
     useEffect(() => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
-
-        userProfileStore.getUserProfile().then(response => {
-            setCurrentUser(response);
-        })
        
         courseStore.getCoursesForCreator()
     }, [])

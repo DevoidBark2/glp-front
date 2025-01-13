@@ -15,7 +15,6 @@ import {
   Tabs,
   notification,
   TabsProps,
-  Tooltip,
   DatePicker,
   Checkbox,
 } from "antd";
@@ -24,7 +23,6 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useMobxStores } from "@/stores/stores";
-import { getCookieUserDetails } from "@/lib/users";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import nextConfig from "next.config.mjs";
@@ -34,14 +32,11 @@ import { UserRole } from "@/shared/api/user/model";
 import {PageContainerControlPanel} from "@/shared/ui";
 
 const ProfilePage = () => {
+  const { userProfileStore } = useMobxStores();
   const [formProfile] = Form.useForm();
   const [formSettings] = Form.useForm();
   const [avatar, setAvatar] = useState<string | null>(null);
-  const { userProfileStore } = useMobxStores();
-  const [currentRole, setCurrentRole] = useState<UserRole | null>(null);
-
   const [showFooterOptions, setShowFooterOptions] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const handleAvatarUpload = async (file: File) => {
@@ -59,7 +54,6 @@ const ProfilePage = () => {
 
   useEffect(() => {
     userProfileStore.getUserProfile().then((response) => {
-      setCurrentRole(response.role)
       setAvatar(response.image ? `${nextConfig.env?.API_URL}${response.image}` : null);
 
       if (response.birth_day) {
@@ -116,8 +110,8 @@ const ProfilePage = () => {
               ) : null}
               <Avatar
                 size={100}
-                src={avatar || undefined}
-                icon={!avatar && <UserOutlined />}
+                src={userProfileStore.userProfile?.image || undefined}
+                icon={!userProfileStore.userProfile?.image && <UserOutlined />}
                 className="cursor-pointer"
                 style={{
                   opacity: loading ? 0.5 : 1,
@@ -128,7 +122,7 @@ const ProfilePage = () => {
           </Upload>
           <div className="ml-6">
             <h2 className="text-2xl font-bold text-gray-800">
-              {profileTitle(currentRole!)}
+              {profileTitle(userProfileStore.userProfile?.role!)}
             </h2>
             <p className="text-gray-600">
               Здесь вы можете обновить ваши личные данные и настройки.

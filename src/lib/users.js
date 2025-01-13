@@ -25,12 +25,6 @@ export const delete_cookie = () => {
         document.cookie = `${COOKIE_NAME}=; Max-Age=-99999999; path=/`;
     }
 };
-
-export const setActiveUser = (value) => {
-    if (typeof window !== "undefined") {
-        set_cookie("isActiveUser", JSON.stringify(value));
-    }
-}
 export const signInUser = (data) => {
     if (typeof window !== "undefined") {
         window[WINDOW_USER_SCRIPT_VARIABLE] = data;
@@ -43,30 +37,6 @@ export const signInUser = (data) => {
     return data;
 };
 
-export const setAdminUser = (value) => {
-    if (typeof window !== "undefined") {
-        set_cookie("admin_auth", value);
-    }
-}
-export const deleteAuthAdmin = () => {
-    cookieCutter.set("admin_auth", "", { expires: new Date(0) });
-}
-export const isAdminUser = () => {
-    if(!isServer){
-        const user = cookieCutter.get("admin_auth");
-
-        if (user) {
-            const userValues = JSON.parse(user);
-
-            if (userValues) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-}
-
 export const getCookieUserDetails = () => {
     if(!isServer){
         const user = cookieCutter.get(COOKIE_NAME);
@@ -77,37 +47,6 @@ export const getCookieUserDetails = () => {
 
         return null;
     }
-}
-export const getUserRole = () => {
-    if(!isServer){
-        const user = cookieCutter.get(COOKIE_NAME);
-
-        if (user) {
-            const userValues = JSON.parse(user);
-            if (userValues.user && userValues.user.email) {
-                return {role: userValues.user.role};
-            }
-        }
-
-        return null;
-    }
-    return null;
-}
-
-export const getUserFIO = () => {
-    if(!isServer){
-        const user = cookieCutter.get(COOKIE_NAME);
-
-        if (user) {
-            const userValues = JSON.parse(user);
-            if (userValues.user && userValues.user.user_name) {
-                return userValues.user.user_name;
-            }
-        }
-
-        return null;
-    }
-    return null;
 }
 
 export const getUserToken = () => {

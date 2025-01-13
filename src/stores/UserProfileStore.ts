@@ -1,10 +1,11 @@
-import { GET, POST, PUT } from "@/lib/fetcher";
+import { PUT } from "@/lib/fetcher";
 import { confirmLeaveCourse } from "@/shared/api/course";
 import { Course } from "@/shared/api/course/model";
-import { getUserProfile } from "@/shared/api/user";
+import {getUserProfile, updateProfile, uploadProfileAvatar} from "@/shared/api/user";
 import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 import nextConfig from "next.config.mjs";
+import {UserRole} from "@/shared/api/user/model";
 
 export type UserProfile = {
     first_name: string
@@ -13,6 +14,7 @@ export type UserProfile = {
     phone: string
     email: string;
     birth_day: Date
+    role: UserRole;
     city: string;
     about_me: string;
     image: string;
@@ -69,7 +71,6 @@ class UserProfileStore {
 
     getUserProfile = action(async () => {
         this.setLoading(true);
-
         const response = await getUserProfile();
         this.setUserProfileCourses(response.userCourses);
         this.setUserAvatar(response.image);
@@ -77,27 +78,26 @@ class UserProfileStore {
         return response;
     });
 
-
-    logout = action( async () => {
-
-    })
-
     updateProfile = action(async (values: UserProfile) => {
         window.localStorage.setItem('user_settings', JSON.stringify(values))
         this.setSaveProfile(true)
-        await PUT('/api/profile', values).then(response => {
+        await updateProfile(values).then(response => {
             notification.success({ message: response.message })
+            const updatedProfile = { ...this.userProfile, ...values };
+            this.setUserProfile(updatedProfile);
         }).catch(e => {
         }).finally(() => {
             this.setSaveProfile(false)
-            this.setUserProfile(values);
         })
     })
 
     uploadAvatar = action(async (file: File) => {
         const form = new FormData();
         form.append('logo_avatar', file)
-        return await PUT('/api/upload-avatar', form);
+        const data = await uploadProfileAvatar(form);
+        const updatedProfile = { ...this.userProfile, image: data.data };
+        this.setUserProfile(updatedProfile);
+        return data
     })
 
 }

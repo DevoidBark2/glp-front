@@ -1,7 +1,7 @@
 import { SectionCourseItem } from "@/shared/api/course/model";
 import { StatusSectionEnum } from "@/shared/api/section/model";
 import {FORMAT_VIEW_DATE, MAIN_COLOR} from "@/shared/constants";
-import {Button, Input, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip} from "antd"
+import {Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip} from "antd"
 import dayjs, { Dayjs } from "dayjs";
 import { sectionsTable } from "@/shared/config";
 import {
@@ -12,22 +12,14 @@ import {
 import Link from "next/link";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import { observer } from "mobx-react";
 import {UserRole} from "@/shared/api/user/model";
-import {UserHoverCard, UserType} from "@/widgets";
+import {UserHoverCard} from "@/widgets";
 
 export const SectionList = observer(() => {
     const {sectionCourseStore, userProfileStore} = useMobxStores();
     const router = useRouter();
-    const [currentUser, setCurrentUser] = useState<UserType | null>(null);
-
-
-    useEffect(() => {
-        userProfileStore.getUserProfile().then(response => {
-            setCurrentUser(response)
-        })
-    },[])
 
     const columns: TableColumnsType<SectionCourseItem> = [
         {
@@ -86,7 +78,7 @@ export const SectionList = observer(() => {
         {
             title: "Создатель",
             dataIndex: "user",
-            hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
+            hidden: userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN,
             render: (_, record) => (
                 record.user?.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">

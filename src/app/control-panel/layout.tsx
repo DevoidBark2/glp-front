@@ -1,11 +1,9 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Divider, Menu, MenuProps, Skeleton } from "antd";
+import {Divider, Menu, MenuProps, Skeleton, Spin} from "antd";
 import Link from "next/link";
 import { observer } from "mobx-react";
-import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import { getCookieUserDetails } from "@/lib/users";
 import {
     AppstoreOutlined,
     BarsOutlined,
@@ -15,9 +13,9 @@ SettingOutlined,
     ToolOutlined, UserOutlined
 } from "@ant-design/icons";
 import { useMobxStores } from "@/stores/stores";
-import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
-import {UserType} from "@/widgets";
+import Image from "next/image";
+import nextConfig from "../../../next.config.mjs";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';
@@ -168,23 +166,19 @@ let dashboardMenuItems: MenuItem[] = [
 ];
 
 const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
-    const { resolvedTheme } = useTheme()
     const { userProfileStore } = useMobxStores()
-
-    const [currentUser, setCurrentUser] = useState<UserType | null>(null);
     const pathName = usePathname();
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
     const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
 
-        userProfileStore.getUserProfile().then(response => {
-            setCurrentUser(response)
+        userProfileStore.getUserProfile().then((response) => {
             if (response.role === UserRole.SUPER_ADMIN) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
             }
     
-            if (response.role === UserRole.TEACHER) {
+            if (userProfileStore.userProfile?.role === UserRole.TEACHER) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                     menuItem?.key !== "moderators_items"
                     && menuItem?.key !== "settings"
@@ -195,7 +189,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 )
             }
     
-            if (response.role === UserRole.MODERATOR) {
+            if (userProfileStore.userProfile?.role === UserRole.MODERATOR) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                     menuItem?.key !== "settings"
                     && menuItem?.key !== "nomenclature"
@@ -213,49 +207,44 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         setLoading(false)
     }, [])
 
-    useEffect(() => {
-        // userProfileStore.getUserProfile().then((response) => {
-        //     const userData = response.data;
-
-        //     if (userData.profile_url) {
-        //         const fullAvatarUrl = `${nextConfig.env?.API_URL}${userData.profile_url}`;
-        //         setAvatar(fullAvatarUrl);
-        //     } else {
-        //         setAvatar(null);
-        //     }
-
-        // }).finally(() => {
-        //     userProfileStore.setLoading(false)
-        // });
-        // avatarIconsStore.getAllAvatarIcons();
-    }, [])
-
     return (
         <>
             <div className="flex">
                 <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
                     <div className="flex flex-col items-center justify-center mb-2">
-                        <div className="relative mb-4">
-                            <div className="relative rounded-full bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 h-24 w-24 flex items-center justify-center overflow-hidden shadow-xl transform transition-all duration-300">
+                        <div className="relative mb-4 flex items-center justify-center">
+                            <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg bg-gray-200">
+                                {userProfileStore.userProfile?.image ? (
+                                    <Image
+                                        src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile.image}`}
+                                        alt="User Profile"
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="rounded-full"
+                                    />
+                                ) : <div className="flex items-center justify-center h-full">
+                                    <Spin/>
+                                </div>}
                             </div>
                         </div>
 
+
                         <Skeleton loading={loading} active>
-                            <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
-                                <h1 className="text-lg font-bold mb-1 text-center">{currentUser?.first_name}</h1>
+                            <div className="flex flex-col items-center justify-center" style={{width: 250}}>
+                                <h1 className="text-lg font-bold mb-1 text-center">{`${userProfileStore.userProfile?.second_name ?? ''} ${userProfileStore.userProfile?.first_name ?? ''} ${userProfileStore.userProfile?.last_name ?? ''}`}</h1>
                                 <div className="flex items-center gap-2 mb-4">
-                                    <span className="text-gray-300 text-sm">{currentUser?.role}</span>
+                                    <span className="text-gray-300 text-sm">{userProfileStore.userProfile?.role}</span>
                                     <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
                                 </div>
                             </div>
                         </Skeleton>
                     </div>
 
-                    <Divider className="bg-gray-600 dark:bg-white" />
+                    <Divider className="bg-gray-600 dark:bg-white"/>
                     {
                         !loading ? (
                             <Menu
-                                style={{ width: 240 }}
+                                style={{width: 240}}
                                 defaultSelectedKeys={[selectedKey]}
                                 mode="vertical"
                                 items={dashboardMenuItems}
@@ -264,19 +253,17 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                         ) : (
                             <>
                                 {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
-                                    <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
+                                    <Skeleton.Input key={it} active block style={{width: 250, marginTop: 10}}/>
                                 ))}
                             </>
                         )
                     }
                 </div>
 
-                {/* Контент справа от меню */}
                 <div className="p-6 w-full">
                     {children}
                 </div>
             </div>
-
         </>
     );
 }

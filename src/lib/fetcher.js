@@ -55,12 +55,12 @@ export const PUT = async (url, values) => {
         });
         return data;
     }catch (e){
-        if(e.response.status === UNAUTHORIZED_STATUS_CODE){
-            logoutUser();
-        }
-        else{
-            throw e
-        }
+        // if(e.response.status === UNAUTHORIZED_STATUS_CODE){
+        //     logoutUser();
+        // }
+        // else{
+        //     throw e
+        // }
     }
 }
 

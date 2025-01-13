@@ -24,7 +24,6 @@ import {useMobxStores} from "@/stores/stores";
 
 const PostPage = () => {
     const { postStore, userProfileStore } = useMobxStores();
-    const [currentUser, setCurrentUser] = useState(null);
     const router = useRouter();
 
     const fieldNames: { [key: string]: string } = {
@@ -122,9 +121,6 @@ const PostPage = () => {
 
 
     useEffect(() => {
-        userProfileStore.getUserProfile().then(response => {
-            setCurrentUser(response)
-        })
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
         postStore.getUserPosts();
@@ -147,7 +143,7 @@ const PostPage = () => {
                 dataSource={postStore.userPosts}
                 columns={getPostColumns({
                     getStatusTag: getStatusTag,
-                    currentUser: currentUser,
+                    currentUser: userProfileStore.userProfile,
                     renderTooltipTitle: renderTooltipTitle,
                     publishPost: postStore.publishPost,
                     submitReview: postStore.submitReview,

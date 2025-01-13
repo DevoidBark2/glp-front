@@ -1,5 +1,6 @@
 import { axiosInstance, withAuth } from "../http-client"
 import { StatusUserEnum, UserRole } from "./model";
+import {UserProfile} from "@/stores/UserProfileStore";
 
 type ChangeUserRoleDto = {
     userId: number;
@@ -27,6 +28,18 @@ export const getUserProfile = async () => {
     const data = (await axiosInstance.get('/api/profile-user')).data
 
     return data.data;
+}
+
+export const updateProfile = async (user: UserProfile) => {
+    return (await axiosInstance.put('api/profile',user)).data;
+}
+
+export const uploadProfileAvatar = async (form: FormData) => {
+    return (await axiosInstance.put(`api/upload-avatar`,form,{
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })).data;
 }
 
 export const handleBlockUser = withAuth(async (body: ChangeBlockUserDto, config = {}) => {

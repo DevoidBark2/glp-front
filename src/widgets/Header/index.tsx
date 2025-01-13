@@ -123,7 +123,7 @@ export const Header = observer(() => {
                                         size={40}
                                         src={
                                             userStore.userProfile?.image
-                                                ? `${nextConfig.env?.API_URL}${userStore.userProfile.image}`
+                                                ? `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                                 : undefined
                                         }
                                         icon={!userStore.userProfile?.image && <UserOutlined />}

@@ -1,7 +1,6 @@
 "use client"
 import {PageContainerControlPanel} from "@/shared/ui";
 import { Post } from "@/shared/api/posts/model";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { Breadcrumb, Button, Divider, Form, Input, notification, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { observer } from "mobx-react";
@@ -9,11 +8,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-    ClockCircleOutlined,
     InboxOutlined,
-    SyncOutlined,
 } from "@ant-design/icons";
-import { getCookieUserDetails } from "@/lib/users";
 import { UserRole } from "@/shared/api/user/model";
 
 const ReactQuill = dynamic(
@@ -23,13 +19,13 @@ const ReactQuill = dynamic(
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import nextConfig from "next.config.mjs";
+import {useMobxStores} from "@/stores/stores";
 
 const postPage = () => {
-    const { postStore } = useMobxStores();
+    const { postStore, userProfileStore } = useMobxStores();
     const { postId } = useParams();
     const router = useRouter();
     const [form] = Form.useForm<Post>();
-    const [currentUser, setCurrentUser] = useState<any>(null);
 
     const [currentPost, setCurrentPost] = useState<Post | null>(null);
     const [fileList, setFileList] = useState<any[]>([]);
@@ -66,9 +62,7 @@ const postPage = () => {
     
 
     useEffect(() => {
-        const user = getCookieUserDetails();
-        setCurrentUser(user);
-        postStore.getPostById(Number(postId)).then(response => {
+        postStore.getPostById(String(postId)).then(response => {
             setCurrentPost(response!)
             form.setFieldsValue(response!)
 
@@ -115,7 +109,7 @@ const postPage = () => {
                     label="Заголовок"
                     rules={[{ required: true, message: 'Введите заголовок поста!' }]}
                 >
-                    <Input disabled={currentUser?.user.role === UserRole.SUPER_ADMIN} placeholder="Введите название поста" />
+                    <Input disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN} placeholder="Введите название поста" />
                 </Form.Item>
 
                 <Form.Item
@@ -123,11 +117,11 @@ const postPage = () => {
                     label="Описание"
                     rules={[{ required: true, message: 'Введите описание поста!' }]}
                 >
-                    <Input disabled={currentUser?.user.role === UserRole.SUPER_ADMIN} placeholder="Введите описание поста" />
+                    <Input disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN} placeholder="Введите описание поста" />
                 </Form.Item>
 
                 <Form.Item name="image" label="Изображение поста">
-                    <Dragger {...props} disabled={currentUser?.user.role === UserRole.SUPER_ADMIN}>
+                    <Dragger {...props} disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN}>
                     <>
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined />
@@ -187,7 +181,7 @@ const postPage = () => {
 
                 <div className="flex flex-col items-center">
                     <Form.Item style={{ marginTop: '10px' }}>
-                        <Button type="primary" htmlType="submit" loading={postStore.loading} disabled={currentUser?.user.role === UserRole.SUPER_ADMIN}>Изменить</Button>
+                        <Button type="primary" htmlType="submit" loading={postStore.loading} disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN}>Изменить</Button>
                     </Form.Item>
                 </div>
             </Form>

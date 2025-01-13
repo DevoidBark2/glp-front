@@ -12,7 +12,7 @@ export const getCPAllPost = async (): Promise<Post[]> => {
     return response.data;
 };
 
-export const getPostById = async (id: number): Promise<Post> => {
+export const getPostById = async (id: string) => {
     const data = (await axiosInstance.get(`api/getPostById?postId=${id}`)).data;
     return data.data;
 };

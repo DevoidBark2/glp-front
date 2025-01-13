@@ -6,10 +6,8 @@ import dynamic from "next/dynamic";
 import { InboxOutlined } from "@ant-design/icons";
 
 import Dragger from "antd/es/upload/Dragger";
-import { useEffect, useState } from "react";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { useMobxStores } from "@/stores/stores";
-import { getCookieUserDetails } from "@/lib/users";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 const ReactQuill = dynamic(
@@ -22,7 +20,6 @@ import 'react-quill/dist/quill.snow.css';
 const CreatePostPage = () => {
     const { postStore } = useMobxStores();
     const [form] = Form.useForm<PostCreateForm>();
-    const [currentUser, setCurrentUser] = useState(null);
     const router = useRouter();
     const props: UploadProps = {
         name: 'file',
@@ -37,12 +34,6 @@ const CreatePostPage = () => {
             }
         }
     };
-
-    useEffect(() => {
-        const user = getCookieUserDetails();
-        setCurrentUser(user);
-    }, [])
-
 
     return (
         <PageContainerControlPanel>

@@ -3,7 +3,7 @@ import { DELETE, GET, PUT } from "@/lib/fetcher";
 import { notification } from "antd"
 import dayjs from "dayjs";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
-import {createPost, getCPAllPost, publishPost} from "@/shared/api/posts";
+import {createPost, getCPAllPost, getPostById, publishPost} from "@/shared/api/posts";
 import { User } from "@/shared/api/user/model";
 
 
@@ -103,8 +103,8 @@ class PostStore {
 
 
     getPostById = action(async (postId: string) => {
-        return await GET(`/api/post?postId=${postId}`).then(response => {
-            return response.data
+        return await getPostById(postId).then(response => {
+            return response
         }).catch(e => {
 
         })

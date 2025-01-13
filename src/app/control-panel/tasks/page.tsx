@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
 import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
@@ -9,12 +9,10 @@ import { taskColumns } from "@/columnsTables/taskColumns";
 import { taskTable } from "@/shared/config";
 import { useRouter } from "next/navigation";
 import {CourseComponentTypeI} from "@/shared/api/course/model";
-import { UserType } from "@/widgets";
 
 const TaskPage = () => {
     const { courseComponentStore, userProfileStore } = useMobxStores()
     const router = useRouter();
-    const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
     const handleChangeComponentTask = (record: CourseComponentTypeI) => {
         router.push(`tasks/${record.id}`)
@@ -22,9 +20,6 @@ const TaskPage = () => {
 
     useEffect(() => {
         courseComponentStore.getAllComponent();
-        userProfileStore.getUserProfile().then(response => {
-            setCurrentUser(response)
-        })
     }, []);
 
     return (
@@ -42,7 +37,7 @@ const TaskPage = () => {
                 columns={taskColumns({
                     handleChangeComponent: handleChangeComponentTask,
                     handleDeleteComponent: courseComponentStore.deleteComponent,
-                    currentUser: currentUser
+                    currentUser: userProfileStore.userProfile
                 })}
                 locale={taskTable}
             />
