@@ -1,14 +1,16 @@
 "use client"
-import {PageContainerControlPanel} from "@/shared/ui";
-import { Post } from "@/shared/api/posts/model";
-import { Breadcrumb, Button, Divider, Form, Input, notification, UploadProps } from "antd";
+import { PageContainerControlPanel } from "@/shared/ui";
+import { Post, PostStatusEnum } from "@/shared/api/posts/model";
+import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Tooltip, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+    ClockCircleOutlined,
     InboxOutlined,
+    SyncOutlined,
 } from "@ant-design/icons";
 import { UserRole } from "@/shared/api/user/model";
 
@@ -19,7 +21,7 @@ const ReactQuill = dynamic(
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import nextConfig from "next.config.mjs";
-import {useMobxStores} from "@/stores/stores";
+import { useMobxStores } from "@/stores/stores";
 
 const postPage = () => {
     const { postStore, userProfileStore } = useMobxStores();
@@ -37,15 +39,14 @@ const postPage = () => {
         fileList,
         onChange(info) {
             const { status } = info.file;
-    
+
             setFileList(info.fileList);
-    
+
             if (status === 'done') {
                 notification.success({
                     message: `${info.file.name} загружен успешно.`,
                 });
-    
-                // Сохраняем загруженный файл в форму
+
                 form.setFieldValue('image', `${nextConfig.env?.API_URL}${info.file.response?.url}`); // Пример: ожидаем, что сервер вернёт URL
             } else if (status === 'error') {
                 notification.error({
@@ -59,7 +60,7 @@ const postPage = () => {
             form.setFieldValue('image', null);
         },
     };
-    
+
 
     useEffect(() => {
         postStore.getPostById(String(postId)).then(response => {
@@ -109,7 +110,7 @@ const postPage = () => {
                     label="Заголовок"
                     rules={[{ required: true, message: 'Введите заголовок поста!' }]}
                 >
-                    <Input disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN} placeholder="Введите название поста" />
+                    <Input placeholder="Введите название поста" />
                 </Form.Item>
 
                 <Form.Item
@@ -117,60 +118,56 @@ const postPage = () => {
                     label="Описание"
                     rules={[{ required: true, message: 'Введите описание поста!' }]}
                 >
-                    <Input disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN} placeholder="Введите описание поста" />
+                    <Input placeholder="Введите описание поста" />
                 </Form.Item>
 
                 <Form.Item name="image" label="Изображение поста">
-                    <Dragger {...props} disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN}>
-                    <>
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">
-                                    Нажмите или перетащите файл в эту область для загрузки
-                                </p>
-                                <p className="ant-upload-hint">
-                                    Запрещено загружать конфиденциальные данные.
-                                </p>
-                            </>
+                    <Dragger {...props}>
+                        <>
+                            <p className="ant-upload-drag-icon">
+                                <InboxOutlined />
+                            </p>
+                            <p className="ant-upload-text">
+                                Нажмите или перетащите файл в эту область для загрузки
+                            </p>
+                            <p className="ant-upload-hint">
+                                Запрещено загружать конфиденциальные данные.
+                            </p>
+                        </>
                     </Dragger>
                 </Form.Item>
 
+                <Form.Item
+                    label="Статус"
+                    name="status"
+                >
+                    <Select
+                        placeholder="Выберите статус"
+                        style={{ width: '100%' }}
 
-                {/* {
-                    currentUser?.user.role === UserRole.SUPER_ADMIN && <Form.Item
-                        label="Статус"
-                        name="status"
                     >
-                        <Select
-                            placeholder="Выберите статус"
-                            style={{ width: '100%' }}
+                        <Select.Option value={PostStatusEnum.NEW}>
+                            <Tooltip title="Новый">
+                                <Tag icon={<ClockCircleOutlined />} color="blue">
+                                    Новый
+                                </Tag>
+                            </Tooltip>
+                        </Select.Option>
+                        <Select.Option value={PostStatusEnum.REJECT}>
+                            <Tooltip color="red">
+                                <Tag color="red">Отклонен</Tag>
+                            </Tooltip>
+                        </Select.Option>
 
-                        >
-                            <Select.Option value={PostStatusEnum.NEW}>
-                                <Tooltip title="Новый">
-                                    <Tag icon={<ClockCircleOutlined />} color="blue">
-                                        Новый
-                                    </Tag>
-                                </Tooltip>
-                            </Select.Option>
-                            <Select.Option value={PostStatusEnum.REJECT}>
-                                <Tooltip color="red">
-                                    <Tag color="red">Отклонен</Tag>
-                                </Tooltip>
-                            </Select.Option>
-
-                            <Select.Option value={PostStatusEnum.IN_PROCESSING}>
-                                <Tooltip title="В обработке">
-                                    <Tag icon={<SyncOutlined spin />} color="yellow">
-                                        В обработке
-                                    </Tag>
-                                </Tooltip>
-                            </Select.Option>
-                        </Select>
-                    </Form.Item>
-
-                } */}
+                        <Select.Option value={PostStatusEnum.IN_PROCESSING}>
+                            <Tooltip title="В обработке">
+                                <Tag icon={<SyncOutlined spin />} color="yellow">
+                                    В обработке
+                                </Tag>
+                            </Tooltip>
+                        </Select.Option>
+                    </Select>
+                </Form.Item>
 
                 <Form.Item
                     name="content"

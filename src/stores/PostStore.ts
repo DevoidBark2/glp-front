@@ -3,7 +3,7 @@ import { DELETE, GET, PUT } from "@/lib/fetcher";
 import { notification } from "antd"
 import dayjs from "dayjs";
 import { PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
-import {createPost, getCPAllPost, getPostById, publishPost} from "@/shared/api/posts";
+import { createPost, deletePost, getCPAllPost, getPostById, publishPost } from "@/shared/api/posts";
 import { User } from "@/shared/api/user/model";
 
 
@@ -78,11 +78,10 @@ class PostStore {
     })
 
     deletePost = action(async (postId: number) => {
-        await DELETE(`/api/posts?postId=${postId}`).then((response) => {
-            this.userPosts = this.userPosts.filter(post => post.id !== postId);
+        await deletePost(postId).then(response => {
             notification.success({ message: response.message })
-        }).catch(e => {
-        })
+            this.userPosts = this.userPosts.filter(post => post.id !== postId);
+        });
     })
 
     submitReview = action(async (postId: number) => {
@@ -111,7 +110,7 @@ class PostStore {
     })
 
     publishPost = action(async (postId: number, checked: boolean) => {
-        await publishPost(postId,checked).then(response => {
+        await publishPost(postId, checked).then(response => {
             const changedPostIndex = this.userPosts.findIndex(post => post.id === postId);
 
             if (changedPostIndex !== -1) {
