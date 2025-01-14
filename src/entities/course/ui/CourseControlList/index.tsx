@@ -5,7 +5,6 @@ import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from 
 import { useMobxStores } from "@/stores/stores";
 import { showCourseStatus } from "@/utils/showCourseStatusInTable";
 import {Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
-import { SizeType } from "antd/es/config-provider/SizeContext";
 import dayjs from "dayjs";
 import { observer } from "mobx-react";
 import Link from "next/link";
@@ -14,15 +13,12 @@ import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
 import {UserHoverCard} from "@/widgets";
 import { isEditedCourse } from "../../selectors";
+import {SettingControlPanel} from "@/shared/model";
 
 export const CourseControlList = observer(() => {
     const { courseStore, userProfileStore } = useMobxStores()
     const router = useRouter();
-    const [settings, setSettings] = useState<{
-        pagination_size: number,
-        table_size: SizeType,
-        show_footer_table: boolean
-    } | null>(null);
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const publishCourse = (id: number) => courseStore.publishCourse(id)
 

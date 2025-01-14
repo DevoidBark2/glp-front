@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Avatar, Divider, Menu, MenuProps, Skeleton } from "antd";
+import {Avatar, Divider, Menu, MenuProps, Skeleton, Spin} from "antd";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { usePathname } from "next/navigation";
@@ -177,7 +177,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
             }
 
-            if (userProfileStore.userProfile?.role === UserRole.TEACHER) {
+            if (response.role === UserRole.TEACHER) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                     menuItem?.key !== "moderators_items"
                     && menuItem?.key !== "settings"
@@ -188,7 +188,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 )
             }
 
-            if (userProfileStore.userProfile?.role === UserRole.MODERATOR) {
+            if (response.role === UserRole.MODERATOR) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
                     menuItem?.key !== "settings"
                     && menuItem?.key !== "nomenclature"
@@ -200,10 +200,9 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                     && menuItem?.key !== "general"
                 )
             }
+        }).finally(() => {
+            setLoading(false)
         })
-
-
-        setLoading(false)
     }, [])
 
     return (
@@ -213,16 +212,24 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                     <div className="flex flex-col items-center justify-center mb-2">
                         <div className="relative mb-4 flex items-center justify-center">
                             <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg bg-gray-200">
-                                <Avatar
-                                    size={100}
-                                    src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile?.image}`}
-                                    icon={!userProfileStore.userProfile?.image && <UserOutlined />}
-                                    className="cursor-pointer"
-                                    style={{
-                                        opacity: loading ? 0.5 : 1,
-                                        transition: 'opacity 0.3s ease',
-                                    }}
-                                />
+                                <Spin spinning={loading}>
+                                    <Avatar
+                                        size={100}
+                                        src={
+                                            !loading && userProfileStore.userProfile?.image
+                                                ? `${nextConfig.env!.API_URL}${userProfileStore.userProfile.image}`
+                                                : undefined
+                                        }
+                                        icon={
+                                            (!userProfileStore.userProfile?.image || loading) && <UserOutlined />
+                                        }
+                                        className="cursor-pointer"
+                                        style={{
+                                            opacity: loading ? 0.5 : 1,
+                                            transition: 'opacity 0.3s ease',
+                                        }}
+                                    />
+                                </Spin>
                             </div>
                         </div>
 

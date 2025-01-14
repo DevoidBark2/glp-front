@@ -12,14 +12,16 @@ import {
 import Link from "next/link";
 import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import { observer } from "mobx-react";
 import {UserRole} from "@/shared/api/user/model";
 import {UserHoverCard} from "@/widgets";
+import {SettingControlPanel} from "@/shared/model";
 
 export const SectionList = observer(() => {
     const {sectionCourseStore, userProfileStore} = useMobxStores();
     const router = useRouter();
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const columns: TableColumnsType<SectionCourseItem> = [
         {
@@ -135,16 +137,20 @@ export const SectionList = observer(() => {
     }
 
     useEffect(() => {
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        setSettings(settingUser);
         sectionCourseStore.getAllSectionCourse();
     }, []);
 
     return (
         <Table
+            size={(settings && settings.table_size) ?? "middle"}
+            footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+            pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
             rowKey={(record) => record.id}
             loading={sectionCourseStore.loadingSectionsCourse}
             columns={columns as any}
             dataSource={sectionCourseStore.sectionCourse}
-            pagination={{ pageSize: 10 }}
             locale={sectionsTable}
         />
     )

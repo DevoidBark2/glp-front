@@ -1,7 +1,7 @@
 "use client"
 import { observer } from "mobx-react";
 import { Button, Empty, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { useMobxStores } from "@/stores/stores";
 import {PageHeader} from "@/shared/ui/PageHeader";
 import {PageContainerControlPanel} from "@/shared/ui";
@@ -9,9 +9,11 @@ import {CreateCategoryModal} from "@/entities/category/ui/CreateCategoryModal";
 import {ChangeCategoryModal} from "@/entities/category/ui/ChangeCategoryModal";
 import { NomenclatureItem } from "@/shared/api/nomenclature/model";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {SettingControlPanel} from "@/shared/model";
 
 const CategoryPage = () => {
     const { nomenclatureStore } = useMobxStores();
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const columns: TableColumnsType<NomenclatureItem> = [
         {
@@ -53,6 +55,8 @@ const CategoryPage = () => {
     ];
 
     useEffect(() => {
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        setSettings(settingUser);
         nomenclatureStore.getCategories();
     }, []);
 
@@ -79,6 +83,9 @@ const CategoryPage = () => {
             />
             <Table
                 rowKey={(record) => record.id}
+                size={(settings && settings.table_size) ?? "middle"}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 dataSource={nomenclatureStore.categories}
                 columns={columns}
                 loading={nomenclatureStore.loadingCategories}

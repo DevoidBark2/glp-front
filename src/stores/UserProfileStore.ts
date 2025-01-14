@@ -19,6 +19,7 @@ export type UserProfile = {
     image: string;
     user_name: string;
     pagination_size: number;
+    settings_control_panel: boolean;
 }
 
 class UserProfileStore {
@@ -78,17 +79,27 @@ class UserProfileStore {
     });
 
     updateProfile = action(async (values: UserProfile) => {
-        window.localStorage.setItem('user_settings', JSON.stringify(values))
-        this.setSaveProfile(true)
-        await updateProfile(values).then(response => {
-            notification.success({ message: response.message })
-            const updatedProfile = { ...this.userProfile, ...values };
-            this.setUserProfile(updatedProfile);
-        }).catch(e => {
-        }).finally(() => {
-            this.setSaveProfile(false)
-        })
-    })
+        this.setSaveProfile(true);
+
+        const { settings_control_panel, ...cleanedValues } = values;
+        if (settings_control_panel) {
+            window.localStorage.setItem('user_settings', JSON.stringify(values));
+        }
+
+        await updateProfile(cleanedValues)
+            .then(response => {
+                notification.success({ message: response.message });
+                const updatedProfile = { ...this.userProfile, ...cleanedValues };
+                this.setUserProfile(updatedProfile);
+            })
+            .catch(e => {
+                console.error("Ошибка при обновлении профиля:", e);
+            })
+            .finally(() => {
+                this.setSaveProfile(false);
+            });
+    });
+
 
     uploadAvatar = action(async (file: File) => {
         const form = new FormData();

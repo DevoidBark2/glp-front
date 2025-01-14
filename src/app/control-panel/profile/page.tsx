@@ -97,28 +97,24 @@ const ProfilePage = () => {
             }}
           >
             <div className="relative cursor-pointer transition-transform hover:scale-105">
-              {loading ? (
-                <Spin
-                  size="large"
-                  style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    zIndex: 1,
-                  }}
+              <Spin spinning={userProfileStore.loading}>
+                <Avatar
+                    size={100}
+                    src={
+                      !userProfileStore.loading && userProfileStore.userProfile?.image
+                          ? `${nextConfig.env!.API_URL}${userProfileStore.userProfile.image}`
+                          : undefined
+                    }
+                    icon={
+                        (!userProfileStore.userProfile?.image || userProfileStore.loading) && <UserOutlined />
+                    }
+                    className="cursor-pointer"
+                    style={{
+                      opacity: loading ? 0.5 : 1,
+                      transition: 'opacity 0.3s ease',
+                    }}
                 />
-              ) : null}
-              <Avatar
-                size={100}
-                src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile?.image}` || undefined}
-                icon={!userProfileStore.userProfile?.image && <UserOutlined />}
-                className="cursor-pointer"
-                style={{
-                  opacity: loading ? 0.5 : 1,
-                  transition: 'opacity 0.3s ease',
-                }}
-              />
+              </Spin>
 
               <div
                 className="absolute bottom-5 right-5 bg-white rounded-full shadow-lg p-2 flex items-center justify-center"
@@ -243,6 +239,7 @@ const ProfilePage = () => {
       >
         <Row gutter={16}>
           <Col xs={24} md={12}>
+            <Form.Item hidden name="settings_control_panel" initialValue={true}></Form.Item>
             <Form.Item
               tooltip="Определяет количество элементов, отображаемых на одной странице списка."
               label="Количество элементов на странице"

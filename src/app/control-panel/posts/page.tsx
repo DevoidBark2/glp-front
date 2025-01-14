@@ -18,13 +18,14 @@ import { getPostColumns } from "@/columnsTables/postColumns";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { postTable } from "@/shared/config";
 import { PostStatusEnum } from "@/shared/api/posts/model";
-import { SizeType } from "antd/es/config-provider/SizeContext";
 import { useRouter } from "next/navigation";
 import {useMobxStores} from "@/stores/stores";
+import {SettingControlPanel} from "@/shared/model";
 
 const PostPage = () => {
     const { postStore, userProfileStore } = useMobxStores();
     const router = useRouter();
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const fieldNames: { [key: string]: string } = {
         name: "Заголовок",
@@ -112,13 +113,6 @@ const PostPage = () => {
     const handelChangePost = (postId: number) => {
         router.push(`posts/${postId}`)
     }
-
-    const [settings, setSettings] = useState<{
-        pagination_size: number,
-        table_size: SizeType,
-        show_footer_table: boolean
-    } | null>(null);
-
 
     useEffect(() => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);

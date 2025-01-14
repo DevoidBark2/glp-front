@@ -15,18 +15,14 @@ import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
 import { usersTable } from "@/shared/config";
 import { User } from "@/shared/api/user/model";
-import { SizeType } from "antd/es/config-provider/SizeContext";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { GroupActionComponent } from "@/widgets";
+import {SettingControlPanel} from "@/shared/model";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();
     const router = useRouter();
-    const [settings, setSettings] = useState<{
-        pagination_size: number,
-        table_size: SizeType,
-        show_footer_table: boolean
-    } | null>(null);
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const columns: TableColumnsType<User> = [
         {

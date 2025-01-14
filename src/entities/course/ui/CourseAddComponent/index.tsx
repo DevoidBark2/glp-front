@@ -63,25 +63,24 @@ export const CourseAddComponent = () => {
             })}
             layout="vertical"
         >
-            <Row gutter={100}>
+            <Row gutter={24}>
                 <Col span={12}>
+                    <Form.Item name="id" hidden/>
                     <Form.Item
-                        name="name_course"
+                        name="name"
                         label="Название курса"
-                        rules={[{ required: true, message: "Название курса обязательно!" },
-                            { max: 64,message: 'Название курса превышает допустимую длину 64' }
-                        ]}
+                        rules={[{required: true, message: 'Название курса обязательно!'}]}
                     >
-                        <Input placeholder="Введите название курса" />
+                        <Input placeholder="Введите название курса" style={{width: '100%'}}/>
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
-                        name="description"
+                        name="small_description"
                         label="Краткое описание"
-                        rules={[{ max: 255, message: 'Краткое описание превышает допустимую длину 255' }]}
                     >
-                        <Input placeholder="Введите краткое описание курса" />
+                        <Input placeholder="Введите краткое описание курса"
+                               style={{width: '100%'}}/>
                     </Form.Item>
                 </Col>
             </Row>
@@ -98,7 +97,7 @@ export const CourseAddComponent = () => {
                 </Dragger>
             </Form.Item>
 
-            <Row gutter={80}>
+            <Row gutter={24}>
                 <Col span={12}>
                     <Form.Item
                         name="category"
@@ -163,7 +162,7 @@ export const CourseAddComponent = () => {
                 </Col>
             </Row>
 
-            <Row gutter={80}>
+            <Row gutter={24}>
                 <Col span={12}>
                     <Form.Item
                         name="duration"

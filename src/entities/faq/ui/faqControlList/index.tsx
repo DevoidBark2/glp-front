@@ -4,19 +4,15 @@ import { Button, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
 import { observer } from "mobx-react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { SizeType } from "antd/es/config-provider/SizeContext";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { faqTable } from "@/shared/config/tableConfig";
 import { useRouter } from "next/navigation";
+import {SettingControlPanel} from "@/shared/model";
 
 export const FaqControlList = observer(() => {
     const { faqStore } = useMobxStores();
     const router = useRouter()
-    const [settings, setSettings] = useState<{
-        pagination_size: number,
-        table_size: SizeType,
-        show_footer_table: boolean
-    } | null>(null);
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const columns: TableColumnsType<Faq> = [
         {
@@ -66,9 +62,9 @@ export const FaqControlList = observer(() => {
     ];
 
     useEffect(() => {
-        faqStore.getAll();
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
+        faqStore.getAll();
     }, [])
 
     return (
