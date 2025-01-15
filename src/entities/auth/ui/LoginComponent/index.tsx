@@ -1,13 +1,13 @@
 "use client"
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/stores/stores";
 import { notification, Button, Form, Input, Modal, Divider } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
 import { useRouter } from "next/navigation";
 import Image from "next/image"
+import {useMobxStores} from "@/shared/store/RootStore";
 
 export const LoginComponent = observer(() => {
     const [recaptcha, setRecaptcha] = useState<string | null>(null);
@@ -31,6 +31,7 @@ export const LoginComponent = observer(() => {
             code: values.code
         } : values
         userStore.loginUser(body).then((response) => {
+            debugger
             if (response.message) {
                 notification.success({ message: response.message })
                 setIsShowTwoFacor(true);
@@ -100,13 +101,15 @@ export const LoginComponent = observer(() => {
                 <Divider className="uppercase"><p className="text-gray-500">Или</p></Divider>
 
                 {isShowTwoFactor && (
-                    <Form.Item
-                        name="code"
-                        label="Код"
-                        rules={[{ required: true, message: "Введите код!" }]}
-                    >
-                        <Input.OTP />
-                    </Form.Item>
+                    <div className="flex justify-center">
+                        <Form.Item
+                            name="code"
+                            label="Код"
+                            rules={[{ required: true, message: "Введите код!" }]}
+                        >
+                            <Input.OTP />
+                        </Form.Item>
+                    </div>
                 )}
 
                 {!isShowTwoFactor && (

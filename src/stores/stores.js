@@ -2,7 +2,6 @@ import React from "react";
 import PostStore from "@/stores/PostStore";
 import SettingsStore from "@/stores/SettingsStore";
 import CourseStore from "@/stores/CourseStore";
-import GraphStore from "@/stores/GraphStore";
 import NomenclatureStore from "@/stores/NomenclatureStore";
 import EventStore from "@/stores/EventStore";
 import CourseComponent from "@/stores/CourseComponent";
@@ -19,7 +18,6 @@ const userStore = new UserStore();
 const postStore = new PostStore();
 const settingsStore = new SettingsStore();
 const courseStore = new CourseStore();
-const graphStore = new GraphStore();
 const nomenclatureStore = new NomenclatureStore();
 const eventStore = new EventStore();
 const generalSettingsStore = new GeneralSettings();
@@ -36,7 +34,6 @@ export const RootStore = {
     postStore,
     settingsStore,
     courseStore,
-    graphStore,
     nomenclatureStore,
     eventStore,
     generalSettingsStore,

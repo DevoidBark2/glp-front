@@ -1,10 +1,11 @@
 import { Avatar, message, notification, Spin, Upload } from "antd";
 import { CameraOutlined, UserOutlined } from "@ant-design/icons";
-import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import "react-phone-input-2/lib/bootstrap.css";
 import { ProfileForm } from "@/entities/user-profile/ui/ProfileForm";
 import nextConfig from "../../../next.config.mjs";
+import {useMobxStores} from "@/shared/store/RootStore";
+import {AuthMethodEnum} from "@/shared/api/auth/model";
 
 export const UserProfileBlock = observer(() => {
     const { userProfileStore } = useMobxStores();
@@ -46,7 +47,14 @@ export const UserProfileBlock = observer(() => {
                         ) : null}
                         <Avatar
                             size={130}
-                            src={`${nextConfig.env!.API_URL}${userProfileStore.userProfile?.image}` || undefined}
+                            src={
+                                userProfileStore.userProfile?.image
+                                    ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
+                                    userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                        ? userProfileStore.userProfile?.image
+                                        : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
+                                    : undefined
+                            }
                             icon={!userProfileStore.userAvatar && <UserOutlined />}
                             className="cursor-pointer"
                             style={{

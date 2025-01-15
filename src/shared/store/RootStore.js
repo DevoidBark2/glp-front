@@ -4,19 +4,25 @@ import { CourseStore } from "@/entities/course";
 import { FaqStore } from "@/entities/faq";
 import { AuthStore } from "@/entities/auth";
 import {GeneralSettings} from "@/entities/general-settings";
+import UserProfileStore from "@/entities/user-profile/model/UserProfileStore";
+import UserStore from "@/entities/user/model/UserStore";
 
+const userStore = new UserStore();
 const postStore = new PostStore();
 const courseStore = new CourseStore();
 const faqStore = new FaqStore();
 const authStore = new AuthStore();
 const generalStore = new GeneralSettings();
+const userProfileStore = new UserProfileStore();
 
 export const RootStore = {
+    userStore,
     postStore,
     courseStore,
     faqStore,
     authStore,
-    generalStore
+    generalStore,
+    userProfileStore
 };
 
 const StoreContext = React.createContext(RootStore);

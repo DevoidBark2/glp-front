@@ -7,9 +7,7 @@ export const register = async (body: any) => {
 }
 
 export const login = async (body: any) => {
-    const data = (await axiosInstance.post('/api/login', body)).data
-
-    return data.data;
+    return (await axiosInstance.post('/api/login', body)).data
 }
 
 export const oauthByProvider = async (provider: 'google' | 'yandex') => {
@@ -45,5 +43,10 @@ export const changePassword = withAuth(async (values: ChangePasswordType, config
 export const logoutUser = async () => {
     const data = (await axiosInstance.post('/api/logout')).data
 
+    return data.data;
+}
+
+export const deleteUserAccount = async () => {
+    const data = (await axiosInstance.delete('/api/delete-account')).data
     return data.data;
 }

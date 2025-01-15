@@ -6,7 +6,17 @@ const nextConfig = {
     },
     reactStrictMode: false,
     images: {
-        domains: ['localhost']
+        domains: ['localhost'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'avatars.yandex.net'
+            }
+        ]
     },
     experimental: {
         serverActions: {

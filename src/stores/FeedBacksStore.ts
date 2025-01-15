@@ -1,5 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
-import { GET, POST } from "@/lib/fetcher";
+import { GET } from "@/lib/fetcher";
 import { notification, UploadFile } from "antd";
 import dayjs from "dayjs";
 import {User} from "@/shared/api/user/model";

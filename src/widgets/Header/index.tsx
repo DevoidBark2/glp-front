@@ -1,15 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import { Avatar, Button, Dropdown, MenuProps, Spin } from "antd";
+import {Avatar, Button, Dropdown, MenuProps, Spin} from "antd";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import { useMobxStores } from "@/stores/stores";
-import { platformMenu } from "@/shared/constants";
-import { UserRole } from "@/shared/api/user/model";
-import nextConfig from "next.config.mjs";
-import { UserOutlined } from "@ant-design/icons";
-import { observer } from "mobx-react";
+import {usePathname, useRouter} from "next/navigation";
+import {platformMenu} from "@/shared/constants";
+import {UserRole} from "@/shared/api/user/model";
+import {UserOutlined} from "@ant-design/icons";
+import {observer} from "mobx-react";
+import {useMobxStores} from "@/shared/store/RootStore";
+import {AuthMethodEnum} from "@/shared/api/auth/model";
+import nextConfig from "../../../next.config.mjs";
 
 export type UserType = {
     role: UserRole,
@@ -137,28 +138,29 @@ export const Header = observer(() => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                    {userProfileStore.loading ? ( // Показываем лоадер, если данные загружаются
+                    {userProfileStore.loading ? (
                         <div className="flex items-center justify-center">
-                            <Spin size="large" /> {/* Ant Design лоадер */}
+                            <Spin size="large" />
                         </div>
-                    ) : userProfileStore.userProfile ? ( // Если загрузка завершена и пользователь существует
+                    ) : userProfileStore.userProfile ? (
                         <Dropdown menu={{ items }} placement="bottomRight">
                             <div className="flex items-center cursor-pointer p-2 rounded transition-colors duration-300 hover:bg-white/20">
                                 <Avatar
                                     size={40}
                                     src={
                                         userProfileStore.userProfile?.image
-                                            ? `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
+                                            ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
+                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                ? userProfileStore.userProfile?.image
+                                                : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                             : undefined
                                     }
                                     icon={!userProfileStore.userProfile?.image && <UserOutlined />}
                                 />
-                                {/* <div className="text-white font-semibold ml-3">
-                    {`${userStore.userProfile?.second_name ?? ""} ${userStore.userProfile?.first_name ?? ""} ${userStore.userProfile?.last_name ?? ""}`}
-                </div> */}
+
                             </div>
                         </Dropdown>
-                    ) : ( // Если пользователь не авторизован (данные не загружены и currentUser отсутствует)
+                    ) : (
                         <Button
                             type="default"
                             onClick={() => router.push('/platform/auth/login')}

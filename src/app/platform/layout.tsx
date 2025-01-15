@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react';
-import { useMobxStores } from '@/stores/stores';
 import { usePathname } from 'next/navigation';
 import { Footer } from "@/widgets/Footer";
 import { Header } from "@/widgets";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 interface LayoutProps {
     children: React.ReactNode;

@@ -1,4 +1,11 @@
-import { changePassword, newPassword, resetPassword, verificationEmail } from "@/shared/api/auth";
+import {
+    changePassword,
+    deleteUserAccount,
+    logoutUser,
+    newPassword,
+    resetPassword,
+    verificationEmail
+} from "@/shared/api/auth";
 import { ChangePasswordType } from "@/shared/api/auth/model";
 import { action, makeAutoObservable } from "mobx";
 
@@ -22,6 +29,12 @@ class AuthStore {
 
     verification = action(async (token: string | null) => {
         return await verificationEmail(token)
+    })
+
+    deleteAccount = action(async () => {
+        return await deleteUserAccount().then(async  () => {
+            await logoutUser()
+        });
     })
 }
 

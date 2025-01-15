@@ -14,11 +14,10 @@ export const getCPAllCourse = async () => {
 
 export const createCourse = async (values: any): Promise<Course> => {
     const hasCertificate = values.has_certificate !== undefined ? String(Boolean(values.has_certificate)) : 'false';
-
-    console.log(values.has_certificate)
+    debugger
     const form = new FormData();
-    form.append('name', values.name_course)
-    form.append('small_description', values.description)
+    form.append('name', values.name)
+    form.append('small_description', values.small_description)
     form.append('has_certificate', hasCertificate)
     // form.append('image',values.image.originFileObj)
     if (values.category) {

@@ -271,22 +271,22 @@ const UserDetailsPage = () => {
                     <Descriptions.Item label="Роль и статус">
                         <div className="flex items-center space-x-4">
                             {renderTag(user?.role, user?.status)}
-                            <Select
-                                value={user?.role}
-                                onChange={showModal}
-                                options={[
-                                    { value: UserRole.STUDENT, label: "Пользователь" },
-                                    { value: UserRole.TEACHER, label: "Преподаватель" },
-                                    { value: UserRole.MODERATOR, label: "Модератор" },
-                                ]}
-                                loading={roleUpdating}
-                                style={{ width: 150 }}
-                            />
-                            <div className="flex justify-end">
-                                <Button type="primary" danger={user.status === StatusUserEnum.ACTIVATED} onClick={handleBlockUser}>
-                                    {user.status === StatusUserEnum.ACTIVATED ? "Заблокировать" : "Разблокировать"}
-                                </Button>
-                            </div>
+                            {/*<Select*/}
+                            {/*    value={user?.role}*/}
+                            {/*    onChange={showModal}*/}
+                            {/*    options={[*/}
+                            {/*        { value: UserRole.STUDENT, label: "Пользователь" },*/}
+                            {/*        { value: UserRole.TEACHER, label: "Преподаватель" },*/}
+                            {/*        { value: UserRole.MODERATOR, label: "Модератор" },*/}
+                            {/*    ]}*/}
+                            {/*    loading={roleUpdating}*/}
+                            {/*    style={{ width: 150 }}*/}
+                            {/*/>*/}
+                            {/*<div className="flex justify-end">*/}
+                            {/*    <Button type="primary" danger={user.status === StatusUserEnum.ACTIVATED} onClick={handleBlockUser}>*/}
+                            {/*        {user.status === StatusUserEnum.ACTIVATED ? "Заблокировать" : "Разблокировать"}*/}
+                            {/*    </Button>*/}
+                            {/*</div>*/}
                         </div>
                     </Descriptions.Item>
                     <Descriptions.Item label="Дата регистрации">

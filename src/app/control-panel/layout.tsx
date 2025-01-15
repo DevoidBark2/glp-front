@@ -25,7 +25,6 @@ const findKeyByPathname = (pathName: string, items: any): string => {
         }
     }
     return findKeyByPathname(pathName, items.map((i: any) => i.children).flat().filter(Boolean))
-
 }
 
 export type MenuItem = Required<MenuProps>['items'][number];
@@ -250,6 +249,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                         !loading ? (
                             <Menu
                                 style={{ width: 240 }}
+                                selectedKeys={[selectedKey]}
                                 defaultSelectedKeys={[selectedKey]}
                                 mode="vertical"
                                 items={dashboardMenuItems}

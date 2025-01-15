@@ -11,3 +11,8 @@ export enum ComplexityPasswordEnum {
     VERY_HIGH = 'very_high',
 }
 
+export enum AuthMethodEnum {
+    CREDENTIALS = 'credentials',
+    GOOGLE = 'google',
+    YANDEX = 'yandex'
+}

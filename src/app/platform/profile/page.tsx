@@ -1,10 +1,10 @@
 "use client";
 import {Button, Divider, Spin} from "antd";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/stores/stores";
 import React, { useEffect } from "react";
 import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const ProfilePage = () => {
     const { userProfileStore } = useMobxStores();

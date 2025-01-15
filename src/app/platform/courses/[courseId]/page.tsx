@@ -64,7 +64,7 @@ const CoursePage = () => {
                     <div className="mt-4">
                         <Breadcrumb
                             items={[
-                                {title: <Link href="/platform/courses">Курсы</Link>},
+                                {title: <Link href="/platform/courses">Доступные курсы</Link>},
                                 {title: <p>{currentCourse?.name}</p>},
                             ]}
                         />

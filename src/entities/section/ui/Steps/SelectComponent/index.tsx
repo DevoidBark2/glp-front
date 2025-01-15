@@ -58,10 +58,11 @@ export const SelectComponent = ({createSectionForm} : SelectComponentProps) => {
     const handleSelect = (value: string, option: any) => {
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
         if (selectedComponent) {
+            debugger
             courseComponentStore.addComponentToTable(selectedComponent);
             const currentComponentIds = createSectionForm.getFieldValue('components') || [];
 
-            const updatedComponentIds = [...currentComponentIds, selectedComponent];
+            const updatedComponentIds = [...currentComponentIds, selectedComponent.id];
 
             // Обновляем значение в форме только с массивом ID
             createSectionForm.setFieldsValue({ components: updatedComponentIds });

@@ -3,7 +3,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import {SaveOutlined} from "@ant-design/icons";
 import {UserProfile} from "@/stores/UserProfileStore";
-import {useMobxStores} from "@/stores/stores";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 export const ProfileForm = () => {
     const { userProfileStore } = useMobxStores();
