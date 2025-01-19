@@ -6,21 +6,20 @@ import {
 } from "antd";
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
-import { ModeratorFeedback, Post } from "@/stores/PostStore";
 import {
     CheckCircleOutlined,
     ClockCircleOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
 
-import {PageHeader} from "@/shared/ui/PageHeader";
+import { PageHeader } from "@/shared/ui/PageHeader";
 import { getPostColumns } from "@/columnsTables/postColumns";
-import {PageContainerControlPanel} from "@/shared/ui";
+import { PageContainerControlPanel } from "@/shared/ui";
 import { postTable } from "@/shared/config";
-import { PostStatusEnum } from "@/shared/api/posts/model";
+import { ModeratorFeedback, PostStatusEnum } from "@/shared/api/posts/model";
 import { useRouter } from "next/navigation";
-import {useMobxStores} from "@/stores/stores";
-import {SettingControlPanel} from "@/shared/model";
+import { SettingControlPanel } from "@/shared/model";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const PostPage = () => {
     const { postStore, userProfileStore } = useMobxStores();
@@ -93,23 +92,6 @@ const PostPage = () => {
         }
     };
 
-    const renderTooltipTitle = (record: Post) => {
-        switch (record.status) {
-            case PostStatusEnum.NEW:
-                return "Отправьте сначала на проверку и ожидайте ответа от модератора перед публикацией поста.";
-            case PostStatusEnum.MODIFIED:
-                return "Отправьте сначала на проверку и ожидайте ответа от модератора перед публикацией поста.";
-            case PostStatusEnum.IN_PROCESSING:
-                return "Ожидайте подтверждения модератором."
-            case PostStatusEnum.REJECT:
-                return "Пост был отклонен модератором,больше информации находится в форме редактирования поста."
-            case PostStatusEnum.APPROVED:
-                return "Пост успешно прошел проверку, Вы можете опубликовать данный пост."
-            default:
-                return "Неизвестно"
-        }
-    }
-
     const handelChangePost = (postId: number) => {
         router.push(`posts/${postId}`)
     }
@@ -138,9 +120,7 @@ const PostPage = () => {
                 columns={getPostColumns({
                     getStatusTag: getStatusTag,
                     currentUser: userProfileStore.userProfile,
-                    renderTooltipTitle: renderTooltipTitle,
                     publishPost: postStore.publishPost,
-                    submitReview: postStore.submitReview,
                     deletePost: postStore.deletePost,
                     handleChangePost: handelChangePost
                 })}

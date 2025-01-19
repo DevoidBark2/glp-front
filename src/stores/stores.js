@@ -1,5 +1,4 @@
 import React from "react";
-import PostStore from "@/stores/PostStore";
 import SettingsStore from "@/stores/SettingsStore";
 import CourseStore from "@/stores/CourseStore";
 import NomenclatureStore from "@/stores/NomenclatureStore";
@@ -12,10 +11,9 @@ import FeedBacksStore from "./FeedBacksStore";
 import AchievementsStore from "./AchievementsStore";
 import ModeratorStore from "./ModeratorStore";
 import UserStore from "./UserStore";
-import {GeneralSettings} from "@/entities/general-settings";
+import { GeneralSettings } from "@/entities/general-settings";
 
 const userStore = new UserStore();
-const postStore = new PostStore();
 const settingsStore = new SettingsStore();
 const courseStore = new CourseStore();
 const nomenclatureStore = new NomenclatureStore();
@@ -31,7 +29,6 @@ const moderatorStore = new ModeratorStore();
 
 export const RootStore = {
     userStore,
-    postStore,
     settingsStore,
     courseStore,
     nomenclatureStore,

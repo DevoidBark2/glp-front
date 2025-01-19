@@ -1,6 +1,6 @@
 import { axiosInstance, withAuth } from "../http-client"
-import {Post, PostCreateForm, PostStatusEnum} from "./model";
-import {Comments} from "@/app/control-panel/manage-posts/page";
+import { Post, PostCreateForm, PostStatusEnum } from "./model";
+import { Comments } from "@/app/control-panel/manage-posts/page";
 
 export const getAllPost = async (): Promise<Post[]> => {
     const data = (await axiosInstance.get('api/posts')).data;
@@ -12,17 +12,18 @@ export const getCPAllPost = async (): Promise<Post[]> => {
     return response.data;
 };
 
-export const getPostById = async (id: string) => {
+export const getPostById = async (id: number) => {
     const data = (await axiosInstance.get(`api/getPostById?postId=${id}`)).data;
     return data.data;
 };
 
 export const createPost = async (values: PostCreateForm, config = {}) => {
+    debugger
     const form = new FormData();
     form.append("name", values.name);
     form.append("content", values.content);
-    if(values.description) form.append("description", values.description);
-    if (values.image?.originFileObj) form.append("image", values.image.originFileObj);
+    if (values.description) form.append("description", values.description);
+    if (values.image) form.append("image", values.image);
 
     return (await axiosInstance.post("/api/posts", form, config)).data;
 };

@@ -1,7 +1,7 @@
-import {action, makeAutoObservable, runInAction} from "mobx";
-import {GET} from "@/lib/fetcher";
-import {notification} from "antd";
-import {SectionCourseItem} from "@/stores/SectionCourse";
+import { action, makeAutoObservable, runInAction } from "mobx";
+import { GET } from "@/lib/fetcher";
+import { notification } from "antd";
+import { SectionCourseItem } from "@/stores/SectionCourse";
 import {
     changeCourse,
     createCourse,
@@ -12,12 +12,12 @@ import {
     getCPAllCourse, getFullCourse,
     sendToReviewCourse
 } from "@/shared/api/course";
-import {Course, StatusCourseEnum} from "@/shared/api/course/model";
-import {courseMapper} from "@/entities/course/mappers/courseMapper";
-import {axiosInstance} from "@/shared/api/http-client";
-import {TaskAnswerUserDto} from "@/shared/api/task/model";
-import {getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed} from "@/shared/api/task";
-import {SectionCourse} from "@/shared/api/section/model";
+import { Course, StatusCourseEnum } from "@/shared/api/course/model";
+import { courseMapper } from "@/entities/course/mappers/courseMapper";
+import { axiosInstance } from "@/shared/api/http-client";
+import { TaskAnswerUserDto } from "@/shared/api/task/model";
+import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
+import { SectionCourse } from "@/shared/api/section/model";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",
@@ -91,7 +91,7 @@ class CourseStore {
         this.loadingCourseDetails = value
     })
 
-    setCourseDetailsSections = action((value: SectionCourseItem[])=> {
+    setCourseDetailsSections = action((value: SectionCourseItem[]) => {
         this.courseDetailsSections = value
     })
     setSelectedCourseForDetailModal = action((course: Course | null) => {
@@ -158,7 +158,7 @@ class CourseStore {
         })
     })
 
-    getCourseDetailsById = action(async(courseId: number) => {
+    getCourseDetailsById = action(async (courseId: number) => {
         return await getCourseById(courseId);
     })
 
@@ -201,7 +201,7 @@ class CourseStore {
         })
     })
 
-    subscribeCourse = action(async (courseId: number, userId: number) => {
+    subscribeCourse = action(async (courseId: number, userId: string) => {
         this.setLoadingSubscribeCourse(true)
         try {
             return await axiosInstance.post('api/subscribe-course', {
@@ -220,14 +220,14 @@ class CourseStore {
         // обновить копмонент + обновить меню
 
         runInAction(() => {
-            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section:any) => {
+            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section: any) => {
                 return {
                     ...section,
-                    children: section.children.map((child:any) => {
+                    children: section.children.map((child: any) => {
                         if (child.id === task.currentSection) {
                             return {
                                 ...child,
-                                sectionComponents: (child.sectionComponents || []).map((component:any) => {
+                                sectionComponents: (child.sectionComponents || []).map((component: any) => {
                                     if (component.componentTask.id === task.task.id) {
                                         // Обновляем данные для componentTask и userAnswer
                                         console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
@@ -295,7 +295,7 @@ class CourseStore {
                         }),
                     };
                 });
-    
+
                 // Заменяем sections новым массивом
                 // @ts-ignore
                 this.courseMenuItems = {
@@ -305,7 +305,7 @@ class CourseStore {
             });
         }
     });
-    
+
 
     getMenuSections = action(async (courseId: number, currentSection: number) => {
         this.setLoadingSection(true)

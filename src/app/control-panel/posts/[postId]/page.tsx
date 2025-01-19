@@ -1,8 +1,7 @@
 "use client"
 import { PageContainerControlPanel } from "@/shared/ui";
 import { Post, PostStatusEnum } from "@/shared/api/posts/model";
-import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Tooltip, UploadProps } from "antd";
-import Dragger from "antd/es/upload/Dragger";
+import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Upload, UploadProps } from "antd";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -12,7 +11,6 @@ import {
     InboxOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
-import { UserRole } from "@/shared/api/user/model";
 
 const ReactQuill = dynamic(
     () => import('react-quill'),
@@ -21,10 +19,10 @@ const ReactQuill = dynamic(
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import nextConfig from "next.config.mjs";
-import { useMobxStores } from "@/stores/stores";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const postPage = () => {
-    const { postStore, userProfileStore } = useMobxStores();
+    const { postStore } = useMobxStores();
     const { postId } = useParams();
     const router = useRouter();
     const [form] = Form.useForm<Post>();
@@ -37,6 +35,7 @@ const postPage = () => {
         name: 'file',
         multiple: false,
         fileList,
+        listType: "picture",
         onChange(info) {
             const { status } = info.file;
 
@@ -47,15 +46,14 @@ const postPage = () => {
                     message: `${info.file.name} загружен успешно.`,
                 });
 
-                form.setFieldValue('image', `${nextConfig.env?.API_URL}${info.file.response?.url}`); // Пример: ожидаем, что сервер вернёт URL
+                form.setFieldValue('image', `${nextConfig.env?.API_URL}${info.file.response?.url}`);
             } else if (status === 'error') {
                 notification.error({
                     message: `${info.file.name} ошибка загрузки.`,
                 });
             }
         },
-        onRemove(file) {
-            // Удаляем файл из состояния и сбрасываем значение в форме
+        onRemove() {
             setFileList([]);
             form.setFieldValue('image', null);
         },
@@ -63,7 +61,7 @@ const postPage = () => {
 
 
     useEffect(() => {
-        postStore.getPostById(String(postId)).then(response => {
+        postStore.getPostById(Number(postId)).then(response => {
             setCurrentPost(response!)
             form.setFieldsValue(response!)
 
@@ -73,7 +71,7 @@ const postPage = () => {
                         uid: '-1', // Уникальный идентификатор файла
                         name: response?.image.split('/')[1],
                         status: 'done', // Статус успешной загрузки
-                        url: `${nextConfig.env?.API_URL}${response.image}`, // URL текущего изображения
+                        url: `${nextConfig.env?.API_URL}${response.image}`,
                     },
                 ]);
             }
@@ -81,6 +79,7 @@ const postPage = () => {
             notification.error({ message: e.response.data.message })
         });
     }, [postId]);
+
     return (
         <PageContainerControlPanel>
             <Breadcrumb
@@ -122,19 +121,17 @@ const postPage = () => {
                 </Form.Item>
 
                 <Form.Item name="image" label="Изображение поста">
-                    <Dragger {...props}>
-                        <>
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">
-                                Нажмите или перетащите файл в эту область для загрузки
-                            </p>
-                            <p className="ant-upload-hint">
-                                Запрещено загружать конфиденциальные данные.
-                            </p>
-                        </>
-                    </Dragger>
+                    <Upload.Dragger {...props}>
+                        <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                        </p>
+                        <p className="ant-upload-text">
+                            Нажмите или перетащите файл в эту область для загрузки
+                        </p>
+                        <p className="ant-upload-hint">
+                            Запрещено загружать конфиденциальные данные.
+                        </p>
+                    </Upload.Dragger>
                 </Form.Item>
 
                 <Form.Item
@@ -146,25 +143,24 @@ const postPage = () => {
                         style={{ width: '100%' }}
 
                     >
+                        <Select.Option value={PostStatusEnum.APPROVED}>
+                            <Tag icon={<ClockCircleOutlined />} color="green">
+                                Подтвержденный
+                            </Tag>
+                        </Select.Option>
                         <Select.Option value={PostStatusEnum.NEW}>
-                            <Tooltip title="Новый">
-                                <Tag icon={<ClockCircleOutlined />} color="blue">
-                                    Новый
-                                </Tag>
-                            </Tooltip>
+                            <Tag icon={<ClockCircleOutlined />} color="blue">
+                                Новый
+                            </Tag>
                         </Select.Option>
                         <Select.Option value={PostStatusEnum.REJECT}>
-                            <Tooltip color="red">
-                                <Tag color="red">Отклонен</Tag>
-                            </Tooltip>
+                            <Tag color="red">Отклонен</Tag>
                         </Select.Option>
 
                         <Select.Option value={PostStatusEnum.IN_PROCESSING}>
-                            <Tooltip title="В обработке">
-                                <Tag icon={<SyncOutlined spin />} color="yellow">
-                                    В обработке
-                                </Tag>
-                            </Tooltip>
+                            <Tag icon={<SyncOutlined spin />} color="yellow">
+                                В обработке
+                            </Tag>
                         </Select.Option>
                     </Select>
                 </Form.Item>
@@ -178,7 +174,7 @@ const postPage = () => {
 
                 <div className="flex flex-col items-center">
                     <Form.Item style={{ marginTop: '10px' }}>
-                        <Button type="primary" htmlType="submit" loading={postStore.loading} disabled={userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN}>Изменить</Button>
+                        <Button type="primary" htmlType="submit" loading={postStore.loading}>Изменить</Button>
                     </Form.Item>
                 </div>
             </Form>

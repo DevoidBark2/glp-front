@@ -7,6 +7,7 @@ import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
 
 export type UserProfile = {
+    id: string
     first_name: string
     last_name: string
     second_name: string

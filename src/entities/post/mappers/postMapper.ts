@@ -1,6 +1,4 @@
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
-import { Post } from "@/stores/PostStore";
-import dayjs from "dayjs";
+import { Post } from "@/shared/api/posts/model";
 
 export const postMapper = (post: Post): Post => {
     return {
@@ -11,7 +9,7 @@ export const postMapper = (post: Post): Post => {
         content: post.content,
         status: post.status,
         is_publish: post.is_publish,
-        created_at: dayjs(post.created_at, FORMAT_VIEW_DATE).toDate(),
+        created_at: post.created_at,
         user: post.user,
         moderatorFeedBack: post.moderatorFeedBack
     };

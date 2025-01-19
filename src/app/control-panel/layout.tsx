@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import {Avatar, Divider, Menu, MenuProps, Skeleton, Spin} from "antd";
+import { Avatar, Divider, Menu, MenuProps, Skeleton, Spin } from "antd";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { usePathname } from "next/navigation";
@@ -12,9 +12,9 @@ import {
     SolutionOutlined,
     ToolOutlined, UserOutlined
 } from "@ant-design/icons";
-import { useMobxStores } from "@/stores/stores";
 import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "../../../next.config.mjs";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';

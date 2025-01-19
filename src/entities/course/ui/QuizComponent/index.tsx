@@ -161,9 +161,9 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
                 </div>
             </div>
 
-            <div className="navigation flex justify-between mt-4">
+            <div className="navigation mt-4">
                 {currentQuestionIndex !== 0 && (
-                    <Button onClick={handleBack} type="default" className="hover:scale-105">
+                    <Button onClick={handleBack} type="default" className="mr-2 hover:scale-105">
                         Назад
                     </Button>
                 )}

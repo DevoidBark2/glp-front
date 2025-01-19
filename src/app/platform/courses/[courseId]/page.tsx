@@ -3,44 +3,41 @@ import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Breadcrumb, Button, Divider, notification, Spin } from "antd";
 import { useParams } from "next/navigation";
-import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import nextConfig from "next.config.mjs";
-import {AccessRightEnum, Course} from "@/shared/api/course/model";
-import {ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined} from "@ant-design/icons";
-import { getCookieUserDetails } from "@/lib/users";
+import { AccessRightEnum, Course } from "@/shared/api/course/model";
+import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import {CourseLevelComponent,InputSecretKeyModal} from "@/entities/course/ui";
+import { CourseLevelComponent, InputSecretKeyModal } from "@/entities/course/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const CoursePage = () => {
-    const { courseStore, userStore } = useMobxStores();
+    const { courseStore, userProfileStore } = useMobxStores();
     const { courseId } = useParams();
-    const [currentCourse,setCurrentCourse] = useState<Course | null>(null);
+    const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState(false);
     const router = useRouter();
 
     const handleClick = () => {
-
-        if(currentCourse?.access_right === AccessRightEnum.PRIVATE) {
+        if (currentCourse?.access_right === AccessRightEnum.PRIVATE) {
             setInputSecretKeyModal(true)
         }
         courseStore.setSubscribeCourseLoading(true);
-        const user = getCookieUserDetails();
 
-        if(!user) {
-            userStore.setOpenLoginModal(true);
+        if (!userProfileStore.userProfile) {
+            router.push('/platform/auth/login')
             courseStore.setSubscribeCourseLoading(false);
             return;
         }
 
-        if(currentCourse && currentCourse.isUserEnrolled) {
+        if (currentCourse && currentCourse.isUserEnrolled) {
             router.push(`/platform/lessons/${courseId}`)
             courseStore.setSubscribeCourseLoading(false);
             return;
         }
 
-        courseStore.subscribeCourse(Number(courseId),user.user.id).then(response => {
+        courseStore.subscribeCourse(Number(courseId), userProfileStore.userProfile?.id).then(response => {
             router.push(`/platform/lessons/${courseId}`)
         }).finally(() => {
             courseStore.setSubscribeCourseLoading(false);
@@ -58,14 +55,14 @@ const CoursePage = () => {
 
     return (
         <>
-            {inputSecretKeyModal && <InputSecretKeyModal inputSecretKeyModal={inputSecretKeyModal} setInputSecretKeyModal={setInputSecretKeyModal} /> }
+            {inputSecretKeyModal && <InputSecretKeyModal inputSecretKeyModal={inputSecretKeyModal} setInputSecretKeyModal={setInputSecretKeyModal} />}
             <div className="container mx-auto">
                 <div className="px-6">
                     <div className="mt-4">
                         <Breadcrumb
                             items={[
-                                {title: <Link href="/platform/courses">Доступные курсы</Link>},
-                                {title: <p>{currentCourse?.name}</p>},
+                                { title: <Link href="/platform/courses">Доступные курсы</Link> },
+                                { title: <p>{currentCourse?.name}</p> },
                             ]}
                         />
                     </div>
@@ -110,12 +107,12 @@ const CoursePage = () => {
                                             width={0}
                                             height={0}
                                             sizes="100vw"
-                                            style={{width: '100%', height: 'auto'}}
+                                            style={{ width: '100%', height: 'auto' }}
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
                                         <div className="w-80 h-48 flex items-center justify-center bg-gray-200">
-                                            <BookOutlined style={{fontSize: '48px', color: '#8c8c8c'}}/>
+                                            <BookOutlined style={{ fontSize: '48px', color: '#8c8c8c' }} />
                                         </div>
                                     )}
                                 </div>
@@ -124,40 +121,40 @@ const CoursePage = () => {
                             <div
                                 className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
                                 <div className="flex items-center bg-gray-100 p-4 rounded-lg">
-                                    <CourseLevelComponent level={currentCourse.level}/>
+                                    <CourseLevelComponent level={currentCourse.level} />
                                 </div>
                                 <div className="flex items-center bg-gray-100 p-4 rounded-lg">
                                     {currentCourse.access_right === 0 ? (
                                         <>
-                                            <UnlockOutlined style={{fontSize: 30, color: 'green'}}/>
+                                            <UnlockOutlined style={{ fontSize: 30, color: 'green' }} />
                                             <span className="ml-4 text-gray-700 text-base font-medium">
-                Уровень допуска: <span className="text-green-600 font-semibold">Открытый</span>
-            </span>
+                                                Уровень допуска: <span className="text-green-600 font-semibold">Открытый</span>
+                                            </span>
                                         </>
                                     ) : (
                                         <>
-                                            <LockOutlined style={{fontSize: 30, color: 'red'}}/>
+                                            <LockOutlined style={{ fontSize: 30, color: 'red' }} />
                                             <span className="ml-4 text-gray-700 text-base font-medium">
-                Уровень допуска: <span className="text-red-600 font-semibold">Закрытый</span>
-            </span>
+                                                Уровень допуска: <span className="text-red-600 font-semibold">Закрытый</span>
+                                            </span>
                                         </>
                                     )}
                                 </div>
                                 <div className="flex items-center bg-gray-100 p-4 rounded-lg">
-                                    <ClockCircleOutlined style={{fontSize: 30}}/>
+                                    <ClockCircleOutlined style={{ fontSize: 30 }} />
                                     <span className="ml-4 text-gray-700 text-base font-medium">
-                Продолжительность: {currentCourse.duration} ч.
-            </span>
+                                        Продолжительность: {currentCourse.duration} ч.
+                                    </span>
                                 </div>
                                 <div className="flex items-center bg-gray-100 p-4 rounded-lg">
-                                    <BarsOutlined style={{fontSize: 30}}/>
+                                    <BarsOutlined style={{ fontSize: 30 }} />
                                     <span className="ml-4 text-gray-700 text-base font-medium">
-                Категория: {currentCourse.category?.name}
-            </span>
+                                        Категория: {currentCourse.category?.name}
+                                    </span>
                                 </div>
                             </div>
 
-                            <Divider/>
+                            <Divider />
                             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                                 Описание курса
                             </h2>
@@ -171,7 +168,7 @@ const CoursePage = () => {
 
                     ) : (
                         <div className="text-center py-20">
-                            <Spin size="large"/>
+                            <Spin size="large" />
                             <p className="text-gray-500 mt-4">Загрузка информации о курсе...</p>
                         </div>
                     )}

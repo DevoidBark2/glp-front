@@ -5,9 +5,10 @@ import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
-import {AuthMethodEnum} from "@/shared/api/auth/model";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 export type UserProfile = {
+    id: string
     first_name: string
     last_name: string
     second_name: string

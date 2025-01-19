@@ -64,7 +64,7 @@ class PostStore {
             const data = await createPost(values);
 
             this.userPosts = [...this.userPosts, postMapper(data)];
-            //notification.success({ message: response.message });
+            notification.success({ message: data.message });
         } catch (e) {
 
         } finally {

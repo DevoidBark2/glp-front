@@ -1,4 +1,3 @@
-import { ModeratorFeedback, Post } from "@/stores/PostStore";
 import { Button, Popconfirm, Popover, Switch, TableColumnsType, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -10,23 +9,22 @@ import {
     UserOutlined
 } from "@ant-design/icons";
 import { UserRole } from "@/shared/api/user/model";
-import { PostStatusEnum } from "@/shared/api/posts/model";
+import { ModeratorFeedback, Post, PostStatusEnum } from "@/shared/api/posts/model";
 import { UserHoverCard } from "@/widgets";
 import { FILTER_STATUS_POST, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
+import { UserProfile } from "@/entities/user-profile/model/UserProfileStore";
 
 interface getPostColumnsProps {
     getStatusTag: (status: PostStatusEnum, rejectReason?: ModeratorFeedback) => React.JSX.Element;
-    currentUser: any,
-    renderTooltipTitle: (post: Post) => string
+    currentUser: UserProfile | null,
     publishPost: (postId: number, checked: boolean) => void
-    submitReview: (postId: number) => void
     deletePost: (postId: number) => void
     handleChangePost: (postId: number) => void;
 }
 
 
 
-export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, publishPost, submitReview, deletePost, handleChangePost }: getPostColumnsProps): TableColumnsType<Post> => {
+export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deletePost, handleChangePost }: getPostColumnsProps): TableColumnsType<Post> => {
     return [
         {
             title: 'Название',
@@ -60,6 +58,8 @@ export const getPostColumns = ({ getStatusTag, currentUser, renderTooltipTitle, 
             title: "Опубликован",
             dataIndex: "is_publish",
             render: (_, record) => {
+                const a = currentUser;
+                debugger
                 // const isSuperAdmin = currentUser?.role === UserRole.SUPER_ADMIN;
                 // const isUnderReview = record.status !== PostStatusEnum.APPROVED;
                 // const isDisabled =
