@@ -1,11 +1,9 @@
 import { action, makeAutoObservable } from "mobx";
 import SectionCourse from "@/stores/SectionCourse";
-import { Post } from "@/stores/PostStore";
-import { GET } from "@/lib/fetcher";
-import { getUserToken } from "@/lib/users";
 import { Course } from "@/shared/api/course/model";
 import {User} from "@/shared/api/user/model";
 import { getStatistics } from "@/shared/api/statistics";
+import {Post} from "@/shared/api/posts/model";
 
 export type StatisticsData = {
     countUsers: number;

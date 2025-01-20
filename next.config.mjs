@@ -6,8 +6,11 @@ const nextConfig = {
     },
     reactStrictMode: false,
     images: {
-        domains: ['localhost'],
         remotePatterns: [
+            {
+              protocol: 'http',
+              hostname: 'localhost',
+            },
             {
                 protocol: 'https',
                 hostname: 'lh3.googleusercontent.com',

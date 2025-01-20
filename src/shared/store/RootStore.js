@@ -6,6 +6,7 @@ import { AuthStore } from "@/entities/auth";
 import {GeneralSettings} from "@/entities/general-settings";
 import UserProfileStore from "@/entities/user-profile/model/UserProfileStore";
 import UserStore from "@/entities/user/model/UserStore";
+import StatisticsStore from "@/entities/statistics/model/StatisticsStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -14,6 +15,7 @@ const faqStore = new FaqStore();
 const authStore = new AuthStore();
 const generalStore = new GeneralSettings();
 const userProfileStore = new UserProfileStore();
+const statisticsStore = new StatisticsStore();
 
 export const RootStore = {
     userStore,
@@ -22,7 +24,8 @@ export const RootStore = {
     faqStore,
     authStore,
     generalStore,
-    userProfileStore
+    userProfileStore,
+    statisticsStore
 };
 
 const StoreContext = React.createContext(RootStore);

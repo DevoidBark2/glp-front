@@ -19,10 +19,10 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { UserRole } from "@/shared/api/user/model";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const ControlPanel = () => {
   const { statisticsStore, userProfileStore } = useMobxStores();

@@ -18,12 +18,13 @@ export const getPostById = async (id: number) => {
 };
 
 export const createPost = async (values: PostCreateForm, config = {}) => {
-    debugger
     const form = new FormData();
     form.append("name", values.name);
     form.append("content", values.content);
     if (values.description) form.append("description", values.description);
-    if (values.image) form.append("image", values.image);
+    if (values.image) {
+        form.append("image", values.image);
+    }
 
     return (await axiosInstance.post("/api/posts", form, config)).data;
 };
@@ -31,7 +32,17 @@ export const createPost = async (values: PostCreateForm, config = {}) => {
 
 export const publishPost = async (postId: number, checked: boolean) => (await axiosInstance.post('api/publish-post', { id: postId, checked: checked })).data;
 
-export const changePost = withAuth(async (post: Post, config = {}) => (await axiosInstance.put('api/post', post, config)).data);
+export const changePost = async (post: Post) => {
+    debugger
+    const form = new FormData();
+    form.append("name", post.name);
+    form.append("content", post.content);
+    if (post.description) form.append("description", post.description);
+    if (post.image) form.append("image", post.image);
+    const data = (await axiosInstance.put('api/post', post)).data
+
+    return data.data;
+}
 
 export const deletePost = async (id: number) => (await axiosInstance.delete(`/api/posts/${id}`)).data;
 
