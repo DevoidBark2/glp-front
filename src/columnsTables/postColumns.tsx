@@ -58,8 +58,6 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
             title: "Опубликован",
             dataIndex: "is_publish",
             render: (_, record) => {
-                const a = currentUser;
-                debugger
                 // const isSuperAdmin = currentUser?.role === UserRole.SUPER_ADMIN;
                 // const isUnderReview = record.status !== PostStatusEnum.APPROVED;
                 // const isDisabled =

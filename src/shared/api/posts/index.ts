@@ -33,7 +33,6 @@ export const createPost = async (values: PostCreateForm, config = {}) => {
 export const publishPost = async (postId: number, checked: boolean) => (await axiosInstance.post('api/publish-post', { id: postId, checked: checked })).data;
 
 export const changePost = async (post: Post) => {
-    debugger
     const form = new FormData();
     form.append("name", post.name);
     form.append("content", post.content);

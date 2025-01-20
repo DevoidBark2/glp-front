@@ -16,6 +16,7 @@ import {
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { CourseStore } from "@/entities/course";
 import { CourseMenu } from "@/entities/course/model/CourseStore";
+import { observer } from "mobx-react";
 
 const { Sider } = Layout;
 
@@ -29,7 +30,7 @@ interface NavbarLessonProps {
     courseId: number
 }
 
-export const NavbarLesson: FC<NavbarLessonProps> = ({ courseStore, router, collapsed, setCollapsed, selectedSection, setSelectedSection, courseId }) => {
+export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, router, collapsed, setCollapsed, selectedSection, setSelectedSection, courseId }) => {
 
     // переход между разделами
     const handleMenuClick = ({ key }: any) => {
@@ -152,4 +153,4 @@ export const NavbarLesson: FC<NavbarLessonProps> = ({ courseStore, router, colla
             }
         </Sider>
     )
-}
+})

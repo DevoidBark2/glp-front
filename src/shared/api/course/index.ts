@@ -14,7 +14,6 @@ export const getCPAllCourse = async () => {
 
 export const createCourse = async (values: any): Promise<Course> => {
     const hasCertificate = values.has_certificate !== undefined ? String(Boolean(values.has_certificate)) : 'false';
-    debugger
     const form = new FormData();
     form.append('name', values.name)
     form.append('small_description', values.small_description)
@@ -26,20 +25,20 @@ export const createCourse = async (values: any): Promise<Course> => {
     form.append('access_right', values.access_right)
     form.append('duration', values.duration)
     form.append('level', values.level)
-    if(values.content_description) form.append("content_description", values.content_description)
+    if (values.content_description) form.append("content_description", values.content_description)
 
-    const data = (await axiosInstance.post('/api/course',form)).data;
+    const data = (await axiosInstance.post('/api/course', form)).data;
     return data.data;
 }
 
-export const confirmLeaveCourse = withAuth(async (courseId: number,config = {}) => {
-    const data = (await axiosInstance.delete(`api/leave-course/${courseId}`,config)).data
+export const confirmLeaveCourse = withAuth(async (courseId: number, config = {}) => {
+    const data = (await axiosInstance.delete(`api/leave-course/${courseId}`, config)).data
 
     return data.data;
 })
 
 export const getCourseById = withAuth(async (courseId: number, config = {}) => {
-    const data = (await axiosInstance.get(`api/course/${courseId}`,config)).data;
+    const data = (await axiosInstance.get(`api/course/${courseId}`, config)).data;
 
     return data.data;
 })
@@ -49,11 +48,11 @@ export const deleteCourseById = async (id: number) => {
 }
 
 export const changeCourse = async (course: Course) => {
-    return (await axiosInstance.put('api/course',course)).data;
+    return (await axiosInstance.put('api/course', course)).data;
 }
 
 export const sendToReviewCourse = async (id: number) => {
-    return (await axiosInstance.post('api/publish-course',{ courseId: id })).data;
+    return (await axiosInstance.post('api/publish-course', { courseId: id })).data;
 }
 
 export const getCourseDetailsSections = async (courseId: number) => {

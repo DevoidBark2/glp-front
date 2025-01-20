@@ -7,7 +7,7 @@ import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
 import { useRouter } from "next/navigation";
 import Image from "next/image"
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 export const LoginComponent = observer(() => {
     const [recaptcha, setRecaptcha] = useState<string | null>(null);
@@ -31,7 +31,6 @@ export const LoginComponent = observer(() => {
             code: values.code
         } : values
         userStore.loginUser(body).then((response) => {
-            debugger
             if (response.message) {
                 notification.success({ message: response.message })
                 setIsShowTwoFacor(true);

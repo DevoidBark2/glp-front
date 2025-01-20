@@ -132,7 +132,6 @@ class CourseStore {
 
     createCourse = action(async (values: any) => {
         this.setLoadingCreateCourse(true)
-        debugger
         return await createCourse(values).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => this.setLoadingCreateCourse(false))
@@ -219,57 +218,62 @@ class CourseStore {
 
         // обновить копмонент + обновить меню
 
+
+        this.courseMenuItems?.sections
+        const a = this.fullDetailCourse!.sections
+
+        debugger
         runInAction(() => {
-            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section: any) => {
-                return {
-                    ...section,
-                    children: section.children.map((child: any) => {
-                        if (child.id === task.currentSection) {
-                            return {
-                                ...child,
-                                sectionComponents: (child.sectionComponents || []).map((component: any) => {
-                                    if (component.componentTask.id === task.task.id) {
-                                        // Обновляем данные для componentTask и userAnswer
-                                        console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
-                                        console.log('Ответы:', data.answers.answer);
-                                        return {
-                                            ...component,
-                                            componentTask: {
-                                                ...component.componentTask,
-                                                userAnswer: data.answers.answer, // Обновляем userAnswer в componentTask
-                                            },
-                                        };
-                                    }
-                                    return component; // Оставляем компонент неизменным
-                                }),
-                            };
-                        }
-                        return child;
-                    }),
-                };
+            this.fullDetailCourse!.components = this.fullDetailCourse!.components.map((section: any) => {
+                debugger;
+
+                // Проверяем, соответствует ли componentTask в секции текущей задаче
+                if (section.componentTask.id === task.task.id) {
+                    // Если componentTask совпадает с task.id, обновляем его
+                    return {
+                        ...section,
+                        componentTask: {
+                            ...section.componentTask,
+                            // Обновляем ответы для componentTask
+                            userAnswer: data.answers.answer,
+                            sectionComponents: (section.componentTask.sectionComponents || []).map((component: any) => {
+                                if (component.componentTask.id === task.task.id) {
+                                    debugger;
+                                    console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
+                                    console.log('Ответы:', data.answers.answer);
+                                    return {
+                                        ...component,
+                                        componentTask: {
+                                            ...component.componentTask,
+                                            userAnswer: data.answers.answer, // Обновляем userAnswer в componentTask
+                                        },
+                                    };
+                                }
+                                return component; // Оставляем компонент неизменным
+                            }),
+                        },
+                    };
+                }
+
+                // Если componentTask не совпадает, возвращаем секцию без изменений
+                return section;
             });
 
-            const updatedSections = this.courseMenuItems?.sections.map(section => {
-                return {
+            if (this.courseMenuItems && this.courseMenuItems.sections) {
+                const updatedSections = this.courseMenuItems?.sections.map(section => ({
                     ...section,
                     children: section.children.map(child => {
-                        if (child.id === data.section.id) {
-                            return {
-                                ...child,
-                                userAnswer: data.answer, // Обновляем userAnswer
-                            };
+                        if (child.id === data.answers.section.id) {
+                            return { ...child, userAnswer: data.userAnswer };
                         }
                         return child;
                     }),
-                };
-            });
+                }));
 
-            // Заменяем sections новым массивом
-            // @ts-ignore
-            this.courseMenuItems = {
-                ...this.courseMenuItems,
-                sections: updatedSections as any,
-            };
+                runInAction(() => {
+                    this.courseMenuItems = { ...this.courseMenuItems, sections: updatedSections };
+                });
+            }
         });
 
 

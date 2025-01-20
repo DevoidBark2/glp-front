@@ -1,13 +1,15 @@
 import React from "react";
 import Link from "next/link";
-import {observer} from "mobx-react";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { observer } from "mobx-react";
+import { useMobxStores } from "@/shared/store/RootStore";
 
-export const Footer = observer(() => {
-    const {generalStore} = useMobxStores();
+export const Footer = observer(({ userSettings }: { userSettings?: any }) => {
+    const { generalStore } = useMobxStores();
+
 
     return (
         <footer className="bg-gray-800 text-white py-10 mt-10">
+            {userSettings}
             <div className="container mx-auto px-6">
                 <div className="flex flex-wrap sm:flex-nowrap justify-around items-start">
 

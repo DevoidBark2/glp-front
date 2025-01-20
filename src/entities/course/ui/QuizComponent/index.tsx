@@ -39,7 +39,6 @@ export const QuizComponent = observer(({ quiz, currentSection }: QuizComponentPr
     };
 
     const handleCheckResult = () => {
-        const a = currentSection;
         courseStore
             .handleCheckTask({ task: quiz, answers: selectedAnswers, currentSection: Number(currentSection) })
             .then(() => {

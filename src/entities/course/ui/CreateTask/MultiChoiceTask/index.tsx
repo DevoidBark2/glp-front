@@ -10,8 +10,8 @@ interface MultiPlayChoiceProps {
 export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
     return (
         <>
-            <Form.Item 
-                label="Заголовок" 
+            <Form.Item
+                label="Заголовок"
                 name="title"
                 tooltip="Укажите заголовок, чтобы легко идентифицировать компонент, относящийся к разделу."
             >
@@ -105,7 +105,7 @@ export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
 
                                 <Form.Item
                                     label="Правильный ответ(ы)"
-                                    name={[name, "correctOptions"]}
+                                    name={[name, "correctOption"]}
                                     rules={[
                                         { required: true, message: "Пожалуйста, выберите правильный ответ(ы)" },
                                     ]}

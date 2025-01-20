@@ -9,8 +9,8 @@ interface QuizMultiComponentProps {
     currentSection: number
 }
 
-export const QuizMultiComponent = observer(({quiz,currentSection} :QuizMultiComponentProps) => {
-    const {courseStore} = useMobxStores();
+export const QuizMultiComponent = observer(({ quiz, currentSection }: QuizMultiComponentProps) => {
+    const { courseStore } = useMobxStores();
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
 
     const handleOptionChange = (index: number) => {
@@ -23,6 +23,7 @@ export const QuizMultiComponent = observer(({quiz,currentSection} :QuizMultiComp
     };
 
     const checkAnswers = () => {
+        debugger
         courseStore.handleCheckTask({ task: quiz, answers: selectedAnswers, currentSection: Number(currentSection) })
     };
 

@@ -1,7 +1,7 @@
-import {action, makeAutoObservable} from "mobx";
-import {notification} from "antd";
-import {GeneralSettingsType} from "@/shared/api/general-settings/model";
-import {changeGeneralSettings, getGeneralSettings} from "@/shared/api/general-settings";
+import { action, makeAutoObservable } from "mobx";
+import { notification } from "antd";
+import { GeneralSettingsType } from "@/shared/api/general-settings/model";
+import { changeGeneralSettings, getFooterInfo, getGeneralSettings } from "@/shared/api/general-settings";
 
 export class GeneralSettings {
     constructor() {
@@ -18,13 +18,20 @@ export class GeneralSettings {
         this.loading = value;
     })
 
+    getFooter = action(async () => {
+        await getFooterInfo().then(response => {
+            this.setGeneralSetting(response)
+        });
+    })
     getGeneralSettings = action(async () => {
-       try {
-           this.setLoading(true);
-           return await getGeneralSettings()
-       }finally {
-           this.setLoading(false);
-       }
+        try {
+            this.setLoading(true);
+            const data = await getGeneralSettings()
+
+            this.setGeneralSetting(data[0])
+        } finally {
+            this.setLoading(false);
+        }
     })
 
     saveGeneralSetting = action(async (values: any) => {

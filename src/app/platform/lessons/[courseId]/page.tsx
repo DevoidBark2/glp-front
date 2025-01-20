@@ -89,6 +89,13 @@ const LessonPage = () => {
                                     if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
                                         return <QuizMultiComponent key={component.id} quiz={component.componentTask} currentSection={selectedSection} />;
                                     }
+
+                                    if (component.componentTask.type === CourseComponentType.SimpleTask) {
+                                        return <div>
+                                            {component.componentTask.title}
+                                            {component.componentTask.description}
+                                        </div>
+                                    }
                                 })}
 
                             {(courseStore.fullDetailCourse?.files && courseStore.fullDetailCourse?.files.length > 0 || courseStore.fullDetailCourse?.links && courseStore.fullDetailCourse?.links.length > 0) && <Divider />}

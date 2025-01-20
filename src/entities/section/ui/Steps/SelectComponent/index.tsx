@@ -16,8 +16,8 @@ interface SelectComponentProps {
     createSectionForm: FormInstance
 }
 
-export const SelectComponent = ({createSectionForm} : SelectComponentProps) => {
-    const {courseComponentStore} = useMobxStores();
+export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => {
+    const { courseComponentStore } = useMobxStores();
 
     const renderType = (type: CourseComponentType) => {
         switch (type) {
@@ -58,7 +58,6 @@ export const SelectComponent = ({createSectionForm} : SelectComponentProps) => {
     const handleSelect = (value: string, option: any) => {
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
         if (selectedComponent) {
-            debugger
             courseComponentStore.addComponentToTable(selectedComponent);
             const currentComponentIds = createSectionForm.getFieldValue('components') || [];
 
@@ -104,7 +103,7 @@ export const SelectComponent = ({createSectionForm} : SelectComponentProps) => {
             ),
         },
     ];
-    
+
     return {
         title: "Содержимое раздела",
         content: (

@@ -4,18 +4,19 @@ import { observer } from 'mobx-react';
 import { usePathname } from 'next/navigation';
 import { Footer } from "@/widgets/Footer";
 import { Header } from "@/widgets";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface LayoutProps {
     children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const { userProfileStore } = useMobxStores()
+    const { userProfileStore, generalStore } = useMobxStores()
     const pathName = usePathname();
 
     useEffect(() => {
         userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false))
+        generalStore.getFooter()
     }, []);
 
     // if (generalStore.loading) {
