@@ -7,13 +7,10 @@ import {
     notification
 } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-
 import { useMobxStores } from "@/stores/stores";
 import { CourseComponentType } from "@/shared/api/course/model";
-import { QuizComponent } from "@/entities/course/ui/QuizComponent";
-import { QuizMultiComponent } from "@/entities/course/ui/QuizMultiComponent";
-import { TextComponent } from "@/entities/course/ui/TextComponent";
 import { FileAttachment, HeaderLesson, LinksAttachment, NavbarLesson } from "@/widgets/Lesson";
+import {SimpleTask,QuizComponent, QuizMultiComponent,TextComponent} from "@/entities/course/ui";
 
 const { Content } = Layout;
 
@@ -91,10 +88,7 @@ const LessonPage = () => {
                                     }
 
                                     if (component.componentTask.type === CourseComponentType.SimpleTask) {
-                                        return <div>
-                                            {component.componentTask.title}
-                                            {component.componentTask.description}
-                                        </div>
+                                        return <SimpleTask key={component.id} task={component.componentTask} currentSection={selectedSection} />
                                     }
                                 })}
 
