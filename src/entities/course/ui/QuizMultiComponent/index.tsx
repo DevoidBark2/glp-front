@@ -36,24 +36,28 @@ export const QuizMultiComponent = observer(({ quiz, currentSection }: QuizMultiC
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Вопрос: {questionItem.question}</h3>
 
                     <div className="options">
-                        {questionItem.options.map((option, optionIndex) => (
-                            <label
-                                key={optionIndex}
-                                className={`block cursor-pointer mb-2 p-4 border rounded-lg transition-all ${selectedAnswers.includes(optionIndex)
-                                    ? 'bg-blue-100 border-blue-500'
-                                    : 'bg-white border-gray-300'
-                                    }`}
-                            >
-                                <input
-                                    type="checkbox"
-                                    value={optionIndex}
-                                    checked={selectedAnswers.includes(optionIndex)}
-                                    onChange={() => handleOptionChange(optionIndex)}
-                                    className="mr-2"
-                                />
-                                {option}
-                            </label>
-                        ))}
+                        {questionItem.options.map((option, optionIndex) => {
+                            return (
+                                <label
+                                    key={optionIndex}
+                                    className={`block cursor-pointer mb-2 p-4 border rounded-lg transition-all ${quiz.userAnswer && quiz.userAnswer[0]?.userAnswer?.includes(optionIndex)
+                                            ? 'bg-blue-100 border-blue-500'
+                                            : 'bg-white border-gray-300'
+                                        }`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        disabled={!!quiz.userAnswer}
+                                        value={optionIndex}
+                                        checked={quiz.userAnswer && quiz.userAnswer[0]?.userAnswer?.includes(optionIndex)}
+                                        onChange={() => handleOptionChange(optionIndex)}
+                                        className="mr-2"
+                                    />
+                                    {option}
+                                </label>
+
+                            )
+                        })}
                     </div>
                 </div>
             ))}
@@ -61,6 +65,7 @@ export const QuizMultiComponent = observer(({ quiz, currentSection }: QuizMultiC
             <div className="flex justify-end">
                 <Button
                     type="primary"
+                    disabled={!!quiz.userAnswer}
                     onClick={checkAnswers}
                     className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
                 >

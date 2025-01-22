@@ -1,33 +1,37 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {useMobxStores} from "@/shared/store/RootStore";
-import {Button} from "antd";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import Image from "next/image";
 import nextConfig from "../../../../../next.config.mjs";
-import {DeleteOutlined} from "@ant-design/icons";
-import {UserRole} from "@/shared/api/user/model";
-import {AuthMethodEnum} from "@/shared/api/auth/model";
+import { DeleteOutlined } from "@ant-design/icons";
+import { UserRole } from "@/shared/api/user/model";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 dayjs.extend(relativeTime);
 dayjs.locale('ru');
 
 export const CommentBlock = observer(() => {
-    const {commentsStore, userProfileStore} = useMobxStores()
+    const { commentsStore, userProfileStore } = useMobxStores()
     const searchParams = useSearchParams();
 
     const sendComment = () => {
-        if(searchParams.get("step")) {
-            commentsStore.sendSectionComment(Number(searchParams.get("step")))
+        if (!searchParams.get("step")) return;
+
+        if (commentsStore.comment.length < 1) {
+            message.warning("Введите текст комментария!")
+            return
         }
+        commentsStore.sendSectionComment(Number(searchParams.get("step")))
     }
 
     const deleteComment = (id: string) => {
-        if(searchParams.get("step")) {
+        if (searchParams.get("step")) {
             commentsStore.deleteSectionComment(id)
         }
     }
@@ -57,11 +61,11 @@ export const CommentBlock = observer(() => {
                                 {comment.user.profile_url
                                     ? comment.user.method_auth === AuthMethodEnum.GOOGLE || comment.user.method_auth === AuthMethodEnum.YANDEX
                                         ? <Image src={comment.user.profile_url} width={20} height={20}
-                                                 alt={`${comment.user.first_name} ${comment.user.last_name}`}
-                                                 className="w-full h-full object-cover" />
+                                            alt={`${comment.user.first_name} ${comment.user.last_name}`}
+                                            className="w-full h-full object-cover" />
                                         : <Image src={`${nextConfig.env!.API_URL}${comment.user.profile_url}`} width={20} height={20}
-                                                 alt={`${comment.user.first_name} ${comment.user.last_name}`}
-                                                 className="w-full h-full object-cover" />
+                                            alt={`${comment.user.first_name} ${comment.user.last_name}`}
+                                            className="w-full h-full object-cover" />
                                     : userProfileStore.userProfile?.id === comment.user.id
                                         ? 'Вы'
                                         : `${comment.user.first_name[0]}${comment.user.second_name ? comment.user.second_name[0] : ""}`}
@@ -83,7 +87,7 @@ export const CommentBlock = observer(() => {
                             {
                                 (userProfileStore.userProfile?.id === comment.user.id || userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN) &&
                                 <div className="absolute bottom-2 right-2 text-gray-400 hover:text-red-500 transition">
-                                    <Button onClick={() => deleteComment(comment.id)} danger icon={<DeleteOutlined/>}/>
+                                    <Button onClick={() => deleteComment(comment.id)} danger icon={<DeleteOutlined />} />
                                 </div>
                             }
                         </div>

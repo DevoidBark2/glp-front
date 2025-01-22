@@ -36,6 +36,7 @@ export type CourseMenu = {
     id: number,
     name: string,
     courseName: string,
+    progress: number,
     userAnswer: UserAnswer,
     children: CourseMenu[],
     sections: CourseMenu[]

@@ -1,14 +1,12 @@
-import { Button, Spin } from "antd";
+import React from "react";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { Button, Progress, Spin } from "antd";
 import { Header } from "antd/es/layout/layout";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import React, { FC } from "react";
+import { useRouter } from "next/navigation";
 
-interface HeaderLessonProps {
-    courseStore: any
-    router: AppRouterInstance
-}
-
-export const HeaderLesson: FC<HeaderLessonProps> = ({ courseStore, router }) => {
+export const HeaderLesson = () => {
+    const { courseStore } = useMobxStores()
+    const router = useRouter()
     return (
         <Header className="flex items-center justify-between fixed w-full top-0 left-0 z-50 bg-[#001529] h-16">
             {courseStore.courseMenuLoading ? (
@@ -18,21 +16,22 @@ export const HeaderLesson: FC<HeaderLessonProps> = ({ courseStore, router }) => 
                     {courseStore.courseMenuItems?.courseName}
                 </h1>
             )}
-            <Button
-                onClick={() => router.push('/platform/courses')}
-            >Вернутся на платформу</Button>
-            {/* <div className="flex-1 mx-4">
-            {
-                !courseStore.courseMenuLoading &&
+            <div className="flex-1 mx-4">
+                {
+                    !courseStore.courseMenuLoading &&
                     <Progress
-                        percent={20}
+                        // success={{ percent: 90 }}
+                        percent={courseStore.courseMenuItems?.progress}
                         strokeColor="green"
                         trailColor="#CCCCCC"
                         showInfo={true}
                         format={(percent) => <span className="text-white font-bold">{percent}%</span>}
                     />
-            }
-        </div> */}
+                }
+            </div>
+            <Button
+                onClick={() => router.push('/platform/courses')}
+            >Вернутся на платформу</Button>
         </Header>
     )
 }

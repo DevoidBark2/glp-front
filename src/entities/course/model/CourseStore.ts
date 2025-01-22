@@ -37,6 +37,7 @@ export type CourseMenu = {
     name: string,
     courseName: string,
     userAnswer: UserAnswer,
+    progress: number,
     children: CourseMenu[],
     sections: CourseMenu[]
 }
@@ -63,6 +64,11 @@ class CourseStore {
     courseMenuLoading: boolean = false;
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
+    messageWarning: string | null = ""
+
+    setMessageWarning = action((value: string | null) => {
+        this.messageWarning = value
+    })
 
     setSubscribeCourseLoading = action((value: boolean) => {
         this.subscribeCourseLoading = value;
@@ -310,9 +316,15 @@ class CourseStore {
         this.setLoadingSection(true)
         this.setFullDetailCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
-        runInAction(() => {
-            this.setFullDetailCourse(data.data);
-        })
+        if (!data.data.message) {
+            runInAction(() => {
+                this.setFullDetailCourse(data.data);
+            })
+        }
+        else {
+            this.setMessageWarning(data.data.message)
+        }
+
 
         this.setLoadingSection(false)
     })

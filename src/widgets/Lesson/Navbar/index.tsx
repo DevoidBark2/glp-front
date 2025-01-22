@@ -17,6 +17,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { CourseStore } from "@/entities/course";
 import { CourseMenu } from "@/entities/course/model/CourseStore";
 import { observer } from "mobx-react";
+import { cp } from "fs";
 
 const { Sider } = Layout;
 
@@ -87,12 +88,14 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, rout
 
     return (
         <Sider
+            collapsible
             collapsed={collapsed}
+            onCollapse={(value) => setCollapsed(value)}
             width={300}
             className="fixed top-16"
             style={{ position: 'fixed' }}
         >
-            <div className="flex justify-end px-3 rounded-full">
+            {/* <div className="flex justify-end px-3 rounded-full">
                 <Button
                     type="text"
                     icon={collapsed
@@ -101,48 +104,65 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, rout
                     }
                     onClick={() => setCollapsed(!collapsed)}
                 />
-            </div>
+            </div> */}
             {
                 courseStore.courseMenuItems ? (
-                    <Menu
-                        theme="dark"
-                        mode="inline"
-                        selectedKeys={[selectedSection.toString()]}
-                        items={courseStore.courseMenuItems?.sections?.map((section) => {
-                            return {
-                                key: section.id.toString(),
-                                label: (
-                                    <Tooltip title={collapsed && section.name} placement="right">
-                                        <div className="flex items-center overflow-hidden">
-                                                <span className="font-bold text-white truncate">
-                                                    {section.name}
-                                                </span>
-                                        </div>
-                                    </Tooltip>
-                                ),
-                                icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
-                                type: 'group',
-                                children: section.children.map((child) => ({
-                                    key: child.id.toString(),
+                    <>
+                        <Menu
+                            theme="dark"
+                            mode="inline"
+                            defaultOpenKeys={courseStore.courseMenuItems?.sections?.map((section) => section.id.toString()) || []}
+                            selectedKeys={[selectedSection.toString()]}
+                            items={[
+                                ...courseStore.courseMenuItems?.sections?.map((section) => {
+                                    return {
+                                        key: section.id.toString(),
+                                        label: (
+                                            <Tooltip title={collapsed && section.name} placement="right">
+                                                <div className="flex items-center overflow-hidden">
+                                                    <span className="font-bold text-white truncate">
+                                                        {section.name}
+                                                    </span>
+                                                </div>
+                                            </Tooltip>
+                                        ),
+                                        children: section.children.map((child) => ({
+                                            key: child.id.toString(),
+                                            label: (
+                                                <div
+                                                    className="flex items-center justify-between"
+                                                    style={{
+                                                        padding: '8px 16px',
+                                                        borderLeft: '2px solid #4caf50',
+                                                    }}
+                                                >
+                                                    <p>{child.name}</p>
+                                                </div>
+                                            ),
+                                            icon: renderIconCountAnswerUser(child),
+                                        })),
+                                    };
+                                }),
+                                { type: "divider" },
+                                {
+                                    key: '-1',
                                     label: (
-                                        <div className="flex items-center justify-between"
-                                             style={{
-                                                 padding: '8px 16px',
-                                                 borderLeft: '2px solid #4caf50',
-                                             }}
-                                        >
-                                            <p>{child.name}</p>
+                                        <div className="flex items-center justify-between">
+                                            <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>Экзамен</p>
                                         </div>
                                     ),
-                                    icon: renderIconCountAnswerUser(child),
-                                })),
-                            };
-                        })}
-                        style={{ paddingBottom: 20 }}
-                        className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                        onClick={handleMenuClick}
-                    />
-
+                                    icon: (
+                                        <Tooltip title="Пока нельзя перейти к экзамену" placement="top">
+                                            <ExclamationCircleOutlined style={{ color: '#1976d2', fontSize: 25, opacity: 0.5 }} />
+                                        </Tooltip>
+                                    ),
+                                }
+                            ]}
+                            style={{ paddingBottom: 20 }}
+                            className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
+                            onClick={handleMenuClick}
+                        />
+                    </>
                 ) : (
                     <>
                         {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (

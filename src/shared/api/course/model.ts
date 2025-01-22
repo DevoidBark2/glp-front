@@ -70,7 +70,7 @@ export type CourseComponentTypeI = {
     tags: string[]
     created_at: Date
     user: User
-    userAnswer?: UserAnswer[]
+    userAnswer?: UserAnswer[] | number[]
 }
 
 export type UserAnswer = {
