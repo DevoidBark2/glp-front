@@ -1,5 +1,6 @@
 import { Course } from "../course/model";
 import { Post } from "../posts/model";
+import {AuthMethodEnum} from "@/shared/api/auth/model";
 
 export enum UserRole {
     SUPER_ADMIN = 'superadmin',
@@ -16,7 +17,7 @@ export enum StatusUserEnum {
 }
 
 export type User = {
-    id: number;
+    id: string;
     first_name: string;
     second_name: string;
     last_name: string;
@@ -31,5 +32,6 @@ export type User = {
     created_at: Date;
     courses: Course[];
     posts: Post[]
+    method_auth: AuthMethodEnum
     isVerified: boolean
 }

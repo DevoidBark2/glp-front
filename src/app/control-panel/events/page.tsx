@@ -4,12 +4,12 @@ import {Button, Divider, Table, TableColumnsType, Tooltip, Tag, Input, DatePicke
 import React, {useEffect, useState} from "react";
 import {observer} from "mobx-react";
 import {useMobxStores} from "@/stores/stores";
-import {EventUser} from "@/stores/EventStore";
 import {ReloadOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
-import {eventColors, eventTooltips, FORMAT_VIEW_DATE} from "@/constants";
-import {MAIN_COLOR} from "@/constants";
 import dayjs from "dayjs";
 import { ActionEvent } from "@/shared/api/action-user";
+import {eventColors, eventTooltips, FORMAT_VIEW_DATE, MAIN_COLOR} from "@/shared/constants";
+import {EventUser} from "@/shared/api/events/model";
+import {PageContainerControlPanel, PageHeader} from "@/shared/ui";
 
 const { RangePicker } = DatePicker;
 const EventPage = () => {
@@ -100,14 +100,21 @@ const EventPage = () => {
     }, []);
 
     return (
-        <div className="bg-white h-full p-5 shadow-2xl overflow-y-auto rounded" style={{height: 'calc(100vh - 60px)'}}>
-            <div className="flex items-center justify-between">
-                <h1 className="text-gray-800 font-bold text-3xl mb-2">Пользовательские события</h1>
-                <Button icon={<ReloadOutlined/>} onClick={handleRefresh}>
-                    Обновить
-                </Button>
-            </div>
-            <Divider/>
+        <PageContainerControlPanel>
+            {/*<div className="flex items-center justify-between">*/}
+            {/*    <h1 className="text-gray-800 font-bold text-3xl mb-2">Пользовательские события</h1>*/}
+            {/*    <Button icon={<ReloadOutlined/>} onClick={handleRefresh}>*/}
+            {/*        Обновить*/}
+            {/*    </Button>*/}
+            {/*</div>*/}
+            {/*<Divider/>*/}
+
+            <PageHeader
+                title="Журнал аудита"
+                showBottomDivider
+                buttonTitle="Обновить"
+                onClickButton={handleRefresh}
+            />
             <div className="flex items-center justify-between mb-4">
                 <Input
                     placeholder="Поиск по событиям..."
@@ -128,7 +135,7 @@ const EventPage = () => {
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                 }
             />
-        </div>
+        </PageContainerControlPanel>
     )
 }
 

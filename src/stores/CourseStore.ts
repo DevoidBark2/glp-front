@@ -217,15 +217,8 @@ class CourseStore {
 
 
         // обновить копмонент + обновить меню
-
-
-        this.courseMenuItems?.sections
-        const a = this.fullDetailCourse!.sections
-
-        debugger
         runInAction(() => {
             this.fullDetailCourse!.components = this.fullDetailCourse!.components.map((section: any) => {
-                debugger;
 
                 // Проверяем, соответствует ли componentTask в секции текущей задаче
                 if (section.componentTask.id === task.task.id) {
@@ -238,7 +231,6 @@ class CourseStore {
                             userAnswer: data.answers.answer,
                             sectionComponents: (section.componentTask.sectionComponents || []).map((component: any) => {
                                 if (component.componentTask.id === task.task.id) {
-                                    debugger;
                                     console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
                                     console.log('Ответы:', data.answers.answer);
                                     return {

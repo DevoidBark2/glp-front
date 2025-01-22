@@ -108,41 +108,41 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, rout
                         theme="dark"
                         mode="inline"
                         selectedKeys={[selectedSection.toString()]}
-                        items={courseStore.courseMenuItems?.sections
-                            ?.map((section) => {
-                                return {
-                                    key: section.id.toString(),
-                                    label: (
-                                        <Tooltip title={collapsed && section.name} placement="right">
-                                            <div className="flex items-center overflow-hidden">
+                        items={courseStore.courseMenuItems?.sections?.map((section) => {
+                            return {
+                                key: section.id.toString(),
+                                label: (
+                                    <Tooltip title={collapsed && section.name} placement="right">
+                                        <div className="flex items-center overflow-hidden">
                                                 <span className="font-bold text-white truncate">
                                                     {section.name}
                                                 </span>
-                                            </div>
-                                        </Tooltip>
+                                        </div>
+                                    </Tooltip>
+                                ),
+                                icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
+                                type: 'group',
+                                children: section.children.map((child) => ({
+                                    key: child.id.toString(),
+                                    label: (
+                                        <div className="flex items-center justify-between"
+                                             style={{
+                                                 padding: '8px 16px',
+                                                 borderLeft: '2px solid #4caf50',
+                                             }}
+                                        >
+                                            <p>{child.name}</p>
+                                        </div>
                                     ),
-                                    icon: <ExclamationCircleOutlined style={{ color: '#d32f2f' }} />,
-                                    type: 'group',
-                                    children: section.children.map((child) => ({
-                                        key: child.id.toString(),
-                                        label: (
-                                            <div className="flex items-center justify-between"
-                                                style={{
-                                                    padding: '8px 16px',
-                                                    borderLeft: '2px solid #4caf50',
-                                                }}
-                                            >
-                                                <p>{child.name}</p>
-                                            </div>
-                                        ),
-                                        icon: renderIconCountAnswerUser(child),
-                                    })),
-                                };
-                            })}
+                                    icon: renderIconCountAnswerUser(child),
+                                })),
+                            };
+                        })}
                         style={{ paddingBottom: 20 }}
                         className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
                         onClick={handleMenuClick}
                     />
+
                 ) : (
                     <>
                         {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (

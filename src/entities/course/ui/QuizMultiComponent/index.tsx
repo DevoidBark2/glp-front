@@ -23,7 +23,6 @@ export const QuizMultiComponent = observer(({ quiz, currentSection }: QuizMultiC
     };
 
     const checkAnswers = () => {
-        debugger
         courseStore.handleCheckTask({ task: quiz, answers: selectedAnswers, currentSection: Number(currentSection) })
     };
 

@@ -99,18 +99,18 @@ let dashboardMenuItems: MenuItem[] = [
             },
         ]
     },
-    // {
-    //     key: 'logging',
-    //     label: 'Логирование',
-    //     icon: <BarsOutlined />,
-    //     children: [
-    //         {
-    //             key: 'events',
-    //             label: <Link href={"/control-panel/events"}>События пользователей</Link>,
-    //             icon: <BarsOutlined />,
-    //         },
-    //     ]
-    // },
+    {
+        key: 'logging',
+        label: 'Логирование',
+        icon: <BarsOutlined />,
+        children: [
+            {
+                key: 'events',
+                label: <Link href={"/control-panel/events"}>Журнал аудита</Link>,
+                icon: <BarsOutlined />,
+            },
+        ]
+    },
     {
         key: 'users',
         label: <Link href={"/control-panel/users"}>Пользователи</Link>,
