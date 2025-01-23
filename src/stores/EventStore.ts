@@ -1,6 +1,4 @@
 import { action, makeAutoObservable } from "mobx";
-import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import {EventUser} from "@/shared/api/events/model";
 import {getAllEvents} from "@/shared/api/events";
 
@@ -29,11 +27,9 @@ const eventMapper = (value: any) => {
         id: value.id,
         action: value.action,
         description: value.description,
-        createdAt: dayjs(value.created_at, FORMAT_VIEW_DATE).toDate(),
-        user: {
-            id: value.user.id,
-            name: value.user.first_name + " " + value.user.last_name,
-        },
+        createdAt: value.created_at,
+        success: value.success,
+        user: value.user
     }
 }
 export default EventStore;

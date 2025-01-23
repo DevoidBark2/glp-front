@@ -157,6 +157,11 @@ let dashboardMenuItems: MenuItem[] = [
     //     icon: <StarOutlined />,
     // },
     {
+        key: "manual",
+        label: <Link href={"/control-panel/manual"}>Руководство пользователя</Link>,
+        icon: <LogoutOutlined />,
+    },
+    {
         key: 'platform',
         label: <Link href={"/platform"}>Вернуться на платформу</Link>,
         icon: <LogoutOutlined />,
