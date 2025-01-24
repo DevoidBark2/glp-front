@@ -9,7 +9,7 @@ import {
     getAllCourses,
     getCourseById,
     getCourseDetailsSections,
-    getCPAllCourse, getFullCourse,
+    getCPAllCourse, getFullCourse, handleFilterByCategory, handleFilterBySearch,
     sendToReviewCourse
 } from "@/shared/api/course";
 import { Course, StatusCourseEnum } from "@/shared/api/course/model";
@@ -313,6 +313,20 @@ class CourseStore {
         })
 
         this.setLoadingSection(false)
+    })
+
+    handleFilterCoursesByCategory = action(async (id: number) => {
+        // this.setLoadingCourses(true)
+        // this.courses = []
+        const data = await handleFilterByCategory(id)
+        this.courses = data.map(courseMapper)
+        // this.setLoadingCourses(false)
+    })
+
+    handleFilterCoursesBySearch = action(async (value: string) => {
+        const data = await handleFilterBySearch(value)
+        debugger
+        this.courses = data.map(courseMapper)
     })
 }
 

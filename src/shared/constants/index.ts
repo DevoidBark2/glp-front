@@ -16,7 +16,7 @@ export type PlatformMenu = {
 
 export const platformMenu: PlatformMenu[] = [
     { key: 1, title: "Главная", link: '/platform' },
-    { key: 3, title: "Курсы", link: '/platform/courses' },
+    { key: 3, title: "Блог", link: '/platform/blog' },
 ]
 export const FILTER_STATUS_POST = [
     { id: 1, text: 'Новый', value: PostStatusEnum.NEW },

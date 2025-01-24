@@ -65,3 +65,15 @@ export const getCourseDetailsSections = async (courseId: number) => {
 export const getFullCourse = async (courserId: number) => {
     return (await axiosInstance.get(`api/full-course?courseId=${courserId}`)).data
 }
+
+export const handleFilterByCategory = async (id: number) => {
+    const data = (await axiosInstance.get(`api/get-courses?categoryId=${id}`)).data
+
+    return data.data;
+}
+
+export const handleFilterBySearch = async (value: string) => {
+    const data = (await axiosInstance.get(`api/search-courses?search=${value}`)).data
+
+    return data.data;
+}
