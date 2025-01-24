@@ -7,13 +7,13 @@ import React from "react";
 type CourseListProps = {
     courses: Course[];
     loading: boolean;
-    noResultsFound: boolean
+    notFound: boolean
 };
 
-export const CourseList = observer(({ courses,loading,noResultsFound }: CourseListProps) => {
+export const CourseList = observer(({ courses,loading,notFound }: CourseListProps) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6 px-4">
-            {!loading && courses.length < 1 && !noResultsFound
+            {!loading && courses.length < 1 && !notFound
                 ? Array.from({length: 8}).map((_, index) => (
                     <div key={index} className="bg-white rounded-lg shadow">
                         <div className="flex-shrink-0 w-full h-48 mr-4 bg-gray-200 rounded-lg overflow-hidden"></div>
