@@ -95,6 +95,7 @@ const PlatformPage = () => {
                                             sizes="100vw"
                                             style={{width: '100%', height: '100%'}}
                                             className="w-full h-full object-cover"
+                                            priority
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-gray-200">
@@ -133,7 +134,7 @@ const PlatformPage = () => {
                 value={searchTerm}
                 allowClear
                 onChange={(e) => handleSearch(e.target.value)}
-                prefix={<SearchOutlined className="text-gray-500" />}
+                prefix={<SearchOutlined className="text-gray-500"/>}
                 className="md:w-3/12"
             />
         </div>
@@ -183,11 +184,96 @@ const PlatformPage = () => {
         {noResultsFound && (
             <div className="text-center py-10">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Курсы не найдены</h3>
-                <p className="text-gray-600">Извините, по вашему запросу курсы не найдены. Пожалуйста, попробуйте другой запрос.</p>
+                <p className="text-gray-600">Извините, по вашему запросу курсы не найдены. Пожалуйста, попробуйте другой
+                    запрос.</p>
             </div>
         )}
 
         <CourseList courses={courseStore.courses} loading={courseStore.loadingCourses} notFound={noResultsFound}/>
+
+
+        <div className="container mx-auto mt-12">
+            <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">
+                Отзывы студентов
+            </h1>
+            <Carousel
+                pauseOnHover={false}
+                dots={true}
+                speed={1000}
+                slidesToShow={4}
+                className="overflow-hidden mx-auto"
+            >
+                {[
+                    {
+                        name: "Иван Иванов",
+                        text: "Курс был потрясающим! Научился намного больше, чем ожидал.",
+                        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                    },
+                    {
+                        name: "Мария Петрова",
+                        text: "Очень хороший курс с отличными примерами и объяснениями.",
+                        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                    },
+                    {
+                        name: "Александр Смирнов",
+                        text: "Рекомендую этот курс всем, кто хочет быстро развиваться.",
+                        avatar: "https://randomuser.me/api/portraits/men/75.jpg",
+                    },
+                ].map((review, index) => (
+                    <div key={index} className="bg-white shadow-lg rounded-lg p-6 text-center">
+                        <img
+                            src={review.avatar}
+                            alt={review.name}
+                            className="w-24 h-24 mx-auto rounded-full object-cover mb-4"
+                        />
+                        <h3 className="text-xl font-semibold text-gray-800">{review.name}</h3>
+                        <p className="text-gray-600 text-sm">{review.text}</p>
+                    </div>
+                ))}
+            </Carousel>
+
+        </div>
+
+        <div className="container mx-auto my-12">
+            <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">
+                Наши преподаватели
+            </h1>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                    {
+                        name: "Дмитрий Ковалёв",
+                        position: "Эксперт по Python",
+                        bio: "Опыт работы в разработке более 10 лет. Автор популярных книг по программированию.",
+                        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                    },
+                    {
+                        name: "Елена Васильева",
+                        position: "Дизайнер UI/UX",
+                        bio: "Специалист по разработке интерфейсов с упором на пользовательский опыт.",
+                        avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+                    },
+                    {
+                        name: "Андрей Смирнов",
+                        position: "Fullstack разработчик",
+                        bio: "Мастер веб-разработки, увлечён обучением современных технологий.",
+                        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                    },
+                ].map((teacher, index) => (
+                    <div key={index} className="bg-white shadow-lg rounded-lg p-6 text-center">
+                        <img
+                            src={teacher.avatar}
+                            alt={teacher.name}
+                            className="w-24 h-24 mx-auto rounded-full object-cover mb-4"
+                        />
+                        <h3 className="text-xl font-semibold text-gray-800">{teacher.name}</h3>
+                        <p className="text-gray-600 text-sm">{teacher.position}</p>
+                        <p className="text-gray-600 mt-4">{teacher.bio}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+
     </div>
 }
 
