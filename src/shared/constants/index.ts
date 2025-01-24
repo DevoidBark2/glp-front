@@ -12,12 +12,8 @@ export type PlatformMenu = {
     key: number;
     title: string;
     link: string;
+    icon: any
 }
-
-export const platformMenu: PlatformMenu[] = [
-    { key: 1, title: "Главная", link: '/platform' },
-    { key: 3, title: "Блог", link: '/platform/blog' },
-]
 export const FILTER_STATUS_POST = [
     { id: 1, text: 'Новый', value: PostStatusEnum.NEW },
     { id: 2, text: 'В обработке', value: PostStatusEnum.IN_PROCESSING },
