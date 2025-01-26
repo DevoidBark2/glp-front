@@ -1,23 +1,23 @@
 "use client"
 import { observer } from 'mobx-react-lite';
-import React, {useEffect, useState} from "react";
-import {Carousel, Divider, Input, Skeleton} from "antd";
+import React, { useEffect, useState } from "react";
+import { Carousel, Divider, Input, Skeleton } from "antd";
 import Image from "next/image";
 import nextConfig from "../../../next.config.mjs";
-import {BookOutlined, SearchOutlined} from "@ant-design/icons";
+import { BookOutlined, SearchOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import {useMobxStores} from "@/stores/stores";
-import {CourseList} from "@/entities/course/ui";
+import { useMobxStores } from "@/stores/stores";
+import { CourseList } from "@/entities/course/ui";
 
 const PlatformPage = () => {
     const { courseStore, nomenclatureStore } = useMobxStores()
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCategory,setSelectedCategory] = useState<number>(-1);
+    const [selectedCategory, setSelectedCategory] = useState<number>(-1);
     const [noResultsFound, setNoResultsFound] = useState(false);
 
     const handleSearch = (value: string) => {
         setSearchTerm(value);
-        if(value.length > 2)
+        if (value.length > 2)
             courseStore.handleFilterCoursesBySearch(value);
     };
 
@@ -53,17 +53,17 @@ const PlatformPage = () => {
                 responsive={[
                     {
                         breakpoint: 1024,
-                        settings: {slidesToShow: 2},
+                        settings: { slidesToShow: 2 },
                     },
                     {
                         breakpoint: 768,
-                        settings: {slidesToShow: 1},
+                        settings: { slidesToShow: 1 },
                     },
                 ]}
             >
                 {/* Если данные еще не загружены, показываем скелетоны */}
                 {!courseStore.loadingCourses && courseStore.courses.length < 1
-                    ? Array.from({length: 4}).map((_, index) => (
+                    ? Array.from({ length: 4 }).map((_, index) => (
                         <div key={index} className="flex justify-center items-center p-4 mb-4">
                             <div className="bg-white rounded-lg shadow-lg p-6 flex items-center max-w-md">
                                 {/* Скелетон для картинки */}
@@ -74,8 +74,8 @@ const PlatformPage = () => {
                                 <div className="flex-1">
                                     <Skeleton
                                         active
-                                        paragraph={{rows: 2, width: ['80%', '60%']}}
-                                        title={{width: '70%'}}
+                                        paragraph={{ rows: 2, width: ['80%', '60%'] }}
+                                        title={{ width: '70%' }}
                                     />
                                 </div>
                             </div>
@@ -93,13 +93,13 @@ const PlatformPage = () => {
                                             width={0}
                                             height={0}
                                             sizes="100vw"
-                                            style={{width: '100%', height: '100%'}}
+                                            style={{ width: '100%', height: '100%' }}
                                             className="w-full h-full object-cover"
                                             priority
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                                            <BookOutlined style={{fontSize: '48px', color: '#8c8c8c'}}/>
+                                            <BookOutlined style={{ fontSize: '48px', color: '#8c8c8c' }} />
                                         </div>
                                     )}
                                 </div>
@@ -134,17 +134,17 @@ const PlatformPage = () => {
                 value={searchTerm}
                 allowClear
                 onChange={(e) => handleSearch(e.target.value)}
-                prefix={<SearchOutlined className="text-gray-500"/>}
+                prefix={<SearchOutlined className="text-gray-500" />}
                 className="md:w-3/12"
             />
         </div>
 
-        <Divider className="my-6"/>
+        <Divider className="my-6" />
 
         <div className="flex flex-wrap gap-4 mb-6">
             {!nomenclatureStore.loadingCategories && nomenclatureStore.categories.length < 1 ? (
-                Array.from({length: 3}).map((_, index) => (
-                    <Skeleton.Input key={index} active/>
+                Array.from({ length: 3 }).map((_, index) => (
+                    <Skeleton.Input key={index} active />
                 ))
             ) : (
                 // Отображение реальных данных, если загрузка завершена
@@ -153,11 +153,10 @@ const PlatformPage = () => {
                         <div
                             key="all-categories"
                             onClick={() => handleFilterCoursesByCategory(-1)}
-                            className={`px-4 py-2 text-sm font-medium shadow-sm cursor-pointer rounded-lg ${
-                                selectedCategory === -1
-                                    ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                                    : "bg-transparent text-gray-700 hover:bg-gray-200"
-                            }`}
+                            className={`px-4 py-2 text-sm font-medium shadow-sm cursor-pointer rounded-lg ${selectedCategory === -1
+                                ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                : "bg-transparent text-gray-700 hover:bg-gray-200"
+                                }`}
                         >
                             Все категории
                         </div>
@@ -165,11 +164,10 @@ const PlatformPage = () => {
                             <div
                                 key={it.id}
                                 onClick={() => handleFilterCoursesByCategory(it.id)}
-                                className={`px-4 py-2 text-sm font-medium shadow-sm cursor-pointer rounded-lg ${
-                                    selectedCategory === it.id
-                                        ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                }`}
+                                className={`px-4 py-2 text-sm font-medium shadow-sm cursor-pointer rounded-lg ${selectedCategory === it.id
+                                    ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
                             >
                                 {it.name}
                             </div>
@@ -189,7 +187,7 @@ const PlatformPage = () => {
             </div>
         )}
 
-        <CourseList courses={courseStore.courses} loading={courseStore.loadingCourses} notFound={noResultsFound}/>
+        <CourseList courses={courseStore.courses} loading={courseStore.loadingCourses} notFound={noResultsFound} />
 
 
         <div className="container mx-auto mt-12">

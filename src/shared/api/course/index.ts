@@ -77,3 +77,9 @@ export const handleFilterBySearch = async (value: string) => {
 
     return data.data;
 }
+
+export const getAllMembersCourse = async (courseId: number) => {
+    const data = (await axiosInstance.get(`api/get-course-members?courseId=${courseId}`)).data
+
+    return data.data;
+}

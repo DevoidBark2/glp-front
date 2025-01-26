@@ -7,6 +7,7 @@ import {
     createCourse,
     deleteCourseById,
     getAllCourses,
+    getAllMembersCourse,
     getCourseById,
     getCourseDetailsSections,
     getCPAllCourse, getFullCourse, handleFilterByCategory, handleFilterBySearch,
@@ -170,7 +171,9 @@ class CourseStore {
     })
 
     getAllMembersCourse = action(async (courseId: number) => {
-
+        debugger
+        const data = await getAllMembersCourse(courseId);
+        debugger
     })
 
     changeCourse = action(async (values: Course) => {
