@@ -83,3 +83,7 @@ export const getAllMembersCourse = async (courseId: number) => {
 
     return data.data;
 }
+
+export const deleteCourseMember = async (id: number) => {
+    return (await axiosInstance.delete(`api/delete-course-member?id=${id}`)).data
+}

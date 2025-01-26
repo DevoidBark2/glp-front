@@ -110,3 +110,11 @@ export type Course = {
     children: any
     isUserEnrolled: boolean
 }
+
+
+export type CourseMember = {
+    id: number,
+    enrolledAt: Date
+    progress: number,
+    user: User,
+}

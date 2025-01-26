@@ -36,6 +36,9 @@ import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { typeIcons } from "@/columnsTables/taskColumns";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { Collapse, Progress } from 'antd';
+
+const { Panel } = Collapse;
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -63,6 +66,10 @@ const CoursePage = () => {
             courseStore.courseDetailsSections.filter(it => it.id !== id);
             notification.success({ message: response.message });
         });
+    }
+
+    const handleDeleteMember = (id: number) => {
+        courseStore.deleteMember(id)
     }
 
     const columns: TableColumnsType<CourseComponentTypeI> = [{
@@ -117,7 +124,6 @@ const CoursePage = () => {
     };
 
     const handleChangeStep = (step: string) => {
-        debugger
         if (Number(step) === 2) courseStore.getCourseDetailsSections(Number(courseId)); else if (Number(step) === 3) courseStore.getAllMembersCourse(Number(courseId));
     }
 
@@ -389,21 +395,73 @@ const CoursePage = () => {
                     />)}
                 </div>,
             }, {
-                label: 'Дополнительные настройки',
+                label: 'Участники курса',
                 key: '3',
-                children: (<div style={{ padding: '10px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
-                    <h3 style={{ marginBottom: 10 }}>👥 Текущие участники</h3>
-                    {[].length > 0 ? (<List
-                        bordered
-                        dataSource={[]}
-                        renderItem={(item, index) => (<List.Item>
-                            {index + 1}. {item}
-                        </List.Item>)}
-                    />) : (<p style={{ fontStyle: 'italic', color: 'gray' }}>
-                        Нет участников. Начните приглашать новых!
-                    </p>)}
-                </div>)
-            },]}
+                children: (
+                    <div style={{ padding: '20px 0', borderBottom: '1px solid #ddd', marginBottom: 10 }}>
+                        <h3 style={{ marginBottom: 15, fontWeight: 'bold', fontSize: '18px' }}>👥 Текущие участники</h3>
+                        {courseStore.courseMembers.length > 0 ? (
+                            <Collapse accordion>
+                                {courseStore.courseMembers.map((item, index) => (
+                                    <Panel
+                                        header={
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="font-semibold">
+                                                    {item.user.first_name} {item.user.second_name || ''}
+                                                </h4>
+                                            </div>
+                                        }
+                                        key={item.id}
+                                    >
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <span className="text-sm text-gray-500">
+                                                        Запись на курс: {new Date(item.enrolledAt).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                                <Tooltip title="Удалить участника">
+                                                    <Popconfirm
+                                                        title="Удалить участиника?"
+                                                        placement="leftBottom"
+                                                        description="Вы уверены, что хотите удалить данного учестаника? Это действие нельзя будет отменить."
+                                                        okText="Да"
+                                                        onConfirm={() => handleDeleteMember(item.id)}
+                                                        cancelText="Нет"
+                                                    >
+                                                        <Button
+                                                            danger
+                                                            type="primary"
+                                                            icon={<DeleteOutlined />}
+                                                        />
+                                                    </Popconfirm>
+                                                </Tooltip>
+                                            </div>
+
+                                            <p className="text-gray-600">
+                                                <strong>Прогресс:</strong>
+                                            </p>
+                                            <Progress percent={item.progress} status="active" />
+                                        </div>
+                                    </Panel>
+                                ))}
+                            </Collapse>
+                        ) : (
+                            <p className="italic text-gray-500">Нет участников вашего курса!</p>
+                        )}
+                    </div>
+                ),
+            },
+            {
+                label: 'Дополнительные параметры',
+                key: '4',
+                children: (
+                    <div>
+                        Выбрать экзамен для курса
+                    </div>
+                ),
+            }
+            ]}
         />
     </PageContainerControlPanel>)
 }

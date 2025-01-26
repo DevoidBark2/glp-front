@@ -75,6 +75,11 @@ let dashboardMenuItems: MenuItem[] = [
                 label: <Link href={"/control-panel/tasks"}>Компоненты</Link>,
                 icon: <BarsOutlined />,
             },
+            {
+                key: 'exams',
+                label: <Link href={"/control-panel/exams"}>Экзамены</Link>,
+                icon: <BarsOutlined />,
+            },
         ]
     },
     {

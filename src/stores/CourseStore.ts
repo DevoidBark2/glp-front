@@ -6,6 +6,7 @@ import {
     changeCourse,
     createCourse,
     deleteCourseById,
+    deleteCourseMember,
     getAllCourses,
     getAllMembersCourse,
     getCourseById,
@@ -13,8 +14,8 @@ import {
     getCPAllCourse, getFullCourse, handleFilterByCategory, handleFilterBySearch,
     sendToReviewCourse
 } from "@/shared/api/course";
-import { Course, StatusCourseEnum } from "@/shared/api/course/model";
-import { courseMapper } from "@/entities/course/mappers/courseMapper";
+import { Course, CourseMember, StatusCourseEnum } from "@/shared/api/course/model";
+import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
@@ -65,6 +66,7 @@ class CourseStore {
     courseMenuLoading: boolean = false;
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
+    courseMembers: CourseMember[] = []
 
     setSubscribeCourseLoading = action((value: boolean) => {
         this.subscribeCourseLoading = value;
@@ -171,9 +173,17 @@ class CourseStore {
     })
 
     getAllMembersCourse = action(async (courseId: number) => {
-        debugger
         const data = await getAllMembersCourse(courseId);
+        runInAction(() => {
+            this.courseMembers = data.map(courseMemberMapper)
+        })
+    })
+
+    deleteMember = action(async (id: number) => {
+        const data = await deleteCourseMember(id)
         debugger
+        this.courseMembers = this.courseMembers.filter(it => id !== it.id)
+        notification.success({ message: data.message })
     })
 
     changeCourse = action(async (values: Course) => {

@@ -1,0 +1,138 @@
+"use client"
+import { Exam, ExamStatus } from "@/shared/api/exams/model";
+import { UserRole } from "@/shared/api/user/model";
+import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { PageContainerControlPanel, PageHeader } from "@/shared/ui"
+import { UserHoverCard } from "@/widgets";
+import { Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
+import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+const ExamsPage = () => {
+    const { userProfileStore, examStore } = useMobxStores()
+    const router = useRouter()
+
+    const showExamStatus = (status: ExamStatus) => {
+        switch (status) {
+            case ExamStatus.ACTIVE:
+                return "Активный"
+            case ExamStatus.DEACTIVED:
+                return "Не активный"
+        }
+    }
+
+    const columns: TableColumnsType<Exam> = [
+        {
+            title: 'Название',
+            dataIndex: 'title',
+            sorter: (a, b) => a.title.localeCompare(b.title),
+            showSorterTooltip: false,
+            render: (value, record) => (
+                <Tooltip title={`Перейти к курсу: ${value}`}>
+                    <Link className="text-gray-800 hover:text-gray-500 hover:cursor-pointer" href={`exams/${record.id}`}>
+                        {value}
+                    </Link>
+                </Tooltip>
+            ),
+        },
+        {
+            title: 'Дата создания',
+            dataIndex: 'created_at',
+            sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
+            showSorterTooltip: false,
+            render: (value) => (
+                <Tooltip title="Дата создания экзамена">
+                    {dayjs(value).format(FORMAT_VIEW_DATE)}
+                </Tooltip>
+            ),
+        },
+        {
+            title: "Статус",
+            dataIndex: "status",
+            onFilter: (value, record) => record.status === value,
+            filterSearch: true,
+            render: (value) => showExamStatus(value),
+        },
+        {
+            title: "Создатель",
+            dataIndex: "user",
+            hidden: userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN,
+            render: (_, record) => (
+                record.user?.role === UserRole.SUPER_ADMIN ? (
+                    <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
+                        <Tooltip title="Перейти в профиль">
+                            <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
+                                Администратор
+                            </Tag>
+                        </Tooltip>
+                    </Link>
+                ) : (
+                    <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
+                        <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
+                        <Link href={`/control-panel/users/${record.user?.id}`} className="hover:text-blue-500">
+                            {`${record.user?.second_name} ${record.user?.first_name} ${record.user?.last_name}`}
+                        </Link>
+                    </Popover>
+                )
+            ),
+        },
+        {
+            title: "Действия",
+            align: 'start',
+            render: (_, record) => (
+                <div className="flex justify-end gap-2">
+                    <Tooltip title="Редактировать экзамен">
+                        <Button
+                            type="default"
+                            icon={<EditOutlined />}
+                        // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
+                        // onClick={() => handleChangePost(record.id)}
+                        />
+                    </Tooltip>
+
+                    <Tooltip title="Удалить экзамен">
+                        <Popconfirm
+                            title="Удалить экзамен?"
+                            description="Вы уверены, что хотите удалить этот экзамен? Это действие нельзя будет отменить."
+                            okText="Да"
+                            cancelText="Нет"
+                        //onConfirm={() => deletePost(record.id)}
+                        >
+                            <Button
+                                danger
+                                type="primary"
+                                icon={<DeleteOutlined />}
+                            // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
+                            />
+                        </Popconfirm>
+                    </Tooltip>
+                </div >
+            ),
+        },
+    ];
+
+    useEffect(() => {
+        examStore.getUserExams();
+    }, [])
+    return (
+        <PageContainerControlPanel>
+            <PageHeader
+                title="Доступные экзамены"
+                buttonTitle="Добавить экзамен"
+                onClickButton={() => router.push('add')}
+                showBottomDivider
+            />
+
+            <Table
+                columns={columns}
+                dataSource={[]}
+            />
+        </PageContainerControlPanel>
+    )
+}
+
+export default ExamsPage
