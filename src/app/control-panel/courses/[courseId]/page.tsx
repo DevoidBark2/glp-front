@@ -24,7 +24,6 @@ import {
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/stores/stores";
 import { Input } from "antd/lib";
 import { FORMAT_VIEW_DATE, LEVEL_COURSE } from "@/shared/constants";
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, } from "@ant-design/icons";
@@ -37,6 +36,7 @@ import dynamic from "next/dynamic";
 import { typeIcons } from "@/columnsTables/taskColumns";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Collapse, Progress } from 'antd';
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const { Panel } = Collapse;
 

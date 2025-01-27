@@ -5,15 +5,15 @@ import { SectionCourseItem } from "@/stores/SectionCourse";
 import {
     changeCourse,
     createCourse,
-    deleteCourseById,
-    getAllCourses,
+    deleteCourseById, deleteCourseMember,
+    getAllCourses, getAllMembersCourse,
     getCourseById,
     getCourseDetailsSections,
     getCPAllCourse, getFullCourse,
     sendToReviewCourse
 } from "@/shared/api/course";
-import { Course, StatusCourseEnum } from "@/shared/api/course/model";
-import { courseMapper } from "@/entities/course/mappers/courseMapper";
+import {Course, CourseMember, StatusCourseEnum} from "@/shared/api/course/model";
+import {courseMapper, courseMemberMapper} from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
@@ -65,6 +65,7 @@ class CourseStore {
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
     messageWarning: string | null = ""
+    courseMembers: CourseMember[] = []
 
     setMessageWarning = action((value: string | null) => {
         this.messageWarning = value
@@ -136,6 +137,13 @@ class CourseStore {
         }
     })
 
+    deleteMember = action(async (id: number) => {
+        const data = await deleteCourseMember(id)
+        debugger
+        this.courseMembers = this.courseMembers.filter(it => id !== it.id)
+        notification.success({ message: data.message })
+    })
+
     createCourse = action(async (values: any) => {
         this.setLoadingCreateCourse(true)
         return await createCourse(values).catch(e => {
@@ -175,7 +183,10 @@ class CourseStore {
     })
 
     getAllMembersCourse = action(async (courseId: number) => {
-
+        const data = await getAllMembersCourse(courseId);
+        runInAction(() => {
+            this.courseMembers = data.map(courseMemberMapper)
+        })
     })
 
     changeCourse = action(async (values: Course) => {

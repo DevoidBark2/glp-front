@@ -10,6 +10,7 @@ import StatisticsStore from "@/entities/statistics/model/StatisticsStore";
 import CommentsStore from "@/entities/comments/model/CommentsStore";
 import { ExamStore } from "@/entities/exams";
 import {CourseComponent} from "@/entities/component-task";
+import {NomenclatureStore} from "@/entities/nomenclature";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -22,6 +23,7 @@ const statisticsStore = new StatisticsStore();
 const commentsStore = new CommentsStore();
 const examStore = new ExamStore();
 const courseComponentStore = new CourseComponent();
+const nomenclatureStore = new NomenclatureStore()
 
 export const RootStore = {
     userStore,
@@ -34,7 +36,8 @@ export const RootStore = {
     statisticsStore,
     commentsStore,
     courseComponentStore,
-    examStore
+    examStore,
+    nomenclatureStore
 };
 
 const StoreContext = React.createContext(RootStore);
