@@ -3,6 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 import {
     Breadcrumb,
     Button,
+    Card,
     Col,
     Divider,
     Empty,
@@ -11,6 +12,7 @@ import {
     message,
     notification,
     Popconfirm,
+    Radio,
     Row,
     Select,
     Spin,
@@ -26,7 +28,7 @@ import Link from "next/link";
 import { observer } from "mobx-react";
 import { Input } from "antd/lib";
 import { FORMAT_VIEW_DATE, LEVEL_COURSE } from "@/shared/constants";
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined, } from "@ant-design/icons";
+import { CheckCircleOutlined, DeleteOutlined, EditOutlined, PlusCircleOutlined, } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";
@@ -36,7 +38,8 @@ import dynamic from "next/dynamic";
 import { typeIcons } from "@/columnsTables/taskColumns";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Collapse, Progress } from 'antd';
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { ExamStatus } from "@/shared/api/exams/model";
 
 const { Panel } = Collapse;
 
@@ -44,7 +47,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const CoursePage = () => {
     const { courseId } = useParams();
-    const { courseStore, nomenclatureStore, sectionCourseStore } = useMobxStores();
+    const { courseStore, nomenclatureStore, examStore, sectionCourseStore } = useMobxStores();
     const [courseName, setCourseName] = useState(null)
     const [form] = Form.useForm();
     const router = useRouter();
@@ -123,13 +126,23 @@ const CoursePage = () => {
         console.log("Удаление компонента с ID:", id);
     };
 
+    const [selectedExamId, setSelectedExamId] = useState<number | null>(null);
+
+    const handleSave = () => {
+        if (selectedExamId) {
+            examStore.setExamForCourse(selectedExamId, Number(courseId)).then(response => {
+                notification.success({ message: response.message })
+            })
+        }
+    };
+
     const handleChangeStep = (step: string) => {
         if (Number(step) === 2) {
             courseStore.getCourseDetailsSections(Number(courseId));
         } else if (Number(step) === 3) {
             courseStore.getAllMembersCourse(Number(courseId));
         } else if (Number(step) === 4) {
-            // examStore.getUserExams();
+            examStore.getUserExams();
         }
     }
 
@@ -463,7 +476,54 @@ const CoursePage = () => {
                 key: '4',
                 children: (
                     <div>
-                        Выбрать экзамен для курса
+                        <h2 className="text-2xl font-bold mb-6 text-gray-800">
+                            Выбор экзамена
+                        </h2>
+                        <p className="text-gray-600 mb-4">
+                            Выберите экзамен, который будет активным для курса. Нажмите "Сохранить",
+                            чтобы подтвердить выбор.
+                        </p>
+
+                        <List
+                            bordered
+                            dataSource={examStore.exams}
+                            renderItem={(exam) => (
+                                <List.Item
+                                    className={`cursor-pointer transition-all ${selectedExamId === exam.id
+                                        ? "bg-blue-100 border-l-4 border-blue-500"
+                                        : "hover:bg-gray-100"
+                                        }`}
+                                    onClick={() => setSelectedExamId(exam.id)}
+                                >
+                                    <div className="flex justify-between items-center w-full">
+                                        <div>
+                                            <h3 className={`font-bold ${selectedExamId === exam.id ? "text-blue-800" : "text-gray-800"}`}>
+                                                {exam.title}
+                                            </h3>
+                                            <p className="text-gray-500">
+                                                Статус:{" "}
+                                                <span
+                                                    className={exam.status === "active" ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}
+                                                >
+                                                    {exam.status === "active" ? "Активный" : "Деактивирован"}
+                                                </span>
+                                            </p>
+                                            <p className="text-gray-500">Создано: {new Date(exam.created_at).toLocaleDateString()}</p>
+                                        </div>
+                                        <Radio checked={selectedExamId === exam.id} />
+                                    </div>
+                                </List.Item>
+                            )}
+                        />
+
+                        <Button
+                            type="primary"
+                            onClick={handleSave}
+                            className="w-full md:w-auto mt-4"
+                            disabled={!selectedExamId}
+                        >
+                            Сохранить выбор
+                        </Button>
                     </div>
                 ),
             }
