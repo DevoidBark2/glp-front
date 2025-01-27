@@ -9,6 +9,7 @@ import UserStore from "@/entities/user/model/UserStore";
 import StatisticsStore from "@/entities/statistics/model/StatisticsStore";
 import CommentsStore from "@/entities/comments/model/CommentsStore";
 import { ExamStore } from "@/entities/exams";
+import {CourseComponent} from "@/entities/component-task";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -20,6 +21,7 @@ const userProfileStore = new UserProfileStore();
 const statisticsStore = new StatisticsStore();
 const commentsStore = new CommentsStore();
 const examStore = new ExamStore();
+const courseComponentStore = new CourseComponent();
 
 export const RootStore = {
     userStore,
@@ -31,6 +33,7 @@ export const RootStore = {
     userProfileStore,
     statisticsStore,
     commentsStore,
+    courseComponentStore,
     examStore
 };
 

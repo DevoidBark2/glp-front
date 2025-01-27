@@ -1,18 +1,18 @@
-import { Button, Col, Form, Input, Row, Select, Tag } from "antd";
+import { Button, Col, Form, Input, Row, Select } from "antd";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { FormInstance } from "antd/lib";
 import { v4 as uuidv4 } from 'uuid';
 
 interface QuizTaskProps {
-    form: FormInstance;
+    form?: FormInstance;
 }
 
 export const QuizTask: FC<QuizTaskProps> = ({ form }) => {
     return (
         <>
-            <Form.Item 
-                label="Заголовок" 
+            <Form.Item
+                label="Заголовок"
                 name="title"
                 tooltip="Укажите заголовок, чтобы легко идентифицировать компонент, относящийся к разделу."
             >
@@ -85,7 +85,7 @@ export const QuizTask: FC<QuizTaskProps> = ({ form }) => {
                                     rules={[{ required: true, message: 'Пожалуйста, выберите правильный ответ' }]}
                                 >
                                     <Select placeholder="Выберите правильный ответ">
-                                        {form.getFieldValue(['questions', qIndex, 'options'])?.map((option: string, index: number) => (
+                                        {form?.getFieldValue(['questions', qIndex, 'options'])?.map((option: string, index: number) => (
                                             <Select.Option key={index} value={index}>
                                                 {option}
                                             </Select.Option>

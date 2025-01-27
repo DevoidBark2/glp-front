@@ -124,7 +124,13 @@ const CoursePage = () => {
     };
 
     const handleChangeStep = (step: string) => {
-        if (Number(step) === 2) courseStore.getCourseDetailsSections(Number(courseId)); else if (Number(step) === 3) courseStore.getAllMembersCourse(Number(courseId));
+        if (Number(step) === 2) {
+            courseStore.getCourseDetailsSections(Number(courseId));
+        } else if (Number(step) === 3) {
+            courseStore.getAllMembersCourse(Number(courseId));
+        } else if (Number(step) === 4) {
+            // examStore.getUserExams();
+        }
     }
 
     useEffect(() => {

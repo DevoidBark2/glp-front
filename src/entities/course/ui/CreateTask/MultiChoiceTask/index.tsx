@@ -4,7 +4,7 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from 'uuid';
 
 interface MultiPlayChoiceProps {
-    form: FormInstance;
+    form?: FormInstance;
 }
 
 export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
@@ -17,24 +17,6 @@ export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
             >
                 <Input placeholder="Введите заголовок" />
             </Form.Item>
-
-            {/* <Form.Item
-                name="tags"
-                label="Теги"
-                rules={[{ required: true, message: "Пожалуйста, добавьте хотя бы один тег!" }]}
-            >
-                <Select
-                    mode="tags"
-                    style={{ width: "100%" }}
-                    placeholder="Введите тег и нажмите Enter"
-                    tagRender={({ label, closable, onClose }) => (
-                        <Tag closable={closable} onClose={onClose} style={{ margin: 2 }}>
-                            {label}
-                        </Tag>
-                    )}
-                    options={[]}
-                />
-            </Form.Item> */}
 
             <Form.Item label="Описание компонента" name="description">
                 <Input.TextArea placeholder="Введите описание компонента" />
@@ -112,8 +94,7 @@ export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
                                 >
                                     <Checkbox.Group>
                                         <div className="flex flex-col">
-                                            {form
-                                                .getFieldValue(["questions", qIndex, "options"])
+                                            {form?.getFieldValue(["questions", qIndex, "options"])
                                                 ?.map((option: string, index: number) => (
                                                     <Checkbox key={index} value={index}>
                                                         <div className="option-box">

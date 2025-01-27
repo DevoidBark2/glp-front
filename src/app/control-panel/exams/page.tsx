@@ -5,14 +5,15 @@ import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { PageContainerControlPanel, PageHeader } from "@/shared/ui"
 import { UserHoverCard } from "@/widgets";
-import { Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
+import {Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip} from "antd";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import {observer} from "mobx-react";
 
-const ExamsPage = () => {
+const ExamsPage = observer(() => {
     const { userProfileStore, examStore } = useMobxStores()
     const router = useRouter()
 
@@ -20,9 +21,15 @@ const ExamsPage = () => {
         switch (status) {
             case ExamStatus.ACTIVE:
                 return "Активный"
-            case ExamStatus.DEACTIVED:
+            case ExamStatus.DEACTIVATED:
                 return "Не активный"
         }
+    }
+
+    const handleDeleteExam = (id: number) => {
+        examStore.deleteExam(id).then(response => {
+            notification.success({message: response.message})
+        })
     }
 
     const columns: TableColumnsType<Exam> = [
@@ -89,8 +96,8 @@ const ExamsPage = () => {
                         <Button
                             type="default"
                             icon={<EditOutlined />}
-                        // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
-                        // onClick={() => handleChangePost(record.id)}
+                            // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
+                            // onClick={() => handleChangePost(record.id)}
                         />
                     </Tooltip>
 
@@ -100,13 +107,13 @@ const ExamsPage = () => {
                             description="Вы уверены, что хотите удалить этот экзамен? Это действие нельзя будет отменить."
                             okText="Да"
                             cancelText="Нет"
-                        //onConfirm={() => deletePost(record.id)}
+                            onConfirm={() => handleDeleteExam(record.id)}
                         >
                             <Button
                                 danger
                                 type="primary"
                                 icon={<DeleteOutlined />}
-                            // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
+                                // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
                             />
                         </Popconfirm>
                     </Tooltip>
@@ -123,16 +130,16 @@ const ExamsPage = () => {
             <PageHeader
                 title="Доступные экзамены"
                 buttonTitle="Добавить экзамен"
-                onClickButton={() => router.push('add')}
+                onClickButton={() => router.push('exams/add')}
                 showBottomDivider
             />
 
             <Table
                 columns={columns}
-                dataSource={[]}
+                dataSource={examStore.exams}
             />
         </PageContainerControlPanel>
     )
-}
+})
 
 export default ExamsPage

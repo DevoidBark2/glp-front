@@ -66,6 +66,7 @@ export type CourseComponentTypeI = {
     questions: QuestionsType[]
     content_description: string
     status: StatusComponentTaskEnum
+    sort: number
     componentTask: any
     tags: string[]
     created_at: Date

@@ -12,5 +12,5 @@ export type Exam = {
 
 export enum ExamStatus {
     ACTIVE = "active",
-    DEACTIVED = "deactived"
+    DEACTIVATED = "deactivated"
 }

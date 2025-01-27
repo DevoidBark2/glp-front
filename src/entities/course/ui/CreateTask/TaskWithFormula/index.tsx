@@ -1,16 +1,15 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import {Divider, Form, FormInstance, Input, Typography} from "antd";
+import {Divider, Form, FormInstance, Input} from "antd";
 import "mathlive";
 import { MathfieldElement } from "mathlive";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 const { TextArea } = Input;
-const { Title } = Typography;
 
 
 interface TaskWithFormulaProps {
-  form: FormInstance;
+  form?: FormInstance;
 }
 
 const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {

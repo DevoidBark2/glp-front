@@ -7,7 +7,7 @@ import {
     createCourse,
     deleteCourseById,
     deleteCourseMember,
-    getAllCourses,
+    getAllCourses, getAllExams,
     getAllMembersCourse,
     getCourseById,
     getCourseDetailsSections,
@@ -177,6 +177,10 @@ class CourseStore {
         runInAction(() => {
             this.courseMembers = data.map(courseMemberMapper)
         })
+    })
+
+    getAllExams = action(async () => {
+        const data = await getAllExams();
     })
 
     deleteMember = action(async (id: number) => {
