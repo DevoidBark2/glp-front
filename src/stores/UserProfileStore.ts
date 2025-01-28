@@ -5,6 +5,7 @@ import { notification, UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 export type UserProfile = {
     id: string
@@ -19,6 +20,7 @@ export type UserProfile = {
     about_me: string;
     image: string;
     user_name: string;
+    method_auth: AuthMethodEnum
     pagination_size: number;
     settings_control_panel: boolean;
 }

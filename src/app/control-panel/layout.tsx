@@ -15,6 +15,7 @@ import {
 import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "../../../next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';
@@ -220,21 +221,22 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
                     <div className="flex flex-col items-center justify-center mb-2">
                         <div className="relative mb-4 flex items-center justify-center">
-                            <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg bg-gray-200">
+                            <div className="relative rounded-full overflow-hidden shadow-lg bg-gray-200">
                                 <Spin spinning={loading}>
                                     <Avatar
                                         size={100}
                                         src={
-                                            !loading && userProfileStore.userProfile?.image
-                                                ? `${nextConfig.env!.API_URL}${userProfileStore.userProfile.image}`
+                                            userProfileStore.userProfile?.image
+                                                ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
+                                                    userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                    ? userProfileStore.userProfile?.image
+                                                    : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                                 : undefined
                                         }
-                                        icon={
-                                            (!userProfileStore.userProfile?.image || loading) && <UserOutlined />
-                                        }
+                                        icon={!userProfileStore.userAvatar && <UserOutlined />}
                                         className="cursor-pointer"
                                         style={{
-                                            opacity: loading ? 0.5 : 1,
+                                            opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1,
                                             transition: 'opacity 0.3s ease',
                                         }}
                                     />

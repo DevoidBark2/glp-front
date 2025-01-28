@@ -31,6 +31,7 @@ import { observer } from "mobx-react";
 import dayjs from "dayjs";
 import { UserRole } from "@/shared/api/user/model";
 import { PageContainerControlPanel } from "@/shared/ui";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 const ProfilePage = () => {
   const { userProfileStore } = useMobxStores();
@@ -99,20 +100,21 @@ const ProfilePage = () => {
             <div className="relative cursor-pointer transition-transform hover:scale-105">
               <Spin spinning={userProfileStore.loading}>
                 <Avatar
-                    size={100}
-                    src={
-                      !userProfileStore.loading && userProfileStore.userProfile?.image
-                          ? `${nextConfig.env!.API_URL}${userProfileStore.userProfile.image}`
-                          : undefined
-                    }
-                    icon={
-                        (!userProfileStore.userProfile?.image || userProfileStore.loading) && <UserOutlined />
-                    }
-                    className="cursor-pointer"
-                    style={{
-                      opacity: loading ? 0.5 : 1,
-                      transition: 'opacity 0.3s ease',
-                    }}
+                  size={100}
+                  src={
+                    userProfileStore.userProfile?.image
+                      ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
+                        userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                        ? userProfileStore.userProfile?.image
+                        : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
+                      : undefined
+                  }
+                  icon={!userProfileStore.userAvatar && <UserOutlined />}
+                  className="cursor-pointer"
+                  style={{
+                    opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1,
+                    transition: 'opacity 0.3s ease',
+                  }}
                 />
               </Spin>
 
