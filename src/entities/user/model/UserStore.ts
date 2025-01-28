@@ -3,8 +3,9 @@ import { DELETE, GET, POST } from "@/lib/fetcher";
 import dayjs from "dayjs";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { getUserById, handleBlockUser, searchUsers, updateRole } from "@/shared/api/user";
-import {login, logoutUser, oauthByProvider, register} from "@/shared/api/auth";
-import {UserProfile} from "@/stores/UserProfileStore";
+import { login, logoutUser, oauthByProvider, register } from "@/shared/api/auth";
+import { UserProfile } from "@/stores/UserProfileStore";
+import { usersMapper } from "../mappers";
 
 class UserStore {
     constructor() {
@@ -152,7 +153,7 @@ class UserStore {
         }
     })
 
-    deleteUsers = action(async (id: number) => {
+    deleteUsers = action(async (id: string) => {
         try {
             const response = await DELETE(`/api/users?id=${id}`)
             this.allUsers = this.allUsers.filter(user => id !== user.id)
@@ -175,26 +176,5 @@ class UserStore {
         return await handleBlockUser({ userId: id, status: status });
     })
 }
-const usersMapper = (value: User) => {
-    const user: User = {
-        id: value.id,
-        first_name: value.first_name,
-        second_name: value.second_name,
-        last_name: value.last_name,
-        status: value.status,
-        phone: value.phone,
-        role: value.role,
-        email: value.email,
-        created_at: dayjs(value.created_at).toDate(),
-        about_me: value.about_me,
-        birth_day: value.birth_day,
-        courses: value.courses,
-        posts: value.posts,
-        city: value.city,
-        profile_url: value.profile_url,
-        isVerified: value.isVerified
-    }
 
-    return user;
-}
 export default UserStore;

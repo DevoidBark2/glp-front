@@ -342,7 +342,6 @@ class CourseStore {
 
     handleFilterCoursesBySearch = action(async (value: string) => {
         const data = await handleFilterBySearch(value)
-        debugger
         this.courses = data.map(courseMapper)
     })
 }

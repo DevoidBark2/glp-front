@@ -10,15 +10,19 @@ import {
     getCourseById,
     getCourseDetailsSections,
     getCPAllCourse, getFullCourse,
+    handleFilterByCategory,
+    handleFilterBySearch,
+    searchCourseByFilter,
     sendToReviewCourse
 } from "@/shared/api/course";
-import {Course, CourseMember, StatusCourseEnum} from "@/shared/api/course/model";
-import {courseMapper, courseMemberMapper} from "@/entities/course/mappers/courseMapper";
+import { Course, CourseMember, StatusCourseEnum } from "@/shared/api/course/model";
+import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
 import { SectionCourse } from "@/shared/api/section/model";
-import {Exam} from "@/shared/api/exams/model";
+import { Exam } from "@/shared/api/exams/model";
+import { FilterValues } from "@/shared/api/filter/model";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",
@@ -68,6 +72,7 @@ class CourseStore {
     messageWarning: string | null = ""
     courseMembers: CourseMember[] = []
     examCourse: Exam | null = null
+    resultSearchCourses: Course[] = []
 
     setMessageWarning = action((value: string | null) => {
         this.messageWarning = value
@@ -329,7 +334,7 @@ class CourseStore {
         this.setLoadingSection(true)
         this.setFullDetailCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
-        if(currentSection === - 1) {
+        if (currentSection === - 1) {
             runInAction(() => {
                 this.examCourse = data.data
             })
@@ -348,32 +353,24 @@ class CourseStore {
         this.setLoadingSection(false)
     })
 
+    searchCourseByFilter = action(async (values: FilterValues) => {
+        const data = await searchCourseByFilter(values)
+        this.resultSearchCourses = data.data.map(courseMapper)
+    })
+
+    handleFilterCoursesByCategory = action(async (id: number) => {
+        this.setLoadingCourses(true)
+        // this.courses = []
+        const data = await handleFilterByCategory(id)
+        this.courses = data.map(courseMapper)
+        this.setLoadingCourses(false)
+    })
+
+    handleFilterCoursesBySearch = action(async (value: string) => {
+        const data = await handleFilterBySearch(value)
+        this.resultSearchCourses = data.map(courseMapper)
+    })
 
 }
 
-// export const courseMapper = (course: Course) => {
-//     return {
-//         id: course.id,
-//         name: course.name,
-//         image: course.image,
-//         category: course.category,
-//         access_right: course.access_right,
-//         level: course.level,
-//         small_description: course.small_description,
-//         content_description: course.content_description,
-//         duration: course.duration,
-//         status: course.status,
-//         publish_date: dayjs(course.publish_date, FORMAT_VIEW_DATE).toDate(),
-//         user: course.user
-//     };
-// }
-
-// const teachCourseMapper = (course: TeacherCourse) => {
-//     return {
-//         id: course.id,
-//         name: course.name,
-//         image: course.image,
-//         publish_date:
-//     }
-// }
 export default CourseStore

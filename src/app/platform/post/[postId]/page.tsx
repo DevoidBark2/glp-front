@@ -1,5 +1,4 @@
 "use client";
-import { Post } from "@/stores/PostStore";
 import { Breadcrumb, notification } from "antd";
 import { observer } from "mobx-react";
 import Link from "next/link";
@@ -7,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { PostCard } from "@/entities/post";
+import { Post } from "@/shared/api/posts/model";
 
 const PostPage = () => {
     const { postId } = useParams();
@@ -27,7 +27,7 @@ const PostPage = () => {
                 <div className="mt-4">
                     <Breadcrumb items={[
                         {
-                            title: <Link href={"/platform"}>Главная</Link>,
+                            title: <Link href={"/platform/blog"}>Блог</Link>,
                         },
                         {
                             title: <p>{currentPost?.name}</p>,

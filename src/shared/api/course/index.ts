@@ -1,3 +1,4 @@
+import { FilterValues } from "../filter/model";
 import { axiosInstance, withAuth } from "../http-client";
 import { Course } from "./model";
 
@@ -90,4 +91,10 @@ export const deleteCourseMember = async (id: number) => {
 
 export const getAllExams = async () => {
     const data = (await axiosInstance.get(`api/get-user-exams`)).data
+}
+
+export const searchCourseByFilter = async (values: FilterValues) => {
+    const data = (await axiosInstance.post('/api/search-course-by-filter', values))
+
+    return data.data
 }

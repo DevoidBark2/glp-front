@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { getUserById, handleBlockUser, searchUsers, updateRole } from "@/shared/api/user";
 import { UserProfile } from "./UserProfileStore";
-import {login, logoutUser, oauthByProvider, register} from "@/shared/api/auth";
+import { login, logoutUser, oauthByProvider, register } from "@/shared/api/auth";
 
 class UserStore {
     constructor() {
@@ -152,7 +152,7 @@ class UserStore {
         }
     })
 
-    deleteUsers = action(async (id: number) => {
+    deleteUsers = action(async (id: string) => {
         try {
             const response = await DELETE(`/api/users?id=${id}`)
             this.allUsers = this.allUsers.filter(user => id !== user.id)

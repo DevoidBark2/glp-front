@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Avatar, Button, Dropdown, MenuProps, Spin, Drawer } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import {PlatformMenu, platformMenu} from "@/shared/constants";
+import { PlatformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
-import {UserOutlined, MenuOutlined, CloseOutlined, HomeOutlined, ReadOutlined} from "@ant-design/icons";
+import { UserOutlined, MenuOutlined, CloseOutlined, HomeOutlined, ReadOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
@@ -22,7 +22,7 @@ export const Header = observer(() => {
 
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
-        { key: 3, title: "Блог", link: '/platform/blog',icon: <ReadOutlined /> },
+        { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
     useEffect(() => {
@@ -48,9 +48,9 @@ export const Header = observer(() => {
                     ),
                 },
                 userProfileStore.userProfile &&
-                (userProfileStore.userProfile.role === UserRole.TEACHER ||
-                    userProfileStore.userProfile.role === UserRole.SUPER_ADMIN ||
-                    userProfileStore.userProfile.role === UserRole.MODERATOR)
+                    (userProfileStore.userProfile.role === UserRole.TEACHER ||
+                        userProfileStore.userProfile.role === UserRole.SUPER_ADMIN ||
+                        userProfileStore.userProfile.role === UserRole.MODERATOR)
                     ? {
                         key: "2",
                         label: (
@@ -132,9 +132,8 @@ export const Header = observer(() => {
                         <Link
                             key={menuItem.key}
                             href={menuItem.link}
-                            className={`text-white text-lg hover:text-yellow-300 transition-transform transform hover:scale-105 ${
-                                pathName === menuItem.link ? "border-b-2 border-yellow-300" : ""
-                            }`}
+                            className={`text-white text-lg hover:text-yellow-300 transition-transform transform hover:scale-105 ${pathName === menuItem.link ? "border-b-2 border-yellow-300" : ""
+                                }`}
                         >
                             {menuItem.title}
                         </Link>
@@ -144,7 +143,7 @@ export const Header = observer(() => {
                 {/* Аватар пользователя или кнопка входа */}
                 <div className="hidden lg:flex items-center space-x-4">
                     {userProfileStore.loading ? (
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center p-3">
                             <Spin size="large" />
                         </div>
                     ) : userProfileStore.userProfile ? (
@@ -155,7 +154,7 @@ export const Header = observer(() => {
                                     src={
                                         userProfileStore.userProfile?.image
                                             ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                                 ? userProfileStore.userProfile?.image
                                                 : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                             : undefined
@@ -165,15 +164,18 @@ export const Header = observer(() => {
                             </div>
                         </Dropdown>
                     ) : (
-                        <Button
-                            type="default"
-                            onClick={() => router.push('/platform/auth/login')}
-                            className="bg-white text-green-500 hover:bg-green-600 hover:text-white transition-transform duration-300 transform hover:scale-105"
-                        >
-                            Войти в профиль
-                        </Button>
+                        <div className="p-3">
+                            <Button
+                                type="default"
+                                onClick={() => router.push('/platform/auth/login')}
+                                className="bg-white text-green-500 hover:bg-green-600 hover:text-white transition-transform duration-300 transform hover:scale-105"
+                            >
+                                Войти в профиль
+                            </Button>
+                        </div>
                     )}
                 </div>
+
 
                 {/* Бургер-меню для мобильных */}
                 <div className="lg:hidden">
@@ -200,11 +202,10 @@ export const Header = observer(() => {
                             <Link
                                 key={menuItem.key}
                                 href={menuItem.link}
-                                className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 ${
-                                    pathName === menuItem.link
-                                        ? "bg-blue-100 text-blue-600 font-semibold"
-                                        : "bg-gray-100 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-                                }`}
+                                className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 ${pathName === menuItem.link
+                                    ? "bg-blue-100 text-blue-600 font-semibold"
+                                    : "bg-gray-100 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
+                                    }`}
                                 onClick={() => setDrawerOpen(false)} // Закрытие меню после клика
                             >
                                 {menuItem.icon} {/* Иконка пункта меню */}
@@ -229,7 +230,7 @@ export const Header = observer(() => {
                                     src={
                                         userProfileStore.userProfile?.image
                                             ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                                 ? userProfileStore.userProfile?.image
                                                 : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                             : undefined

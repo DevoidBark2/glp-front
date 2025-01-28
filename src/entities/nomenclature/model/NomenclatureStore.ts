@@ -1,7 +1,9 @@
 import { action, makeAutoObservable } from "mobx";
 import { notification } from "antd";
-import {NomenclatureItem} from "@/shared/api/nomenclature/model";
-import {createCategory, deleteCategory, getAllCategory, updateCategory} from "@/shared/api/nomenclature";
+import { NomenclatureItem } from "@/shared/api/nomenclature/model";
+import { createCategory, deleteCategory, getAllCategory, getTeachers, updateCategory } from "@/shared/api/nomenclature";
+import { User } from "@/shared/api/user/model";
+import { usersMapper } from "@/entities/user/mappers";
 
 class NomenclatureStore {
     constructor() {
@@ -9,6 +11,7 @@ class NomenclatureStore {
     }
 
     categories: NomenclatureItem[] = [];
+    teachers: User[] = []
     loadingCategories: boolean = false;
     createCategoryModal: boolean = false;
     changeCategoryModal: boolean = false;
@@ -50,7 +53,7 @@ class NomenclatureStore {
     })
 
     changeCategory = action(async (values: NomenclatureItem) => {
-        if(values.name === this.selectedCategory?.name) return;
+        if (values.name === this.selectedCategory?.name) return;
 
         await updateCategory({ ...values }).then(response => {
             notification.success({ message: response.data.message })
@@ -69,6 +72,11 @@ class NomenclatureStore {
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         })
+    })
+
+    getTeachers = action(async () => {
+        const data = await getTeachers();
+        this.teachers = data.map(usersMapper)
     })
 
     categoryMapper = (item: NomenclatureItem) => {

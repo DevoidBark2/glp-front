@@ -1,4 +1,3 @@
-import { CourseComponentTypeI } from "../course/model";
 import { axiosInstance, withAuth } from "../http-client";
 import { CurrentSectionDto, TaskAnswerUserDto } from "./model";
 

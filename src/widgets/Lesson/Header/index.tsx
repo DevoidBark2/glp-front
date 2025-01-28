@@ -30,7 +30,7 @@ export const HeaderLesson = () => {
                 }
             </div>
             <Button
-                onClick={() => router.push('/platform/courses')}
+                onClick={() => router.push('/platform')}
             >Вернутся на платформу</Button>
         </Header>
     )

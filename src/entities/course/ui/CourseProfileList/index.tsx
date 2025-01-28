@@ -15,7 +15,7 @@ export const CourseProfileList = observer(() => {
             )) : <div className="flex items-center justify-center h-3/4">
                 <Empty description={<div className="flex flex-col">
                     <span>Список пуст</span>
-                    <Button type="primary" className="mt-2" onClick={() => router.push('/platform/courses')}>Перейти к списку</Button>
+                    <Button type="primary" className="mt-2" onClick={() => router.push('/platform/')}>Перейти к списку</Button>
                 </div>} />
             </div>}
         </>

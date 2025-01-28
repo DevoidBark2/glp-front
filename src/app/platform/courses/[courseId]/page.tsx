@@ -1,16 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Breadcrumb, Button, Divider, notification, Spin } from "antd";
+import { Avatar, Breadcrumb, Button, Divider, notification, Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import nextConfig from "next.config.mjs";
 import { AccessRightEnum, Course } from "@/shared/api/course/model";
-import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { CourseLevelComponent, InputSecretKeyModal } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 const CoursePage = () => {
     const { courseStore, userProfileStore } = useMobxStores();
@@ -151,6 +152,35 @@ const CoursePage = () => {
                                     <span className="ml-4 text-gray-700 text-base font-medium">
                                         Категория: {currentCourse.category?.name}
                                     </span>
+                                </div>
+                            </div>
+
+                            <Divider />
+
+                            <div className="">
+                                <h3 className="text-xl font-semibold text-gray-800">Преподаватель</h3>
+
+                                <Divider />
+                                <div className="flex items-center">
+                                    <Avatar
+                                        size={80}
+                                        src={
+                                            currentCourse.user?.profile_url
+                                                ? currentCourse.user.method_auth === AuthMethodEnum.GOOGLE ||
+                                                    currentCourse.user.method_auth === AuthMethodEnum.YANDEX
+                                                    ? currentCourse.user?.profile_url
+                                                    : `${nextConfig.env?.API_URL}${currentCourse.user?.profile_url}`
+                                                : undefined
+                                        }
+                                        icon={!currentCourse.user.profile_url && <UserOutlined />}
+                                    />
+                                    <div className="ml-6">
+                                        <Link href={`/platform/users/${currentCourse.user?.id}`} className="hover:underline transition-all">
+                                            <p className="text-lg font-medium text-gray-900">
+                                                {currentCourse.user?.first_name} {currentCourse.user?.last_name}
+                                            </p>
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
 
