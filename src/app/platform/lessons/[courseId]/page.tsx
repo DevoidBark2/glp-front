@@ -4,13 +4,14 @@ import { observer } from "mobx-react";
 import {
     Layout,
     Card, Divider,
-    notification
+    notification, Skeleton
 } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { CourseComponentType } from "@/shared/api/course/model";
 import { FileAttachment, HeaderLesson, LinksAttachment, NavbarLesson } from "@/widgets/Lesson";
 import { SimpleTask, QuizComponent, QuizMultiComponent, TextComponent, CommentBlock } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
+import ExamCourse from "@/entities/exams/ui/ExamCourse";
 
 const { Content } = Layout;
 
@@ -54,6 +55,7 @@ const LessonPage = () => {
     useEffect(() => {
         if (Number(selectedSection) !== 0) {
             courseStore.getMenuSections(Number(courseId), Number(selectedSection)).then(() => {
+                commentsStore.sectionComments = []
                 commentsStore.getSectionComments(Number(selectedSection));
             })
         }
@@ -70,7 +72,7 @@ const LessonPage = () => {
 
             <Layout className="mt-16">
                 <NavbarLesson router={router} courseStore={courseStore} collapsed={collapsed} setCollapsed={setCollapsed} selectedSection={selectedSection} setSelectedSection={setSelectedSection} courseId={Number(courseId)} />
-                <Layout className={`${collapsed ? "ml-20" : "ml-72"}`}>
+                <Layout>
                     <Content style={{ height: 'calc(100vh - 64px)' }}
                         className="m-0 p-6 flex flex-col pl-6 py-4 pr-4 max-h-[calc(100vh-64px)] overflow-y-auto">
                         <Card
@@ -79,7 +81,12 @@ const LessonPage = () => {
                             title={
                                 <div className="space-y-2 my-4">
                                     <h2 className="text-2xl font-bold text-gray-800">
-                                        {courseStore.fullDetailCourse?.name}
+                                        {courseStore.loadingSection ? (
+                                            <Skeleton.Input />
+                                        ) : (
+                                            courseStore.fullDetailCourse?.name || `Экзамен - ${courseStore.examCourse?.title || ''}`
+                                        )}
+
                                     </h2>
                                     <p className="text-sm text-gray-500">
                                         {courseStore.fullDetailCourse?.small_description}
@@ -88,7 +95,7 @@ const LessonPage = () => {
                             }
                         >
                             {
-                                courseStore.fullDetailCourse?.components && courseStore.fullDetailCourse?.components.map((component) => {
+                                Number(searchParams.get("step")) !== -1 && courseStore.fullDetailCourse?.components && courseStore.fullDetailCourse?.components.map((component) => {
                                     if (component.componentTask.type === CourseComponentType.Text) {
                                         return <TextComponent key={component.id} component={component.componentTask} />
                                     }
@@ -107,6 +114,10 @@ const LessonPage = () => {
                                     }
                                 })}
 
+                            {
+                                Number(searchParams.get("step")) === -1 && <ExamCourse exam={courseStore.examCourse!}/>
+                            }
+
                             {courseStore.messageWarning && <h1>{courseStore.messageWarning}</h1>}
 
                             {(courseStore.fullDetailCourse?.files && courseStore.fullDetailCourse?.files.length > 0 || courseStore.fullDetailCourse?.links && courseStore.fullDetailCourse?.links.length > 0) &&
@@ -116,7 +127,7 @@ const LessonPage = () => {
                                 <LinksAttachment />
                             </div>
                         </Card>
-                        {!courseStore.messageWarning && <CommentBlock />}
+                        {(!courseStore.messageWarning && Number(searchParams.get("step")) !== -1) && <CommentBlock />}
                     </Content>
                 </Layout>
             </Layout>

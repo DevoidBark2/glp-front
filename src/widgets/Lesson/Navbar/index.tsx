@@ -88,14 +88,15 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, rout
 
     return (
         <Sider
-            collapsible
+            // collapsible
             collapsed={collapsed}
+            breakpoint="lg"
             onCollapse={(value) => setCollapsed(value)}
             width={300}
-            className="fixed top-16"
-            style={{ position: 'fixed' }}
+            // className="fixed top-16"
+            style={{ height: "calc(100vh - 96px)" }}
         >
-            {/* <div className="flex justify-end px-3 rounded-full">
+            <div className="flex justify-end px-3 rounded-full">
                 <Button
                     type="text"
                     icon={collapsed
@@ -104,7 +105,7 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, rout
                     }
                     onClick={() => setCollapsed(!collapsed)}
                 />
-            </div> */}
+            </div>
             {
                 courseStore.courseMenuItems ? (
                     <>

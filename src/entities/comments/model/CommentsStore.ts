@@ -18,9 +18,10 @@ class CommentsStore {
     })
 
     getSectionComments = action(async (sectionId: number) => {
-        const data = await getSectionComments(sectionId);
-
-        this.sectionComments = data.map(commentMapper)
+        this.sectionComments = []
+        await getSectionComments(sectionId).then(response => {
+            this.sectionComments = response.map(commentMapper)
+        });
     })
 
     sendSectionComment = action(async (sectionId: number) => {

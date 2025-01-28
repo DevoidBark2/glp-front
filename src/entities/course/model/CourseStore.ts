@@ -18,6 +18,7 @@ import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
 import { SectionCourse } from "@/shared/api/section/model";
+import {Exam} from "@/shared/api/exams/model";
 
 enum CourseMenuStatus {
     NOT_STARTED = "not_started",
@@ -60,12 +61,13 @@ class CourseStore {
     courses: Course[] = []
     userCourses: Course[] = []
     selectedIdCourse: number | null = null;
-    loadingSection: boolean = false;
+    loadingSection: boolean = true;
     courseMenuLoading: boolean = false;
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
     messageWarning: string | null = ""
     courseMembers: CourseMember[] = []
+    examCourse: Exam | null = null
 
     setMessageWarning = action((value: string | null) => {
         this.messageWarning = value
@@ -327,6 +329,13 @@ class CourseStore {
         this.setLoadingSection(true)
         this.setFullDetailCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
+        if(currentSection === - 1) {
+            runInAction(() => {
+                this.examCourse = data.data
+            })
+            this.setLoadingSection(false)
+            return;
+        }
         if (!data.data.message) {
             runInAction(() => {
                 this.setFullDetailCourse(data.data);
@@ -336,9 +345,10 @@ class CourseStore {
             this.setMessageWarning(data.data.message)
         }
 
-
         this.setLoadingSection(false)
     })
+
+
 }
 
 // export const courseMapper = (course: Course) => {
