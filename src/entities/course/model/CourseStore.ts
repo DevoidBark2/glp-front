@@ -13,9 +13,10 @@ import {
     handleFilterByCategory,
     handleFilterBySearch,
     searchCourseByFilter,
-    sendToReviewCourse
+    sendToReviewCourse,
+    submitReviewCourse
 } from "@/shared/api/course";
-import { Course, CourseMember, StatusCourseEnum } from "@/shared/api/course/model";
+import { Course, CourseMember, CourseReview, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
@@ -369,6 +370,11 @@ class CourseStore {
     handleFilterCoursesBySearch = action(async (value: string) => {
         const data = await handleFilterBySearch(value)
         this.resultSearchCourses = data.map(courseMapper)
+    })
+
+
+    handleReviewSubmitCourse = action(async (values: CourseReview) => {
+        const data = await submitReviewCourse(values);
     })
 
 }

@@ -119,3 +119,9 @@ export type CourseMember = {
     progress: number,
     user: User,
 }
+
+export type CourseReview = {
+    rating: number
+    review: string
+    courseId: number
+}

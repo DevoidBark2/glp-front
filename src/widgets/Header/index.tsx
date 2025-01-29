@@ -121,9 +121,8 @@ export const Header = observer(() => {
     return (
         <div className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
-                {/* Логотип */}
                 <div className="flex items-center">
-                    <span className="text-white text-2xl font-bold">Learnify</span>
+                    <Link href="/platform"><span className="text-white text-2xl font-bold">Learnify</span></Link>
                 </div>
 
                 {/* Десктопное меню */}

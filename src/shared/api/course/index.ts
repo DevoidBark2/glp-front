@@ -1,6 +1,6 @@
 import { FilterValues } from "../filter/model";
 import { axiosInstance, withAuth } from "../http-client";
-import { Course } from "./model";
+import { Course, CourseReview } from "./model";
 
 export const getAllCourses = withAuth(async (arg: any, config = {}): Promise<Course[]> => {
     const data = (await axiosInstance.get('api/courses', config)).data;
@@ -95,6 +95,12 @@ export const getAllExams = async () => {
 
 export const searchCourseByFilter = async (values: FilterValues) => {
     const data = (await axiosInstance.post('/api/search-course-by-filter', values))
+
+    return data.data
+}
+
+export const submitReviewCourse = async (values: CourseReview) => {
+    const data = (await axiosInstance.post('/api/course-review', values)).data
 
     return data.data
 }
