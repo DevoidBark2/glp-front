@@ -1,12 +1,10 @@
 "use client"
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Carousel, Divider, Input, Skeleton } from "antd";
-import Image from "next/image";
+import { Avatar, Button, Divider, Input, Skeleton } from "antd";
 import nextConfig from "../../../next.config.mjs";
-import { BookOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
-import Link from "next/link";
-import { CourseList } from "@/entities/course/ui";
+import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { CourseList, CourseCarousel } from "@/entities/course/ui";
 import { useRouter } from 'next/navigation';
 import { useMobxStores } from '@/shared/store/RootStore';
 import { AuthMethodEnum } from '@/shared/api/auth/model';
@@ -54,84 +52,7 @@ const PlatformPage = () => {
         <div className="mb-12 mt-12">
             <h2 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">Популярные
                 курсы</h2>
-            <Carousel
-                autoplay={!courseStore.loadingCourses}
-                pauseOnHover={false}
-                dots={false}
-                speed={1500}
-                slidesToShow={4}
-                className="rounded-lg overflow-hidden"
-                responsive={[
-                    {
-                        breakpoint: 1024,
-                        settings: { slidesToShow: 2 },
-                    },
-                    {
-                        breakpoint: 768,
-                        settings: { slidesToShow: 1 },
-                    },
-                ]}
-            >
-                {!courseStore.loadingCourses && courseStore.courses.length < 1
-                    ? Array.from({ length: 4 }).map((_, index) => (
-                        <div key={index} className="flex justify-center items-center p-4 mb-4">
-                            <div className="bg-white rounded-lg shadow-lg p-6 flex items-center max-w-md">
-                                {/* Скелетон для картинки */}
-                                <div
-                                    className="flex-shrink-0 w-32 h-32 mr-4 bg-gray-200 rounded-lg overflow-hidden"></div>
-
-                                {/* Скелетон для текста */}
-                                <div className="flex-1">
-                                    <Skeleton
-                                        active
-                                        paragraph={{ rows: 2, width: ['80%', '60%'] }}
-                                        title={{ width: '70%' }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                    : courseStore.courses.slice(0, 5).map((course, index) => (
-                        <div key={course.id || index} className="flex justify-center items-center p-4 mb-4">
-                            <div className="bg-white rounded-lg shadow-lg p-6 flex items-center max-w-md">
-                                {/* Картинка курса */}
-                                <div className="flex-shrink-0 w-32 h-32 mr-4 bg-gray-200 rounded-lg overflow-hidden">
-                                    {course.image ? (
-                                        <Image
-                                            src={`${nextConfig.env!.API_URL}${course.image}`}
-                                            alt={course.name}
-                                            width={0}
-                                            height={0}
-                                            sizes="100vw"
-                                            style={{ width: '100%', height: '100%' }}
-                                            className="w-full h-full object-cover"
-                                            priority
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                                            <BookOutlined style={{ fontSize: '48px', color: '#8c8c8c' }} />
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Контент курса */}
-                                <div className="flex-1">
-                                    <h3 className="text-xl font-semibold text-gray-800">{course.name}</h3>
-                                    <p className="text-sm text-gray-600 mt-2">
-                                        {course.small_description?.length > 100
-                                            ? `${course.small_description.slice(0, 100)}...`
-                                            : course.small_description || 'Описание курса'}
-                                    </p>
-                                    <Link href={`/platform/courses/${course.id}`}
-                                        className="text-blue-500 mt-4 inline-block hover:underline"
-                                    >
-                                        Подробнее
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-            </Carousel>
+            <CourseCarousel courses={courseStore.courses} loading={courseStore.loadingCourses} />
         </div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
 

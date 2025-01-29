@@ -193,7 +193,7 @@ export const Header = observer(() => {
                 onClose={() => setDrawerOpen(false)}
                 open={isDrawerOpen}
                 closeIcon={<CloseOutlined className="text-gray-600" />}
-                bodyStyle={{ padding: 0 }}
+                style={{ padding: 0 }}
             >
                 <div className="flex flex-col p-4">
                     {/* Список ссылок */}
