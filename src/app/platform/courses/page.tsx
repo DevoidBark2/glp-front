@@ -8,7 +8,6 @@ import { CourseList } from "@/entities/course/ui";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import FilterBlock from "@/entities/filters/ui/FilterBlock";
-import Image from "next/image"
 
 const CoursesSearch = observer(() => {
     const { courseStore, nomenclatureStore } = useMobxStores();

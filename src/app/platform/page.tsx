@@ -8,6 +8,7 @@ import { CourseList, CourseCarousel } from "@/entities/course/ui";
 import { useRouter } from 'next/navigation';
 import { useMobxStores } from '@/shared/store/RootStore';
 import { AuthMethodEnum } from '@/shared/api/auth/model';
+import Link from 'next/link';
 
 const PlatformPage = () => {
     const { courseStore, nomenclatureStore } = useMobxStores()
@@ -147,13 +148,15 @@ const PlatformPage = () => {
                             }
                             icon={!teacher?.profile_url && <UserOutlined />}
                         />
-                        <h3 className="text-xl font-semibold text-gray-800 mt-4">{`${teacher.second_name ?? ''} ${teacher.first_name ?? ''} ${teacher.last_name ?? ''}`}</h3>
+                        <Link href={`/platform/users/${teacher.id}`} className='hover:underline hover:cursor-pointer'>
+                            <h3 className="text-xl font-semibold text-gray-800 mt-4">{`${teacher.second_name ?? ''} ${teacher.first_name ?? ''} ${teacher.last_name ?? ''}`}</h3>
+                        </Link>
                         <p className="text-gray-600 mt-4">{teacher.about_me ?? ''}</p>
                     </div>
                 ))}
             </div>
         </div>
-    </div>
+    </div >
 }
 
 export default observer(PlatformPage);

@@ -1,5 +1,4 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-import { GET } from "@/lib/fetcher";
 import { notification } from "antd";
 import { SectionCourseItem } from "@/stores/SectionCourse";
 import {
@@ -9,14 +8,15 @@ import {
     getAllCourses, getAllMembersCourse,
     getCourseById,
     getCourseDetailsSections,
-    getCPAllCourse, getFullCourse,
+    getCourseTitleAndMenuById,
+    getCPAllCourse,
     handleFilterByCategory,
     handleFilterBySearch,
     searchCourseByFilter,
     sendToReviewCourse,
     submitReviewCourse
 } from "@/shared/api/course";
-import { Course, CourseMember, CourseReview, StatusCourseEnum } from "@/shared/api/course/model";
+import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
@@ -24,29 +24,6 @@ import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } 
 import { SectionCourse } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
-
-enum CourseMenuStatus {
-    NOT_STARTED = "not_started",
-    FAILED = "failed",
-    WARNING = "warning",
-    SUCCESS = "success"
-}
-
-type UserAnswer = {
-    confirmedStep?: number,
-    totalAnswers?: number,
-    correctAnswers?: number
-}
-
-export type CourseMenu = {
-    id: number,
-    name: string,
-    courseName: string,
-    userAnswer: UserAnswer,
-    progress: number,
-    children: CourseMenu[],
-    sections: CourseMenu[]
-}
 
 class CourseStore {
     constructor() {
@@ -214,10 +191,9 @@ class CourseStore {
         })
     })
 
-    getFullCourseById = action(async (id: number) => {
+    getCourseTitleAndMenuById = action(async (id: number) => {
         this.setCourseMenuLoading(true);
-        return await getFullCourse(id).then(response => {
-            // this.setFullDetailCourse(response.data);
+        return await getCourseTitleAndMenuById(id).then(response => {
             this.setCourseMenuItems(response.data)
             return response.data;
         }).finally(() => {

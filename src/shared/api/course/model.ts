@@ -125,3 +125,21 @@ export type CourseReview = {
     review: string
     courseId: number
 }
+
+
+export type SectionMenu = {
+    id: number
+    name: string
+    userAnswer: UserAnswer
+}
+export type MainSectionMenu = {
+    id: number
+    name: string
+    children: SectionMenu[]
+}
+
+export type CourseMenu = {
+    courseName: string,
+    progress: number,
+    children: MainSectionMenu[],
+}

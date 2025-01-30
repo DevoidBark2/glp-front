@@ -63,7 +63,7 @@ export const getCourseDetailsSections = async (courseId: number) => {
 }
 
 
-export const getFullCourse = async (courserId: number) => {
+export const getCourseTitleAndMenuById = async (courserId: number) => {
     return (await axiosInstance.get(`api/full-course?courseId=${courserId}`)).data
 }
 

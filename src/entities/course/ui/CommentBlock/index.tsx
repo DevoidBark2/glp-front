@@ -17,7 +17,7 @@ dayjs.extend(relativeTime);
 dayjs.locale('ru');
 
 export const CommentBlock = observer(() => {
-    const { commentsStore, userProfileStore } = useMobxStores()
+    const { commentsStore, userProfileStore, courseStore } = useMobxStores()
     const searchParams = useSearchParams();
 
     const sendComment = () => {
@@ -34,6 +34,10 @@ export const CommentBlock = observer(() => {
         if (searchParams.get("step")) {
             commentsStore.deleteSectionComment(id)
         }
+    }
+
+    if (courseStore.messageWarning || Number(searchParams.get("step")) === -1) {
+        return;
     }
 
     return (

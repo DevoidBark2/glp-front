@@ -3,10 +3,10 @@ import {
     Layout,
     Button,
     Tooltip,
-    Skeleton
+    Skeleton,
+    notification
 } from "antd";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import {
     ExclamationCircleOutlined,
     CheckCircleOutlined,
@@ -14,24 +14,24 @@ import {
     QuestionCircleOutlined
 } from "@ant-design/icons";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
-import { CourseStore } from "@/entities/course";
-import { CourseMenu } from "@/entities/course/model/CourseStore";
 import { observer } from "mobx-react";
-import { cp } from "fs";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { CourseMenu } from "@/shared/api/course/model";
 
 const { Sider } = Layout;
 
 interface NavbarLessonProps {
-    courseStore: CourseStore
-    router: AppRouterInstance
-    collapsed: boolean,
-    setCollapsed: (value: boolean) => void
-    selectedSection: number,
-    setSelectedSection: (value: number) => void
     courseId: number
 }
 
-export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, router, collapsed, setCollapsed, selectedSection, setSelectedSection, courseId }) => {
+export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseId }) => {
+    const { courseStore, commentsStore } = useMobxStores()
+    const router = useRouter()
+    const [collapsed, setCollapsed] = useState<boolean>(false);
+    const searchParams = useSearchParams();
+    const [selectedSection, setSelectedSection] = useState<number>(0);
+
 
     // переход между разделами
     const handleMenuClick = ({ key }: any) => {
@@ -86,15 +86,25 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseStore, rout
         );
     };
 
+    useEffect(() => {
+        const step = Number(searchParams.get('step'))
+        const initialSectionId = step || courseStore.courseMenuItems?.children[0].children[0].id
+
+        commentsStore.getSectionComments(Number(initialSectionId));
+
+        if (!step) {
+            router.push(`/platform/lessons/${courseId}?step=${initialSectionId}`);
+        }
+    }, [])
+
     return (
         <Sider
-            // collapsible
             collapsed={collapsed}
             breakpoint="lg"
             onCollapse={(value) => setCollapsed(value)}
             width={300}
             // className="fixed top-16"
-            style={{ height: "calc(100vh - 96px)" }}
+            style={{ height: "calc(100vh - 64px)" }}
         >
             <div className="flex justify-end px-3 rounded-full">
                 <Button

@@ -20,7 +20,6 @@ export const HeaderLesson = () => {
                 {
                     !courseStore.courseMenuLoading &&
                     <Progress
-                        // success={{ percent: 90 }}
                         percent={courseStore.courseMenuItems?.progress}
                         strokeColor="green"
                         trailColor="#CCCCCC"
