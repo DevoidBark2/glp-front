@@ -75,6 +75,9 @@ export type CourseComponentTypeI = {
 }
 
 export type UserAnswer = {
+    confirmedStep: number,
+    totalAnswers: number,
+    correctAnswers: number
     id: string;
     correctAnswer: number;
     isCorrect: boolean;
@@ -141,5 +144,5 @@ export type MainSectionMenu = {
 export type CourseMenu = {
     courseName: string,
     progress: number,
-    children: MainSectionMenu[],
+    sections: MainSectionMenu[],
 }

@@ -32,7 +32,7 @@ class CourseStore {
 
     loadingCourses: boolean = false;
 
-    fullDetailCourse: SectionCourse | null = null
+    sectionCourse: SectionCourse | null = null
     courseMenuItems: CourseMenu | null = null
     loadingCreateCourse: boolean = false;
     selectedCourseForDetailModal: Course | null = null
@@ -67,8 +67,8 @@ class CourseStore {
         this.loadingSubscribeCourse = value;
     })
 
-    setFullDetailCourse = action((value: SectionCourse | null) => {
-        this.fullDetailCourse = value;
+    setSectionCourse = action((value: SectionCourse | null) => {
+        this.sectionCourse = value;
     })
 
     setCourseMenuItems = action((value: any) => {
@@ -124,7 +124,6 @@ class CourseStore {
 
     deleteMember = action(async (id: number) => {
         const data = await deleteCourseMember(id)
-        debugger
         this.courseMembers = this.courseMembers.filter(it => id !== it.id)
         notification.success({ message: data.message })
     })
@@ -191,7 +190,7 @@ class CourseStore {
         })
     })
 
-    getCourseTitleAndMenuById = action(async (id: number) => {
+    getCourseTitleAndMenuById = action(async (id: number): Promise<CourseMenu> => {
         this.setCourseMenuLoading(true);
         return await getCourseTitleAndMenuById(id).then(response => {
             this.setCourseMenuItems(response.data)
@@ -215,45 +214,53 @@ class CourseStore {
 
     handleCheckTask = action(async (task: TaskAnswerUserDto) => {
         const data = await handleCheckUserTask(task);
+        debugger
 
+        // обновить копмонент + обновить меню\
 
-        // обновить копмонент + обновить меню
+        // component.componentTask.map((child: any) => {
+        //     if (child.id === task.currentSection) {
+        //         return {
+        //             ...child,
+        //             sectionComponents: (child.sectionComponents || []).map((component: any) => {
+        //                 if (component.componentTask.id === task.task.id) {
+        //                     // Обновляем данные для componentTask и userAnswer
+        //                     console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
+        //                     console.log('Ответы:', data.answers.answer);
+        //                     return {
+        //                         ...component,
+        //                         componentTask: {
+        //                             ...component.componentTask,
+        //                             userAnswer: data.answers.answer, // Обновляем userAnswer в componentTask
+        //                         },
+        //                     };
+        //                 }
+        //                 return component; // Оставляем компонент неизменным
+        //             }),
+        //         };
+        //     }
+        //     return child;
+        // }),
 
         runInAction(() => {
-            this.fullDetailCourse!.sections = this.fullDetailCourse!.sections.map((section: any) => {
+            this.sectionCourse!.components = this.sectionCourse!.components.map((component) => {
                 return {
-                    ...section,
-                    children: section.children.map((child: any) => {
-                        if (child.id === task.currentSection) {
-                            return {
-                                ...child,
-                                sectionComponents: (child.sectionComponents || []).map((component: any) => {
-                                    if (component.componentTask.id === task.task.id) {
-                                        // Обновляем данные для componentTask и userAnswer
-                                        console.log('Обновляем userAnswer для componentTask.id:', component.componentTask.id);
-                                        console.log('Ответы:', data.answers.answer);
-                                        return {
-                                            ...component,
-                                            componentTask: {
-                                                ...component.componentTask,
-                                                userAnswer: data.answers.answer, // Обновляем userAnswer в componentTask
-                                            },
-                                        };
-                                    }
-                                    return component; // Оставляем компонент неизменным
-                                }),
-                            };
-                        }
-                        return child;
-                    }),
+                    ...component,
+                    componentTask: {
+                        ...component.componentTask,
+                        userAnswer: data.answer,
+                    }
                 };
             });
 
+            debugger
             const updatedSections = this.courseMenuItems?.sections.map(section => {
+                debugger
                 return {
                     ...section,
                     children: section.children.map(child => {
-                        if (child.id === data.section.id) {
+                        debugger
+                        if (child.id === task.currentSection) {
                             return {
                                 ...child,
                                 userAnswer: data.answer, // Обновляем userAnswer
@@ -307,9 +314,9 @@ class CourseStore {
     });
 
 
-    getMenuSections = action(async (courseId: number, currentSection: number) => {
+    getCourseSectionByStepId = action(async (courseId: number, currentSection: number) => {
         this.setLoadingSection(true)
-        this.setFullDetailCourse(null);
+        this.setSectionCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
         if (currentSection === - 1) {
             runInAction(() => {
@@ -320,7 +327,7 @@ class CourseStore {
         }
         if (!data.data.message) {
             runInAction(() => {
-                this.setFullDetailCourse(data.data);
+                this.setSectionCourse(data.data);
             })
         }
         else {

@@ -15,9 +15,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const pathName = usePathname();
 
     useEffect(() => {
-        userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false))
-        generalStore.getFooter()
+        if (!pathName.includes('/profile')) {
+            userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false));
+        } else {
+            userProfileStore.setLoading(false);
+        }
+
+        if (!pathName.includes('/lessons/')) {
+            generalStore.getFooter();
+        }
     }, []);
+
 
     // if (generalStore.loading) {
     //     return (

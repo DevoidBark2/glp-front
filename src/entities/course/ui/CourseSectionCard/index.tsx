@@ -1,4 +1,4 @@
-import { CourseComponentType } from "@/shared/api/course/model";
+import {CourseComponentType, CourseComponentTypeI} from "@/shared/api/course/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Card, Divider, Skeleton } from "antd";
 import { observer } from "mobx-react";
@@ -6,31 +6,40 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { TextComponent } from "../TextComponent";
 import { QuizComponent } from "../QuizComponent";
-import { QuizMultiComponent } from "../QuizMultiComponent";
+import { QuizMultiComponent } from "@/entities/course/ui";
 import { SimpleTask } from "../SimpleTask";
 import { FileAttachment, LinksAttachment } from "@/widgets/Lesson";
 import ExamCourse from "@/entities/exams/ui/ExamCourse";
 import { isExamCoursePage } from "../../selectors";
 
 export const CourseSectionCard = observer(() => {
-    const { courseStore, commentsStore } = useMobxStores()
+    const { courseStore, commentsStore } = useMobxStores();
     const searchParams = useSearchParams();
     const { courseId } = useParams();
-    const step = Number(searchParams.get('step'))
+    const stepParam = searchParams.get("step");
+    const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
+
+    const handleCheckResult = async (quiz: CourseComponentTypeI, selectedAnswers : string | number[]) => {
+        await courseStore.handleCheckTask({
+            task: quiz,
+            answers: selectedAnswers,
+            currentSection: step!,
+        });
+    };
 
     useEffect(() => {
-        if (step !== 0) {
-            courseStore.getMenuSections(Number(courseId), step).then(() => {
-                commentsStore.sectionComments = []
-                commentsStore.getSectionComments(step);
-            })
+        if (step !== null) {
+            courseStore.getCourseSectionByStepId(Number(courseId), step).then(() => {
+                    commentsStore.getSectionComments(step);
+            }).catch((e) => {
+                    console.error("Ошибка при загрузке данных:", e);
+            });
         }
 
         return () => {
-            courseStore.setMessageWarning(null)
-        }
-
-    }, [searchParams])
+            courseStore.setMessageWarning(null);
+        };
+    }, [searchParams, courseId, courseStore, commentsStore]);
 
     return (
         <Card
@@ -42,48 +51,57 @@ export const CourseSectionCard = observer(() => {
                         {courseStore.loadingSection ? (
                             <Skeleton.Input />
                         ) : (
-                            courseStore.fullDetailCourse?.name || `Экзамен - ${courseStore.examCourse?.title || ''}`
+                            courseStore.sectionCourse?.name || `Экзамен - ${courseStore.examCourse?.title || ""}`
                         )}
-
                     </h2>
-                    <p className="text-sm text-gray-500">
-                        {courseStore.fullDetailCourse?.small_description}
-                    </p>
+                    <p className="text-sm text-gray-500">{courseStore.sectionCourse?.small_description}</p>
                 </div>
             }
         >
-            {
-                !isExamCoursePage(searchParams) && courseStore.fullDetailCourse?.components && courseStore.fullDetailCourse?.components.map((component) => {
-                    if (component.componentTask.type === CourseComponentType.Text) {
-                        return <TextComponent key={component.id} component={component.componentTask} />
-                    }
-                    if (component.componentTask.type === CourseComponentType.Quiz) {
-                        return <QuizComponent key={component.id} quiz={component.componentTask}
-                            currentSection={step} />;
-                    }
-                    if (component.componentTask.type === CourseComponentType.MultiPlayChoice) {
-                        return <QuizMultiComponent key={component.id} quiz={component.componentTask}
-                            currentSection={step} />;
-                    }
+            {!isExamCoursePage(searchParams) &&
+                courseStore.sectionCourse?.components?.map((component) => {
+                    const { componentTask } = component;
 
-                    if (component.componentTask.type === CourseComponentType.SimpleTask) {
-                        return <SimpleTask key={component.id} task={component.componentTask}
-                            currentSection={step} />
+                    switch (componentTask.type) {
+                        case CourseComponentType.Text:
+                            return <TextComponent key={component.id} component={componentTask} />;
+
+                        case CourseComponentType.Quiz:
+                            return (
+                                <QuizComponent
+                                    key={component.id}
+                                    quiz={componentTask}
+                                    onCheckResult={handleCheckResult}
+                                />
+                            );
+
+                        case CourseComponentType.MultiPlayChoice:
+                            return <QuizMultiComponent key={component.id} quiz={componentTask} currentSection={step!} />;
+
+                        case CourseComponentType.SimpleTask:
+                            return <SimpleTask key={component.id} task={componentTask} currentSection={step!} />;
+
+                        default:
+                            return null;
                     }
                 })}
 
-            {
-                isExamCoursePage(searchParams) && <ExamCourse exam={courseStore.examCourse!} />
-            }
+            {/* Отображение экзамена */}
+            {isExamCoursePage(searchParams) && <ExamCourse exam={courseStore.examCourse!} />}
 
+            {/* Отображение предупреждений */}
             {courseStore.messageWarning && <h1>{courseStore.messageWarning}</h1>}
 
-            {(courseStore.fullDetailCourse?.files && courseStore.fullDetailCourse?.files.length > 0 || courseStore.fullDetailCourse?.links && courseStore.fullDetailCourse?.links.length > 0) &&
+            {(courseStore.sectionCourse?.files && courseStore.sectionCourse?.files.length > 0 || courseStore.sectionCourse?.links && courseStore.sectionCourse?.links.length > 0) &&
                 <Divider />}
             <div className="space-y-12">
                 <FileAttachment />
                 <LinksAttachment />
             </div>
+            <div className="space-y-12">
+                <FileAttachment />
+                <LinksAttachment />
+            </div>
         </Card>
-    )
-})
+    );
+});

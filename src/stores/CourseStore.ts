@@ -10,8 +10,8 @@ import {
     getAllCourses, getAllExams,
     getAllMembersCourse,
     getCourseById,
-    getCourseDetailsSections,
-    getCPAllCourse, getFullCourse, handleFilterByCategory, handleFilterBySearch,
+    getCourseDetailsSections, getCourseTitleAndMenuById,
+    getCPAllCourse, handleFilterByCategory, handleFilterBySearch,
     sendToReviewCourse
 } from "@/shared/api/course";
 import { Course, CourseMember, StatusCourseEnum } from "@/shared/api/course/model";
@@ -185,7 +185,6 @@ class CourseStore {
 
     deleteMember = action(async (id: number) => {
         const data = await deleteCourseMember(id)
-        debugger
         this.courseMembers = this.courseMembers.filter(it => id !== it.id)
         notification.success({ message: data.message })
     })
@@ -209,7 +208,7 @@ class CourseStore {
 
     getFullCourseById = action(async (id: number) => {
         this.setCourseMenuLoading(true);
-        return await getFullCourse(id).then(response => {
+        return await getCourseTitleAndMenuById(id).then(response => {
             // this.setFullDetailCourse(response.data);
             this.setCourseMenuItems(response.data)
             return response.data;
