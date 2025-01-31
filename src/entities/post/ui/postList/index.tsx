@@ -1,4 +1,4 @@
-import { Skeleton, Spin } from "antd";
+import { Skeleton} from "antd";
 import { PostRow } from "../postRow";
 import { Post } from "@/shared/api/posts/model";
 import Image from "next/image";
@@ -30,7 +30,6 @@ export const PostList = ({ loading, posts }: PostListProps) => {
                         </div>
                     )
                 ) : (
-                    // Здесь добавляем скелетоны для постов
                     <div className="flex flex-wrap gap-4">
                         {Array.from({ length: 3 }).map((_, index) => (
                             <div

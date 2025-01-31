@@ -1,10 +1,10 @@
-import { useMobxStores } from "@/stores/stores";
 import { Button, Form, message, notification, Steps } from "antd"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { observer } from "mobx-react";
 import { SelectCourse, General, SelectComponent } from "../Steps";
 import { FormInstance } from "antd/lib";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 interface FormStepsProps {
     sectionCourseForm?: FormInstance

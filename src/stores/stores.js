@@ -1,6 +1,5 @@
 import React from "react";
 import SettingsStore from "@/stores/SettingsStore";
-import CourseStore from "@/stores/CourseStore";
 import NomenclatureStore from "@/stores/NomenclatureStore";
 import EventStore from "@/stores/EventStore";
 import CourseComponent from "@/stores/CourseComponent";
@@ -15,7 +14,6 @@ import { GeneralSettings } from "@/entities/general-settings";
 
 const userStore = new UserStore();
 const settingsStore = new SettingsStore();
-const courseStore = new CourseStore();
 const nomenclatureStore = new NomenclatureStore();
 const eventStore = new EventStore();
 const generalSettingsStore = new GeneralSettings();
@@ -30,7 +28,6 @@ const moderatorStore = new ModeratorStore();
 export const RootStore = {
     userStore,
     settingsStore,
-    courseStore,
     nomenclatureStore,
     eventStore,
     generalSettingsStore,

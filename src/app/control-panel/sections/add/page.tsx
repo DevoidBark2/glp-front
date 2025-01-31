@@ -4,7 +4,7 @@ import { Breadcrumb } from "antd";
 import Link from "next/link";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { FormSteps } from "@/entities/section/ui";
-import {useMobxStores} from "@/stores/stores";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const SectionAddPage = () => {
     const {courseStore} = useMobxStores()

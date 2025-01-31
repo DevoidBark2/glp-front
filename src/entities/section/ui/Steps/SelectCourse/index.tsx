@@ -3,11 +3,11 @@ import { Button, Empty, Form, List } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { CourseMiniCard } from "@/entities/course/ui/CourseMiniCard";
-import { useMobxStores } from "@/stores/stores";
 import { FormInstance } from "antd/lib";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 interface SelectCourseProps {
     createSectionForm: FormInstance

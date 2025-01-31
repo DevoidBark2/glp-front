@@ -1,15 +1,15 @@
-import { CourseComponentTypeI } from "@/shared/api/course/model";
+import {CourseComponentTypeI, UserAnswer} from "@/shared/api/course/model";
 import { Button } from "antd";
 import { observer } from "mobx-react";
 import { useState } from "react";
 
 interface QuizComponentProps {
-    quiz: CourseComponentTypeI;
+    task: CourseComponentTypeI;
     onCheckResult: (quiz: CourseComponentTypeI, answers: number[]) => Promise<void>;
 }
 
-export const QuizComponent = observer(({ quiz, onCheckResult }: QuizComponentProps) => {
-    const { title, description, questions, userAnswer } = quiz;
+export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentProps) => {
+    const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!userAnswer);
@@ -24,7 +24,7 @@ export const QuizComponent = observer(({ quiz, onCheckResult }: QuizComponentPro
     };
 
     const handleCheckResult = async () => {
-        await onCheckResult(quiz, selectedAnswers);
+        await onCheckResult(task, selectedAnswers);
         setDisabledCheckResultBtn(true);
     };
 
@@ -62,8 +62,13 @@ export const QuizComponent = observer(({ quiz, onCheckResult }: QuizComponentPro
                 {/* Варианты ответов */}
                 <div className="space-y-3">
                     {currentQuestion.options.map((option, index) => {
-                        const userSelectedIndex = userAnswer ? userAnswer[currentQuestionIndex]?.userAnswer : null;
-                        const isCorrectAnswer = userAnswer ? userAnswer[currentQuestionIndex]?.isCorrect : null;
+                        const userSelectedIndex = Array.isArray(userAnswer)
+                            ? (userAnswer[currentQuestionIndex] as UserAnswer)?.userAnswer
+                            : null;
+
+                        const isCorrectAnswer = Array.isArray(userAnswer)
+                            ? (userAnswer[currentQuestionIndex] as UserAnswer)?.isCorrect
+                            : null;
 
                         const isSelected = selectedAnswers[currentQuestionIndex] === index;
                         const isUserAnswer = userSelectedIndex === index;

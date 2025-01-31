@@ -39,7 +39,6 @@ import { typeIcons } from "@/columnsTables/taskColumns";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Collapse, Progress } from 'antd';
 import { useMobxStores } from "@/shared/store/RootStore";
-import { ExamStatus } from "@/shared/api/exams/model";
 
 const { Panel } = Collapse;
 

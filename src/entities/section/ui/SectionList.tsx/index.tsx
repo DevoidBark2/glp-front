@@ -10,13 +10,13 @@ import {
     EditOutlined, UserOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { useMobxStores } from "@/stores/stores";
 import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
 import { observer } from "mobx-react";
 import {UserRole} from "@/shared/api/user/model";
 import {UserHoverCard} from "@/widgets";
 import {SettingControlPanel} from "@/shared/model";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 export const SectionList = observer(() => {
     const {sectionCourseStore, userProfileStore} = useMobxStores();

@@ -71,7 +71,7 @@ export type CourseComponentTypeI = {
     tags: string[]
     created_at: Date
     user: User
-    userAnswer?: UserAnswer[] | number[]
+    userAnswer?: UserAnswer[] | number[]  | UserAnswer
 }
 
 export type UserAnswer = {
@@ -82,7 +82,8 @@ export type UserAnswer = {
     correctAnswer: number;
     isCorrect: boolean;
     question: string;
-    userAnswer: number
+    userAnswer: UserAnswer
+    value:string
 }
 
 export type QuestionsType = {

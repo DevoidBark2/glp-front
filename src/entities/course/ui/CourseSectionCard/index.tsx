@@ -19,10 +19,10 @@ export const CourseSectionCard = observer(() => {
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
-    const handleCheckResult = async (quiz: CourseComponentTypeI, selectedAnswers : string | number[]) => {
+    const handleCheckResult = async (quiz: CourseComponentTypeI, userAnswer : string | number[]) => {
         await courseStore.handleCheckTask({
             task: quiz,
-            answers: selectedAnswers,
+            answers: userAnswer,
             currentSection: step!,
         });
     };
@@ -67,29 +67,33 @@ export const CourseSectionCard = observer(() => {
                             return <TextComponent key={component.id} component={componentTask} />;
 
                         case CourseComponentType.Quiz:
-                            return (
-                                <QuizComponent
-                                    key={component.id}
-                                    quiz={componentTask}
-                                    onCheckResult={handleCheckResult}
-                                />
-                            );
-
-                        case CourseComponentType.MultiPlayChoice:
-                            return <QuizMultiComponent key={component.id} quiz={componentTask} currentSection={step!} />;
+                            return <QuizComponent
+                                key={component.id}
+                                task={componentTask}
+                                onCheckResult={handleCheckResult}
+                            />
 
                         case CourseComponentType.SimpleTask:
-                            return <SimpleTask key={component.id} task={componentTask} currentSection={step!} />;
+                            return <SimpleTask
+                                key={component.id}
+                                task={componentTask}
+                                onCheckResult={handleCheckResult}
+                            />;
+
+                        case CourseComponentType.MultiPlayChoice:
+                            return <QuizMultiComponent
+                                key={component.id}
+                                task={componentTask}
+                                onCheckResult={handleCheckResult}
+                            />;
 
                         default:
                             return null;
                     }
                 })}
 
-            {/* Отображение экзамена */}
             {isExamCoursePage(searchParams) && <ExamCourse exam={courseStore.examCourse!} />}
 
-            {/* Отображение предупреждений */}
             {courseStore.messageWarning && <h1>{courseStore.messageWarning}</h1>}
 
             {(courseStore.sectionCourse?.files && courseStore.sectionCourse?.files.length > 0 || courseStore.sectionCourse?.links && courseStore.sectionCourse?.links.length > 0) &&

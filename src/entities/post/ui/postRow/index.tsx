@@ -1,7 +1,5 @@
 import nextConfig from "next.config.mjs";
-import dayjs from "dayjs";
 import Image from "next/image";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { Post } from "@/shared/api/posts/model";
 import Link from "next/link";
 

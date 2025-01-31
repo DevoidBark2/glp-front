@@ -1,6 +1,6 @@
 "use client"
-import {Posts} from "@/widgets";
 import React from "react";
+import {Posts} from "@/widgets";
 
 const BlogPage = () => {
     return <Posts/>

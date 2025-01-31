@@ -4,8 +4,9 @@ import "react-phone-input-2/lib/bootstrap.css";
 import {SaveOutlined} from "@ant-design/icons";
 import {UserProfile} from "@/stores/UserProfileStore";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {observer} from "mobx-react";
 
-export const ProfileForm = () => {
+export const ProfileForm = observer(() => {
     const { userProfileStore } = useMobxStores();
     const [formProfile] = Form.useForm<UserProfile>();
     return (
@@ -73,4 +74,4 @@ export const ProfileForm = () => {
             </div>
         </Form>
     )
-}
+})

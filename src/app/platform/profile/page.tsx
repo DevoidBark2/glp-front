@@ -1,5 +1,5 @@
 "use client";
-import {Button, Divider, Spin} from "antd";
+import { Divider, Spin} from "antd";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
