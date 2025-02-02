@@ -10,6 +10,7 @@ import {
     getCourseDetailsSections,
     getCourseTitleAndMenuById,
     getCPAllCourse,
+    getPopularCourses,
     handleFilterByCategory,
     handleFilterBySearch,
     searchCourseByFilter,
@@ -41,6 +42,7 @@ class CourseStore {
     openCourseDetailsModal: boolean = false;
     courseDetailsSections: SectionCourseItem[] = [];
     courses: Course[] = []
+    popularCourses: Course[] = []
     userCourses: Course[] = []
     selectedIdCourse: number | null = null;
     loadingSection: boolean = true;
@@ -120,6 +122,12 @@ class CourseStore {
         } finally {
             this.setLoadingCourses(false)
         }
+    })
+
+    getAllPopularCourses = action(async () => {
+        const data = await getPopularCourses()
+
+        this.popularCourses = data.map(courseMapper)
     })
 
     deleteMember = action(async (id: number) => {

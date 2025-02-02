@@ -13,6 +13,7 @@ import { ExamStore } from "@/entities/exams";
 import { CourseComponent } from "@/entities/component-task";
 import { NomenclatureStore } from "@/entities/nomenclature";
 import { FilterStore } from "@/entities/filters";
+import { ReviewStore } from "@/entities/review";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -27,6 +28,7 @@ const examStore = new ExamStore();
 const courseComponentStore = new CourseComponent();
 const nomenclatureStore = new NomenclatureStore()
 const filterStore = new FilterStore()
+const reviewStore = new ReviewStore()
 
 export const RootStore = {
     userStore,
@@ -41,7 +43,8 @@ export const RootStore = {
     courseComponentStore,
     examStore,
     nomenclatureStore,
-    filterStore
+    filterStore,
+    reviewStore
 };
 
 const StoreContext = React.createContext(RootStore);

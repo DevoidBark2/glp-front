@@ -7,6 +7,12 @@ export const getAllCourses = withAuth(async (arg: any, config = {}): Promise<Cou
     return data.data;
 });
 
+export const getPopularCourses = async () => {
+    const data = (await axiosInstance.get('api/popular-courses')).data
+
+    return data.data
+}
+
 export const getCPAllCourse = async () => {
     const data = (await axiosInstance.get('api/get-user-courses')).data
 

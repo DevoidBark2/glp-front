@@ -1,4 +1,3 @@
-"use client"
 import { PostList } from "@/entities/post/ui/postList";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Divider } from "antd";

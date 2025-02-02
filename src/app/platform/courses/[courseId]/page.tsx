@@ -15,7 +15,7 @@ import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseReviews } from "@/entities/review";
 
 const CoursePage = () => {
-    const { courseStore, userProfileStore } = useMobxStores();
+    const { courseStore, userProfileStore, reviewStore } = useMobxStores();
     const { courseId } = useParams();
     const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState(false);
@@ -39,7 +39,7 @@ const CoursePage = () => {
             return;
         }
 
-        courseStore.subscribeCourse(Number(courseId), userProfileStore.userProfile?.id).then(response => {
+        courseStore.subscribeCourse(Number(courseId), userProfileStore.userProfile?.id).then(() => {
             router.push(`/platform/lessons/${courseId}`)
         }).finally(() => {
             courseStore.setSubscribeCourseLoading(false);
@@ -49,6 +49,8 @@ const CoursePage = () => {
     useEffect(() => {
         courseStore.getCourseDetailsById(Number(courseId)).then(response => {
             setCurrentCourse(response);
+
+            reviewStore.getCourseReviews(Number(courseId))
         }).catch((e) => {
             router.push("/platform/courses");
             notification.error({ message: e.response.data.message });

@@ -14,7 +14,7 @@ export const LoginComponent = observer(() => {
     const router = useRouter()
     const { userStore } = useMobxStores();
     const [form] = Form.useForm();
-    const [isShowTwoFactor, setIsShowTwoFacor] = useState(false)
+    const [isShowTwoFactor, setIsShowTwoFactor] = useState(false)
     const [credentials, setCredentials] = useState({
         email: "",
         password: "",
@@ -33,7 +33,7 @@ export const LoginComponent = observer(() => {
         userStore.loginUser(body).then((response) => {
             if (response.message) {
                 notification.success({ message: response.message })
-                setIsShowTwoFacor(true);
+                setIsShowTwoFactor(true);
                 setCredentials({
                     email: values.email,
                     password: values.password,

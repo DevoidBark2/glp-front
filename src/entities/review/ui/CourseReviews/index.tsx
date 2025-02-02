@@ -1,46 +1,19 @@
-import { Avatar, Divider, List, Rate } from "antd"
-import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Divider, List, Rate } from "antd"
+import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
+import { observer } from "mobx-react";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
+import nextConfig from "next.config.mjs";
+import { UserRole } from "@/shared/api/user/model";
+import { IsAdmin } from "@/entities/user/selectors";
+import dayjs from "dayjs";
 
-export const CourseReviews = () => {
+export const CourseReviews = observer(() => {
+    const { reviewStore, userProfileStore } = useMobxStores()
 
-    const mockReviews = [
-        {
-            id: 1,
-            user: {
-                first_name: "Иван",
-                last_name: "Петров",
-                profile_url: "",
-            },
-            rating: 5,
-            comment: "Отличный курс! Всё понятно и интересно объяснено.",
-        },
-        {
-            id: 2,
-            user: {
-                first_name: "Мария",
-                last_name: "Сидорова",
-                profile_url: "",
-            },
-            rating: 4,
-            comment: "Хороший курс, но хотелось бы больше примеров.",
-        },
-        {
-            id: 3,
-            user: {
-                first_name: "Алексей",
-                last_name: "Кузнецов",
-                profile_url: "",
-            },
-            rating: 3.5,
-            comment: "Неплохо, но есть где улучшить подачу материала.",
-        },
-    ];
-
-
-    const averageRating = mockReviews.length
-        ? mockReviews.reduce((acc, review) => acc + review.rating, 0) / mockReviews.length
+    const averageRating = reviewStore.courseReviews.length
+        ? reviewStore.courseReviews.reduce((acc, review) => acc + review.rating, 0) / reviewStore.courseReviews.length
         : 0;
-
 
     return (
         <div>
@@ -49,37 +22,60 @@ export const CourseReviews = () => {
                 <span className="text-gray-700 text-lg">
                     {averageRating ? `${averageRating.toFixed(1)} / 5` : "Нет оценок"}
                 </span>
-                <span className="text-gray-500 text-sm">({mockReviews.length} отзывов)</span>
+                <span className="text-gray-500 text-sm">({reviewStore.courseReviews.length} отзывов)</span>
             </div>
 
             <Divider />
 
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Отзывы пользователей</h2>
 
-            {mockReviews.length > 0 ? (
+            {reviewStore.courseReviews.length > 0 ? (
                 <List
                     itemLayout="horizontal"
-                    dataSource={mockReviews}
+                    dataSource={reviewStore.courseReviews}
                     renderItem={(review) => (
-                        <List.Item className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
+                        <List.Item className="bg-gray-50 p-4 rounded-lg shadow-sm mb-4 flex relative">
                             <List.Item.Meta
                                 avatar={
                                     <Avatar
-                                        src={review.user.profile_url || undefined}
+                                        className="ml-3"
+                                        src={
+                                            review.user?.profile_url
+                                                ? review.user?.method_auth === AuthMethodEnum.GOOGLE ||
+                                                    review.user?.method_auth === AuthMethodEnum.YANDEX
+                                                    ? review.user?.profile_url
+                                                    : `${nextConfig.env?.API_URL}${review.user?.profile_url}`
+                                                : undefined
+                                        }
                                         icon={!review.user.profile_url && <UserOutlined />}
                                         size="large"
                                     />
                                 }
                                 title={
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-between mr-3">
                                         <span className="font-semibold text-gray-900">
-                                            {review.user.first_name} {review.user.last_name}
+                                            {review.user.second_name ?? ""} {review.user.first_name ?? ""}{" "}
+                                            {review.user.last_name ?? ""}
                                         </span>
-                                        <Rate disabled value={review.rating} />
+                                        <Rate disabled allowHalf value={review.rating} />
                                     </div>
                                 }
-                                description={<p className="text-gray-700">{review.comment}</p>}
+                                description={
+                                    <p className="text-gray-700 break-words whitespace-normal">{review.review}</p>
+                                }
                             />
+                            {IsAdmin(userProfileStore.userProfile?.role!) && (
+                                <Button
+                                    type="primary"
+                                    danger
+                                    icon={<DeleteOutlined />}
+                                //onClick={() => onDelete(review.id)}
+                                />
+                            )}
+
+                            <span className="absolute right-2 bottom-2 text-gray-500 text-sm">
+                                {dayjs(review.created_at).fromNow()}
+                            </span>
                         </List.Item>
                     )}
                 />
@@ -88,4 +84,4 @@ export const CourseReviews = () => {
             )}
         </div>
     )
-}
+})

@@ -44,6 +44,7 @@ const PlatformPage = () => {
 
     useEffect(() => {
         courseStore.getAllCourses();
+        courseStore.getAllPopularCourses();
         nomenclatureStore.getCategories();
         nomenclatureStore.getTeachers();
     }, []);
@@ -51,9 +52,8 @@ const PlatformPage = () => {
     return <div className="container mx-auto">
 
         <div className="mb-12 mt-12">
-            <h2 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">Популярные
-                курсы</h2>
-            <CourseCarousel courses={courseStore.courses} loading={courseStore.loadingCourses} />
+            <h2 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">Популярные курсы</h2>
+            <CourseCarousel courses={courseStore.popularCourses} loading={courseStore.loadingCourses} />
         </div>
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
 

@@ -73,7 +73,10 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                     <Form.Item
                         name="review"
                         label="Ваш отзыв"
-                        rules={[{ required: true, message: "Пожалуйста, напишите отзыв" }]}
+                        rules={[
+                            { required: true, message: "Пожалуйста, напишите отзыв" },
+                            { max: 300, message: "Превышен максимальный размер отзыва" }
+                        ]}
                     >
                         <Input.TextArea rows={4} placeholder="Напишите свой отзыв о курсе..." />
                     </Form.Item>

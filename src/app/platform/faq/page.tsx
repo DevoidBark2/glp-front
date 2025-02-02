@@ -20,7 +20,7 @@ const FaqPage = () => {
                 </div>
             </div>
             <Divider className="my-6" />
-            <FaqList faqs={faqStore.faqs} />
+            <FaqList />
         </div>
     )
 }

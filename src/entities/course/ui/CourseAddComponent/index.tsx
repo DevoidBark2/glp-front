@@ -1,14 +1,14 @@
-import {Button, Col, Form, Modal, notification, Row, Select, Switch, Tooltip, UploadProps} from "antd";
-import {Input} from "antd/lib";
+import { Button, Col, Form, Modal, notification, Row, Select, Switch, Tooltip, UploadProps } from "antd";
+import { Input } from "antd/lib";
 import Dragger from "antd/es/upload/Dragger";
-import {InboxOutlined} from "@ant-design/icons";
+import { InboxOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import {LEVEL_COURSE} from "@/shared/constants";
-import React, {useState} from "react";
-import {useMobxStores} from "@/stores/stores";
-import {useRouter} from "next/navigation";
+import { LEVEL_COURSE } from "@/shared/constants";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
+import { useMobxStores } from "@/shared/store/RootStore";
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
@@ -65,13 +65,13 @@ export const CourseAddComponent = () => {
         >
             <Row gutter={24}>
                 <Col span={12}>
-                    <Form.Item name="id" hidden/>
+                    <Form.Item name="id" hidden />
                     <Form.Item
                         name="name"
                         label="Название курса"
-                        rules={[{required: true, message: 'Название курса обязательно!'}]}
+                        rules={[{ required: true, message: 'Название курса обязательно!' }]}
                     >
-                        <Input placeholder="Введите название курса" style={{width: '100%'}}/>
+                        <Input placeholder="Введите название курса" style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -80,7 +80,7 @@ export const CourseAddComponent = () => {
                         label="Краткое описание"
                     >
                         <Input placeholder="Введите краткое описание курса"
-                               style={{width: '100%'}}/>
+                            style={{ width: '100%' }} />
                     </Form.Item>
                 </Col>
             </Row>

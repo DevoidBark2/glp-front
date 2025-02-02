@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { PlatformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
-import { UserOutlined, MenuOutlined, CloseOutlined, HomeOutlined, ReadOutlined } from "@ant-design/icons";
+import { UserOutlined, MenuOutlined, CloseOutlined, HomeOutlined, ReadOutlined, RadiusSettingOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
@@ -22,6 +22,7 @@ export const Header = observer(() => {
 
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
+        { key: 2, title: "Рейтинг", link: '/platform/rating', icon: <RadiusSettingOutlined /> },
         { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
@@ -165,11 +166,20 @@ export const Header = observer(() => {
                     ) : (
                         <div className="p-3">
                             <Button
-                                type="default"
+                                type="primary"
+                                color="white"
                                 onClick={() => router.push('/platform/auth/login')}
-                                className="bg-white text-green-500 hover:bg-green-600 hover:text-white transition-transform duration-300 transform hover:scale-105"
+                                className="text-white"
                             >
-                                Войти в профиль
+                                Войти
+                            </Button>
+                            <Button
+                                type="primary"
+                                color="white"
+                                onClick={() => router.push('/platform/auth/register')}
+                                className="text-white ml-3"
+                            >
+                                Регистрация
                             </Button>
                         </div>
                     )}

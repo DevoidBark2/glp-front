@@ -1,7 +1,7 @@
 import { SectionCourseItem } from "@/shared/api/course/model";
 import { StatusSectionEnum } from "@/shared/api/section/model";
-import {FORMAT_VIEW_DATE, MAIN_COLOR} from "@/shared/constants";
-import {Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip} from "antd"
+import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
+import { Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd"
 import dayjs, { Dayjs } from "dayjs";
 import { sectionsTable } from "@/shared/config";
 import {
@@ -11,15 +11,15 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import {UserRole} from "@/shared/api/user/model";
-import {UserHoverCard} from "@/widgets";
-import {SettingControlPanel} from "@/shared/model";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { UserRole } from "@/shared/api/user/model";
+import { UserHoverCard } from "@/widgets";
+import { SettingControlPanel } from "@/shared/model";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 export const SectionList = observer(() => {
-    const {sectionCourseStore, userProfileStore} = useMobxStores();
+    const { sectionCourseStore, userProfileStore } = useMobxStores();
     const router = useRouter();
     const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
@@ -132,7 +132,7 @@ export const SectionList = observer(() => {
 
     const handleDeleteSection = (id: number) => {
         sectionCourseStore.deleteSection(id).then(response => {
-            notification.success({message: response.message});
+            notification.success({ message: response.message });
         })
     }
 

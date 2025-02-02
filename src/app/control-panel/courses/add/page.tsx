@@ -3,12 +3,12 @@ import {
     Breadcrumb,
     Divider,
 } from "antd";
-import { useMobxStores } from "@/stores/stores";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
-import {PageContainerControlPanel} from "@/shared/ui";
-import {CourseAddComponent} from "@/entities/course/ui";
+import { PageContainerControlPanel } from "@/shared/ui";
+import { CourseAddComponent } from "@/entities/course/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const CourseAddPage = () => {
     const { nomenclatureStore } = useMobxStores();
@@ -34,7 +34,7 @@ const CourseAddPage = () => {
                 <h1 className="text-center text-3xl">Добавление курса</h1>
             </div>
             <Divider />
-            <CourseAddComponent/>
+            <CourseAddComponent />
         </PageContainerControlPanel>
     );
 }

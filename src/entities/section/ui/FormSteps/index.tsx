@@ -4,25 +4,25 @@ import { useState } from "react";
 import { observer } from "mobx-react";
 import { SelectCourse, General, SelectComponent } from "../Steps";
 import { FormInstance } from "antd/lib";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface FormStepsProps {
     sectionCourseForm?: FormInstance
 }
 
-export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
+export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
     const { courseStore, courseComponentStore, sectionCourseStore } = useMobxStores();
     const [createSectionForm] = Form.useForm();
     const [current, setCurrent] = useState(0);
     const router = useRouter();
-    
+
     const steps = [
         {
             title: "Выбор курса",
             content: <SelectCourse createSectionForm={createSectionForm} />,
         },
         General(),
-        SelectComponent({createSectionForm: createSectionForm})
+        SelectComponent({ createSectionForm: createSectionForm })
     ];
 
     const next = async () => {
@@ -32,7 +32,7 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
         }
 
         if (current === 1) {
-            await createSectionForm.validateFields(["name", "description","parentSection"]);
+            await createSectionForm.validateFields(["name", "description", "parentSection"]);
             setCurrent(current + 1);
         } else {
             setCurrent(current + 1);
@@ -53,7 +53,7 @@ export const FormSteps = observer(({sectionCourseForm}: FormStepsProps) => {
             courseComponentStore.setSearchResult([]);
             courseComponentStore.setSelectedComponent([]);
         }).catch(e => {
-            notification.error({message: e.response.data.message})
+            notification.error({ message: e.response.data.message })
         }).finally(() => {
             sectionCourseStore.setCreateSectionLoading(false);
         })
