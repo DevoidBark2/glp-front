@@ -1,4 +1,4 @@
-import {CourseComponentTypeI, UserAnswer} from "@/shared/api/course/model";
+import { CourseComponentTypeI } from "@/shared/api/course/model";
 import { Button } from "antd";
 import { observer } from "mobx-react";
 import { useState } from "react";
@@ -13,7 +13,6 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!task.userAnswer);
-    const [userTaskAnswer,setUserTaskAnswer] = useState<UserAnswer | UserAnswer[] | number[] | undefined | null>(task.userAnswer)
     const [retryDisabled, setRetryDisabled] = useState(false);
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -34,8 +33,9 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
         setCurrentQuestionIndex(0);
         setDisabledCheckResultBtn(false);
         setRetryDisabled(true);
-        setUserTaskAnswer(null)
     };
+
+    console.log(userAnswer)
 
     return (
         <div className="quiz-container mb-6 transition-transform p-4">
@@ -52,20 +52,16 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                         </h4>
                     </div>
 
-                    {userTaskAnswer && <Button onClick={handleRetryQuiz} type="default" disabled={retryDisabled}>
+                    {userAnswer && <Button onClick={handleRetryQuiz} type="default" disabled={retryDisabled}>
                         Попробовать еще раз
                     </Button>}
                 </div>
 
                 <div className="space-y-3">
                     {currentQuestion.options.map((option, index) => {
-                        const userSelectedIndex = Array.isArray(userTaskAnswer)
-                            ? (userTaskAnswer[currentQuestionIndex] as UserAnswer)?.userAnswer
-                            : null;
+                        const userSelectedIndex = userAnswer?.answer[currentQuestionIndex].userAnswer
 
-                        const isCorrectAnswer = Array.isArray(userTaskAnswer)
-                            ? (userTaskAnswer[currentQuestionIndex] as UserAnswer)?.isCorrect
-                            : null;
+                        const isCorrectAnswer = userAnswer?.answer[currentQuestionIndex].isCorrect
 
                         const isSelected = selectedAnswers[currentQuestionIndex] === index;
                         const isUserAnswer = userSelectedIndex === index;
@@ -94,7 +90,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                                         value={index}
                                         checked={isUserAnswer || isSelected}
                                         onChange={() => handleOptionChange(index)}
-                                        disabled={!!userTaskAnswer && retryDisabled}
+                                        disabled={!!userAnswer && retryDisabled}
                                         className="mr-2"
                                     />
                                     {option}
@@ -103,6 +99,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                         );
                     })}
                 </div>
+
             </div>
 
             <div className="flex justify-between mt-4">

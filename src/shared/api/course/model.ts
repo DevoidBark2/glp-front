@@ -71,19 +71,36 @@ export type CourseComponentTypeI = {
     tags: string[]
     created_at: Date
     user: User
-    userAnswer?: UserAnswer[] | number[]  | UserAnswer
+    userAnswer?: UserAnswer
+}
+
+export type QuizAnswer = {
+    id: string
+    question: string
+    userAnswer: number,
+    isCorrect: boolean
+}
+
+
+// исправить для вопроса аздача id на string тип
+export type SimpleTaskAnswer = {
+    id: number
+    question: string;
+    userAnswer: number,
+    isCorrect: boolean
+}
+
+export type MultiQuizTaskAnswer = {
+    id: string
+    question: string
+    userAnswer: number[],
+    isCorrect: boolean
 }
 
 export type UserAnswer = {
-    confirmedStep: number,
-    totalAnswers: number,
-    correctAnswers: number
-    id: string;
-    correctAnswer: number;
-    isCorrect: boolean;
-    question: string;
-    userAnswer: UserAnswer
-    value:string
+    id: number;
+    taskType: CourseComponentType
+    answer: QuizAnswer[] | SimpleTaskAnswer[] | MultiQuizTaskAnswer[]
 }
 
 export type QuestionsType = {

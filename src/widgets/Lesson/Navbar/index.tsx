@@ -15,7 +15,7 @@ import {
     MenuFoldOutlined
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { SectionMenu } from "@/shared/api/course/model";
 import Image from "next/image";
@@ -38,6 +38,7 @@ export const NavbarLesson = observer(() => {
     };
 
     const renderIcon = (menuItem: SectionMenu) => {
+        debugger
         const { userAnswer } = menuItem;
         const iconStyles = {
             marginRight: 8,
@@ -67,7 +68,7 @@ export const NavbarLesson = observer(() => {
                 ? `Задание выполнено верно`
                 : `Задание выполнено неверно`;
 
-            const icon = userAnswer.isCorrect
+            const icon = userAnswer.answer
                 ? <CheckCircleOutlined style={{ ...iconStyles, color: "green" }} />
                 : <CloseCircleOutlined style={{ ...iconStyles, color: "red" }} />;
 
@@ -130,7 +131,7 @@ export const NavbarLesson = observer(() => {
                             alt="pin"
                             width={30}
                             height={30}
-                        />: <Image
+                        /> : <Image
                             src="/static/pin_icon.svg"
                             alt="pin"
                             width={30}

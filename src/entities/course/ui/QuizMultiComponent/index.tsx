@@ -12,7 +12,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiCo
     const { title, description, questions, userAnswer } = task;
 
     // Инициализация состояния с учётом userAnswer, если оно есть
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(userAnswer[0]?.userAnswer);
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(userAnswer);
 
     // Функция для обновления выбранных ответов
     const handleOptionChange = (index: number) => {
@@ -48,8 +48,8 @@ export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiCo
                     <div className="options">
                         {questionItem.options.map((option, optionIndex) => {
                             // Проверка, является ли опция правильной для данного ответа
-                            const isCorrectOption = correctOptions.includes(optionIndex);
-                            const isUserSelected = selectedAnswers.includes(optionIndex);
+                            const isCorrectOption = correctOptions?.includes(optionIndex);
+                            const isUserSelected = selectedAnswers?.includes(optionIndex);
 
                             // Условия для окраски
                             let optionClass = "block cursor-pointer mb-2 p-4 border rounded-lg transition-all ";

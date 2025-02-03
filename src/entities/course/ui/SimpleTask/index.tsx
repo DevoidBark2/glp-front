@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React, {FC, useEffect, useRef, useState} from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { CourseComponentTypeI } from "@/shared/api/course/model";
 import { MathJaxContext } from "better-react-mathjax";
 import { MathfieldElement } from "mathlive";
@@ -31,7 +31,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
             }
         };
         typesetMath();
-    }, [task.title,isEditable]);
+    }, [task.title, isEditable]);
 
     const handleCheckResult = async () => {
         await onCheckResult(task, mathFieldRef.current?.value!);
@@ -50,7 +50,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
                 </div>
                 <math-field
                     ref={mathFieldRef}
-                    disabled={!isEditable}
+                    //disabled={!isEditable}
                     style={{
                         width: "100%",
                         fontSize: "1.2rem",

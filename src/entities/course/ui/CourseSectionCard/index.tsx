@@ -1,4 +1,4 @@
-import {CourseComponentType, CourseComponentTypeI} from "@/shared/api/course/model";
+import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Card, Divider, Skeleton } from "antd";
 import { observer } from "mobx-react";
@@ -19,7 +19,7 @@ export const CourseSectionCard = observer(() => {
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
-    const handleCheckResult = async (quiz: CourseComponentTypeI, userAnswer : string | number[]) => {
+    const handleCheckResult = async (quiz: CourseComponentTypeI, userAnswer: string | number[]) => {
         await courseStore.handleCheckTask({
             task: quiz,
             answers: userAnswer,
@@ -30,9 +30,9 @@ export const CourseSectionCard = observer(() => {
     useEffect(() => {
         if (step !== null) {
             courseStore.getCourseSectionByStepId(Number(courseId), step).then(() => {
-                    commentsStore.getSectionComments(step);
+                commentsStore.getSectionComments(step);
             }).catch((e) => {
-                    console.error("Ошибка при загрузке данных:", e);
+                console.error("Ошибка при загрузке данных:", e);
             });
         }
 
