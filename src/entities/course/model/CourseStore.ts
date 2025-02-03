@@ -1,6 +1,5 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
 import { notification } from "antd";
-import { SectionCourseItem } from "@/stores/SectionCourse";
 import {
     changeCourse,
     createCourse,
@@ -22,7 +21,7 @@ import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/cour
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
-import { SectionCourse } from "@/shared/api/section/model";
+import {SectionCourse, SectionCourseItem} from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
 

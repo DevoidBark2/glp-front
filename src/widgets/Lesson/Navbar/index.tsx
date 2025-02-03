@@ -5,28 +5,26 @@ import {
     Tooltip,
     Skeleton,
 } from "antd";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     ExclamationCircleOutlined,
     CheckCircleOutlined,
     CloseCircleOutlined,
     QuestionCircleOutlined,
     MenuUnfoldOutlined,
-    MenuFoldOutlined, FolderOutlined,
+    MenuFoldOutlined
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { SectionMenu } from "@/shared/api/course/model";
+import Image from "next/image";
 
 const { Sider } = Layout;
 
-interface NavbarLessonProps {
-    courseId: number;
-}
-
-export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseId }) => {
+export const NavbarLesson = observer(() => {
     const { courseStore } = useMobxStores();
+    const { courseId } = useParams()
     const router = useRouter();
     const searchParams = useSearchParams();
     const [collapsed, setCollapsed] = useState(false);
@@ -95,6 +93,18 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseId }) => {
         return <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
     };
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768); // Если ширина экрана ≤ 768px, считаем его мобильным
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     useEffect(() => {
         const step = Number(searchParams.get("step"));
         const initialSectionId = step || courseStore.courseMenuItems?.sections?.[0]?.children?.[0]?.id;
@@ -109,96 +119,111 @@ export const NavbarLesson: FC<NavbarLessonProps> = observer(({ courseId }) => {
     }, [searchParams, courseId]);
 
     return (
-        <Sider
-            collapsed={collapsed}
-            breakpoint="lg"
-            onCollapse={setCollapsed}
-            width={300}
-            style={{ height: "calc(100vh - 64px)" }}
-        >
-            {/* Кнопка скрытия/развертывания */}
-            <div className="flex justify-end px-3">
-                <Button
-                    type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined style={{ color: "white" }} size={30} /> : <MenuFoldOutlined style={{ color: "white" }} size={30} />}
-                    onClick={() => setCollapsed(!collapsed)}
-                />
-            </div>
+        <>
+            {isMobile &&
+                <div className="fixed">
+                    <Button
+                        onClick={() => setCollapsed(false)}
+                        className="fixed"
+                        icon={isMobile ? <Image
+                            src="/static/pin_icon_2.svg"
+                            alt="pin"
+                            width={30}
+                            height={30}
+                        />: <Image
+                            src="/static/pin_icon.svg"
+                            alt="pin"
+                            width={30}
+                            height={30}
+                        />}
+                    />
+                </div>
+            }
+            <Sider
+                collapsed={collapsed}
+                breakpoint="md"
+                onCollapse={setCollapsed}
+                width={240}
+                // style={{ , position: "fixed", zIndex: 1000 }}
+                style={{
+                    position: isMobile ? "fixed" : "static",
+                    left: collapsed ? (collapsed ? "-240px" : "0") : "0",
+                    height: "calc(100vh - 64px)",
+                    zIndex: 1100,
+                    transition: "left 0.3s ease-in-out",
+                }}
+            >
+                <div className="flex justify-end px-3">
+                    <Button
+                        type="text"
+                        icon={collapsed ? <Image
+                            src="/static/pin_icon_2.svg"
+                            alt="pin"
+                            width={30}
+                            height={30}
+                            color="white"
+                        /> : <Image
+                            src="/static/pin_icon.svg"
+                            alt="pin"
+                            width={30}
+                            height={30}
+                            color="white"
+                        />}
+                        onClick={() => setCollapsed(!collapsed)}
+                    />
+                </div>
 
-            {/* Проверяем наличие данных в courseStore */}
-            {courseStore.courseMenuItems ? (
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    defaultOpenKeys={courseStore.courseMenuItems?.sections?.map((section) => section.id.toString()) || []}
-                    selectedKeys={[selectedSection?.toString() || ""]}
-                    onClick={(info) => handleMenuClick(Number(info.key))}
-                    className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                    style={{ paddingBottom: 20 }}
-                >
-                    {/* Перебираем разделы курса */}
-                    {courseStore.courseMenuItems?.sections?.map((section) => ({
-                        key: section.id.toString(),
-                        label: (
-                            <Tooltip title={collapsed ? section.name : ""} placement="right">
-                                <span className="font-bold text-white truncate">{section.name}</span>
-                            </Tooltip>
-                        ),
-                        children: section.children.map((child) => ({
-                            key: child.id.toString(),
-                            label: (
-                                <div className="flex items-center justify-between px-4 py-2 border-l-2 border-green-500">
-                                    <p className="truncate">{child.name}</p>
-                                </div>
-                            ),
-                            icon: renderIcon(child),
-                        })),
-                    })).map((section) =>
-                        collapsed ? (
-                            // Если меню свернуто, используем Tooltip для отображения названия
-                            <Tooltip key={section.key} title={section.label} placement="right">
-                                <Menu.SubMenu key={section.key} icon={<FolderOutlined />}>
-                                    {section.children.map((child) => (
-                                        <Menu.Item key={child.key} icon={child.icon}>
-                                            {child.label}
-                                        </Menu.Item>
-                                    ))}
-                                </Menu.SubMenu>
-                            </Tooltip>
-                        ) : (
-                            <Menu.SubMenu key={section.key} title={section.label} icon={<FolderOutlined />}>
-                                {section.children.map((child) => (
-                                    <Menu.Item key={child.key} icon={child.icon}>
-                                        {child.label}
-                                    </Menu.Item>
-                                ))}
-                            </Menu.SubMenu>
-                        )
-                    )}
+                {courseStore.courseMenuItems ? (
+                    <Menu
+                        theme="dark"
+                        mode="inline"
+                        openKeys={!collapsed && courseStore.courseMenuItems?.sections?.map((section) => section.id?.toString() || "") || []}
+                        expandIcon={() => null}
+                        selectedKeys={[selectedSection?.toString() || ""]}
+                        onClick={(info) => handleMenuClick(Number(info.key))}
+                        className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
+                        style={{ paddingBottom: 20 }}
+                        items={[
+                            ...(courseStore.courseMenuItems?.sections?.map((section) => ({
+                                key: section.id?.toString(),
+                                label: (<span className="font-bold text-white truncate">{section.name}</span>),
+                                children: section.children?.map((child) => ({
+                                    key: child.id?.toString(),
+                                    icon: renderIcon(child),
+                                    label: (
+                                        <div className="flex items-center justify-between px-4 py-2 border-l-2 border-green-500">
+                                            <p className="truncate">{child.name}</p>
+                                        </div>
+                                    ),
+                                })) || [],
+                            })) || []),
 
-                    {/* Разделитель */}
-                    <Menu.Divider />
+                            { type: "divider" },
 
-                    {/* Экзамен (пункт недоступен) */}
-                    <Menu.Item
-                        key="-1"
-                        disabled
-                        icon={
-                            <Tooltip title="Пока нельзя перейти к экзамену">
-                                <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
-                            </Tooltip>
+                            {
+                                key: "-1",
+                                label: <span className="text-gray-400">Экзамен</span>,
+                                icon: (
+                                    <Tooltip title="Пока нельзя перейти к экзамену">
+                                        <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
+                                    </Tooltip>
+                                ),
+                                disabled: true,
+                            },
+                        ]}
+                    />
+
+
+                ) : (
+                    <div className="h-[calc(100vh-96px)] custom-scrollbar">
+                        {
+                            Array.from({ length: 8 }).map((_, index) => (
+                                <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 10, marginTop: 10 }} />
+                            ))
                         }
-                    >
-                        <span className="text-gray-400">Экзамен</span>
-                    </Menu.Item>
-                </Menu>
-            ) : (
-                // Если данные еще загружаются, показываем заглушку
-                Array.from({ length: 8 }).map((_, index) => (
-                    <Skeleton.Input key={index} active block style={{ width: 250, marginLeft: 10, marginTop: 10 }} />
-                ))
-            )}
-        </Sider>
-
+                    </div>
+                )}
+            </Sider>
+        </>
     );
 });

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Breadcrumb, Collapse, notification, Select } from "antd";
-import { useMobxStores } from "@/stores/stores";
 import { useParams, useRouter } from "next/navigation";
 import { AppstoreOutlined, FileTextOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -12,7 +11,8 @@ import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { Course } from "@/shared/api/course/model";
 import { Post } from "@/shared/api/posts/model";
-import { showUserStatus } from "@/utils/showUserStatus";
+import {showUserStatus} from "@/shared/lib/showUserStatus";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const { Title, Text } = Typography;
 
@@ -201,13 +201,13 @@ const UserDetailsPage = () => {
         );
     };
 
-    const handleBlockUser = async () => {
+   /* const handleBlockUser = async () => {
         const changeStatus = user?.status === StatusUserEnum.ACTIVATED ? StatusUserEnum.BLOCKED : StatusUserEnum.ACTIVATED
         await userStore.blockUser(user!.id, changeStatus).then(response => {
             setUser((prev) => (prev ? { ...prev, status: changeStatus } : null));
             notification.success({ message: response.message })
         });
-    }
+    }*/
 
     if (loading) {
         return (

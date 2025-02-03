@@ -1,5 +1,4 @@
 "use client"
-import { useMobxStores } from "@/stores/stores";
 import { Button, Divider, Form, Input, notification } from "antd";
 import React, { useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
@@ -9,6 +8,7 @@ import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
 import Image from "next/image"
 import { useRouter } from "next/navigation";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 export const RegisterComponent = observer(() => {
     const router = useRouter()

@@ -1,6 +1,5 @@
-import { axiosInstance, withAuth } from "../http-client"
-import { Post, PostCreateForm, PostStatusEnum } from "./model";
-import { Comments } from "@/app/control-panel/manage-posts/page";
+import { axiosInstance } from "../http-client"
+import {Comments, Post, PostCreateForm, PostStatusEnum} from "./model";
 
 export const getAllPost = async (): Promise<Post[]> => {
     const data = (await axiosInstance.get('api/posts')).data;
@@ -17,7 +16,7 @@ export const getPostById = async (id: number) => {
     return data.data;
 };
 
-export const createPost = async (values: PostCreateForm, config = {}) => {
+export const createPost = async (values: PostCreateForm) => {
     const form = new FormData();
     form.append("name", values.name);
     form.append("content", values.content);
@@ -26,7 +25,7 @@ export const createPost = async (values: PostCreateForm, config = {}) => {
         form.append("image", values.image);
     }
 
-    return (await axiosInstance.post("/api/posts", form, config)).data;
+    return (await axiosInstance.post("/api/posts", form)).data;
 };
 
 
@@ -45,7 +44,7 @@ export const changePost = async (post: Post) => {
 
 export const deletePost = async (id: number) => (await axiosInstance.delete(`/api/posts/${id}`)).data;
 
-export const submitReviewPost = withAuth(async (id: number, config = {}) => (await axiosInstance.put(`/api/submit-preview?postId=${id}`, {}, config)).data);
+export const submitReviewPost = async (id: number) => (await axiosInstance.put(`/api/submit-preview?postId=${id}`, {})).data;
 
 
 export const updatePostStatus = async (postId: number, status: PostStatusEnum, comment: string, comments: Comments) => {

@@ -1,7 +1,6 @@
 "use client";
 import React, {useEffect, useState} from "react";
 import { Table } from "antd";
-import { useMobxStores } from "@/stores/stores";
 import { observer } from "mobx-react";
 import {PageHeader} from "@/shared/ui/PageHeader";
 import {PageContainerControlPanel} from "@/shared/ui";
@@ -10,6 +9,7 @@ import { taskTable } from "@/shared/config";
 import { useRouter } from "next/navigation";
 import {CourseComponentTypeI} from "@/shared/api/course/model";
 import {SettingControlPanel} from "@/shared/model";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const TaskPage = () => {
     const { courseComponentStore, userProfileStore } = useMobxStores()

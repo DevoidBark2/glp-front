@@ -1,13 +1,14 @@
 import {Button, Divider, Form, Switch} from "antd";
-import React, {useEffect} from "react";
+import React from "react";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {AuthMethodEnum} from "@/shared/api/auth/model";
+import {observer} from "mobx-react";
 
 interface ManageProfileProps {
     handleDeleteAccount: () => void;
 }
 
-export const ManageProfile: React.FC<ManageProfileProps> = ({handleDeleteAccount}) => {
+export const ManageProfile: React.FC<ManageProfileProps> = observer(({handleDeleteAccount}) => {
     const [form] = Form.useForm();
     const {userProfileStore} = useMobxStores()
 
@@ -15,11 +16,6 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({handleDeleteAccount
         userProfileStore.updateProfile(form.getFieldsValue())
     }
 
-    useEffect(() => {
-        userProfileStore.getUserProfile().finally(() => {
-            userProfileStore.setLoading(false)
-        })
-    }, [])
     return <div className="space-y-4 w-1/3">
         <h3 className="text-lg font-semibold">Управление аккаунтом</h3>
         <Form
@@ -45,4 +41,4 @@ export const ManageProfile: React.FC<ManageProfileProps> = ({handleDeleteAccount
         </Form>
         <Button onClick={handleDeleteAccount} type="primary" danger>Удалить аккаунт</Button>
     </div>
-}
+})

@@ -1,6 +1,6 @@
 import {Button, Form, Input, Modal} from "antd";
 import {FC, useEffect} from "react";
-import {NomenclatureItem} from "@/stores/NomenclatureStore";
+import {NomenclatureItem} from "@/shared/api/nomenclature/model";
 
 interface ChangeCategoryModalProps {
     openModal: boolean;

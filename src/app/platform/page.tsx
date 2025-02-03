@@ -1,5 +1,4 @@
 "use client"
-import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { Avatar, Button, Divider, Input, Skeleton } from "antd";
 import nextConfig from "../../../next.config.mjs";
@@ -9,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useMobxStores } from '@/shared/store/RootStore';
 import { AuthMethodEnum } from '@/shared/api/auth/model';
 import Link from 'next/link';
+import {observer} from "mobx-react";
 
 const PlatformPage = () => {
     const { courseStore, nomenclatureStore } = useMobxStores()

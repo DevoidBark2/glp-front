@@ -9,7 +9,12 @@ import {Metadata} from "next";
 
 export const metadata: Metadata = {
     title: 'Learnify',
-    description: 'Education System'
+    description: 'Education System',
+    icons: {
+        icon: ['/favicon.ico'],
+        apple: ['/apple-touch-icon.png'],
+        shortcut: ['/apple-touch-icon.png'],
+    }
 }
 
 

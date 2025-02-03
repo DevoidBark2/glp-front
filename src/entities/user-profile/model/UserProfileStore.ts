@@ -90,11 +90,11 @@ class UserProfileStore {
             window.localStorage.setItem('user_settings', JSON.stringify(values));
         }
 
-        await updateProfile(cleanedValues)
+        await updateProfile(cleanedValues as UserProfile)
             .then(response => {
                 notification.success({ message: response.message });
                 const updatedProfile = { ...this.userProfile, ...cleanedValues };
-                this.setUserProfile(updatedProfile);
+                this.setUserProfile(updatedProfile as UserProfile);
             })
             .catch(e => {
                 console.error("Ошибка при обновлении профиля:", e);
@@ -110,7 +110,7 @@ class UserProfileStore {
         form.append('logo_avatar', file)
         const data = await uploadProfileAvatar(form);
         const updatedProfile = { ...this.userProfile, image: data.data };
-        this.setUserProfile(updatedProfile);
+        this.setUserProfile(updatedProfile as UserProfile);
         return data
     })
 

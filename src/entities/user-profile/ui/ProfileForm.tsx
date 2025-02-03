@@ -2,13 +2,14 @@ import {Button, Form, Input} from "antd";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import {SaveOutlined} from "@ant-design/icons";
-import {UserProfile} from "@/stores/UserProfileStore";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {observer} from "mobx-react";
+import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
 
 export const ProfileForm = observer(() => {
     const { userProfileStore } = useMobxStores();
     const [formProfile] = Form.useForm<UserProfile>();
+
     return (
         <Form
             form={formProfile}

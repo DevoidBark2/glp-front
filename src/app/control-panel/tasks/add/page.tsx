@@ -1,14 +1,14 @@
 "use client"
 import {PageContainerControlPanel} from "@/shared/ui";
 import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model"
-import { useMobxStores } from "@/stores/stores"
-import { Breadcrumb, Button, Divider, Form, message, Select } from "antd"
+import { Breadcrumb, Button, Divider, Form, Select } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { MultiPlayChoice, QuizTask, TextTask } from "@/entities/course/ui";
 import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()

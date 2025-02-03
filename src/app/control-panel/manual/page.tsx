@@ -3,8 +3,8 @@ import React from "react";
 import {Typography, Card, Divider, List, Button, Space, Collapse} from "antd";
 import {PageContainerControlPanel} from "@/shared/ui";
 import {CheckCircleOutlined} from "@ant-design/icons";
-import {Panel} from "rc-collapse";
 
+const { Panel } = Collapse;
 const { Title, Paragraph, Text } = Typography;
 
 const ManualPage = () => {
@@ -101,7 +101,7 @@ const ManualPage = () => {
                 <Collapse accordion>
                     <Panel header="Совет 1: Регулярно обновляйте данные" key="1">
                         <Paragraph>
-                            Для получения актуальной информации убедитесь, что данные обновлены. Нажмите на кнопку "Обновить"
+                            Для получения актуальной информации убедитесь, что данные обновлены. Нажмите на кнопку Обновить
                             на панели управления.
                         </Paragraph>
                     </Panel>
@@ -112,7 +112,7 @@ const ManualPage = () => {
                     </Panel>
                     <Panel header="Совет 3: Настройте уведомления" key="3">
                         <Paragraph>
-                            Чтобы не пропустить важные изменения, настройте уведомления в разделе "Настройки".
+                            Чтобы не пропустить важные изменения, настройте уведомления в разделе Настройки.
                         </Paragraph>
                     </Panel>
                 </Collapse>
@@ -123,12 +123,12 @@ const ManualPage = () => {
                 <Collapse accordion>
                     <Panel header="Как восстановить пароль?" key="1">
                         <Paragraph>
-                            Перейдите на страницу авторизации и нажмите на ссылку "Забыли пароль?". Следуйте инструкциям для восстановления.
+                            Перейдите на страницу авторизации и нажмите на ссылку Забыли пароль?. Следуйте инструкциям для восстановления.
                         </Paragraph>
                     </Panel>
                     <Panel header="Как изменить личные данные?" key="2">
                         <Paragraph>
-                            Вы можете редактировать свой профиль в разделе "Настройки" на панели управления.
+                            Вы можете редактировать свой профиль в разделе Настройки на панели управления.
                         </Paragraph>
                     </Panel>
                     <Panel header="Как настроить уведомления?" key="3">

@@ -1,5 +1,5 @@
-import {MainSection} from "@/stores/SectionCourse";
-import { axiosInstance, withAuth } from "../http-client";
+import { axiosInstance } from "../http-client";
+import {MainSection} from "@/shared/api/section/model";
 
 export const getCPAllSection = async () => {
     const data = (await axiosInstance.get('api/sections')).data
@@ -7,27 +7,27 @@ export const getCPAllSection = async () => {
     return data.data
 }
 
-export const deleteSectionCourse = withAuth(async (id: number,config = {}) => {
-    return (await axiosInstance.delete(`api/sections/${id}`,config)).data;
-})
+export const deleteSectionCourse = async (id: number) => {
+    return (await axiosInstance.delete(`api/sections/${id}`)).data;
+}
 
-export const getSectionCourseById = withAuth(async (id: number, config ={}) => {
-    const data = (await axiosInstance.get(`api/sections/${id}`, config)).data;
-
-    return data.data;
-})
-
-export const createMainCourseSection = withAuth(async (mainSection: MainSection, config = {}) => {
-    const data = (await axiosInstance.post('api/main-section',mainSection, config)).data;
+export const getSectionCourseById = async (id: number) => {
+    const data = (await axiosInstance.get(`api/sections/${id}`)).data;
 
     return data.data;
-})
+}
 
-export const getMainCourseSection = withAuth(async (id: number,config = {}) => {
-    const data = (await axiosInstance.get('api/main-section', config)).data;
+export const createMainCourseSection = async (mainSection: MainSection) => {
+    const data = (await axiosInstance.post('api/main-section',mainSection)).data;
 
     return data.data;
-})
+}
+
+export const getMainCourseSection = async (id: number) => {
+    const data = (await axiosInstance.get('api/main-section')).data;
+
+    return data.data;
+}
 
 export const createMainSection = async (values: MainSection) => {
     return (await axiosInstance.post('api/main-section', values)).data;

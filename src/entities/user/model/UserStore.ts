@@ -1,11 +1,9 @@
 import { action, makeAutoObservable } from "mobx"
-import { DELETE, GET, POST } from "@/lib/fetcher";
-import dayjs from "dayjs";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
-import { getUserById, handleBlockUser, searchUsers, updateRole } from "@/shared/api/user";
+import {deleteUser, getAllUsers, getUserById, handleBlockUser, searchUsers, updateRole} from "@/shared/api/user";
 import { login, logoutUser, oauthByProvider, register } from "@/shared/api/auth";
-import { UserProfile } from "@/stores/UserProfileStore";
 import { usersMapper } from "../mappers";
+import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
 
 class UserStore {
     constructor() {
@@ -133,29 +131,14 @@ class UserStore {
 
     getUsers = action(async () => {
         this.setLoading(true)
-        await GET(`/api/users`).then(response => {
+        await getAllUsers().then(response => {
             this.setAllUsers(response.response.data.map(usersMapper))
         }).finally(() => this.setLoading(false))
     })
 
-    createUser = action(async (values: any) => {
-        this.setCreateUserLoading(true)
-        try {
-            const response = await POST(`/api/user`, values);
-            this.allUsers = [...this.allUsers, usersMapper(response)]
-
-            return response;
-        } catch (e) {
-            throw e
-        }
-        finally {
-            this.setCreateUserLoading(false)
-        }
-    })
-
     deleteUsers = action(async (id: string) => {
         try {
-            const response = await DELETE(`/api/users?id=${id}`)
+            const response = await deleteUser(id);
             this.allUsers = this.allUsers.filter(user => id !== user.id)
 
             return response;
@@ -168,7 +151,7 @@ class UserStore {
         return await getUserById(userId);
     })
 
-    updateUserRole = action(async (userId: number, role: UserRole) => {
+    updateUserRole = action(async (userId: string, role: UserRole) => {
         return await updateRole({ userId: userId, role: role });
     })
 

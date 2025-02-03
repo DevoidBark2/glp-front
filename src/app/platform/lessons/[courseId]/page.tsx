@@ -37,17 +37,16 @@ const LessonPage = () => {
         <Layout>
             <HeaderLesson />
 
-            <Layout className="mt-16">
-                <NavbarLesson courseId={Number(courseId)} />
-                <Layout>
-                    <Content className="m-0 p-6 flex flex-col pl-6 py-4 pr-4 max-h-[calc(100vh-64px)] overflow-y-auto">
+            <Layout className="mt-16 h-[calc(100vh-64px)]">
+                <NavbarLesson />
+                <Layout className="flex-1 overflow-hidden">
+                    <Content className="m-0 p-6 flex flex-col max-h-full overflow-y-auto">
                         <CourseSectionCard />
                         <CommentBlock />
                     </Content>
                 </Layout>
             </Layout>
         </Layout>
-
     );
 }
 

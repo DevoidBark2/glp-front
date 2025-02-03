@@ -1,11 +1,11 @@
 import { FilterValues } from "../filter/model";
-import { axiosInstance, withAuth } from "../http-client";
+import { axiosInstance } from "../http-client";
 import { Course, CourseReview } from "./model";
 
-export const getAllCourses = withAuth(async (arg: any, config = {}): Promise<Course[]> => {
-    const data = (await axiosInstance.get('api/courses', config)).data;
+export const getAllCourses = async (): Promise<Course[]> => {
+    const data = (await axiosInstance.get('api/courses')).data;
     return data.data;
-});
+}
 
 export const getPopularCourses = async () => {
     const data = (await axiosInstance.get('api/popular-courses')).data
@@ -38,17 +38,17 @@ export const createCourse = async (values: any): Promise<Course> => {
     return data.data;
 }
 
-export const confirmLeaveCourse = withAuth(async (courseId: number, config = {}) => {
-    const data = (await axiosInstance.delete(`api/leave-course/${courseId}`, config)).data
+export const confirmLeaveCourse = async (courseId: number) => {
+    const data = (await axiosInstance.delete(`api/leave-course/${courseId}`)).data
 
     return data.data;
-})
+}
 
-export const getCourseById = withAuth(async (courseId: number, config = {}) => {
-    const data = (await axiosInstance.get(`api/course/${courseId}`, config)).data;
+export const getCourseById = async (courseId: number) => {
+    const data = (await axiosInstance.get(`api/course/${courseId}`)).data;
 
     return data.data;
-})
+}
 
 export const deleteCourseById = async (id: number) => {
     return (await axiosInstance.delete(`api/course/${id}`)).data

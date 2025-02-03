@@ -1,0 +1,1 @@
+export { default as EventStore } from "./model/EventStore";

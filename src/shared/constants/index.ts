@@ -1,4 +1,4 @@
-import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/stores/AchievementsStore";
+import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/entities/achievements/model/AchievementsStore";
 import { ActionEvent } from "../api/action-user";
 import { StatusComponentTaskEnum } from "../api/component-task";
 import { CourseComponentType, StatusCourseEnum } from "../api/course/model";

@@ -28,7 +28,7 @@ import Link from "next/link";
 import { observer } from "mobx-react";
 import { Input } from "antd/lib";
 import { FORMAT_VIEW_DATE, LEVEL_COURSE } from "@/shared/constants";
-import { CheckCircleOutlined, DeleteOutlined, EditOutlined, PlusCircleOutlined, } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task";

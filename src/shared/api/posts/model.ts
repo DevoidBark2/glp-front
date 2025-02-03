@@ -9,6 +9,12 @@ export enum PostStatusEnum {
     MODIFIED = "modified"
 }
 
+export interface Comments {
+    name: string,
+    description: string,
+    content: string
+}
+
 export type PostCreateForm = {
     name: string;
     description: string;

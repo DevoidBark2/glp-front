@@ -2,8 +2,8 @@ import {Button, Col, Form, Input, Modal, notification, Row, Select, Spin, Upload
 import TextArea from "antd/es/input/TextArea"
 import { useEffect, useState } from "react";
 import { DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { useMobxStores } from "@/stores/stores";
 import { MainSection } from "@/stores/SectionCourse";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 export const General = () => {
     const { sectionCourseStore, generalSettingsStore } = useMobxStores();

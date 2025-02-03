@@ -23,7 +23,6 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { useMobxStores } from "@/stores/stores";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import nextConfig from "next.config.mjs";
@@ -32,6 +31,7 @@ import dayjs from "dayjs";
 import { UserRole } from "@/shared/api/user/model";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const ProfilePage = () => {
   const { userProfileStore } = useMobxStores();

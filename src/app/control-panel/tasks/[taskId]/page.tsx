@@ -2,14 +2,14 @@
 import {PageContainerControlPanel} from "@/shared/ui";
 import { StatusComponentTaskEnum } from "@/shared/api/component-task"
 import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model"
-import { useMobxStores } from "@/stores/stores"
-import { Breadcrumb, Button, Divider, Form, message, Select, Spin, Tag } from "antd"
+import { Breadcrumb, Button, Divider, Form, Select, Spin, Tag } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
 import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const TaskDetailsPage = () => {
     const { courseComponentStore } = useMobxStores()

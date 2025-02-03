@@ -1,5 +1,5 @@
-import { axiosInstance, withAuth } from "../http-client";
-import { CurrentSectionDto, TaskAnswerUserDto } from "./model";
+import {axiosInstance} from "../http-client";
+import {CurrentSectionDto, TaskAnswerUserDto} from "./model";
 
 export const handleCheckUserTask = async (task: TaskAnswerUserDto) => {
     const data = (await axiosInstance.post('api/save-task-user', {
@@ -12,17 +12,15 @@ export const handleCheckUserTask = async (task: TaskAnswerUserDto) => {
 }
 
 
-export const handleUpdateSectionConfirmed = withAuth(async (prevSection: number, config = {}) => {
+export const handleUpdateSectionConfirmed = async (prevSection: number) => {
     const data = (await axiosInstance.post('api/update-step', {
         prevSection: prevSection
-    }, config)).data;
+    })).data;
 
     return data.data;
-})
+}
 
 
-export const getCurrentSection = withAuth(async (currentSection: CurrentSectionDto, config = {}) => {
-    const data = (await axiosInstance.get(`api/get-current-section?courseId=${currentSection.courseId}&currentSection=${currentSection.currentSection}`, config)).data;
-
-    return data;
-})
+export const getCurrentSection = async (currentSection: CurrentSectionDto) => {
+    return (await axiosInstance.get(`api/get-current-section?courseId=${currentSection.courseId}&currentSection=${currentSection.currentSection}`)).data;
+}

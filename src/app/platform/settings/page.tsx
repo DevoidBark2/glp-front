@@ -8,7 +8,7 @@ import {ManageProfile} from "@/entities/user-settings/ui/ManageProfile";
 import {useRouter} from "next/navigation";
 import {useMobxStores} from "@/shared/store/RootStore";
 
-const SettingsPage = () => {
+const SettingsPage = observer(() => {
     const {authStore, userProfileStore} = useMobxStores()
     const [form] = Form.useForm<ChangePasswordType>();
     const router = useRouter()
@@ -28,19 +28,19 @@ const SettingsPage = () => {
             router.push("/platform");
         })
     }
-    
+
     const items: TabsProps['items'] = [
         {
-          key: "1",
-          label: "Безопасность",
-          children: ( <ResetPassword handleChangePassword={handleChangePassword}/>),
+            key: "1",
+            label: "Безопасность",
+            children: ( <ResetPassword handleChangePassword={handleChangePassword}/>),
         },
         {
             key: "2",
             label: "Управление аккаунтом",
             children: (<ManageProfile handleDeleteAccount={handleDeleteAccount} />),
         },
-      ];
+    ];
 
     return(
         <div className="container mx-auto">
@@ -48,6 +48,6 @@ const SettingsPage = () => {
             <Tabs items={items} />
         </div>
     )
-}
+})
 
-export default observer(SettingsPage);
+export default SettingsPage;

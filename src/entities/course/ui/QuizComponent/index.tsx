@@ -12,7 +12,8 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
     const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState(Array(questions.length).fill(null));
-    const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!userAnswer);
+    const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!task.userAnswer);
+    const [userTaskAnswer,setUserTaskAnswer] = useState<UserAnswer | UserAnswer[] | number[] | undefined | null>(task.userAnswer)
     const [retryDisabled, setRetryDisabled] = useState(false);
 
     const currentQuestion = questions[currentQuestionIndex];
@@ -33,41 +34,37 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
         setCurrentQuestionIndex(0);
         setDisabledCheckResultBtn(false);
         setRetryDisabled(true);
+        setUserTaskAnswer(null)
     };
 
     return (
-        <div className="quiz-container mb-6 transition-transform p-4 bg-white rounded-lg shadow-md">
-            {/* Заголовок */}
+        <div className="quiz-container mb-6 transition-transform p-4">
             <div className="text-center mb-4">
                 <h3 className="text-2xl font-bold">{title}</h3>
                 <p className="text-gray-600">{description}</p>
             </div>
 
-            {/* Вопрос */}
             <div className="question mb-4">
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center mb-2 flex-wrap">
                     <div className="flex items-center space-x-2">
                         <h4 className="text-lg font-semibold">
                             Вопрос {currentQuestionIndex + 1}: {currentQuestion.question}
                         </h4>
                     </div>
 
-                    {userAnswer && (
-                        <Button onClick={handleRetryQuiz} type="default" disabled={retryDisabled}>
-                            Попробовать еще раз
-                        </Button>
-                    )}
+                    {userTaskAnswer && <Button onClick={handleRetryQuiz} type="default" disabled={retryDisabled}>
+                        Попробовать еще раз
+                    </Button>}
                 </div>
 
-                {/* Варианты ответов */}
                 <div className="space-y-3">
                     {currentQuestion.options.map((option, index) => {
-                        const userSelectedIndex = Array.isArray(userAnswer)
-                            ? (userAnswer[currentQuestionIndex] as UserAnswer)?.userAnswer
+                        const userSelectedIndex = Array.isArray(userTaskAnswer)
+                            ? (userTaskAnswer[currentQuestionIndex] as UserAnswer)?.userAnswer
                             : null;
 
-                        const isCorrectAnswer = Array.isArray(userAnswer)
-                            ? (userAnswer[currentQuestionIndex] as UserAnswer)?.isCorrect
+                        const isCorrectAnswer = Array.isArray(userTaskAnswer)
+                            ? (userTaskAnswer[currentQuestionIndex] as UserAnswer)?.isCorrect
                             : null;
 
                         const isSelected = selectedAnswers[currentQuestionIndex] === index;
@@ -75,7 +72,6 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                         const isCorrect = isUserAnswer && isCorrectAnswer;
                         const isWrong = isUserAnswer && !isCorrectAnswer;
 
-                        const baseStyle = "border rounded-lg p-4 cursor-pointer transition duration-200";
                         const completedStyle = isCorrect
                             ? "bg-green-100 border-green-500"
                             : isWrong
@@ -88,7 +84,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                         return (
                             <div
                                 key={index}
-                                className={`${baseStyle} ${finalStyle}`}
+                                className={`border rounded-lg p-4 cursor-pointer transition duration-200 ${finalStyle}`}
                                 onClick={() => !userAnswer && handleOptionChange(index)}
                             >
                                 <label className="flex items-center">
@@ -98,7 +94,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                                         value={index}
                                         checked={isUserAnswer || isSelected}
                                         onChange={() => handleOptionChange(index)}
-                                        disabled={!!userAnswer && retryDisabled}
+                                        disabled={!!userTaskAnswer && retryDisabled}
                                         className="mr-2"
                                     />
                                     {option}
@@ -109,7 +105,6 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                 </div>
             </div>
 
-            {/* Навигация */}
             <div className="flex justify-between mt-4">
                 {currentQuestionIndex > 0 && <Button onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))} disabled={currentQuestionIndex === 0}>
                     Назад

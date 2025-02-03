@@ -11,18 +11,14 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-    const { userProfileStore, generalStore } = useMobxStores()
+    const { userProfileStore, generalSettingsStore } = useMobxStores()
     const pathName = usePathname();
 
     useEffect(() => {
-        if (!pathName.includes('/profile')) {
-            userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false));
-        } else {
-            userProfileStore.setLoading(false);
-        }
+        userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false));
 
         if (!pathName.includes('/lessons/')) {
-            generalStore.getFooter();
+            generalSettingsStore.getFooter();
         }
     }, []);
 

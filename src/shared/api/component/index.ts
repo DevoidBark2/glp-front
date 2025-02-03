@@ -1,10 +1,10 @@
 import { CourseComponentTypeI } from "../course/model";
-import { axiosInstance, withAuth } from "../http-client"
+import { axiosInstance } from "../http-client"
 
-export const getComponentTask = withAuth(async (id: number, config = {}): Promise<CourseComponentTypeI> => {
-    const data = (await axiosInstance.get(`api/component-task/${id}`, config)).data;
+export const getComponentTask = async (id: number): Promise<CourseComponentTypeI> => {
+    const data = (await axiosInstance.get(`api/component-task/${id}`)).data;
     return data.data;
-})
+}
 
 export const searchComponentByTitle = async (query: string) => {
     const data = (await axiosInstance.get(`api/search-components?query=${query}`)).data

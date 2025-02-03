@@ -1,9 +1,9 @@
-import { welcomeTextRender } from "@/utils/welcomeText";
 import { Skeleton, Tooltip } from "antd"
 import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import { useEffect, useState } from "react";
 import {SmileOutlined, CloudOutlined, MoonOutlined} from "@ant-design/icons";
+import {welcomeTextRender} from "@/shared/lib/welcomeText";
 
 export const WelcomeTextComponent = () => {
     const [currentDate, setCurrentDate] = useState<string | null>(null);

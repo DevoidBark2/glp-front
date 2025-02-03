@@ -1,4 +1,4 @@
-import { axiosInstance, withAuth } from "../http-client"
+import { axiosInstance } from "../http-client"
 import { ChangePasswordType } from "./model"
 
 export const register = async (body: any) => {
@@ -35,9 +35,9 @@ export const resetPassword = async (email: string) => {
     return data.data
 }
 
-export const changePassword = withAuth(async (values: ChangePasswordType, config = {}) => {
-    return (await axiosInstance.post('/api/change-password',values,config)).data;
-})
+export const changePassword = async (values: ChangePasswordType) => {
+    return (await axiosInstance.post('/api/change-password',values)).data;
+}
 
 
 export const logoutUser = async () => {

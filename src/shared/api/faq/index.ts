@@ -1,4 +1,4 @@
-import { axiosInstance, withAuth } from "../http-client"
+import { axiosInstance } from "../http-client"
 import { Faq } from "./model";
 
 export const getAllFaq = async (): Promise<Faq[]> => {
@@ -7,15 +7,15 @@ export const getAllFaq = async (): Promise<Faq[]> => {
     return data.data;
 }
 
-export const createFaq = withAuth(async (faq: Faq, config = {}) => {
-    return (await axiosInstance.post('api/faq', faq, config)).data;
-})
+export const createFaq = async (faq: Faq) => {
+    return (await axiosInstance.post('api/faq', faq)).data;
+}
 
-export const deleteFaq = withAuth(async (id: number, config = {}) => {
-    const data = (await axiosInstance.delete(`api/faq?id=${id}`, config)).data;
+export const deleteFaq = async (id: number) => {
+    const data = (await axiosInstance.delete(`api/faq?id=${id}`)).data;
 
     return data.data;
-})
+}
 
 export const getFaqById = (async (id: number) => {
     const data = (await axiosInstance.get(`api/faq/${id}`)).data
@@ -23,6 +23,6 @@ export const getFaqById = (async (id: number) => {
     return data.data
 })
 
-export const updateFaq = withAuth(async (faq: Faq, config = {}) => {
-    return (await axiosInstance.patch('api/faq', faq, config)).data;
-})
+export const updateFaq = async (faq: Faq) => {
+    return (await axiosInstance.patch('api/faq', faq)).data;
+}

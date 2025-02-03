@@ -49,7 +49,7 @@ export const CourseSectionComment: FC<CourseSectionCommentProps> = observer(({co
                     </h4>
                     <span className="text-sm text-gray-500">{dayjs(comment.createdAt).fromNow()}</span>
                 </div>
-                <p className="text-gray-700 mt-2">{comment.text}</p>
+                <p className="text-gray-700 mt-2 break-words">{comment.text}</p>
             </div>
 
             {

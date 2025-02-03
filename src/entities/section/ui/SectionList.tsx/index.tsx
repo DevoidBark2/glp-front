@@ -1,5 +1,4 @@
-import { SectionCourseItem } from "@/shared/api/course/model";
-import { StatusSectionEnum } from "@/shared/api/section/model";
+import { StatusSectionEnum, SectionCourseItem } from "@/shared/api/section/model";
 import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd"
 import dayjs, { Dayjs } from "dayjs";

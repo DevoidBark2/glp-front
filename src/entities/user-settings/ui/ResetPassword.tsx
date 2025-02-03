@@ -2,12 +2,13 @@ import {Button, Form, Input, Tooltip} from "antd";
 import React, {FC} from "react";
 import {AuthMethodEnum, ChangePasswordType} from "@/shared/api/auth/model";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {observer} from "mobx-react";
 
 interface ChangePasswordProps {
     handleChangePassword: (values:ChangePasswordType) => void
 }
 
-export const ResetPassword: FC<ChangePasswordProps> = ({handleChangePassword}) => {
+export const ResetPassword: FC<ChangePasswordProps> = observer(({handleChangePassword}) => {
     const { userProfileStore } = useMobxStores()
     const [form] = Form.useForm<ChangePasswordType>();
     return <div className="space-y-4 w-1/3">
@@ -75,4 +76,4 @@ export const ResetPassword: FC<ChangePasswordProps> = ({handleChangePassword}) =
             </Form.Item>
         </Form>
     </div>
-}
+})

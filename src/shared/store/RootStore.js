@@ -14,13 +14,16 @@ import { CourseComponent } from "@/entities/component-task";
 import { NomenclatureStore } from "@/entities/nomenclature";
 import { FilterStore } from "@/entities/filters";
 import { ReviewStore } from "@/entities/review";
+import {SectionStore} from "@/entities/section";
+import {EventStore} from "@/entities/events";
+import {AchievementsStore} from "@/entities/achievements";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
 const courseStore = new CourseStore();
 const faqStore = new FaqStore();
 const authStore = new AuthStore();
-const generalStore = new GeneralSettings();
+const generalSettingsStore = new GeneralSettings();
 const userProfileStore = new UserProfileStore();
 const statisticsStore = new StatisticsStore();
 const commentsStore = new CommentsStore();
@@ -29,6 +32,9 @@ const courseComponentStore = new CourseComponent();
 const nomenclatureStore = new NomenclatureStore()
 const filterStore = new FilterStore()
 const reviewStore = new ReviewStore()
+const sectionCourseStore = new SectionStore()
+const eventStore = new EventStore()
+const achievementsStore = new AchievementsStore()
 
 export const RootStore = {
     userStore,
@@ -36,7 +42,7 @@ export const RootStore = {
     courseStore,
     faqStore,
     authStore,
-    generalStore,
+    generalSettingsStore,
     userProfileStore,
     statisticsStore,
     commentsStore,
@@ -44,7 +50,10 @@ export const RootStore = {
     examStore,
     nomenclatureStore,
     filterStore,
-    reviewStore
+    reviewStore,
+    sectionCourseStore,
+    eventStore,
+    achievementsStore
 };
 
 const StoreContext = React.createContext(RootStore);

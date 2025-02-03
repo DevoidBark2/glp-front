@@ -4,10 +4,10 @@ import { Form, Input, Select, Button, InputNumber, message, Upload, Breadcrumb }
 import { conditionForAchievements, typesConsitions } from "@/shared/constants";
 import Link from "next/link";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/stores/stores";
 import { UploadOutlined } from "@ant-design/icons";
 import Image from "next/image"
 import {PageContainerControlPanel} from "@/shared/ui";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const AchievementsPage = () => {
     const [form] = Form.useForm();

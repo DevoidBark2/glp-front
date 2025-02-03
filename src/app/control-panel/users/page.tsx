@@ -3,7 +3,6 @@ import { observer } from "mobx-react";
 import { Button, Table, Tag, Tooltip, Popconfirm, notification } from "antd";
 import type { TableColumnsType } from "antd";
 import React, { useEffect, useState } from "react";
-import { useMobxStores } from "@/stores/stores";
 import {
     EditOutlined,
     DeleteOutlined,
@@ -11,13 +10,14 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/shared/constants";
-import { showUserStatus } from "@/utils/showUserStatus";
 import { useRouter } from "next/navigation";
 import { usersTable } from "@/shared/config";
 import { User } from "@/shared/api/user/model";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { GroupActionComponent } from "@/widgets";
 import {SettingControlPanel} from "@/shared/model";
+import {showUserStatus} from "@/shared/lib/showUserStatus";
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const UsersPage = () => {
     const { userStore } = useMobxStores();

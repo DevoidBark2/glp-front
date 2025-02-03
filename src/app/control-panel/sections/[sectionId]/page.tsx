@@ -6,7 +6,7 @@ import Link from "next/link"
 import { FormSteps } from "@/entities/section/ui"
 import { useParams } from "next/navigation"
 import { useEffect } from "react"
-import { useMobxStores } from "@/stores/stores"
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const SectionDetailsPage = () => {
     const { sectionCourseStore } = useMobxStores();

@@ -26,90 +26,80 @@ export const Header = observer(() => {
         { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
+    const handleLogoutUser = () => {
+        userStore.logout().then(() => {
+            userProfileStore.setUserProfile(null);
+            setItems([]);
+            router.push("/platform");
+        });
+    }
+
     useEffect(() => {
         if (!userProfileStore.loading) {
             const menuItems: MenuProps["items"] = [
                 {
                     key: "1",
                     label: (
-                        <div className="flex items-center">
-                            <Image
-                                src="/static/profile_icon.svg"
-                                alt="Профиль"
-                                width={20}
-                                height={20}
-                            />
-                            <Link
-                                href={"/platform/profile"}
-                                className="ml-2 text-black hover:text-black"
-                            >
-                                Мой профиль
-                            </Link>
-                        </div>
-                    ),
-                },
-                userProfileStore.userProfile &&
-                    (userProfileStore.userProfile.role === UserRole.TEACHER ||
-                        userProfileStore.userProfile.role === UserRole.SUPER_ADMIN ||
-                        userProfileStore.userProfile.role === UserRole.MODERATOR)
-                    ? {
-                        key: "2",
-                        label: (
-                            <div
-                                className="flex items-center"
-                                onClick={() => router.push("/control-panel")}
-                            >
+                        <Link  href={"/platform/profile"}>
+                            <div className="flex items-center">
                                 <Image
-                                    src="/static/control_panel_icon.svg"
-                                    alt="Панель учителя"
+                                    src="/static/profile_icon.svg"
+                                    alt="Профиль"
                                     width={20}
                                     height={20}
                                 />
-                                <span className="ml-2 text-black hover:text-black">
-                                    Панель учителя
-                                </span>
+                                <p className="ml-2 text-black hover:text-black">Мой профиль</p>
                             </div>
+                        </Link>
+                    ),
+                },
+                userProfileStore.userProfile &&
+                (userProfileStore.userProfile.role === UserRole.TEACHER ||
+                    userProfileStore.userProfile.role === UserRole.SUPER_ADMIN ||
+                    userProfileStore.userProfile.role === UserRole.MODERATOR)
+                    ? {
+                        key: "2",
+                        label: (
+                            <Link href="/control-panel">
+                                <div className="flex items-center">
+                                    <Image
+                                        src="/static/control_panel_icon.svg"
+                                        alt="Панель учителя"
+                                        width={20}
+                                        height={20}
+                                    />
+                                    <p className="ml-2 text-black hover:text-black">Панель учителя</p>
+                                </div>
+                            </Link>
                         ),
                     }
                     : null,
                 {
                     key: "3",
                     label: (
-                        <div className="flex items-center">
-                            <Image
-                                src="/static/settings_icon.svg"
-                                alt="Настройки"
-                                width={20}
-                                height={20}
-                            />
-                            <Link
-                                href={"/platform/settings"}
-                                className="ml-2 text-black hover:text-black"
-                            >
-                                Настройки
-                            </Link>
-                        </div>
+                        <Link  href={"/platform/settings"}>
+                            <div className="flex items-center">
+                                <Image
+                                    src="/static/settings_icon.svg"
+                                    alt="Настройки"
+                                    width={20}
+                                    height={20}
+                                />
+                                <p className="ml-2 text-black hover:text-black">Настройки</p>
+                            </div>
+                        </Link>
                     ),
                 },
                 {
                     key: "4",
                     label: (
-                        <div
-                            className="flex items-center"
-                            onClick={() => {
-                                userStore.logout().then(() => {
-                                    userProfileStore.setUserProfile(null);
-                                    setItems([]);
-                                    router.push("/platform");
-                                });
-                            }}
-                        >
-                            <Image
-                                src="/static/logout_icon.svg"
-                                alt="Выйти из аккаунта"
-                                width={20}
-                                height={20}
-                            />
+                        <div className="flex items-center" onClick={handleLogoutUser}>
+                        <Image
+                            src="/static/logout_icon.svg"
+                            alt="Выйти из аккаунта"
+                            width={20}
+                            height={20}
+                        />
                             <p className="ml-2 text-black hover:text-black">Выйти</p>
                         </div>
                     ),

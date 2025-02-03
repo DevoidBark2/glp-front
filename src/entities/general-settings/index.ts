@@ -1,1 +1,1 @@
-export * from "./model"
+export { default as GeneralSettings } from "./model/GeneralSettings";

@@ -2,7 +2,6 @@ import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import {UserRole} from "@/shared/api/user/model";
 import { coursesTable } from "@/shared/config/tableConfig";
 import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from "@/shared/constants";
-import { showCourseStatus } from "@/utils/showCourseStatusInTable";
 import {Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { observer } from "mobx-react";
@@ -14,6 +13,7 @@ import {UserHoverCard} from "@/widgets";
 import { isEditedCourse } from "../../selectors";
 import {SettingControlPanel} from "@/shared/model";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {showCourseStatus} from "@/shared/lib/showCourseStatusInTable";
 
 export const CourseControlList = observer(() => {
     const { courseStore, userProfileStore } = useMobxStores()

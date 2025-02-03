@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Table, TableColumnsType, Tooltip, Tag, Input, DatePicker, Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/stores/stores";
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
@@ -16,8 +15,7 @@ import { ActionEvent } from "@/shared/api/action-user";
 import { eventColors, eventTooltips, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { EventUser } from "@/shared/api/events/model";
 import { PageContainerControlPanel, PageHeader } from "@/shared/ui";
-
-const { RangePicker } = DatePicker;
+import {useMobxStores} from "@/shared/store/RootStore";
 
 const EventPage = () => {
     const { eventStore } = useMobxStores();

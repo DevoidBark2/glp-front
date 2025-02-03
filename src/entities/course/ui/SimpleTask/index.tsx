@@ -45,12 +45,12 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
             </p>
 
             <MathJaxContext>
-                <div className="bg-[#fff] p-2 border rounded border-[#ddd] mb-4 text-lg text-[#444] flex items-center">
+                <div className="bg-[#fff] p-2 border rounded border-[#ddd] mb-4 text-lg text-[#444] flex items-center flex-wrap">
                     {parseMathFormula(task.title)}
                 </div>
                 <math-field
                     ref={mathFieldRef}
-                   disabled={!isEditable}
+                    disabled={!isEditable}
                     style={{
                         width: "100%",
                         fontSize: "1.2rem",
@@ -62,6 +62,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
                     virtual-keyboard-mode="onfocus"
                 ></math-field>
             </MathJaxContext>
+
 
             <Button className="mt-4" type="primary" onClick={handleCheckResult} disabled={!isEditable}>
                 Завершить
