@@ -1,9 +1,9 @@
-import {Button, Col, Form, Input, Modal, notification, Row, Select, Spin, Upload} from "antd"
+import { Button, Col, Form, Input, Modal, notification, Row, Select, Spin, Upload } from "antd"
 import TextArea from "antd/es/input/TextArea"
 import { useEffect, useState } from "react";
 import { DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { MainSection } from "@/stores/SectionCourse";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { MainSection } from "@/shared/api/section/model";
 
 export const General = () => {
     const { sectionCourseStore, generalSettingsStore } = useMobxStores();
@@ -12,7 +12,7 @@ export const General = () => {
 
     const handleAddSection = (values: MainSection) => {
         sectionCourseStore.addMainSection(values).then(response => {
-            notification.success({message: response.message})
+            notification.success({ message: response.message })
         }).finally(() => {
             setIsModalOpen(false);
         })
@@ -73,7 +73,6 @@ export const General = () => {
                             rules={[{ required: true, message: "Выберите раздел или добавьте новый!" }]}
                         >
                             <Select
-
                                 placeholder="Выберите раздел..."
                                 dropdownRender={(menu) => (
                                     <>
@@ -120,7 +119,7 @@ export const General = () => {
                     name="description"
                     label="Описание раздела"
                     rules={[{ required: false, message: "Введите описание раздела!" },
-                        { max: 100, message: "Описание раздела превышает допустимую длину 100" }
+                    { max: 100, message: "Описание раздела превышает допустимую длину 100" }
                     ]}
                 >
                     <TextArea
@@ -129,7 +128,7 @@ export const General = () => {
                     />
                 </Form.Item>
 
-                {generalSettingsStore.loading ? <Spin/> : generalSettingsStore.generalSettings?.allow_extra_materials && <>
+                {generalSettingsStore.loading ? <Spin /> : generalSettingsStore.generalSettings?.allow_extra_materials && <>
                     <Form.Item
                         name="uploadFile"
                         label="Дополнительные материалы"

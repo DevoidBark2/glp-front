@@ -110,3 +110,9 @@ export const submitReviewCourse = async (values: CourseReview) => {
 
     return data.data
 }
+
+export const handleCheckCourseSecretKey = async (value: string, courseId: number) => {
+    const data = (await axiosInstance.post('/api/check-secret-key', { secret_key: value, courseId: courseId })).data
+
+    return data.data
+}

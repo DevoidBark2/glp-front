@@ -1,4 +1,4 @@
-import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
+import { CourseComponentTypeI } from "@/shared/api/course/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Card, Divider, Skeleton } from "antd";
 import { observer } from "mobx-react";
@@ -11,6 +11,7 @@ import { SimpleTask } from "../SimpleTask";
 import { FileAttachment, LinksAttachment } from "@/widgets/Lesson";
 import ExamCourse from "@/entities/exams/ui/ExamCourse";
 import { isExamCoursePage } from "../../selectors";
+import { CourseComponentType } from "@/shared/api/component/model";
 
 export const CourseSectionCard = observer(() => {
     const { courseStore, commentsStore } = useMobxStores();

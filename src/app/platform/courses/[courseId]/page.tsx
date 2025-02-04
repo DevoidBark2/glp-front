@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Avatar, Breadcrumb, Button, Divider, List, notification, Rate, Spin } from "antd";
+import { Avatar, Breadcrumb, Button, Divider, List, message, notification, Rate, Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,11 +22,7 @@ const CoursePage = () => {
     const router = useRouter();
 
     const handleClick = () => {
-        if (currentCourse?.access_right === AccessRightEnum.PRIVATE) {
-            setInputSecretKeyModal(true)
-        }
         courseStore.setSubscribeCourseLoading(true);
-
         if (!userProfileStore.userProfile) {
             router.push('/platform/auth/login')
             courseStore.setSubscribeCourseLoading(false);
@@ -39,10 +35,29 @@ const CoursePage = () => {
             return;
         }
 
+        if (currentCourse?.access_right === AccessRightEnum.PRIVATE) {
+            setInputSecretKeyModal(true)
+            courseStore.setSubscribeCourseLoading(false);
+            return;
+        }
+
         courseStore.subscribeCourse(Number(courseId), userProfileStore.userProfile?.id).then(() => {
             router.push(`/platform/lessons/${courseId}`)
         }).finally(() => {
             courseStore.setSubscribeCourseLoading(false);
+        })
+    }
+
+    const handleCheckSecretKey = (value: string) => {
+        courseStore.handleCheckSecretKey(value, Number(courseId)).then(response => {
+            setInputSecretKeyModal(false)
+            courseStore.subscribeCourse(Number(courseId), String(userProfileStore.userProfile?.id)).then(() => {
+                router.push(`/platform/lessons/${courseId}`)
+            }).finally(() => {
+                courseStore.setSubscribeCourseLoading(false);
+            })
+        }).catch(e => {
+            message.error(e.response.data.message)
         })
     }
 
@@ -59,7 +74,7 @@ const CoursePage = () => {
 
     return (
         <>
-            {inputSecretKeyModal && <InputSecretKeyModal inputSecretKeyModal={inputSecretKeyModal} setInputSecretKeyModal={setInputSecretKeyModal} />}
+            {inputSecretKeyModal && <InputSecretKeyModal inputSecretKeyModal={inputSecretKeyModal} setInputSecretKeyModal={setInputSecretKeyModal} handleCheckSecretKey={handleCheckSecretKey} />}
             <div className="container mx-auto">
                 <div className="px-6">
                     <div className="mt-4">

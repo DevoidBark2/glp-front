@@ -1,4 +1,3 @@
-
 import { AutoComplete, Button, Form, Input, Table, TableColumnsType, Tag, Tooltip } from "antd"
 import {
     BookOutlined,
@@ -9,8 +8,8 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { FormInstance } from "antd/lib";
-import {useMobxStores} from "@/shared/store/RootStore";
-import {CourseComponent, CourseComponentType} from "@/shared/api/component/model";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
 
 interface SelectComponentProps {
     createSectionForm: FormInstance

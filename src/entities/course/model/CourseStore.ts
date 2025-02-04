@@ -14,14 +14,15 @@ import {
     handleFilterBySearch,
     searchCourseByFilter,
     sendToReviewCourse,
-    submitReviewCourse
+    submitReviewCourse,
+    handleCheckCourseSecretKey
 } from "@/shared/api/course";
 import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
-import {SectionCourse, SectionCourseItem} from "@/shared/api/section/model";
+import { SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
 
@@ -50,6 +51,21 @@ class CourseStore {
     courseMembers: CourseMember[] = []
     examCourse: Exam | null = null
     resultSearchCourses: Course[] = []
+    coursePageTitle: string = ""
+    secret_key: string = ""
+    accessRight: number = 0
+
+    setAccessRight = action((value: number) => {
+        this.accessRight = value
+    })
+
+    setSecretKey = action((value: string) => {
+        this.secret_key = value
+    })
+
+    setCoursePageTitle = action((value: string) => {
+        this.coursePageTitle = value
+    })
 
     setMessageWarning = action((value: string | null) => {
         this.messageWarning = value
@@ -310,6 +326,11 @@ class CourseStore {
 
     handleReviewSubmitCourse = action(async (values: CourseReview) => {
         const data = await submitReviewCourse(values);
+    })
+
+
+    handleCheckSecretKey = action(async (value: string, courseId: number) => {
+        return await handleCheckCourseSecretKey(value, courseId)
     })
 
 }

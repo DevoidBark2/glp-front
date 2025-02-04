@@ -7,23 +7,23 @@ import { FormInstance } from "antd/lib";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface SelectCourseProps {
     createSectionForm: FormInstance
 }
 
-export const SelectCourse = observer(({createSectionForm}: SelectCourseProps) => {
+export const SelectCourse = observer(({ createSectionForm }: SelectCourseProps) => {
     const { courseStore } = useMobxStores();
     const router = useRouter();
 
     useEffect(() => {
         courseStore.getCoursesByUser();
-    },[])
+    }, [])
 
     return (
         <Form.Item
-         name="course"
+            name="course"
         >
             <List
                 locale={{
@@ -41,7 +41,7 @@ export const SelectCourse = observer(({createSectionForm}: SelectCourseProps) =>
                 loading={courseStore.loadingCourses}
                 dataSource={courseStore.userCourses}
                 renderItem={(course) => (
-                    <CourseMiniCard course={course} createSectionForm={createSectionForm}/>
+                    <CourseMiniCard course={course} createSectionForm={createSectionForm} />
                 )}
             />
         </Form.Item>
