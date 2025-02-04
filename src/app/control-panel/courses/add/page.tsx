@@ -1,8 +1,5 @@
 "use client"
-import {
-    Breadcrumb,
-    Divider,
-} from "antd";
+import { Breadcrumb,Divider } from "antd";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";

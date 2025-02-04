@@ -6,7 +6,7 @@ import {Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } fro
 import dayjs from "dayjs";
 import { observer } from "mobx-react";
 import Link from "next/link";
-import { CrownOutlined, DeleteOutlined, EditOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
+import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
 import {UserHoverCard} from "@/widgets";
@@ -19,12 +19,6 @@ export const CourseControlList = observer(() => {
     const { courseStore, userProfileStore } = useMobxStores()
     const router = useRouter();
     const [settings, setSettings] = useState<SettingControlPanel | null>(null);
-
-    const publishCourse = (id: number) => courseStore.publishCourse(id)
-
-    const forwardCourse = (id: number) => router.push(`courses/${id}`)
-
-    const deleteCourse = (id: number) => courseStore.deleteCourse(id)
 
     const columns: TableColumnsType<Course> = [
         {
@@ -101,33 +95,19 @@ export const CourseControlList = observer(() => {
             align: 'start',
             render: (_, record) => (
                 <div className="flex justify-end gap-2">
-                    {userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN && <Tooltip title={
-                        !isEditedCourse(record)
-                            ? "Опубликовать курс"
-                            : "В данный момент курс не может быть опубликован, попробуйте позже"
-                    }>
-                        <Button
-                            onClick={() => publishCourse(record.id)}
-                            disabled={isEditedCourse(record)}
-                            type="default"
-                            icon={<UploadOutlined />}
-                        />
-                    </Tooltip>}
-                    <Tooltip title={isEditedCourse(record) && userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN  ? "В данный момент курс нельзя изменить, попробуйте позже" : "Редактировать курс"}>
-                        <Button
-                            type="default"
-                            shape="circle"
-                            disabled={isEditedCourse(record) && userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN}
-                            onClick={() => forwardCourse(record.id)}
-                            icon={<EditOutlined />}
-                        />
-                    </Tooltip>
+                    <Button
+                        type="default"
+                        shape="circle"
+                        disabled={isEditedCourse(record) && userProfileStore.userProfile?.role !== UserRole.SUPER_ADMIN}
+                        onClick={() => router.push(`courses/${record.id}`)}
+                        icon={<EditOutlined />}
+                    />
                     <Tooltip title="Удалить курс">
                         <Popconfirm
                             title="Удалить курс?"
                             placement="leftBottom"
                             description="Вы уверены, что хотите удалить этот курс? Это действие нельзя будет отменить."
-                            onConfirm={() => deleteCourse(record.id)}
+                            onConfirm={() => courseStore.deleteCourse(record.id)}
                             okText="Да"
                             cancelText="Нет"
                         >
@@ -149,7 +129,12 @@ export const CourseControlList = observer(() => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
        
-        courseStore.getCoursesForCreator()
+        courseStore.getCoursesByUser()
+
+
+        return () => {
+            courseStore.setSuccessCreateCourseModal(false)
+        }
     }, [])
     return (
         <Table

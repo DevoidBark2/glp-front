@@ -1,7 +1,5 @@
 "use client"
 import {PageContainerControlPanel} from "@/shared/ui";
-import { StatusComponentTaskEnum } from "@/shared/api/component-task"
-import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model"
 import { Breadcrumb, Button, Divider, Form, Select, Spin, Tag } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
@@ -10,42 +8,40 @@ import { useEffect, useState } from "react"
 import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
 import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {CourseComponent, CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 
-const TaskDetailsPage = () => {
+const ComponentPage = () => {
     const { courseComponentStore } = useMobxStores()
-    const [form] = Form.useForm<CourseComponentTypeI>();
+    const { componentId } = useParams();
+    const [form] = Form.useForm<CourseComponent>();
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
-    const [changedComponent, setChangedComponent] = useState<CourseComponentTypeI | null>(null)
+    const [changedComponent, setChangedComponent] = useState<CourseComponent | null>(null)
     const [options, setOptions] = useState<Record<number, string[]>>({});
-    const { taskId } = useParams();
 
-    const onFinish = (values: CourseComponentTypeI) => {
-        // if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
-        //     message.warning("Вопрос должен быть хотя бы 1!");
-        //     return;
-        // }
-
+    const onFinish = (values: CourseComponent) => {
         courseComponentStore.changeComponent(values)
     }
 
-    const handleValuesChange = (_: CourseComponentType, allValues: CourseComponentTypeI) => {
+    const handleValuesChange = (_: CourseComponentType, allValues: CourseComponent) => {
         const updatedOptions = allValues.questions?.reduce<Record<number, string[]>>((acc, question, index: number) => {
             acc[index] = question?.options || [];
             return acc;
         }, {});
-        setOptions(updatedOptions);
+        setOptions(updatedOptions!);
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            const component = await courseComponentStore.getComponentById(Number(taskId));
+            const component = await courseComponentStore.getComponentById(String(componentId));
             form.setFieldsValue(component!);
             setChangedComponent(component!);
             setTypeTask(component!.type);
-            setOptions(component!.questions?.reduce((acc, question, index) => {
+            const initialOptions = component.questions?.reduce((acc, question, index) => {
                 acc[index] = question.options || [];
                 return acc;
-            }, {} as Record<number, string[]>));
+            }, {} as Record<number, string[]>) || {};
+
+            setOptions(initialOptions);
         }
 
         fetchData();
@@ -54,7 +50,7 @@ const TaskDetailsPage = () => {
         <PageContainerControlPanel>
             <Breadcrumb
                 items={[{
-                    title: <Link href={"/control-panel/tasks"}>Доступные компоненты</Link>,
+                    title: <Link href={"/control-panel/components"}>Доступные компоненты</Link>,
                 }, {
                     title: changedComponent?.title,
                 }]}
@@ -94,10 +90,10 @@ const TaskDetailsPage = () => {
                             placeholder="Выберите статус"
                             style={{ width: '100%' }}
                         >
-                            <Select.Option value={StatusComponentTaskEnum.ACTIVATED}>
+                            <Select.Option value={StatusCourseComponentEnum.ACTIVATED}>
                                 <Tag color="green">Активен</Tag>
                             </Select.Option>
-                            <Select.Option value={StatusComponentTaskEnum.DEACTIVATED}>
+                            <Select.Option value={StatusCourseComponentEnum.DEACTIVATED}>
                                 <Tag color="red">Неактивен</Tag>
                             </Select.Option>
                         </Select>
@@ -118,4 +114,4 @@ const TaskDetailsPage = () => {
     )
 }
 
-export default observer(TaskDetailsPage);
+export default observer(ComponentPage);

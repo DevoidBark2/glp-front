@@ -1,42 +1,43 @@
 import { action, makeAutoObservable } from "mobx";
-import dayjs from "dayjs";
-import { notification } from "antd";
-import { CourseComponentTypeI } from "@/shared/api/course/model";
-import { changeComponent, createComponent, deleteComponent, getAllComponents } from "@/shared/api/component-task";
-import {getComponentTask, searchComponentByTitle} from "@/shared/api/component";
-export type QuestionsType = {
-    question: string;
-    options: string[];
-    correctOption: number[]
-}
+import {notification} from "antd";
+import { CourseComponent } from "@/shared/api/component/model";
+import {
+    changeComponent,
+    createComponent,
+    deleteComponentById,
+    getAllComponents,
+    getComponentById,
+    searchComponentsByTitle
+} from "@/shared/api/component";
+import {componentTaskMapper} from "@/entities/component-task";
 
-class CourseComponent {
+class CourseComponentStore {
     constructor() {
         makeAutoObservable(this)
     }
 
     loadingCourseComponent: boolean = false;
-    courseComponents: CourseComponentTypeI[] = []
-    searchResults: CourseComponentTypeI[] = [];
-    selectedComponents: CourseComponentTypeI[] = [];
+    courseComponents: CourseComponent[] = []
+    searchResults: CourseComponent[] = [];
+    selectedComponents: CourseComponent[] = [];
     createLoading: boolean = false
 
     setCreateLoading = action((value: boolean) => {
         this.createLoading = value
     })
 
-    setSearchResult = action((value: CourseComponentTypeI[]) => {
+    setSearchResult = action((value: CourseComponent[]) => {
         this.searchResults = value;
     })
 
-    setSelectedComponent = action((value: CourseComponentTypeI[]) => {
+    setSelectedComponent = action((value: CourseComponent[]) => {
         this.selectedComponents = value
     })
     setLoadingCourseComponent = action((value: boolean) => {
         this.loadingCourseComponent = value
     })
 
-    addComponentCourse = action(async (values: CourseComponentTypeI) => {
+    addComponentCourse = action(async (values: CourseComponent) => {
         this.setCreateLoading(true)
         await createComponent(values).then(response => {
             this.courseComponents = [...this.courseComponents, componentTaskMapper(response.component)]
@@ -57,7 +58,7 @@ class CourseComponent {
         })
     })
 
-    changeComponent = action(async (values: CourseComponentTypeI) => {
+    changeComponent = action(async (values: CourseComponent) => {
         await changeComponent(values).then(response => {
             notification.success({ message: response.message })
             const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
@@ -68,59 +69,38 @@ class CourseComponent {
         })
     })
 
-    deleteComponent = action(async (componentId: number) => {
-        await deleteComponent(componentId).then(response => {
+    deleteComponent = action(async (componentId: string) => {
+        await deleteComponentById(componentId).then(response => {
             this.courseComponents = this.courseComponents.filter(component => component.id !== componentId);
             notification.success({ message: response.message })
         });
     })
 
-    // Метод для выполнения поиска к
     searchComponents = action(async (query: string) => {
-        await searchComponentByTitle(query).then(response => {
+        await searchComponentsByTitle(query).then(response => {
             this.setSearchResult(response);
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         });
     })
 
-    // Метод для добавления компонента в таблицу
-    addComponentToTable = action((component: CourseComponentTypeI) => {
-        // Проверяем, что компонент не был добавлен ранее
+    addComponentToTableForSection = action((component: CourseComponent) => {
         const exists = this.selectedComponents.find(item => item.id === component.id);
         if (!exists) {
             this.selectedComponents = [...this.selectedComponents, component];
         }
     })
 
-    // Метод для удаления компонента из таблицы
-    removeComponentFromTable(id: number) {
+    removeComponentFromTable = action(async (id: string) => {
         this.selectedComponents = this.selectedComponents.filter(item => item.id !== id);
-    }
+    })
 
-    getComponentById = action(async (id: number) => {
+    getComponentById = action(async (id: string): Promise<CourseComponent> => {
         this.setLoadingCourseComponent(true)
-        return await getComponentTask(id).finally(() => {
+        return await getComponentById(id).finally(() => {
             this.setLoadingCourseComponent(false)
         });
     })
 }
 
-const componentTaskMapper = (state: CourseComponentTypeI) => {
-    const component: any = {
-        id: state.id,
-        description: state.description,
-        questions: state.questions,
-        type: state.type,
-        content_description: state.content_description,
-        title: state.title,
-        status: state.status,
-        tags: state.tags,
-        user: state.user,
-        created_at: dayjs(state.created_at).toDate()
-    }
-
-    return component;
-}
-
-export default CourseComponent
+export default CourseComponentStore;

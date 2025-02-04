@@ -10,13 +10,13 @@ import UserStore from "@/entities/user/model/UserStore";
 import StatisticsStore from "@/entities/statistics/model/StatisticsStore";
 import CommentsStore from "@/entities/comments/model/CommentsStore";
 import { ExamStore } from "@/entities/exams";
-import { CourseComponent } from "@/entities/component-task";
 import { NomenclatureStore } from "@/entities/nomenclature";
 import { FilterStore } from "@/entities/filters";
 import { ReviewStore } from "@/entities/review";
 import {SectionStore} from "@/entities/section";
 import {EventStore} from "@/entities/events";
 import {AchievementsStore} from "@/entities/achievements";
+import CourseComponentStore from "@/entities/component-task/model/CourseComponentStore";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -28,7 +28,7 @@ const userProfileStore = new UserProfileStore();
 const statisticsStore = new StatisticsStore();
 const commentsStore = new CommentsStore();
 const examStore = new ExamStore();
-const courseComponentStore = new CourseComponent();
+const courseComponentStore = new CourseComponentStore();
 const nomenclatureStore = new NomenclatureStore()
 const filterStore = new FilterStore()
 const reviewStore = new ReviewStore()

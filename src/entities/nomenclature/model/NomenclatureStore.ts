@@ -4,6 +4,7 @@ import { NomenclatureItem } from "@/shared/api/nomenclature/model";
 import { createCategory, deleteCategory, getAllCategory, getTeachers, updateCategory } from "@/shared/api/nomenclature";
 import { User } from "@/shared/api/user/model";
 import { usersMapper } from "@/entities/user/mappers";
+import {categoryMapper} from "@/entities/nomenclature";
 
 class NomenclatureStore {
     constructor() {
@@ -36,7 +37,7 @@ class NomenclatureStore {
     getCategories = action(async () => {
         this.setLoadingCategories(true)
         await getAllCategory().then((response) => {
-            this.categories = response.map(this.categoryMapper)
+            this.categories = response.map(categoryMapper)
         }).finally(() => {
             this.setLoadingCategories(false)
         });
@@ -46,9 +47,10 @@ class NomenclatureStore {
         await createCategory(values).then((response) => {
             this.categories = [...this.categories, response.data.category]
             notification.success({ message: response.data.message })
-            this.setCreateCategoryModal(false)
         }).catch(e => {
             notification.error({ message: e.response.data.message })
+        }).finally(() => {
+            this.setCreateCategoryModal(false)
         })
     })
 
@@ -75,16 +77,10 @@ class NomenclatureStore {
     })
 
     getTeachers = action(async () => {
-        const data = await getTeachers();
-        this.teachers = data.map(usersMapper)
+        await getTeachers().then(response => {
+            this.teachers = response.map(usersMapper)
+        });
     })
-
-    categoryMapper = (item: NomenclatureItem) => {
-        return {
-            id: item.id,
-            name: item.name
-        }
-    }
 }
 
 export default NomenclatureStore;

@@ -1,6 +1,5 @@
 "use client"
 import {PageContainerControlPanel} from "@/shared/ui";
-import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model"
 import { Breadcrumb, Button, Divider, Form, Select } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
@@ -9,46 +8,35 @@ import { useState } from "react"
 import { MultiPlayChoice, QuizTask, TextTask } from "@/entities/course/ui";
 import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {CourseComponent, CourseComponentType} from "@/shared/api/component/model";
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()
-    const [form] = Form.useForm<CourseComponentTypeI>();
+    const [form] = Form.useForm<CourseComponent>();
+    const router = useRouter();
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
     const [options, setOptions] = useState<Record<number, string[]>>({});
-    const router = useRouter();
 
-    const handleValuesChange = (_: CourseComponentType, allValues: CourseComponentTypeI) => {
+    const handleValuesChange = (_: CourseComponentType, allValues: CourseComponent) => {
         const updatedOptions = allValues.questions?.reduce<Record<number, string[]>>((acc, question, index: number) => {
             acc[index] = question?.options || [];
             return acc;
         }, {});
-        setOptions(updatedOptions);
+        setOptions(updatedOptions!);
     };
-    const onFinish = (values: CourseComponentTypeI) => {
-        // if (values.type !== CourseComponentType.Text && (!values.questions || values.questions.length === 0)) {
-        //     message.warning("Вопрос должен быть хотя бы 1!");
-        //     return;
-        // }
-
+    const onFinish = (values: CourseComponent) => {
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
-            router.push('/control-panel/tasks')
+            router.push('/control-panel/components')
             courseComponentStore.setCreateLoading(false)
         });
     }
-
-    const latexFormula = `
-    \\[
-    \\int_{a}^{b} \\left( \\frac{1}{\\sqrt{2\\pi\\sigma^2}} e^{-\\frac{(x - \\mu)^2}{2\\sigma^2}} \\right) dx = 
-    \\sum_{n=1}^{\\infty} \\frac{(-1)^{n+1}}{n} e^{i n x}
-    \\]
-    `;
     
     return (
         <PageContainerControlPanel>
             <Breadcrumb
                 items={[{
-                    title: <Link href={"/control-panel/tasks"}>Доступные компоненты</Link>,
+                    title: <Link href={"/control-panel/components"}>Доступные компоненты</Link>,
                 }, {
                     title: "Новый компонент",
                 }]}
@@ -71,9 +59,9 @@ const TaskAddPage = () => {
                         onChange={(value: CourseComponentType) => setTypeTask(value)}
                     >
                         <Select.Option value={CourseComponentType.Text}>Текст</Select.Option>
-                        <Select.Option value={CourseComponentType.SimpleTask}>Простая задача</Select.Option>
                         <Select.Option value={CourseComponentType.Quiz}>Квиз</Select.Option>
                         <Select.Option value={CourseComponentType.MultiPlayChoice}>Множестенный выбор</Select.Option>
+                        <Select.Option value={CourseComponentType.SimpleTask}>Текстовая задача</Select.Option>
                     </Select>
                 </Form.Item>
 

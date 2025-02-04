@@ -1,4 +1,4 @@
-import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
+
 import { AutoComplete, Button, Form, Input, Table, TableColumnsType, Tag, Tooltip } from "antd"
 import {
     BookOutlined,
@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { FormInstance } from "antd/lib";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {CourseComponent, CourseComponentType} from "@/shared/api/component/model";
 
 interface SelectComponentProps {
     createSectionForm: FormInstance
@@ -47,17 +48,17 @@ export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => 
         [CourseComponentType.Sequencing]: <EditOutlined style={{ color: '#13c2c2' }} />,
     };
 
-    const handleDelete = (record: CourseComponentTypeI) => {
+    const handleDelete = (record: CourseComponent) => {
         courseComponentStore.removeComponentFromTable(record.id)
         const currentComponents = createSectionForm.getFieldValue('components') || [];
-        const updatedComponents = currentComponents.filter((component: CourseComponentTypeI) => component.id !== record.id);
+        const updatedComponents = currentComponents.filter((component: CourseComponent) => component.id !== record.id);
         createSectionForm.setFieldsValue({ components: updatedComponents });
     }
 
     const handleSelect = (value: string, option: any) => {
-        const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
+        const selectedComponent = courseComponentStore.searchResults.find(component => component.id === option.key);
         if (selectedComponent) {
-            courseComponentStore.addComponentToTable(selectedComponent);
+            courseComponentStore.addComponentToTableForSection(selectedComponent);
             const currentComponentIds = createSectionForm.getFieldValue('components') || [];
 
             const updatedComponentIds = [...currentComponentIds, selectedComponent.id];
@@ -69,7 +70,7 @@ export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => 
 
 
 
-    const columns: TableColumnsType<CourseComponentTypeI> = [
+    const columns: TableColumnsType<CourseComponent> = [
         {
             title: 'Название',
             dataIndex: 'title',
@@ -77,7 +78,7 @@ export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => 
             ellipsis: true,
             render: (text: string, record) => (
                 <Tooltip title={`Перейти к компоненту: ${text}`}>
-                    <Link href={`/control-panel/tasks/${record.id}`} target="__blank">
+                    <Link href={`/control-panel/components/${record.id}`} target="__blank">
                         {text}
                     </Link>
                 </Tooltip>

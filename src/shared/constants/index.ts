@@ -1,12 +1,11 @@
 import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/entities/achievements/model/AchievementsStore";
 import { ActionEvent } from "../api/action-user";
-import { StatusComponentTaskEnum } from "../api/component-task";
-import { CourseComponentType, StatusCourseEnum } from "../api/course/model";
 import { PostStatusEnum } from "../api/posts/model";
 import { StatusUserEnum, UserRole } from "../api/user/model";
+import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {StatusCourseEnum} from "@/shared/api/course/model";
 
 export const MAIN_COLOR = "#00b96b"
-export const UNAUTHORIZED_STATUS_CODE = 401
 
 export type PlatformMenu = {
     key: number;
@@ -35,8 +34,8 @@ export const FILTER_TYPE_COMPONENT_COURSE = [
 ]
 
 export const FILTER_STATUS_COMPONENT_COURSE = [
-    { id: 1, text: 'Активен', value: StatusComponentTaskEnum.ACTIVATED },
-    { id: 2, text: 'Неактивен', value: StatusComponentTaskEnum.DEACTIVATED },
+    { id: 1, text: 'Активен', value: StatusCourseComponentEnum.ACTIVATED },
+    { id: 2, text: 'Неактивен', value: StatusCourseComponentEnum.DEACTIVATED },
 ]
 
 export const FILTER_STATUS_USER = [

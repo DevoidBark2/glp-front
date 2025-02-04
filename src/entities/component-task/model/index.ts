@@ -1,1 +1,1 @@
-export * as CourseStore from "./CourseComponent";
+export * as CourseComponentStore from "./CourseComponentStore";

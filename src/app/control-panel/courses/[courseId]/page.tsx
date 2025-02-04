@@ -3,7 +3,6 @@ import { useParams, useRouter } from "next/navigation";
 import {
     Breadcrumb,
     Button,
-    Card,
     Col,
     Divider,
     Empty,
@@ -31,14 +30,14 @@ import { FORMAT_VIEW_DATE, LEVEL_COURSE } from "@/shared/constants";
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { PageContainerControlPanel } from "@/shared/ui";
-import { StatusComponentTaskEnum } from "@/shared/api/component-task";
-import { CourseComponentTypeI, StatusCourseEnum, statusLabels } from "@/shared/api/course/model";
+import { StatusCourseEnum, statusLabels } from "@/shared/api/course/model";
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { typeIcons } from "@/columnsTables/taskColumns";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Collapse, Progress } from 'antd';
 import { useMobxStores } from "@/shared/store/RootStore";
+import {CourseComponent, StatusCourseComponentEnum} from "@/shared/api/component/model";
 
 const { Panel } = Collapse;
 
@@ -74,27 +73,36 @@ const CoursePage = () => {
         courseStore.deleteMember(id)
     }
 
-    const columns: TableColumnsType<CourseComponentTypeI> = [{
-        title: 'Название раздела', dataIndex: 'name', key: 'name', width: '30%', render: (value) => {
-            return value.length > 30 ? `${value.slice(0, 30)}...` : value
-        }
-    }, {
-        title: 'Описание', dataIndex: 'description', key: 'description', width: '40%', render: (description) => {
-            if (!description || description.trim().length === 0) {
-                return <span className="text-gray-400">Нет описания</span>;
+    const columns: TableColumnsType<CourseComponent> = [
+        {
+            title: 'Название раздела',
+            dataIndex: 'name',
+            key: 'name',
+            width: '30%',
+            render: (value) => value.length > 30 ? `${value.slice(0, 30)}...` : value
+        },
+        {
+            title: 'Описание',
+            dataIndex: 'description',
+            key: 'description',
+            width: '40%',
+            render: (description) => {
+                if (!description || description.trim().length === 0) {
+                    return <span className="text-gray-400">Нет описания</span>;
+                }
+                return description.length > 30 ? `${description.slice(0, 30)}...` : description;
             }
-
-            return description.length > 30 ? `${description.slice(0, 30)}...` : description;
-        }
-    }, {
-        title: 'Дата создания',
-        dataIndex: 'created_at',
-        key: 'created_at',
-        width: '30%',
-        render: (date) => (<Tooltip title="Время создания">
-            {dayjs(date).format(FORMAT_VIEW_DATE)}
-        </Tooltip>),
-    }, {
+        },
+        {
+            title: 'Дата создания',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: '30%',
+            render: (date) => (<Tooltip title="Время создания">
+                {dayjs(date).format(FORMAT_VIEW_DATE)}
+            </Tooltip>)
+        },
+        {
         title: "Действия",
         align: 'start',
         render: (_, record) => (<div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
@@ -119,7 +127,7 @@ const CoursePage = () => {
                 />
             </Popconfirm>
         </div>)
-    },];
+    }];
 
     const handleDeleteComponent = (id: number) => {
         console.log("Удаление компонента с ID:", id);
@@ -135,15 +143,15 @@ const CoursePage = () => {
         }
     };
 
-    const handleChangeStep = (step: string) => {
-        if (Number(step) === 2) {
-            courseStore.getCourseDetailsSections(Number(courseId));
-        } else if (Number(step) === 3) {
-            courseStore.getAllMembersCourse(Number(courseId));
-        } else if (Number(step) === 4) {
-            examStore.getUserExams();
-        }
-    }
+    // const handleChangeStep = (step: string) => {
+    //     if (Number(step) === 2) {
+    //         courseStore.getCourseDetailsSections(Number(courseId));
+    //     } else if (Number(step) === 3) {
+    //         courseStore.getAllMembersCourse(Number(courseId));
+    //     } else if (Number(step) === 4) {
+    //         examStore.getUserExams();
+    //     }
+    // }
 
     useEffect(() => {
         nomenclatureStore.getCategories();
@@ -151,6 +159,10 @@ const CoursePage = () => {
             form.setFieldsValue(response);
             form.setFieldValue("category", response.category?.id);
             setCourseName(response.name)
+
+            courseStore.getCourseDetailsSections(Number(courseId));
+            courseStore.getAllMembersCourse(Number(courseId));
+            examStore.getUserExams();
         }).catch(e => {
             router.push('/control-panel/courses')
             notification.warning({ message: e.response.data.result })
@@ -170,7 +182,7 @@ const CoursePage = () => {
         <h1 className="text-center text-3xl">Редактирование курса</h1>
         <Divider />
         <Tabs
-            onChange={handleChangeStep}
+            // onChange={handleChangeStep}
             defaultActiveKey="1"
             items={[{
                 label: 'Основное', key: '1', children: <Form
@@ -377,9 +389,9 @@ const CoursePage = () => {
                                                                             className="block mb-1">
                                                                             Статус:
                                                                             <Tag
-                                                                                color={component.status === StatusComponentTaskEnum.ACTIVATED ? "green" : "red"}
+                                                                                color={component.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}
                                                                             >
-                                                                                {component.status === StatusComponentTaskEnum.ACTIVATED ? "Активен" : "Неактивен"}
+                                                                                {component.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
                                                                             </Tag>
                                                                         </span>
                                                                         <span>

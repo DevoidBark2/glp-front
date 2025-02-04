@@ -13,7 +13,7 @@ export const getPopularCourses = async () => {
     return data.data
 }
 
-export const getCPAllCourse = async () => {
+export const getAllCoursesByUser = async (): Promise<Course[]> => {
     const data = (await axiosInstance.get('api/get-user-courses')).data
 
     return data.data
@@ -70,7 +70,7 @@ export const getCourseDetailsSections = async (courseId: number) => {
 
 
 export const getCourseTitleAndMenuById = async (courserId: number) => {
-    return (await axiosInstance.get(`api/full-course?courseId=${courserId}`)).data
+    return (await axiosInstance.get(`api/get-course-menu?courseId=${courserId}`)).data
 }
 
 export const handleFilterByCategory = async (id: number) => {

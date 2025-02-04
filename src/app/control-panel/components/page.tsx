@@ -7,17 +7,16 @@ import {PageContainerControlPanel} from "@/shared/ui";
 import { taskColumns } from "@/columnsTables/taskColumns";
 import { taskTable } from "@/shared/config";
 import { useRouter } from "next/navigation";
-import {CourseComponentTypeI} from "@/shared/api/course/model";
 import {SettingControlPanel} from "@/shared/model";
 import {useMobxStores} from "@/shared/store/RootStore";
 
-const TaskPage = () => {
+const ComponentsPage = () => {
     const { courseComponentStore, userProfileStore } = useMobxStores()
     const router = useRouter();
     const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
-    const handleChangeComponentTask = (record: CourseComponentTypeI) => {
-        router.push(`tasks/${record.id}`)
+    const handleChangeComponentById = (id: string) => {
+        router.push(`components/${id}`)
     }
 
     useEffect(() => {
@@ -31,7 +30,7 @@ const TaskPage = () => {
             <PageHeader
                 title="Доступные компоненты"
                 buttonTitle="Добавить компонент"
-                onClickButton={() => router.push('tasks/add')}
+                onClickButton={() => router.push('components/add')}
                 showBottomDivider
             />
             <Table
@@ -42,8 +41,8 @@ const TaskPage = () => {
                 loading={courseComponentStore.loadingCourseComponent}
                 dataSource={courseComponentStore.courseComponents}
                 columns={taskColumns({
-                    handleChangeComponent: handleChangeComponentTask,
-                    handleDeleteComponent: courseComponentStore.deleteComponent,
+                    handleChangeComponentById: handleChangeComponentById,
+                    handleDeleteComponentById: courseComponentStore.deleteComponent,
                     currentUser: userProfileStore.userProfile
                 })}
                 locale={taskTable}
@@ -52,4 +51,4 @@ const TaskPage = () => {
     );
 };
 
-export default observer(TaskPage);
+export default observer(ComponentsPage);

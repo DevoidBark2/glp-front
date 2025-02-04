@@ -18,7 +18,7 @@ export const SelectCourse = observer(({createSectionForm}: SelectCourseProps) =>
     const router = useRouter();
 
     useEffect(() => {
-        courseStore.getCoursesForCreator();
+        courseStore.getCoursesByUser();
     },[])
 
     return (

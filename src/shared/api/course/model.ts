@@ -1,6 +1,6 @@
-import { StatusComponentTaskEnum } from "../component-task";
 import { StatusSectionEnum } from "../section/model";
 import { User } from "../user/model";
+import {CourseComponentType, QuestionsType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 
 type Category = {
     id: number;
@@ -48,30 +48,26 @@ export type SectionCourseItem = {
     children: any;
 }
 
-export enum CourseComponentType {
-    Text = "text",
-    Quiz = "quiz",
-    Coding = "coding",
-    MultiPlayChoice = "multiple-choice",
-    Matching = "matching",
-    Sequencing = "sequencing",
-    SimpleTask = "simple-task"
-}
-
-export type CourseComponentTypeI = {
-    id: number;
+export type ComponentTask = {
+    id: string;
+    sort: number
     title: string;
+    componentTask: any
     description: string;
     type: CourseComponentType
     questions: QuestionsType[]
     content_description: string
-    status: StatusComponentTaskEnum
-    sort: number
-    componentTask: any
+    status: StatusCourseComponentEnum
     tags: string[]
     created_at: Date
     user: User
     userAnswer?: UserAnswer
+}
+
+export type CourseComponentTypeI = {
+    id: string;
+    sort: number
+    componentTask: ComponentTask
 }
 
 export type QuizAnswer = {
@@ -81,10 +77,8 @@ export type QuizAnswer = {
     isCorrect: boolean
 }
 
-
-// исправить для вопроса аздача id на string тип
 export type SimpleTaskAnswer = {
-    id: number
+    id: string
     question: string;
     userAnswer: number,
     isCorrect: boolean
@@ -103,11 +97,6 @@ export type UserAnswer = {
     answer: QuizAnswer[] | SimpleTaskAnswer[] | MultiQuizTaskAnswer[]
 }
 
-export type QuestionsType = {
-    question: string;
-    options: string[];
-    correctOption: number
-}
 
 
 export type Course = {
@@ -146,7 +135,6 @@ export type CourseReview = {
     review: string
     courseId: number
 }
-
 
 export type SectionMenu = {
     id: number

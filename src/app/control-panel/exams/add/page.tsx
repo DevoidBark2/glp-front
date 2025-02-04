@@ -8,11 +8,10 @@ import { observer } from "mobx-react";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { typeIcons } from "@/columnsTables/taskColumns";
-import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
-import { CourseComponentType } from "@/shared/api/course/model";
 import {useRouter} from "next/navigation";
+import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 
 const ExamAddPage = observer(() => {
     const { courseComponentStore, examStore } = useMobxStores();
@@ -21,7 +20,7 @@ const ExamAddPage = observer(() => {
     const router = useRouter();
 
     const handleSelect = (_: string, option: any) => {
-        const selectedComponent = courseComponentStore.searchResults.find(component => component.id === parseInt(option.key));
+        const selectedComponent = courseComponentStore.searchResults.find(component => component.id === option.key);
 
         if (selectedComponent && !addedComponents.some(component => component.id === selectedComponent.id)) {
             // Присваиваем сортировку в зависимости от текущей длины массива addedComponents
@@ -186,9 +185,9 @@ const ExamAddPage = observer(() => {
                                                         <span className="block mb-1">
                                                         Статус:
                                                         <Tag
-                                                            color={component.status === StatusComponentTaskEnum.ACTIVATED ? "green" : "red"}
+                                                            color={component.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}
                                                         >
-                                                            {component.status === StatusComponentTaskEnum.ACTIVATED ? "Активен" : "Неактивен"}
+                                                            {component.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
                                                         </Tag>
                                                     </span>
                                                         <span>

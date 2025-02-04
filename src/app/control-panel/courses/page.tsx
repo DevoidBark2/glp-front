@@ -1,6 +1,6 @@
 "use client";
+import React from "react";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {PageContainerControlPanel} from "@/shared/ui";
 import {PageHeader} from "@/shared/ui/PageHeader";
@@ -11,12 +11,6 @@ import {useMobxStores} from "@/shared/store/RootStore";
 const CoursesPage = () => {
     const { courseStore } = useMobxStores()
     const router = useRouter();
-
-    useEffect(() => {
-        return () => {
-            courseStore.setSuccessCreateCourseModal(false)
-        }
-    }, []);
 
     return (
         <>

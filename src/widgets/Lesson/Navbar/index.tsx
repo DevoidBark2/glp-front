@@ -11,8 +11,6 @@ import {
     CheckCircleOutlined,
     CloseCircleOutlined,
     QuestionCircleOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -38,7 +36,6 @@ export const NavbarLesson = observer(() => {
     };
 
     const renderIcon = (menuItem: SectionMenu) => {
-        debugger
         const { userAnswer } = menuItem;
         const iconStyles = {
             marginRight: 8,

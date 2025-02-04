@@ -8,7 +8,7 @@ import {
     getCourseById,
     getCourseDetailsSections,
     getCourseTitleAndMenuById,
-    getCPAllCourse,
+    getAllCoursesByUser,
     getPopularCourses,
     handleFilterByCategory,
     handleFilterBySearch,
@@ -35,10 +35,8 @@ class CourseStore {
     sectionCourse: SectionCourse | null = null
     courseMenuItems: CourseMenu | null = null
     loadingCreateCourse: boolean = false;
-    selectedCourseForDetailModal: Course | null = null
     loadingCourseDetails: boolean = true;
     successCreateCourseModal: boolean = false;
-    openCourseDetailsModal: boolean = false;
     courseDetailsSections: SectionCourseItem[] = [];
     courses: Course[] = []
     popularCourses: Course[] = []
@@ -87,15 +85,8 @@ class CourseStore {
     setCourseDetailsSections = action((value: SectionCourseItem[]) => {
         this.courseDetailsSections = value
     })
-    setSelectedCourseForDetailModal = action((course: Course | null) => {
-        this.selectedCourseForDetailModal = course;
-    })
 
-    setOpenCourseDetailsModal = action((value: boolean) => {
-        this.openCourseDetailsModal = value;
-    })
-
-    setLoadingCreateCourse = ((value: boolean) => {
+    setLoadingCreateCourse = action((value: boolean) => {
         this.loadingCreateCourse = value;
     })
 
@@ -136,16 +127,17 @@ class CourseStore {
     })
 
     createCourse = action(async (values: any) => {
+        debugger
         this.setLoadingCreateCourse(true)
         return await createCourse(values).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => this.setLoadingCreateCourse(false))
     })
 
-    getCoursesForCreator = action(async () => {
+    getCoursesByUser = action(async () => {
         this.setLoadingCourses(true)
-        await getCPAllCourse().then((response) => {
-            this.userCourses = response.courses.map(courseMapper)
+        await getAllCoursesByUser().then((response) => {
+            this.userCourses = response.map(courseMapper)
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => {

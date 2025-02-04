@@ -22,8 +22,7 @@ export const Header = observer(() => {
 
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
-        { key: 2, title: "Рейтинг", link: '/platform/rating', icon: <RadiusSettingOutlined /> },
-        { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
+        { key: 2, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
     const handleLogoutUser = () => {

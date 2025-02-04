@@ -12,11 +12,11 @@ import {
     UserOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { CourseComponentType, CourseComponentTypeI } from "@/shared/api/course/model";
-import { StatusComponentTaskEnum } from "@/shared/api/component-task";
 import Link from "next/link";
 import { UserRole } from "@/shared/api/user/model";
-import { UserHoverCard, UserType } from "@/widgets";
+import { UserHoverCard } from "@/widgets";
+import {CourseComponent, CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
 
 export const typeIcons = {
     [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
@@ -30,12 +30,12 @@ export const typeIcons = {
 
 
 interface TaskColumnsProps {
-    handleChangeComponent: (record: CourseComponentTypeI) => void,
-    handleDeleteComponent: (recordId: number) => void,
-    currentUser: UserType | null
+    handleChangeComponentById: (id: string) => void,
+    handleDeleteComponentById: (id: string) => void,
+    currentUser: UserProfile | null
 }
 
-export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, currentUser }: TaskColumnsProps): TableColumnsType<CourseComponentTypeI> => [
+export const taskColumns = ({ handleChangeComponentById, handleDeleteComponentById, currentUser }: TaskColumnsProps): TableColumnsType<CourseComponent> => [
     {
         title: 'Название',
         dataIndex: 'title',
@@ -44,7 +44,7 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, curr
             <Tooltip title={text ? `Перейти к редактированию: ${text}` : 'Название не указано'}>
                 <p
                     className="cursor-pointer"
-                    onClick={() => handleChangeComponent(record)}
+                    onClick={() => handleChangeComponentById(record.id)}
                     style={{ color: !text ? 'grey' : "black" }}
                 >
                     {text?.length > 30 ? `${text.slice(0, 30)}...` : text ?? 'Название не указано'}
@@ -76,10 +76,10 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, curr
         title: "Статус",
         dataIndex: "status",
         filters: FILTER_STATUS_COMPONENT_COURSE,
-        onFilter: (value, record) => record.status.startsWith(value as string),
+        onFilter: (value, record) => record.status === value,
         render: (status) => (
-            <Tag color={status === StatusComponentTaskEnum.ACTIVATED ? 'green' : 'red'}>
-                {status === StatusComponentTaskEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
+            <Tag color={status === StatusCourseComponentEnum.ACTIVATED ? 'green' : 'red'}>
+                {status === StatusCourseComponentEnum.ACTIVATED ? 'Активен' : 'Неактивен'}
             </Tag>
         ),
     },
@@ -88,7 +88,7 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, curr
         dataIndex: "user",
         hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
         render: (_, record) => {
-            return record.user.role === UserRole.SUPER_ADMIN ? (
+            return record.user?.role === UserRole.SUPER_ADMIN ? (
                 <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                     <Tooltip title="Перейти в профиль">
                         <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
@@ -97,9 +97,9 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, curr
                     </Tooltip>
                 </Link>
             ) : (
-                <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
+                <Popover content={<UserHoverCard user={record.user!} />} title="Краткая информация" trigger="hover">
                     <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
-                    <Link href={`/control-panel/users/${record.user.id}`} className="hover:text-blue-500">
+                    <Link href={`/control-panel/users/${record.user?.id}`} className="hover:text-blue-500">
                         {`${record.user?.second_name ?? ''} ${record.user?.first_name ?? ''} ${record.user?.last_name ?? ''}`}
                     </Link>
                 </Popover>
@@ -115,14 +115,14 @@ export const taskColumns = ({ handleChangeComponent, handleDeleteComponent, curr
                     <Button
                         type="default"
                         icon={<EditOutlined />}
-                        onClick={() => handleChangeComponent(record)}
+                        onClick={() => handleChangeComponentById(record.id)}
                     />
                 </Tooltip>
                 <Popconfirm
                     title="Удалить компонент?"
                     description="Вы уверены, что хотите удалить этот компонент? Это действие нельзя будет отменить."
                     okText="Да"
-                    onConfirm={() => handleDeleteComponent(record.id)}
+                    onConfirm={() => handleDeleteComponentById(record.id)}
                     cancelText="Нет"
                 >
                     <Button

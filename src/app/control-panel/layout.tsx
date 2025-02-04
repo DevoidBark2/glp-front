@@ -73,7 +73,7 @@ let dashboardMenuItems: MenuItem[] = [
             },
             {
                 key: 'tasks',
-                label: <Link href={"/control-panel/tasks"}>Компоненты</Link>,
+                label: <Link href={"/control-panel/components"}>Компоненты</Link>,
                 icon: <BarsOutlined />,
             },
             {
