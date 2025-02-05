@@ -1,6 +1,6 @@
-import {Course, CourseComponentTypeI} from "../course/model";
-import {User} from "@/shared/api/user/model";
-import {CourseComponent} from "@/shared/api/component/model";
+import { Course, CourseComponentTypeI } from "../course/model";
+import { User } from "@/shared/api/user/model";
+import { CourseComponent } from "@/shared/api/component/model";
 
 export enum StatusSectionEnum {
     ACTIVE = 'active',
@@ -16,7 +16,7 @@ export type FileSectionType = {
 export type SectionCourse = {
     id: number;
     name: string;
-    small_description:string,
+    small_description: string,
     components: CourseComponentTypeI[],
     files: FileSectionType[],
     links: string[],
@@ -39,7 +39,7 @@ export type SectionCourseItem = {
 export type SectionComponentTask = {
     id: number;
     sort: number;
-    section: CourseComponent
+    componentTask: CourseComponent
 }
 
 

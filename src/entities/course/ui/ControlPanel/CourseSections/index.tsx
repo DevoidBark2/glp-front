@@ -26,6 +26,10 @@ export const CourseSections = observer(() => {
         });
     }
 
+    const handleDeleteComponent = (sectionId: number, id: string) => {
+        debugger
+    }
+
 
     const columns: TableColumnsType<CourseComponent> = [
         {
@@ -64,7 +68,7 @@ export const CourseSections = observer(() => {
                     <Button
                         type="default"
                         icon={<EditOutlined />}
-                        onClick={() => handleChangeSection(record.id)}
+                    //onClick={() => handleChangeSection(record.id)}
                     />
                 </Tooltip>
                 <Popconfirm
@@ -94,6 +98,7 @@ export const CourseSections = observer(() => {
                 pagination={{ pageSize: 20 }}
                 expandable={{
                     expandedRowRender: (record) => {
+                        debugger
                         return <div className="bg-gray-100 rounded p-4">
                             <div className="mb-4">
                                 <h3 className="text-lg font-semibold">Компоненты</h3>
@@ -118,13 +123,13 @@ export const CourseSections = observer(() => {
                                                             <div
                                                                 className="flex items-center justify-between">
                                                                 <h4 className="font-medium text-xl text-gray-800 mb-2">
-                                                                    {component.section.title || "Нет заголовка"}
+                                                                    {component.componentTask.title || "Нет заголовка"}
                                                                 </h4>
                                                                 <Button
                                                                     icon={<DeleteOutlined />}
                                                                     type="primary"
                                                                     danger
-                                                                // onClick={() => handleDeleteComponent(component.id)}
+                                                                    onClick={() => handleDeleteComponent(component.id, component.componentTask?.id)}
                                                                 />
                                                             </div>
                                                             <div
@@ -134,21 +139,21 @@ export const CourseSections = observer(() => {
                                                                     Тип:
                                                                     <Tag
                                                                         className="ml-2"
-                                                                        icon={typeIcons[component.section.type]}>
-                                                                        <span>{component.section.type}</span>
+                                                                        icon={typeIcons[component.componentTask.type]}>
+                                                                        <span>{component.componentTask.type}</span>
                                                                     </Tag>
                                                                 </span>
                                                                 <span
                                                                     className="block mb-1">
                                                                     Статус:
                                                                     <Tag
-                                                                        color={component.section.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}
+                                                                        color={component.componentTask.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}
                                                                     >
-                                                                        {component.section.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
+                                                                        {component.componentTask.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
                                                                     </Tag>
                                                                 </span>
                                                                 <span>
-                                                                    Создано: {dayjs(component.section.created_at).format(FORMAT_VIEW_DATE)}
+                                                                    Создано: {dayjs(component.componentTask.created_at).format(FORMAT_VIEW_DATE)}
                                                                 </span>
                                                             </div>
                                                         </div>)}

@@ -176,6 +176,7 @@ class CourseStore {
 
     getCourseDetailsSections = action(async (courseId: number) => {
         await getCourseDetailsSections(courseId).then(response => {
+            debugger
             this.setCourseDetailsSections(response);
         })
 

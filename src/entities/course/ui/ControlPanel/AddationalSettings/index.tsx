@@ -1,15 +1,16 @@
 import { useMobxStores } from "@/shared/store/RootStore";
-import {Button, FormInstance, List, notification, Radio} from "antd";
+import { Button, Empty, FormInstance, List, notification, Radio } from "antd";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import {Exam} from "@/shared/api/exams/model";
+import { Exam } from "@/shared/api/exams/model";
+import Link from "next/link";
 
 interface AddationalSettingsProps {
     form: FormInstance
 }
 
-export const AddationalSettings = observer(({form}: AddationalSettingsProps) => {
+export const AddationalSettings = observer(({ form }: AddationalSettingsProps) => {
     const { courseId } = useParams();
     const { examStore } = useMobxStores()
     const [selectedExam, setSelectedExam] = useState<Exam | null>(form.getFieldValue('exam'));
@@ -33,7 +34,7 @@ export const AddationalSettings = observer(({form}: AddationalSettingsProps) => 
                 чтобы подтвердить выбор.
             </p>
 
-            <List
+            {examStore.exams.length > 0 ? <List
                 bordered
                 dataSource={examStore.exams}
                 renderItem={(exam) => (
@@ -63,7 +64,9 @@ export const AddationalSettings = observer(({form}: AddationalSettingsProps) => 
                         </div>
                     </List.Item>
                 )}
-            />
+            /> : <Empty
+                description={<Link href="/control-panel/exams/add"><Button type="primary">Создать экзамен</Button></Link>}
+            />}
 
             <Button
                 type="primary"
