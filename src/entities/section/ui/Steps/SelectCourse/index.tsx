@@ -1,21 +1,20 @@
 "use client"
 import { Button, Empty, Form, List } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
 import { CourseMiniCard } from "@/entities/course/ui/CourseMiniCard";
 import { FormInstance } from "antd/lib";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { useMobxStores } from "@/shared/store/RootStore";
+import {SectionCourseItem} from "@/shared/api/section/model";
 
 interface SelectCourseProps {
-    createSectionForm: FormInstance
+    createSectionForm: FormInstance<SectionCourseItem>
 }
 
 export const SelectCourse = observer(({ createSectionForm }: SelectCourseProps) => {
     const { courseStore } = useMobxStores();
-    const router = useRouter();
 
     useEffect(() => {
         courseStore.getCoursesByUser();

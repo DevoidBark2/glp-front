@@ -96,8 +96,6 @@ const ExamsPage = observer(() => {
                         <Button
                             type="default"
                             icon={<EditOutlined />}
-                            // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
-                            // onClick={() => handleChangePost(record.id)}
                         />
                     </Tooltip>
 
@@ -113,7 +111,6 @@ const ExamsPage = observer(() => {
                                 danger
                                 type="primary"
                                 icon={<DeleteOutlined />}
-                                // disabled={record.user.role !== UserRole.SUPER_ADMIN && record.status === PostStatusEnum.IN_PROCESSING}
                             />
                         </Popconfirm>
                     </Tooltip>

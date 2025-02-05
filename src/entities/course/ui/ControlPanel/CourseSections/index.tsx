@@ -3,25 +3,16 @@ import { CourseComponent, StatusCourseComponentEnum } from "@/shared/api/compone
 import { FORMAT_VIEW_DATE } from "@/shared/constants"
 import { useMobxStores } from "@/shared/store/RootStore";
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Divider, Empty, message, notification, Popconfirm, Table, TableColumnsType, Tag, Tooltip } from "antd"
+import { Button, Divider, Empty, notification, Popconfirm, Table, TableColumnsType, Tag, Tooltip } from "antd"
 import dayjs from "dayjs";
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
 
 export const CourseSections = observer(() => {
     const { courseStore, sectionCourseStore } = useMobxStores()
     const router = useRouter()
-
-
-    const [isCourseLocked, setIsCourseLocked] = useState(false);
-
-    const handleLockToggle = (checked: boolean) => {
-        setIsCourseLocked(checked);
-        message.success(`Курс ${checked ? 'заблокирован' : 'разблокирован'}`);
-    };
 
 
     const handleChangeSection = (id: number) => {
@@ -80,7 +71,7 @@ export const CourseSections = observer(() => {
                     title="Удалить компонент?"
                     description="Вы уверены, что хотите удалить этот компонент? Это действие нельзя будет отменить."
                     okText="Да"
-                    onConfirm={() => handleDeleteSection(record.id)}
+                    //onConfirm={() => handleDeleteSection(record.id)}
                     cancelText="Нет"
                 >
                     <Button
@@ -127,7 +118,7 @@ export const CourseSections = observer(() => {
                                                             <div
                                                                 className="flex items-center justify-between">
                                                                 <h4 className="font-medium text-xl text-gray-800 mb-2">
-                                                                    {component.componentTask.title || "Нет заголовка"}
+                                                                    {component.section.title || "Нет заголовка"}
                                                                 </h4>
                                                                 <Button
                                                                     icon={<DeleteOutlined />}
@@ -143,21 +134,21 @@ export const CourseSections = observer(() => {
                                                                     Тип:
                                                                     <Tag
                                                                         className="ml-2"
-                                                                        icon={typeIcons[component.componentTask.type]}>
-                                                                        <span>{component.componentTask.type}</span>
+                                                                        icon={typeIcons[component.section.type]}>
+                                                                        <span>{component.section.type}</span>
                                                                     </Tag>
                                                                 </span>
                                                                 <span
                                                                     className="block mb-1">
                                                                     Статус:
                                                                     <Tag
-                                                                        color={component.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}
+                                                                        color={component.section.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}
                                                                     >
-                                                                        {component.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
+                                                                        {component.section.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
                                                                     </Tag>
                                                                 </span>
                                                                 <span>
-                                                                    Создано: {dayjs(component.componentTask.created_at).format(FORMAT_VIEW_DATE)}
+                                                                    Создано: {dayjs(component.section.created_at).format(FORMAT_VIEW_DATE)}
                                                                 </span>
                                                             </div>
                                                         </div>)}

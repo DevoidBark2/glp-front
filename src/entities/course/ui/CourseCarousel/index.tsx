@@ -2,7 +2,7 @@ import { Course } from "@/shared/api/course/model";
 import { Card, Carousel, Col, Row, Skeleton, Grid } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'; // Импортируем иконки стрелок
 import { observer } from "mobx-react";
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { CourseItem } from "../CourseItem";
 
 const { useBreakpoint } = Grid;
@@ -24,55 +24,62 @@ export const CourseCarousel: FC<CourseCarouselProps> = observer(({ courses, load
     }, [screens, courses.length]);
 
     return (
-        <div className="mt-8">
-            {!loading && courses.length < 1 ? (
-                <Row gutter={[16, 16]}>
-                    {Array.from({ length: 4 }).map((_, index) => (
-                        <Col key={index} xs={24} sm={12} md={8} lg={6}>
-                            <Card className="rounded-lg shadow-md">
-                                <div className="flex-shrink-0 w-full h-36 mr-4 bg-gray-200 rounded-lg overflow-hidden"></div>
-                                <Skeleton active paragraph={{ rows: 1 }} title style={{ marginTop: 10 }} />
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            ) : isCarouselRequired ? ( // Показываем карусель, если нужно
-                <Carousel
-                    autoplay={false} // Убираем автопрокрутку
-                    arrows // Включаем стрелки для перемещения
-                    slidesToShow={4}
-                    className="rounded-lg overflow-hidden"
-                    nextArrow={<ArrowRightOutlined size={100} />} prevArrow={<ArrowLeftOutlined size={100} />}
-                    responsive={[
-                        {
-                            breakpoint: 1300, // На экранах от 1200px показываем 3 элемента
-                            settings: { slidesToShow: 3 }
-                        },
-                        {
-                            breakpoint: 1050, // На экранах от 1200px показываем 3 элемента
-                            settings: { slidesToShow: 2 }
-                        },
-                        {
-                            breakpoint: 768, // На экранах до 768px показываем 1 элемент
-                            settings: { slidesToShow: 1 }
-                        },
-                    ]}
-                >
-                    {courses.map((course) => (
-                        <div key={course.id} className="p-2">
-                            <CourseItem course={course} />
-                        </div>
-                    ))}
-                </Carousel>
-            ) : (
-                <Row gutter={[16, 16]}>
-                    {courses.slice(0, 4).map((course) => ( // Показываем только первые 4 курса
-                        <Col key={course.id} xs={24} sm={12} md={8} lg={6}>
-                            <CourseItem course={course} />
-                        </Col>
-                    ))}
-                </Row>
-            )}
+        <div className="mb-12 mt-12">
+            <h2 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">Популярные
+                курсы</h2>
+            <div className="mt-8">
+                {/*&& courses.length < 1*/}
+                {loading ? (
+                    <Row gutter={[16, 16]}>
+                        {Array.from({length: 4}).map((_, index) => (
+                            <Col key={index} xs={24} sm={12} md={8} lg={6}>
+                                <Card className="rounded-lg shadow-md">
+                                    <div
+                                        className="flex-shrink-0 w-full h-36 mr-4 bg-gray-200 rounded-lg overflow-hidden"></div>
+                                    <Skeleton active paragraph={{rows: 1}} title style={{marginTop: 10}}/>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+                ) : isCarouselRequired ? ( // Показываем карусель, если нужно
+                    <Carousel
+                        autoplay={false} // Убираем автопрокрутку
+                        arrows // Включаем стрелки для перемещения
+                        slidesToShow={4}
+                        className="rounded-lg overflow-hidden"
+                        nextArrow={<ArrowRightOutlined size={100}/>} prevArrow={<ArrowLeftOutlined size={100}/>}
+                        responsive={[
+                            {
+                                breakpoint: 1300, // На экранах от 1200px показываем 3 элемента
+                                settings: {slidesToShow: 3}
+                            },
+                            {
+                                breakpoint: 1050, // На экранах от 1200px показываем 3 элемента
+                                settings: {slidesToShow: 2}
+                            },
+                            {
+                                breakpoint: 768, // На экранах до 768px показываем 1 элемент
+                                settings: {slidesToShow: 1}
+                            },
+                        ]}
+                    >
+                        {courses.map((course) => (
+                            <div key={course.id} className="p-2">
+                                <CourseItem course={course}/>
+                            </div>
+                        ))}
+                    </Carousel>
+                ) : (
+                    <Row gutter={[16, 16]}>
+                        {courses.slice(0, 4).map((course) => ( // Показываем только первые 4 курса
+                            <Col key={course.id} xs={24} sm={12} md={8} lg={6}>
+                                <CourseItem course={course}/>
+                            </Col>
+                        ))}
+                    </Row>
+                )}
+            </div>
         </div>
+
     );
 });

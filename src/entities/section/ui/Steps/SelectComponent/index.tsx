@@ -10,6 +10,7 @@ import Link from "next/link";
 import { FormInstance } from "antd/lib";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
+import {renderType} from "@/shared/lib/course/course.lib";
 
 interface SelectComponentProps {
     createSectionForm: FormInstance
@@ -18,25 +19,11 @@ interface SelectComponentProps {
 export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => {
     const { courseComponentStore } = useMobxStores();
 
-    const renderType = (type: CourseComponentType) => {
-        switch (type) {
-            case CourseComponentType.Text:
-                return <Tag color="cyan">Текст</Tag>;
-            case CourseComponentType.Quiz:
-                return <Tag color="green">Квиз</Tag>;
-            case CourseComponentType.Coding:
-                return <Tag color="purple">Программирование</Tag>;
-            default:
-                return <Tag color="default">Неизвестно</Tag>;
-        }
-    };
     const handleSearch = (value: string) => {
         if (value && value.length > 2) {
             courseComponentStore.searchComponents(value);
         }
     };
-
-
 
     const typeIcons = {
         [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
@@ -56,16 +43,22 @@ export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => 
 
     const handleSelect = (value: string, option: any) => {
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === option.key);
+
         if (selectedComponent) {
+            // Добавляем компонент в store
             courseComponentStore.addComponentToTableForSection(selectedComponent);
-            const currentComponentIds = createSectionForm.getFieldValue('components') || [];
 
-            const updatedComponentIds = [...currentComponentIds, selectedComponent.id];
+            // Получаем текущие компоненты из формы (массив объектов)
+            const currentComponents = createSectionForm.getFieldValue('components') || [];
 
-            // Обновляем значение в форме только с массивом ID
-            createSectionForm.setFieldsValue({ components: updatedComponentIds });
+            // Добавляем новый объект компонента в массив
+            const updatedComponents = [...currentComponents, selectedComponent];
+
+            // Обновляем форму с полным массивом объектов
+            createSectionForm.setFieldsValue({ components: updatedComponents });
         }
     };
+
 
 
 

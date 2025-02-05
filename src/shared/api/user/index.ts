@@ -1,5 +1,5 @@
 import { axiosInstance } from "../http-client"
-import { StatusUserEnum, UserRole } from "./model";
+import {StatusUserEnum, User, UserRole} from "./model";
 import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
 
 type ChangeUserRoleDto = {
@@ -57,7 +57,7 @@ export const searchUsers = async (query: string) => {
 }
 
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (): Promise<User[]> => {
     const data = (await axiosInstance.get(`api/users`)).data
 
     return data.data

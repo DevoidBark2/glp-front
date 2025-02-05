@@ -1,10 +1,8 @@
 "use client"
-import { Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, Checkbox, InputNumber } from "antd";
+import { Divider, Input, Form, Button, Switch, Tabs, Select, Spin, Tooltip, InputNumber } from "antd";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { useState } from "react";
-import nextConfig from "next.config.mjs";
 import { GeneralSettingTooltips } from "@/shared/constants";
 import {useMobxStores} from "@/shared/store/RootStore";
 
@@ -15,18 +13,16 @@ const SettingsControlPage = () => {
     const [formForUserManagement] = Form.useForm()
     const [formForCourseManagement] = Form.useForm()
     const [formForSec] = Form.useForm()
-    const [uploadedLogo, setUploadedLogo] = useState<string | null>(null)
 
     useEffect(() => {
-        // generalSettingsStore.getGeneralSettings().then((response) => {
-        //     formForSec.setFieldsValue(response[0])
-        //     formForGeneral.setFieldsValue(response[0])
-        //     setUploadedLogo(response[0].logo_url ? `${nextConfig.env?.API_URL}${response[0].logo_url}` : null)
-        //     formForUserManagement.setFieldsValue(response[0])
-        //     formForCourseManagement.setFieldsValue(response[0])
-        // }).finally(() => {
-        //     generalSettingsStore.setLoading(false)
-        // });
+        generalSettingsStore.getGeneralSettings().then((response) => {
+            formForSec.setFieldsValue(response[0])
+            formForGeneral.setFieldsValue(response[0])
+            formForUserManagement.setFieldsValue(response[0])
+            formForCourseManagement.setFieldsValue(response[0])
+        }).finally(() => {
+            generalSettingsStore.setLoading(false)
+        });
     }, []);
 
     return (

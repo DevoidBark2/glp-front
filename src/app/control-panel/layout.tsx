@@ -72,7 +72,7 @@ let dashboardMenuItems: MenuItem[] = [
                 icon: <BarsOutlined />,
             },
             {
-                key: 'tasks',
+                key: 'components',
                 label: <Link href={"/control-panel/components"}>Компоненты</Link>,
                 icon: <BarsOutlined />,
             },
@@ -165,7 +165,7 @@ let dashboardMenuItems: MenuItem[] = [
     {
         key: "manual",
         label: <Link href={"/control-panel/manual"}>Руководство пользователя</Link>,
-        icon: <LogoutOutlined />,
+        icon: <BookOutlined />,
     },
     {
         key: 'platform',

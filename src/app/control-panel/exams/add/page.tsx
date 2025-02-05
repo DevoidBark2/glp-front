@@ -11,7 +11,8 @@ import { typeIcons } from "@/columnsTables/taskColumns";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import {useRouter} from "next/navigation";
-import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {renderType} from "@/shared/lib/course/course.lib";
 
 const ExamAddPage = observer(() => {
     const { courseComponentStore, examStore } = useMobxStores();
@@ -34,19 +35,6 @@ const ExamAddPage = observer(() => {
     const handleSearch = (value: string) => {
         if (value && value.length > 2) {
             courseComponentStore.searchComponents(value);
-        }
-    };
-
-    const renderType = (type: CourseComponentType) => {
-        switch (type) {
-            case CourseComponentType.Text:
-                return <Tag color="cyan">Текст</Tag>;
-            case CourseComponentType.Quiz:
-                return <Tag color="green">Квиз</Tag>;
-            case CourseComponentType.Coding:
-                return <Tag color="purple">Программирование</Tag>;
-            default:
-                return <Tag color="default">Неизвестно</Tag>;
         }
     };
 

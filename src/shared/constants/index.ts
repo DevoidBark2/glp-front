@@ -46,9 +46,9 @@ export const FILTER_STATUS_USER = [
 ]
 
 export const LEVEL_COURSE = [
-    { id: 1, title: 'Начинающий' },
-    { id: 2, title: 'Средний' },
-    { id: 3, title: 'Высокий' },
+    { id: 0, title: 'Начинающий' },
+    { id: 1, title: 'Средний' },
+    { id: 2, title: 'Высокий' },
 ]
 export const userRoleColors = {
     [UserRole.STUDENT]: "blue",

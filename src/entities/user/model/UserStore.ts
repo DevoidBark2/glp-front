@@ -132,7 +132,7 @@ class UserStore {
     getUsers = action(async () => {
         this.setLoading(true)
         await getAllUsers().then(response => {
-            this.setAllUsers(response.response.data.map(usersMapper))
+            this.setAllUsers(response.map(usersMapper))
         }).finally(() => this.setLoading(false))
     })
 

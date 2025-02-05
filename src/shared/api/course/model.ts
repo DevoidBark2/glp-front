@@ -101,7 +101,6 @@ export type UserAnswer = {
 
 export type Course = {
     id: number;
-    courseId: number;
     name: string;
     image: string;
     category: Category;

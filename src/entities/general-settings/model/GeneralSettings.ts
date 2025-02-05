@@ -27,8 +27,8 @@ class GeneralSettings {
         try {
             this.setLoading(true);
             const data = await getGeneralSettings()
-
             this.setGeneralSetting(data[0])
+            return data
         } finally {
             this.setLoading(false);
         }

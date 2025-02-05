@@ -15,7 +15,7 @@ export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniC
 
     const handleSelectCourse = (course:Course) => {
         courseStore.setSelectedCourse(course.id)
-        createSectionForm.setFieldsValue({ course: course.id });
+        createSectionForm.setFieldsValue({ course: course });
     }
 
     const renderLevelCourse = (levelCourse: number) => {

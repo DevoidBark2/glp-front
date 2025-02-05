@@ -2,6 +2,7 @@ import {action, makeAutoObservable, runInAction} from "mobx";
 import {Course, CourseComponentTypeI} from "@/shared/api/course/model";
 import {StatusSectionEnum} from "@/shared/api/section/model";
 import {
+    changeSection,
     createMainSection,
     createSection,
     deleteSectionCourse,
@@ -69,12 +70,17 @@ class SectionStore {
         });
     })
 
+    updateSection = action(async (values: SectionCourseItem) => {
+        this.setCreateSectionLoading(true);
+        return await changeSection(values)
+    })
+
     deleteSection = action(async (id: number) => {
         this.sectionCourse = this.sectionCourse.filter(section => section.id !== id);
         return await deleteSectionCourse(id);
     })
 
-    getMenuSections = action (async (id: number) => {
+    getCourseSectionById = action (async (id: number) => {
         return await getSectionCourseById(id);
     })
 

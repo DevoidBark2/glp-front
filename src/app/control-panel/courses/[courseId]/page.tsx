@@ -73,7 +73,7 @@ const CoursePage = () => {
                         {
                             key: '4',
                             label: 'Дополнительные параметры',
-                            children: <AddationalSettings />,
+                            children: <AddationalSettings form={form}/>,
                         }
                     ]}
             />

@@ -5,20 +5,26 @@ import { observer } from "mobx-react"
 import Link from "next/link"
 import { FormSteps } from "@/entities/section/ui"
 import { useParams } from "next/navigation"
-import { useEffect } from "react"
+import {useEffect, useState} from "react"
 import {useMobxStores} from "@/shared/store/RootStore";
+import {SectionCourseItem} from "@/shared/api/section/model";
 
 const SectionDetailsPage = () => {
-    const { sectionCourseStore } = useMobxStores();
-    const [sectionCourseForm] = Form.useForm();
+    const { sectionCourseStore, courseStore, courseComponentStore } = useMobxStores();
+    const [sectionCourseForm] = Form.useForm<SectionCourseItem>();
+    const [sectionName, setSectionName] = useState("");
     const {sectionId} = useParams();
     
 
     useEffect(() => {
-        sectionCourseStore.getMenuSections(Number(sectionId)).then(response => {
-            sectionCourseForm.setFieldsValue(response);
+        sectionCourseStore.getCourseSectionById(Number(sectionId)).then(response => {
+            setSectionName(response.name)
+            courseStore.setSelectedCourse(response.course.id)
+            sectionCourseForm.setFieldsValue(response)
+            sectionCourseForm.setFieldValue("components",response.sectionComponents.map(it => it.componentTask));
+            courseComponentStore.setSelectedComponent(response.sectionComponents.map(it => it.componentTask))
         });
-    },[sectionId])
+    },[sectionId, sectionCourseForm])
 
     return (
         <PageContainerControlPanel>
@@ -28,7 +34,7 @@ const SectionDetailsPage = () => {
                         title: <Link href={"/control-panel/sections"}>Доступные разделы</Link>,
                     },
                     {
-                        title: <span>Новый раздел</span>,
+                        title: <span>{sectionName}</span>,
                     },
                 ]}
             />

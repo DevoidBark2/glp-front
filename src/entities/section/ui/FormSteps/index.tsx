@@ -5,24 +5,25 @@ import { observer } from "mobx-react";
 import { SelectCourse, General, SelectComponent } from "../Steps";
 import { FormInstance } from "antd/lib";
 import { useMobxStores } from "@/shared/store/RootStore";
+import {SectionCourseItem} from "@/shared/api/section/model";
 
 interface FormStepsProps {
-    sectionCourseForm?: FormInstance
+    sectionCourseForm?: FormInstance<SectionCourseItem>,
 }
 
 export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
     const { courseStore, courseComponentStore, sectionCourseStore } = useMobxStores();
-    const [createSectionForm] = Form.useForm();
+    const [createSectionForm] = Form.useForm<SectionCourseItem>();
     const [current, setCurrent] = useState(0);
     const router = useRouter();
 
     const steps = [
         {
             title: "Выбор курса",
-            content: <SelectCourse createSectionForm={createSectionForm} />,
+            content: <SelectCourse createSectionForm={sectionCourseForm ?? createSectionForm} />,
         },
         General(),
-        SelectComponent({ createSectionForm: createSectionForm })
+        SelectComponent({ createSectionForm: sectionCourseForm ? sectionCourseForm: createSectionForm })
     ];
 
     const next = async () => {
@@ -40,27 +41,43 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
     };
     const prev = () => setCurrent(current - 1);
 
-    const onFinish = () => {
-        const values = createSectionForm.getFieldsValue(true)
+    const onFinish = async () => {
+        const values: SectionCourseItem = sectionCourseForm
+            ? sectionCourseForm.getFieldsValue(true)
+            : createSectionForm.getFieldsValue(true);
+
         if (!values.components || values.components.length === 0) {
-            message.warning("Добавь хотя бы один компонент в раздел!")
+            message.warning("Добавьте хотя бы один компонент в раздел!");
             return;
         }
-        sectionCourseStore.addSection(values).then((response) => {
-            router.push("/control-panel/sections");
-            notification.success({ message: response.message })
-            courseStore.setSelectedCourse(null);
-            courseComponentStore.setSearchResult([]);
-            courseComponentStore.setSelectedComponent([]);
-        }).catch(e => {
-            notification.error({ message: e.response.data.message })
-        }).finally(() => {
-            sectionCourseStore.setCreateSectionLoading(false);
-        })
+
+        if (sectionCourseForm) {
+            await sectionCourseStore.updateSection(values).then(response => {
+                debugger
+                notification.success({message: response.message})
+            }).finally(() => {
+                sectionCourseStore.setCreateSectionLoading(false);
+            })
+        }
+        else {
+            debugger
+            sectionCourseStore.addSection(values).then((response) => {
+                router.push("/control-panel/sections");
+                notification.success({ message: response.message })
+                courseStore.setSelectedCourse(null);
+                courseComponentStore.setSearchResult([]);
+                courseComponentStore.setSelectedComponent([]);
+            }).catch(e => {
+                notification.error({ message: e.response.data.message })
+            }).finally(() => {
+                sectionCourseStore.setCreateSectionLoading(false);
+            })
+        }
     };
 
+
     return (
-        <Form form={sectionCourseForm ?? createSectionForm} initialValues={sectionCourseForm} onFinish={onFinish} layout="vertical">
+        <Form form={sectionCourseForm ?? createSectionForm} onFinish={onFinish} layout="vertical">
             <Steps current={current}>
                 {steps.map((item) => (
                     <Steps.Step key={item.title} title={item.title} />
@@ -80,7 +97,7 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
                 )}
                 {current === steps.length - 1 && (
                     <Button type="primary" htmlType="submit" loading={sectionCourseStore.createSectionLoading}>
-                        Создать
+                        {sectionCourseForm ? "Изменить" : "Создать"}
                     </Button>
                 )}
             </div>
