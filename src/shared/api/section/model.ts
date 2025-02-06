@@ -22,6 +22,12 @@ export type SectionCourse = {
     links: string[],
 }
 
+export type ParentSection = {
+    id: number;
+    title: string;
+    sort: number;
+}
+
 export type SectionCourseItem = {
     id: number;
     name: string;
@@ -33,6 +39,8 @@ export type SectionCourseItem = {
     user: User
     status: StatusSectionEnum;
     sectionComponents: SectionComponentTask[]
+    parentSection: ParentSection
+    sort_number: number
     created_at: Date
 }
 

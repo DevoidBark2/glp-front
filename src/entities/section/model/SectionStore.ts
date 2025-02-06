@@ -93,6 +93,7 @@ class SectionStore {
         this.mainSections = [...this.mainSections, data.data];
         return data
     })
+
 }
 
 const sectionMapper = (section: SectionCourseItem) => {

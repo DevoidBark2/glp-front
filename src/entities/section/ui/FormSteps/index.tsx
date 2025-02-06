@@ -53,14 +53,12 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
 
         if (sectionCourseForm) {
             await sectionCourseStore.updateSection(values).then(response => {
-                debugger
                 notification.success({message: response.message})
             }).finally(() => {
                 sectionCourseStore.setCreateSectionLoading(false);
             })
         }
         else {
-            debugger
             sectionCourseStore.addSection(values).then((response) => {
                 router.push("/control-panel/sections");
                 notification.success({ message: response.message })

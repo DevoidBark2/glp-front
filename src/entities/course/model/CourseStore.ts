@@ -25,6 +25,7 @@ import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } 
 import { SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
+import {updateComponentOrder} from "@/shared/api/component";
 
 class CourseStore {
     constructor() {
@@ -143,7 +144,6 @@ class CourseStore {
     })
 
     createCourse = action(async (values: any) => {
-        debugger
         this.setLoadingCreateCourse(true)
         return await createCourse(values).catch(e => {
             notification.error({ message: e.response.data.message })
@@ -176,7 +176,6 @@ class CourseStore {
 
     getCourseDetailsSections = action(async (courseId: number) => {
         await getCourseDetailsSections(courseId).then(response => {
-            debugger
             this.setCourseDetailsSections(response);
         })
 
@@ -333,6 +332,22 @@ class CourseStore {
     handleCheckSecretKey = action(async (value: string, courseId: number) => {
         return await handleCheckCourseSecretKey(value, courseId)
     })
+
+    updateSectionComponentsOrder = action((sectionId: number, updatedComponents: any[]) => {
+        const sectionIndex = this.courseDetailsSections.findIndex(section => section.id === sectionId);
+
+        if (sectionIndex === -1) return;
+
+        // Обновляем порядок компонентов в указанном разделе
+        this.courseDetailsSections[sectionIndex].sectionComponents = updatedComponents;
+
+        // Принудительно обновляем состояние MobX (если используешь makeAutoObservable, это нужно)
+        this.courseDetailsSections = [...this.courseDetailsSections];
+    })
+
+    updateComponentOrder = action(async (sectionId: number, components: { id: number; sort: number }[]) => {
+        return await updateComponentOrder(sectionId, components)
+    });
 
 }
 
