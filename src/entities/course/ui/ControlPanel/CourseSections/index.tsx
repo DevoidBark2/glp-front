@@ -1,74 +1,46 @@
-import { typeIcons } from "@/columnsTables/taskColumns";
-import { StatusCourseComponentEnum } from "@/shared/api/component/model"
-import { FORMAT_VIEW_DATE } from "@/shared/constants"
+"use client"
 import { useMobxStores } from "@/shared/store/RootStore";
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import {
-    Button,
-    Divider,
-    Empty,
-    InputNumber,
-    notification,
-    Popconfirm,
-    Table,
-    TableColumnsType,
-    Tag,
-    Tooltip
-} from "antd"
-import dayjs from "dayjs";
-import { observer } from "mobx-react"
-import Link from "next/link"
+import {Button, InputNumber, notification, Popconfirm, Table, TableColumnsType, Tooltip} from "antd";
+import { observer } from "mobx-react";
 import { useRouter } from "next/navigation";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
-import {ParentSection, SectionCourseItem} from "@/shared/api/section/model";
+import { SectionCourseItem } from "@/shared/api/section/model";
+import { DragAndDropComponents } from "@/entities/course/ui";
+import {ArrowRightOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import React from "react";
 
 export const CourseSections = observer(() => {
-    const { courseStore, sectionCourseStore } = useMobxStores()
-    const router = useRouter()
-
+    const { courseStore, sectionCourseStore } = useMobxStores();
+    const router = useRouter();
 
     const handleChangeSection = (id: number) => {
-        router.push(`/control-panel/sections/${id}`)
-    }
+        router.push(`/control-panel/sections/${id}`);
+    };
 
     const handleDeleteSection = (id: number) => {
         sectionCourseStore.deleteSection(id).then(response => {
-            courseStore.courseDetailsSections.filter(it => it.id !== id);
+            courseStore.courseDetailsSections = courseStore.courseDetailsSections.filter(it => it.id !== id);
             notification.success({ message: response.message });
         });
-    }
+    };
 
-    const handleDeleteComponent = (sectionId: number, id: string) => {
-
-    }
+    const handleDeleteComponent = (componentId: string, sectionId: number) => {};
 
     const handleSortChange = (value: number, record: SectionCourseItem) => {
         if (value < 0) return;
 
-        // Обновляем sort_number у текущего элемента
-        const updatedSections = [...courseStore.courseDetailsSections].map((section) =>
-            section.id === record.id ? {...section, sort_number: value} : section
+        const updatedSections = courseStore.courseDetailsSections.map(section =>
+            section.id === record.id ? { ...section, sort_number: value } : section
         );
 
-        // Сортируем по новому значению sort_number
         updatedSections.sort((a, b) => (a.sort_number || 0) - (b.sort_number || 0));
-
-        // Обновляем store
         courseStore.setCourseDetailsSections(updatedSections);
+    };
 
-        // Отправляем изменения на бэкенд
-        // courseStore.updateSectionSortOrder({
-        //     sectionId: record.id,
-        //     sort_number: value
-        // }).catch((e) => {
-        //     notification.error({message: e.response?.data?.message || "Ошибка обновления сортировки"});
-        // });
-    }
     const handleDragDropComponent = (result: any, record: SectionCourseItem) => {
         if (!result.destination) return;
 
         const sectionId = record.id;
-        const updatedComponents = Array.from(record.sectionComponents);
+        const updatedComponents = [...record.sectionComponents];
         const [movedComponent] = updatedComponents.splice(result.source.index, 1);
         updatedComponents.splice(result.destination.index, 0, movedComponent);
 
@@ -84,164 +56,174 @@ export const CourseSections = observer(() => {
         }))).catch((e) => {
             notification.error({ message: e.response.data.message });
         });
-    }
+    };
 
     const groupedSections = courseStore.courseDetailsSections.reduce((acc, section) => {
-        const parentTitle = section.parentSection?.title || "Без родителя";
+        const parentId = section.parentSection?.id;
+        const parentTitle = section.parentSection?.title;
+        const parentSort = section.sort_number;
+        debugger
 
-        if (!acc[parentTitle]) {
-            acc[parentTitle] = [];
+        if (!acc[parentId]) {
+            acc[parentId] = {
+                id: parentId,
+                title: parentTitle,
+                sections: [],
+                sort_number: parentSort
+            };
         }
 
-        acc[parentTitle].push(section);
+        acc[parentId].sections.push({
+            ...section,
+            sectionComponents: section.sectionComponents,
+        });
+
         return acc;
-    }, {} as Record<string, SectionCourseItem[]>);
+    }, {} as Record<string, { id: number | string; title: string; sections: SectionCourseItem[]; sort_number: number }>);
 
-    const parentColumns: TableColumnsType<SectionCourseItem> = [
+    const parentColumns: TableColumnsType<{ id: number | string; title: string; sections: SectionCourseItem[], sort_number: number }> = [
         {
-            title: 'Сортировка',
-            dataIndex: 'sort_number',
-            key: 'sort_number',
-            sorter: (a, b) => (a.sort_number || 0) - (b.sort_number || 0),
-            width: '10%',
-            render: (_, record) => {
-                debugger
-                return <strong>{record.sort_number ?? "—"}</strong>
-            },
-        },
-        {
-            title: 'Родительский раздел',
-            dataIndex: 'parentTitle',
-            key: 'parentTitle',
-            width: '30%',
-            render: (title) => {
-                debugger
-                return <strong>{title}</strong>
-            },
-        },
-    ];
-
-    const sectionColumns: TableColumnsType<SectionCourseItem> = [
-        {
-            title: 'Сортировка',
-            dataIndex: 'sort_number',
-            key: 'sort_number',
-            sorter: (a, b) => (a.sort_number || 0) - (b.sort_number || 0),
-            width: '10%',
+            title: "Сортировка",
+            dataIndex: "sort_number",
+            width:"5%",
+            key: "sort_number",
+            showSorterTooltip: false,
+            sorter: (a, b) => a.sort_number - b.sort_number,
             render: (_, record) => (
-                <InputNumber min={0} value={record.sort_number || 0} onChange={(value) => handleSortChange(value, record)} />
+                <InputNumber
+                    min={0}
+                    value={record.sort_number || 0}
+                    onBlur={(e) => handleSortChangeParent(Number(e.target.value), record)}
+                />
             ),
         },
         {
-            title: 'Название раздела',
-            dataIndex: 'name',
-            key: 'name',
-            sorter: (a, b) => a.name.localeCompare(b.name),
-            width: '30%',
+            title: "Родительский раздел",
+            dataIndex: "title",
+            key: "title",
+            render: (title) => <strong>{title}</strong>,
         },
         {
-            title: 'Описание',
-            dataIndex: 'description',
-            key: 'description',
-            width: '40%',
-            render: (description) =>
-                description?.length > 30 ? `${description.slice(0, 30)}...` : description || <span className="text-gray-400">Нет описания</span>,
-        },
-        {
-            title: 'Дата создания',
-            dataIndex: 'created_at',
-            key: 'created_at',
-            sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
-            width: '20%',
-            render: (date) => <Tooltip title="Время создания">{dayjs(date).format(FORMAT_VIEW_DATE)}</Tooltip>,
+            title: "Действия",
+            width: "20%",
+            render: (_, record) => (
+                <div className="flex justify-end gap-2">
+                    <Tooltip title="Удалить весь раздел?">
+                        <Popconfirm
+                            title="Это действие нельзя отменить."
+                            //onConfirm={() => nomenclatureStore.deleteCategory(record.id)}
+                            okText="Удалить"
+                            cancelText="Отменить"
+                            placement="left"
+                        >
+                            <Button
+                                danger
+                                type="primary"
+                                icon={<DeleteOutlined />}
+                            />
+                        </Popconfirm>
+                    </Tooltip>
+
+                </div>
+            ),
         },
     ];
 
+    const handleSortChangeParent = (value: number, record: { id: number | string; title: string; sections: SectionCourseItem[]; sort_number: number }) => {
+        if (value < 0) return;
+
+        // Обновляем данные в store
+        const updatedSections = Object.values(groupedSections).map(parent =>
+            parent.id === record.id ? { ...parent, sort_number: value } : parent
+        );
+
+        updatedSections.sort((a, b) => (a.sort_number || 0) - (b.sort_number || 0));
+
+        // Обновляем в store
+        courseStore.setCourseDetailsSections(
+            updatedSections.flatMap(parent => parent.sections)
+        );
+
+        // отправка на бек
+    };
+
+    const sectionColumns: TableColumnsType<SectionCourseItem> = [
+        {
+            title: "Сортировка",
+            dataIndex: "sort_number",
+            key: "sort_number",
+            width:"5%",
+            showSorterTooltip: false,
+            sorter: (a, b) => a.sort_number - b.sort_number,
+            render: (_, record) => (
+                <InputNumber min={0} value={record.sort_number || 0} onChange={(value) => handleSortChange(value!, record)} />
+            ),
+        },
+        {
+            title: "Название раздела",
+            dataIndex: "name",
+            key: "name",
+            sorter: (a, b) => a.name.localeCompare(b.name),
+        },
+        {
+            title: "Действия",
+            width: "20%",
+            render: (_, record) => (
+                <div className="flex justify-end gap-2">
+                    <Tooltip title="Перейти в раздел">
+                        <Button
+                            icon={<ArrowRightOutlined />}
+                            onClick={() => router.push(`/control-panel/sections/${record.id}`)}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Удалить раздел">
+                        <Popconfirm
+                            title="Это действие нельзя отменить."
+                            //onConfirm={() => nomenclatureStore.deleteCategory(record.id)}
+                            okText="Удалить"
+                            cancelText="Отменить"
+                            placement="left"
+                        >
+                            <Button
+                                danger
+                                type="primary"
+                                icon={<DeleteOutlined />}
+                            />
+                        </Popconfirm>
+                    </Tooltip>
+
+                </div>
+            ),
+        },
+    ];
 
     return (
         <div className="p-2">
             {Object.keys(groupedSections).length > 0 ? (
                 <Table
-                    dataSource={Object.keys(groupedSections)
-                        .map((parentTitle) => ({
-                            key: parentTitle,
-                            parentTitle,
-                            sections: groupedSections[parentTitle],
-                        }))
-                        .sort((a, b) => a.parentTitle.localeCompare(b.parentTitle))}
+                    dataSource={Object.values(groupedSections)}
                     columns={parentColumns}
                     bordered
-                    rowKey={(record) => record.key}
-                    pagination={{pageSize: 20}}
+                    rowKey={(record) => record.id.toString()}
+                    pagination={{ pageSize: 20 }}
                     expandable={{
                         expandedRowRender: (parentRecord) => (
                             <Table
-                                dataSource={parentRecord.sections
-                                    .map((section) => ({
-                                        ...section,
-                                        key: section.id,
-                                    }))
-                                    .sort((a, b) => (a.sort_number || 0) - (b.sort_number || 0))}
+                                dataSource={parentRecord.sections.map(section => ({
+                                    ...section,
+                                    key: section.id,
+                                }))}
                                 columns={sectionColumns}
-                                rowKey={(record) => record.key}
+                                rowKey={(record) => record.id.toString()}
                                 pagination={false}
                                 expandable={{
                                     expandedRowRender: (section) =>
                                         section.sectionComponents.length > 0 ? (
-                                            <DragDropContext
-                                                onDragEnd={(result) => handleDragDropComponent(result, section)}>
-                                                <Droppable droppableId={`droppable-${section.id}`}>
-                                                    {(provided) => (
-                                                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                                                            {section.sectionComponents.map((component, index) => (
-                                                                <Draggable key={component.id}
-                                                                           draggableId={String(component.id)}
-                                                                           index={index}>
-                                                                    {(provided) => (
-                                                                        <div
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                            className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow mb-2"
-                                                                        >
-                                                                            <div
-                                                                                className="flex items-center justify-between">
-                                                                                <h4 className="font-medium text-xl text-gray-800 mb-2">
-                                                                                    {component.componentTask.title || "Нет заголовка"}
-                                                                                </h4>
-                                                                                <Button
-                                                                                    icon={<DeleteOutlined/>}
-                                                                                    type="primary"
-                                                                                    danger
-                                                                                    onClick={() => handleDeleteComponent(component.id, component.componentTask?.id)}
-                                                                                />
-                                                                            </div>
-                                                                            <div className="text-sm text-gray-500">
-                                                                            <span className="block mb-1">
-                                                                                Тип:
-                                                                                <Tag className="ml-2"
-                                                                                     icon={typeIcons[component.componentTask.type]}>
-                                                                                    <span>{component.componentTask.type}</span>
-                                                                                </Tag>
-                                                                            </span>
-                                                                                <span className="block mb-1">
-                                                                                Статус:
-                                                                                <Tag
-                                                                                    color={component.componentTask.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}>
-                                                                                    {component.componentTask.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}
-                                                                                </Tag>
-                                                                            </span>
-                                                                                <span>Создано: {dayjs(component.componentTask.created_at).format(FORMAT_VIEW_DATE)}</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                </Draggable>
-                                                            ))}
-                                                            {provided.placeholder}
-                                                        </div>
-                                                    )}
-                                                </Droppable>
-                                            </DragDropContext>
+                                            <DragAndDropComponents
+                                                handleDragDropComponent={handleDragDropComponent}
+                                                handleDeleteComponent={handleDeleteComponent}
+                                                section={section}
+                                            />
                                         ) : (
                                             <span className="text-gray-500">Нет компонентов</span>
                                         ),
@@ -251,20 +233,8 @@ export const CourseSections = observer(() => {
                     }}
                 />
             ) : (
-                <Empty
-                    description={
-                        <div>
-                            <p>Список пуст</p>
-                            <Link href="/control-panel/sections/add">
-                                <Button className="mt-2 transition-transform transform hover:scale-105" type="primary"
-                                        icon={<PlusCircleOutlined/>}>
-                                    Создать раздел
-                                </Button>
-                            </Link>
-                        </div>
-                    }
-                />
+                <p>Нет данных</p>
             )}
         </div>
-    )
-})
+    );
+});

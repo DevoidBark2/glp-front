@@ -345,7 +345,7 @@ class CourseStore {
         this.courseDetailsSections = [...this.courseDetailsSections];
     })
 
-    updateComponentOrder = action(async (sectionId: number, components: { id: number; sort: number }[]) => {
+    updateComponentOrder = action(async (sectionId: number, components: { id: string; sort: number }[]) => {
         return await updateComponentOrder(sectionId, components)
     });
 

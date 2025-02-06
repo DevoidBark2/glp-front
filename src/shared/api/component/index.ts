@@ -32,7 +32,7 @@ export const changeComponent = async (body: CourseComponent): Promise<{message: 
     return (await axiosInstance.put('api/component-task', body)).data
 }
 
-export const updateComponentOrder = async (sectionId: number, components: { id: number; sort: number }[]) => {
+export const updateComponentOrder = async (sectionId: number, components: { id: string; sort: number }[]) => {
     const data = (await axiosInstance.post(`api/change-order-component`,  {
         sectionId: sectionId,
         components: components

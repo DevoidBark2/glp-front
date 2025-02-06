@@ -25,7 +25,7 @@ export type SectionCourse = {
 export type ParentSection = {
     id: number;
     title: string;
-    sort: number;
+    sort_number: number;
 }
 
 export type SectionCourseItem = {
@@ -45,7 +45,7 @@ export type SectionCourseItem = {
 }
 
 export type SectionComponentTask = {
-    id: number;
+    id: string;
     sort: number;
     componentTask: CourseComponent
 }
