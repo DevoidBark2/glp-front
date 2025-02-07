@@ -5,7 +5,7 @@ import {
     Tooltip,
     Skeleton,
 } from "antd";
-import { useEffect, useState } from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import {
     ExclamationCircleOutlined,
     CheckCircleOutlined,
@@ -20,6 +20,24 @@ import Image from "next/image";
 
 const { Sider } = Layout;
 
+function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+        function updateSize() {
+            setSize([window.innerWidth, window.innerHeight]);
+        }
+        window.addEventListener('resize', updateSize);
+        updateSize();
+        return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+}
+
+function ShowWindowDimensions() {
+    const [width, height] = useWindowSize();
+    return <span>Window size: {width} x {height}</span>;
+}
+
 export const NavbarLesson = observer(() => {
     const { courseStore } = useMobxStores();
     const { courseId } = useParams()
@@ -33,6 +51,8 @@ export const NavbarLesson = observer(() => {
             setSelectedSection(key);
             router.push(`?step=${key}`);
         });
+        setIsHovered(false)
+
     };
 
     const renderIcon = (menuItem: SectionMenu) => {
@@ -91,17 +111,26 @@ export const NavbarLesson = observer(() => {
         return <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
     };
 
-    const [isMobile, setIsMobile] = useState(false);
+    const [windowW,setWindowW] = useState(window.innerWidth)
+    const [isMobile, setIsMobile] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
 
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth <= 768); // Если ширина экрана ≤ 768px, считаем его мобильным
-        };
+    const handleResize = () => {
+        setWindowW(window.innerWidth)
+        console.log(window.innerWidth)
+        if(window.innerWidth <= 768) {
+            setIsMobile(true)
+        }
+        else{
+            setIsMobile(false)
+        }
 
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+
+        useEffect(() => {
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+        }, [windowW]);
+    };
 
     useEffect(() => {
         const step = Number(searchParams.get("step"));
@@ -118,43 +147,32 @@ export const NavbarLesson = observer(() => {
 
     return (
         <>
-            {isMobile &&
-                <div className="fixed">
-                    <Button
-                        onClick={() => setCollapsed(false)}
-                        className="fixed"
-                        icon={isMobile ? <Image
-                            src="/static/pin_icon_2.svg"
-                            alt="pin"
-                            width={30}
-                            height={30}
-                        /> : <Image
-                            src="/static/pin_icon.svg"
-                            alt="pin"
-                            width={30}
-                            height={30}
-                        />}
-                    />
+            {isMobile && (
+                <div
+                    className="h-full w-6 bg-gray-400 z-50 flex items-center justify-center"
+                    onMouseEnter={() => setIsHovered(true)}
+                >
+                    <div className="transform -rotate-90 whitespace-nowrap text-white text-sm">
+                        Наведите
+                    </div>
                 </div>
-            }
+            )}
+
             <Sider
-                collapsed={collapsed}
-                breakpoint="md"
-                onCollapse={setCollapsed}
                 width={240}
-                // style={{ , position: "fixed", zIndex: 1000 }}
                 style={{
                     position: isMobile ? "fixed" : "static",
-                    left: collapsed ? (collapsed ? "-240px" : "0") : "0",
+                    left: isMobile && !isHovered ? "-240px" : "0",
                     height: "calc(100vh - 64px)",
                     zIndex: 1100,
                     transition: "left 0.3s ease-in-out",
                 }}
+                onMouseLeave={() => setIsHovered(false)}
             >
                 <div className="flex justify-end px-3">
                     <Button
                         type="text"
-                        icon={collapsed ? <Image
+                        icon={!isMobile ? <Image
                             src="/static/pin_icon_2.svg"
                             alt="pin"
                             width={30}
@@ -167,7 +185,7 @@ export const NavbarLesson = observer(() => {
                             height={30}
                             color="white"
                         />}
-                        onClick={() => setCollapsed(!collapsed)}
+                        onClick={() => setIsMobile(prevState => !prevState)}
                     />
                 </div>
 

@@ -33,6 +33,9 @@ export const themeConfig = {
             colorPrimaryBorder: MAIN_COLOR
         },
         Menu: {
+            // darkPrimary: MAIN_COLOR,
+            // darkItemBg: MAIN_COLOR,
+            // darkColor: MAIN_COLOR,
             colorPrimary: MAIN_COLOR,
             colorPrimaryBg: MAIN_COLOR,
             colorBgLayout: MAIN_COLOR,

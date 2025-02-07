@@ -37,7 +37,7 @@ const LessonPage = () => {
         <Layout>
             <HeaderLesson />
 
-            <Layout className="mt-16 h-[calc(100vh-64px)]">
+            <Layout className="h-[calc(100vh-64px)]">
                 <NavbarLesson />
                 <Layout className="flex-1 overflow-hidden">
                     <Content className="m-0 p-6 flex flex-col max-h-full overflow-y-auto">

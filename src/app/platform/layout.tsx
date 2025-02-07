@@ -43,9 +43,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </>
             )} */}
             <>
-                {!pathName.includes('/lessons/') && <Header />}
+                {!pathName.includes('/lessons/') && !pathName.includes('/3d') && <Header />}
                 <div style={{ flex: 1 }}>{children}</div>
-                {!pathName.includes('/lessons/') && <Footer />}
+                {!pathName.includes('/lessons/') && !pathName.includes('/3d') && <Footer />}
             </>
         </div>
     );

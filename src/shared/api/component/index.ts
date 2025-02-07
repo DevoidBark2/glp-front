@@ -1,5 +1,6 @@
 import { axiosInstance } from "../http-client"
 import {CourseComponent} from "@/shared/api/component/model";
+import {ParentSection} from "@/shared/api/section/model";
 
 export const getAllComponents = async (): Promise<CourseComponent[]> => {
     const data  = (await axiosInstance.get('/api/components')).data
@@ -36,6 +37,15 @@ export const updateComponentOrder = async (sectionId: number, components: { id: 
     const data = (await axiosInstance.post(`api/change-order-component`,  {
         sectionId: sectionId,
         components: components
+    })).data
+
+    return data.data
+}
+
+export const updateOrderParentSection = async (courseId: number, section: { id: number, sort: number }[]) => {
+    const data = (await axiosInstance.post(`api/update-order-parent-section`, {
+        courseId: courseId,
+        sections: section
     })).data
 
     return data.data

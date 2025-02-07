@@ -22,10 +22,10 @@ import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/cour
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
 import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
-import { SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
+import {ParentSection, SectionCourse, SectionCourseItem} from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
-import {updateComponentOrder} from "@/shared/api/component";
+import {updateComponentOrder, updateOrderParentSection} from "@/shared/api/component";
 
 class CourseStore {
     constructor() {
@@ -348,6 +348,10 @@ class CourseStore {
     updateComponentOrder = action(async (sectionId: number, components: { id: string; sort: number }[]) => {
         return await updateComponentOrder(sectionId, components)
     });
+
+    updateParentSectionsOrder = action(async (courseId: number, sections: { id: number, sort: number }[]) => {
+       await updateOrderParentSection(courseId, sections);
+    })
 
 }
 
