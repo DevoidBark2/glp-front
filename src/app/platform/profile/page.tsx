@@ -20,7 +20,7 @@ const FrameNeonUnderline: React.FC<{ children: React.ReactNode }> = ({ children 
 
 const FrameTailwind = () => {
     return (
-        <div className="relative w-[300px] h-[300px] bg-cyan-950">
+        <div className="relative w-[300px] h-[300px] bg-cyan-950 shadow-custom">
             {/* Верхний левый скос с бордером */}
             <div className="absolute top-0 left-0 w-[40px] h-[40px] bg-cyan-950 border-t-2 border-l-2 border-cyan-400"></div>
 
