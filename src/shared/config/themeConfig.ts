@@ -1,19 +1,17 @@
+import { Breadcrumb } from "antd";
 import { MAIN_COLOR } from "../constants";
 
 export const themeConfig = {
     components: {
-        Button: {
-            colorPrimaryBorderHover: MAIN_COLOR,
-            colorPrimaryHover: MAIN_COLOR,
+        // Button: {
+        //     colorPrimaryBorderHover: MAIN_COLOR,
+        //     colorPrimaryHover: MAIN_COLOR,
+        //     colorPrimary: MAIN_COLOR,
+        //     colorPrimaryActive: 'lightgray',
+        //     colorPrimaryTextHover: 'lightgray',
+        // },
+        Breadcrumb: {
             colorPrimary: MAIN_COLOR,
-            colorPrimaryActive: 'lightgray',
-            colorPrimaryTextHover: 'lightgray',
-        },
-        FloatButton: {
-            colorPrimaryHover: MAIN_COLOR,
-            colorPrimary: MAIN_COLOR,
-            colorPrimaryActive: 'lightgray',
-            colorPrimaryTextHover: 'lightgray',
         },
         Radio: {
             colorPrimary: MAIN_COLOR,
@@ -62,8 +60,8 @@ export const themeConfig = {
             colorPrimary: "back"
         },
         Switch: {
-            colorPrimary: MAIN_COLOR,
-            // colorPrimaryHover: MAIN_COLOR
+            colorPrimary: "#00FFFF",
+            colorPrimaryHover: "#00FFFF"
         }
     },
     token: {

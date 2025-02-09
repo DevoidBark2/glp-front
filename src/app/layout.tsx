@@ -5,7 +5,8 @@ import { roboto } from "@/app/fonts";
 import { ConfigProvider } from "antd";
 import React from "react";
 import { themeConfig } from "@/shared/config/themeConfig";
-import {Metadata} from "next";
+import { Metadata } from "next";
+import { ThemeProviders } from "./themeProviders";
 
 export const metadata: Metadata = {
     title: 'Learnify',
@@ -27,13 +28,15 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={roboto.className}>
-            <ConfigProvider theme={themeConfig}>
-                <StoresProvider>
-                    <AntdRegistry>
-                        {children}
-                    </AntdRegistry>
-                </StoresProvider>
-            </ConfigProvider>
+                <ThemeProviders>
+                    <ConfigProvider theme={themeConfig}>
+                        <StoresProvider>
+                            <AntdRegistry>
+                                {children}
+                            </AntdRegistry>
+                        </StoresProvider>
+                    </ConfigProvider>
+                </ThemeProviders>
             </body>
         </html>
     );

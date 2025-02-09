@@ -9,6 +9,7 @@ import Image from "next/image";
 import { BookOutlined } from "@ant-design/icons";
 import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants"
 import { useMobxStores } from "@/shared/store/RootStore"
+import { PlayCircleOutlined, LogoutOutlined, MessageOutlined } from "@ant-design/icons";
 
 interface CourseProfileItemProps {
     course: Course
@@ -110,7 +111,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                         <Tooltip title={`Перейти к курсу "${course.name}"`}>
                             <Button type="primary" onClick={() => {
                                 router.push(`/platform/lessons/${course.courseId}`)
-                            }}>Продолжить</Button>
+                            }} icon={<PlayCircleOutlined />} />
                         </Tooltip>
                         <Popconfirm
                             title="Это действие нельзя отменить. Все сохранные данные будут удалены, Вы согласны?"
@@ -119,13 +120,9 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                             okText="Да"
                             cancelText="Нет"
                         >
-                            <Button danger className="ml-2">
-                                Покинуть курс
-                            </Button>
+                            <Button danger className="ml-2" icon={<LogoutOutlined />} />
                         </Popconfirm>
-                        <Button type="default" className="ml-2" onClick={() => setIsModalOpen(true)}>
-                            Оставить отзыв
-                        </Button>
+                        <Button type="default" className="ml-2" onClick={() => setIsModalOpen(true)} icon={<MessageOutlined />} />
                     </div>
                 </div>
                 <Progress percent={course.progress} strokeColor={MAIN_COLOR} />

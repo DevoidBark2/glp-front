@@ -32,7 +32,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-button {
-    display: none; 
+    display: none;
 }
 
 
@@ -46,11 +46,87 @@
         transform: scale(0.5);
         opacity: 0;
     }
+
     50% {
         transform: scale(1.2);
         opacity: 1;
     }
+
     100% {
         transform: scale(1);
     }
+}
+
+@keyframes borderGradient {
+    0% {
+        border-color: #00FFFF;
+    }
+
+    25% {
+        border-color: #39FF14;
+    }
+
+    50% {
+        border-color: #D400FF;
+    }
+
+    75% {
+        border-color: #FF007F;
+    }
+
+    100% {
+        border-color: #00FFFF;
+    }
+}
+
+.animate-border-gradient {
+    animation: borderGradient 5s infinite linear;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 10px #ec4899, 0 0 15px #ec4899;
+    }
+
+    50% {
+        background-position: 100% 50%;
+        box-shadow: 0 0 20px #9333ea, 0 0 30px #9333ea;
+    }
+
+    100% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 10px #22d3ee, 0 0 15px #22d3ee;
+    }
+}
+
+.animate-gradient-background {
+    background-size: 200% 200%;
+    animation: gradientAnimation 4s ease infinite;
+    /* Бесконечная анимация */
+}
+
+@keyframes glitch {
+    0% {
+        text-shadow: 2px 2px #ff00ff;
+    }
+
+    50% {
+        text-shadow: -2px -2px #00ffff;
+    }
+
+    100% {
+        text-shadow: 2px 2px #ff00ff;
+    }
+}
+
+.glitch-text:hover {
+    color: #fff;
+    animation: glitch 1s ease-in infinite;
+}
+
+
+.clip-cyber {
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+    position: relative;
 }

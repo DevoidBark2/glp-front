@@ -79,25 +79,30 @@ const CoursePage = () => {
                 <div className="px-6">
                     <div className="mt-4">
                         <Breadcrumb
+                            className="text-white"
                             items={[
-                                { title: <Link href="/platform">Главная</Link> },
+                                { title: <Link className="text-white" href="/platform">Главная</Link> },
                                 { title: <p>{currentCourse?.name}</p> },
                             ]}
                         />
                     </div>
 
-                    {currentCourse && <div className="flex justify-end my-4">
-                        <Button
-                            type="primary"
-                            size="large"
-                            className="px-12 py-2 rounded-lg font-medium"
-                            loading={courseStore.subscribeCourseLoading}
-                            onClick={handleClick}
-                            disabled={courseStore.subscribeCourseLoading}
-                        >
-                            {currentCourse.isUserEnrolled ? "Перейти к курсу" : "Записаться на курс"}
-                        </Button>
-                    </div>}
+                    {currentCourse && (
+                        <div className="flex justify-end my-4">
+                            <button
+                                className="px-12 py-2 rounded-lg font-medium text-white 
+        bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-400
+        shadow-[0_0_15px_#ff00ff, 0_0_25px_#ff00ff]
+        animate-gradient-background 
+        transition-all duration-300 ease-in-out
+        hover:scale-105 hover:shadow-[0_0_20px_#ff00ff, 0_0_30px_#ff00ff] hover:bg-gradient-to-r hover:from-yellow-400 hover:to-purple-500"
+                                onClick={handleClick}
+                                disabled={courseStore.subscribeCourseLoading}
+                            >
+                                {currentCourse.isUserEnrolled ? "Перейти к курсу" : "Записаться на курс"}
+                            </button>
+                        </div>
+                    )}
 
                     {currentCourse ? (
                         <>

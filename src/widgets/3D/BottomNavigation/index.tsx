@@ -1,5 +1,8 @@
 export const BottomNavigation = () => {
     const categories = [
+        { id: 1, name: "Голова" },
+        { id: 1, name: "Прическа" },
+        { id: 1, name: "Лицо" },
         { id: 1, name: "Глаза" },
         { id: 2, name: "Уши" },
         { id: 3, name: "Нос" },

@@ -4,8 +4,8 @@ import { observer } from "mobx-react";
 import "react-phone-input-2/lib/bootstrap.css";
 import { ProfileForm } from "@/entities/user-profile/ui/ProfileForm";
 import nextConfig from "../../../next.config.mjs";
-import {useMobxStores} from "@/shared/store/RootStore";
-import {AuthMethodEnum} from "@/shared/api/auth/model";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 
 export const UserProfileBlock = observer(() => {
     const { userProfileStore } = useMobxStores();
@@ -24,7 +24,7 @@ export const UserProfileBlock = observer(() => {
     };
 
     return (
-        <div className="w-2/5 bg-white flex flex-col rounded-md shadow-lg p-6 transition-all duration-300">
+        <div className="w-full flex flex-col p-6">
             <div className="flex justify-center">
                 <Upload
                     name="avatar"
@@ -34,15 +34,11 @@ export const UserProfileBlock = observer(() => {
                         return false;
                     }}
                 >
-                    <div className="relative cursor-pointer transition-transform hover:scale-105">
+                    <div className="relative cursor-pointer transition-transform hover:scale-110">
                         {userProfileStore.uploadingProfileImage ? (
                             <Spin
                                 size="large"
-                                style={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                }}
+                                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                             />
                         ) : null}
                         <Avatar
@@ -50,26 +46,19 @@ export const UserProfileBlock = observer(() => {
                             src={
                                 userProfileStore.userProfile?.image
                                     ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                    userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                        userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                         ? userProfileStore.userProfile?.image
                                         : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                     : undefined
                             }
                             icon={!userProfileStore.userAvatar && <UserOutlined />}
-                            className="cursor-pointer"
-                            style={{
-                                opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1,
-                                transition: 'opacity 0.3s ease',
-                            }}
+                            className="cursor-pointer border-4 border-neon-blue shadow-[0_0_10px_#00FFFF]"
+                            style={{ opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1 }}
                         />
-
                         <div
-                            className="absolute bottom-5 right-5 bg-white rounded-full shadow-lg p-2 flex items-center justify-center"
-                            style={{
-                                transform: 'translate(50%, 50%)',
-                            }}
+                            className="absolute bottom-5 right-5 bg-neon-green rounded-full shadow-[0_0_10px_#39FF14] p-2 flex items-center justify-center transform translate-x-1/2 translate-y-1/2"
                         >
-                            <CameraOutlined style={{ fontSize: 18, color: '#595959' }} />
+                            <CameraOutlined style={{ fontSize: 18, color: '#000' }} />
                         </div>
                     </div>
                 </Upload>
