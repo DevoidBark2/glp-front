@@ -11,7 +11,7 @@ export const CourseProfileList = observer(() => {
     return (
         <>
             {userProfileStore.userProfileCourses.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-4 mt-5">
                     {userProfileStore.userProfileCourses.map((course) => (
                         <CourseProfileItem key={course.id} course={course} />
                     ))}

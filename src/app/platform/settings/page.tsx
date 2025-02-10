@@ -7,6 +7,7 @@ import {ResetPassword} from "@/entities/user-settings/ui/ResetPassword";
 import {ManageProfile} from "@/entities/user-settings/ui/ManageProfile";
 import {useRouter} from "next/navigation";
 import {useMobxStores} from "@/shared/store/RootStore";
+import CyberTextUnderline from "@/shared/ui/Cyberpunk/CyberTextUnderline";
 
 const SettingsPage = observer(() => {
     const {authStore, userProfileStore} = useMobxStores()
@@ -44,7 +45,9 @@ const SettingsPage = observer(() => {
 
     return(
         <div className="container mx-auto">
-            <h1 className="mt-6 text-3xl font-semibold text-gray-800 mb-6">Настройки</h1>
+            <CyberTextUnderline underline>
+                Настройки
+            </CyberTextUnderline>
             <Tabs items={items} />
         </div>
     )

@@ -35,7 +35,7 @@
     "emoji-picker-react": "^4.10.0",
     "eslint-plugin-jest-dom": "^5.4.0",
     "eslint-plugin-testing-library": "^6.3.0",
-    "framer-motion": "^11.3.28",
+    "framer-motion": "^12.4.1",
     "lexical": "^0.22.0",
     "mathjax": "^3.2.2",
     "mathlive": "^0.103.0",

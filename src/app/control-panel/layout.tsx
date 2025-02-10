@@ -16,6 +16,7 @@ import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "../../../next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
+import {useTheme} from "next-themes";
 
 const findKeyByPathname = (pathName: string, items: any): string => {
     if (!items.length) return '0';
@@ -36,26 +37,26 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel"}>Главная</Link>,
         icon: <AppstoreOutlined />,
     },
-    {
-        key: 'moderators_items',
-        type: "submenu",
-        label: 'Панель модератора',
-        icon: <ToolOutlined />,
-        children: [
-            {
-                key: 'manage-courses',
-                label: <Link href={"/control-panel/manage-courses"}>Управление курсами</Link>,
-                title: "Управление курсами",
-                icon: <BookOutlined />,
-            },
-            {
-                key: 'manage-posts',
-                label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
-                title: "Управление постами",
-                icon: <SolutionOutlined />
-            },
-        ]
-    },
+    // {
+    //     key: 'moderators_items',
+    //     type: "submenu",
+    //     label: 'Панель модератора',
+    //     icon: <ToolOutlined />,
+    //     children: [
+    //         {
+    //             key: 'manage-courses',
+    //             label: <Link href={"/control-panel/manage-courses"}>Управление курсами</Link>,
+    //             title: "Управление курсами",
+    //             icon: <BookOutlined />,
+    //         },
+    //         {
+    //             key: 'manage-posts',
+    //             label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
+    //             title: "Управление постами",
+    //             icon: <SolutionOutlined />
+    //         },
+    //     ]
+    // },
     {
         key: 'courses-parent',
         label: 'Курсы',
@@ -132,23 +133,23 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel/settings"}>Настройки</Link>,
         icon: <SettingOutlined />,
     },
-    {
-        key: 'general',
-        label: 'Общее',
-        icon: <BarsOutlined />,
-        children: [
-            {
-                key: 'faq',
-                label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
-                icon: <BarsOutlined />,
-            },
-            // {
-            //     key: 'support',
-            //     label: <Link href={"/control-panel/support"}>Поддержка</Link>,
-            //     icon: <BarsOutlined />,
-            // }
-        ]
-    },
+    // {
+    //     key: 'general',
+    //     label: 'Общее',
+    //     icon: <BarsOutlined />,
+    //     children: [
+    //         {
+    //             key: 'faq',
+    //             label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
+    //             icon: <BarsOutlined />,
+    //         },
+    //         // {
+    //         //     key: 'support',
+    //         //     label: <Link href={"/control-panel/support"}>Поддержка</Link>,
+    //         //     icon: <BarsOutlined />,
+    //         // }
+    //     ]
+    // },
     {
         key: 'profile',
         label: <Link href={"/control-panel/profile"}>Профиль</Link>,
@@ -162,11 +163,11 @@ let dashboardMenuItems: MenuItem[] = [
     //     label: <Link href={"/control-panel/achievements"}>Достижения</Link>,
     //     icon: <StarOutlined />,
     // },
-    {
-        key: "manual",
-        label: <Link href={"/control-panel/manual"}>Руководство пользователя</Link>,
-        icon: <BookOutlined />,
-    },
+    // {
+    //     key: "manual",
+    //     label: <Link href={"/control-panel/manual"}>Руководство пользователя</Link>,
+    //     icon: <BookOutlined />,
+    // },
     {
         key: 'platform',
         label: <Link href={"/platform"}>Вернуться на платформу</Link>,
@@ -177,6 +178,7 @@ let dashboardMenuItems: MenuItem[] = [
 const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { userProfileStore } = useMobxStores()
     const pathName = usePathname();
+    const theme = useTheme();
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
     const [loading, setLoading] = useState<boolean>(true)
@@ -265,7 +267,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                                 defaultSelectedKeys={[selectedKey]}
                                 mode="vertical"
                                 items={dashboardMenuItems}
-                                theme="light"
+                                theme={theme.theme === "dark" ? "dark" : "light"}
                             />
                         ) : (
                             <>

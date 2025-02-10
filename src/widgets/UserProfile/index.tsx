@@ -1,11 +1,14 @@
 import { Avatar, message, notification, Spin, Upload } from "antd";
-import { CameraOutlined, UserOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import "react-phone-input-2/lib/bootstrap.css";
 import { ProfileForm } from "@/entities/user-profile/ui/ProfileForm";
 import nextConfig from "../../../next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
+import CyberNotification from "@/shared/ui/Cyberpunk/CyberNotification";
+import dayjs from "dayjs";
+import {FORMAT_VIEW_DATE} from "@/shared/constants";
 
 export const UserProfileBlock = observer(() => {
     const { userProfileStore } = useMobxStores();
@@ -24,8 +27,8 @@ export const UserProfileBlock = observer(() => {
     };
 
     return (
-        <div className="w-full flex flex-col p-6">
-            <div className="flex justify-center">
+        <div className="w-full flex p-6">
+            <div className="flex flex-col mr-10">
                 <Upload
                     name="avatar"
                     showUploadList={false}
@@ -34,7 +37,7 @@ export const UserProfileBlock = observer(() => {
                         return false;
                     }}
                 >
-                    <div className="relative cursor-pointer transition-transform hover:scale-110">
+                    <div className="relative cursor-pointer">
                         {userProfileStore.uploadingProfileImage ? (
                             <Spin
                                 size="large"
@@ -42,29 +45,38 @@ export const UserProfileBlock = observer(() => {
                             />
                         ) : null}
                         <Avatar
-                            size={130}
+                            size={300}
+                            shape="square"
                             src={
                                 userProfileStore.userProfile?.image
                                     ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                        userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                    userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                         ? userProfileStore.userProfile?.image
                                         : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                     : undefined
                             }
-                            icon={!userProfileStore.userAvatar && <UserOutlined />}
-                            className="cursor-pointer border-4 border-neon-blue shadow-[0_0_10px_#00FFFF]"
-                            style={{ opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1 }}
+                            icon={!userProfileStore.userAvatar && <UserOutlined/>}
+                            className="border-4 border-neon-blue"
+                            style={{opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1}}
                         />
-                        <div
-                            className="absolute bottom-5 right-5 bg-neon-green rounded-full shadow-[0_0_10px_#39FF14] p-2 flex items-center justify-center transform translate-x-1/2 translate-y-1/2"
-                        >
-                            <CameraOutlined style={{ fontSize: 18, color: '#000' }} />
-                        </div>
                     </div>
                 </Upload>
+
+                <div className="mt-4 text-xl text-neon-green font-mono">
+                    {userProfileStore.userProfile?.created_at ? (
+                        <span>
+                <span className="text-white">Зарегистрирован:</span>
+                <p className="text-cyber-yellow">
+                    {dayjs(userProfileStore.userProfile.created_at).format(FORMAT_VIEW_DATE)}
+                </p>
+            </span>
+                    ) : (
+                        <span className="italic text-gray-500">Activation time not available</span>
+                    )}
+                </div>
             </div>
 
-            <ProfileForm />
+            <ProfileForm/>
         </div>
     )
 })

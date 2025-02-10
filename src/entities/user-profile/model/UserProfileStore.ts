@@ -24,6 +24,7 @@ export type UserProfile = {
     settings_control_panel: boolean;
     is_two_factor_enabled: boolean;
     method_auth: AuthMethodEnum
+    created_at: Date;
 }
 
 class UserProfileStore {
@@ -92,9 +93,9 @@ class UserProfileStore {
 
         await updateProfile(cleanedValues as UserProfile)
             .then(response => {
-                notification.success({ message: response.message });
                 const updatedProfile = { ...this.userProfile, ...cleanedValues };
                 this.setUserProfile(updatedProfile as UserProfile);
+                return response;
             })
             .catch(e => {
                 console.error("Ошибка при обновлении профиля:", e);

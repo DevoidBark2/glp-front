@@ -10,12 +10,14 @@ import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import {observer} from "mobx-react";
+import {SettingControlPanel} from "@/shared/model";
 
 const ExamsPage = observer(() => {
     const { userProfileStore, examStore } = useMobxStores()
     const router = useRouter()
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const showExamStatus = (status: ExamStatus) => {
         switch (status) {
@@ -119,7 +121,11 @@ const ExamsPage = observer(() => {
         },
     ];
 
+
     useEffect(() => {
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        setSettings(settingUser);
+
         examStore.getUserExams();
     }, [])
     return (
@@ -132,6 +138,9 @@ const ExamsPage = observer(() => {
             />
 
             <Table
+                size={(settings && settings.table_size) ?? "middle"}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 columns={columns}
                 dataSource={examStore.exams}
             />

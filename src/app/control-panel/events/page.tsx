@@ -16,11 +16,13 @@ import { eventColors, eventTooltips, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shar
 import { EventUser } from "@/shared/api/events/model";
 import { PageContainerControlPanel, PageHeader } from "@/shared/ui";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {SettingControlPanel} from "@/shared/model";
 
 const EventPage = () => {
     const { eventStore } = useMobxStores();
     const [searchText, setSearchText] = useState<string>("");
     const [filteredData, setFilteredData] = useState<EventUser[]>([]);
+    const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const columns: TableColumnsType<EventUser> = [
         {
@@ -141,6 +143,9 @@ const EventPage = () => {
     };
 
     useEffect(() => {
+        const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
+        setSettings(settingUser);
+
         eventStore.getAllEvents().finally(() => {
             eventStore.setLoadingEvents(false);
         });
@@ -172,10 +177,12 @@ const EventPage = () => {
                 </div>
             </div>
             <Table
+                size={(settings && settings.table_size) ?? "middle"}
+                footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
+                pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
                 dataSource={filteredData.length > 0 ? filteredData : eventStore.userEvents}
                 columns={columns}
                 loading={eventStore.loadingEvents}
-                pagination={{ pageSize: 10 }}
                 rowHoverable={false}
                 rowKey={(record) => record.id}
                 rowClassName={(record) =>

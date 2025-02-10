@@ -179,14 +179,14 @@ const SettingsControlPage = () => {
                             >
                                 <Form.Item name="id" hidden></Form.Item>
 
-                                <Form.Item
-                                    label={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.LABEL}
-                                    tooltip={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.TOOLTIP}
-                                    name="auto_publish_course"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
+                                {/*<Form.Item*/}
+                                {/*    label={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.LABEL}*/}
+                                {/*    tooltip={GeneralSettingTooltips.AUTO_PUBLISH_COURSE.TOOLTIP}*/}
+                                {/*    name="auto_publish_course"*/}
+                                {/*    valuePropName="checked"*/}
+                                {/*>*/}
+                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                                {/*</Form.Item>*/}
 
                                 {/* <Form.Item
                                     label="Лимит на количество создаваемых курсов"
@@ -217,34 +217,34 @@ const SettingsControlPage = () => {
                                 </Form.Item> */}
 
                                 {/* Модерация новых курсов */}
-                                <Form.Item
-                                    label={GeneralSettingTooltips.MODERATION_COURSE.LABEL}
-                                    tooltip={GeneralSettingTooltips.MODERATION_COURSE.TOOLTIP}
-                                    name="moderation_new_course"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
+                                {/*<Form.Item*/}
+                                {/*    label={GeneralSettingTooltips.MODERATION_COURSE.LABEL}*/}
+                                {/*    tooltip={GeneralSettingTooltips.MODERATION_COURSE.TOOLTIP}*/}
+                                {/*    name="moderation_new_course"*/}
+                                {/*    valuePropName="checked"*/}
+                                {/*>*/}
+                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                                {/*</Form.Item>*/}
 
                                 {/* Настройка рейтинговой системы курсов */}
-                                <Form.Item
-                                    label="Рейтинговая система курсов"
-                                    tooltip="Включите возможность оценки курсов пользователями."
-                                    name="course_rating_system"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
+                                {/*<Form.Item*/}
+                                {/*    label="Рейтинговая система курсов"*/}
+                                {/*    tooltip="Включите возможность оценки курсов пользователями."*/}
+                                {/*    name="course_rating_system"*/}
+                                {/*    valuePropName="checked"*/}
+                                {/*>*/}
+                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                                {/*</Form.Item>*/}
 
                                 {/* Включить возможность добавления дополнительных материалов */}
-                                <Form.Item
-                                    label="Дополнительные материалы к курсам"
-                                    tooltip="Разрешить создателям курсов загружать дополнительные материалы, такие как PDF-файлы или презентации."
-                                    name="allow_extra_materials"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
+                                {/*<Form.Item*/}
+                                {/*    label="Дополнительные материалы к курсам"*/}
+                                {/*    tooltip="Разрешить создателям курсов загружать дополнительные материалы, такие как PDF-файлы или презентации."*/}
+                                {/*    name="allow_extra_materials"*/}
+                                {/*    valuePropName="checked"*/}
+                                {/*>*/}
+                                {/*    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />*/}
+                                {/*</Form.Item>*/}
 
                                 {/* Разрешить комментарии к курсам */}
                                 {/* <Form.Item
@@ -285,15 +285,6 @@ const SettingsControlPage = () => {
                                     <InputNumber min={1} max={60} placeholder="Введите время в минутах" style={{ width: '100%' }} />
                                 </Form.Item>
 
-                                {/* Аудит действий */}
-                                <Form.Item
-                                    label={GeneralSettingTooltips.AUDIT_TRAIL.LABEL}
-                                    tooltip={GeneralSettingTooltips.AUDIT_TRAIL.TOOLTIP}
-                                    name="audit_enabled"
-                                    valuePropName="checked"
-                                >
-                                    <Switch checkedChildren="Вкл" unCheckedChildren="Выкл" />
-                                </Form.Item>
 
                                 {/* Минимальная длина пароля */}
                                 <Form.Item

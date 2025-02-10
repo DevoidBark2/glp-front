@@ -131,7 +131,6 @@ export const CourseControlList = observer(() => {
        
         courseStore.getCoursesByUser()
 
-
         return () => {
             courseStore.setSuccessCreateCourseModal(false)
         }

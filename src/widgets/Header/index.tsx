@@ -25,7 +25,7 @@ export const Header = observer(() => {
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
         { key: 2, title: "Курсы", link: '/platform/courses', icon: <HomeOutlined /> },
         { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
-        { key: 4, title: "Вопросы и ответы", link: '/platform/blog', icon: <ReadOutlined /> },
+        { key: 4, title: "Профиль", link: '/platform/profile', icon: <ReadOutlined /> },
     ]
 
     const [clickSound, setClickSound] = useState<HTMLAudioElement | null>(null);
@@ -137,11 +137,10 @@ export const Header = observer(() => {
                                 <Link
                                     href={menuItem.link}
                                     className={`dark:text-[#efefef] text-lg relative group hover:text-neon-green transition-all duration-300
-                ${pathName === menuItem.link ? "text-neon-green" : ""}`}
+                ${pathName.includes(menuItem.link) ? "text-neon-green" : ""}`}
                                     onClick={handleClick}
                                 >
                                     {menuItem.title}
-                                    {/* Неоновое подчеркивание при наведении */}
                                     <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-pink-500 to-cyan-400 opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100 origin-left"></span>
                                 </Link>
 
@@ -168,7 +167,7 @@ export const Header = observer(() => {
                                 <Link
                                     href={menuItem.link}
                                     className={`dark:text-[#efefef] text-lg relative group hover:text-neon-green transition-all duration-300
-                ${pathName === menuItem.link ? "text-neon-green" : ""}`}
+                ${pathName.includes(menuItem.link) ? "text-neon-green" : ""}`}
                                     onClick={handleClick}
                                 >
                                     {menuItem.title}
@@ -182,8 +181,6 @@ export const Header = observer(() => {
                             </React.Fragment>
                         ))}
                     </div>
-
-                    <ThemeSwitch />
 
                     {/* User Profile / Login Buttons */}
                     {/* <div className="hidden lg:flex items-center space-x-4">

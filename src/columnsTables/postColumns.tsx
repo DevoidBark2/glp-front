@@ -32,7 +32,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
             width: '20%',
             render: (text) => (
                 <Tooltip title={text.length > 30 ? text : ''}>
-                    <span className="dark:text-white truncate" style={{ maxWidth: 'calc(30ch)' }}>
+                    <span className="truncate" style={{ maxWidth: 'calc(30ch)' }}>
                         {text.length > 30 ? text.substring(0, 30) + '...' : text}
                     </span>
                 </Tooltip>
@@ -44,7 +44,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
             title: 'Дата публикации',
             showSorterTooltip: false,
             sorter: (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf(),
-            render: (value) => <p className="dark:text-white">{dayjs(value).format(FORMAT_VIEW_DATE)}</p>
+            render: (value) => <p className="">{dayjs(value).format(FORMAT_VIEW_DATE)}</p>
         },
         {
             title: "Статус",
