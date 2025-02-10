@@ -1,18 +1,20 @@
 "use client"
-import React from "react";
+import React, {useState} from "react";
 import { ChangePasswordType } from "@/shared/api/auth/model";
-import {Form, notification, Tabs, TabsProps} from "antd";
+import {Form, Modal, notification, Tabs, TabsProps} from "antd";
 import {observer} from "mobx-react";
 import {ResetPassword} from "@/entities/user-settings/ui/ResetPassword";
 import {ManageProfile} from "@/entities/user-settings/ui/ManageProfile";
 import {useRouter} from "next/navigation";
 import {useMobxStores} from "@/shared/store/RootStore";
 import CyberTextUnderline from "@/shared/ui/Cyberpunk/CyberTextUnderline";
+import CyberFrame from "@/shared/ui/Cyberpunk/CyberFrame";
 
 const SettingsPage = observer(() => {
     const {authStore, userProfileStore} = useMobxStores()
     const [form] = Form.useForm<ChangePasswordType>();
     const router = useRouter()
+    const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false)
 
     const handleChangePassword = (values:ChangePasswordType) => {
         authStore.changePassword(values).then((response) => {
@@ -24,10 +26,11 @@ const SettingsPage = observer(() => {
     };
 
     const handleDeleteAccount = () => {
-        authStore.deleteAccount().then(() => {
-            userProfileStore.setUserProfile(null);
-            router.push("/platform");
-        })
+        setShowDeleteAccountModal(true)
+        // authStore.deleteAccount().then(() => {
+        //     userProfileStore.setUserProfile(null);
+        //     router.push("/platform");
+        // })
     }
 
     const items: TabsProps['items'] = [
@@ -44,12 +47,64 @@ const SettingsPage = observer(() => {
     ];
 
     return(
-        <div className="container mx-auto">
-            <CyberTextUnderline underline>
-                Настройки
-            </CyberTextUnderline>
-            <Tabs items={items} />
-        </div>
+        <>
+            {showDeleteAccountModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md z-50">
+                    <div className="relative w-[400px] p-6 bg-black border-2 border-neon-blue shadow-lg shadow-cyber-blue/50">
+
+                        {/* Верхняя панель */}
+                        <div className="flex justify-between items-center border-b border-neon-blue pb-3">
+                            <h2 className="text-neon-green text-xl font-bold tracking-wide">
+                                SYSTEM ALERT
+                            </h2>
+                            <button
+                                onClick={() => setShowDeleteAccountModal(false)}
+                                className="text-cyber-red hover:text-red-500 transition-transform hover:scale-110"
+                            >
+                                ✖
+                            </button>
+                        </div>
+
+                        {/* Текст */}
+                        <p className="mt-4 text-neon-blue text-lg">
+                            Вы действительно хотите стереть себя из системы?
+                        </p>
+
+                        {/* Кнопки */}
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                onClick={() => setShowDeleteAccountModal(false)}
+                                className="px-4 py-2 bg-gray-800 text-white border border-neon-blue hover:bg-gray-700 transition-all shadow-md"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    console.log("Account deleted");
+                                    setShowDeleteAccountModal(false);
+                                }}
+                                className="px-4 py-2 bg-cyber-red text-black border border-cyber-red hover:bg-red-500 transition-all shadow-md"
+                            >
+                                DELETE
+                            </button>
+                        </div>
+
+                        {/* Неоновая рамка */}
+                        <div className="absolute top-0 left-0 w-full h-full border-2 border-neon-blue opacity-30 animate-pulse"></div>
+                    </div>
+                </div>
+            )}
+
+            <div className="container mx-auto px-48 mt-10">
+                <CyberFrame width="full">
+                    <CyberTextUnderline underline>
+                        <h1>Настройки</h1>
+                    </CyberTextUnderline>
+                    <Tabs animated items={items}/>
+                </CyberFrame>
+            </div>
+        </>
+
     )
 })
 

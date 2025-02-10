@@ -16,6 +16,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({handleChangePas
         <Form
             form={form}
             layout="vertical"
+            style={{width:"100%"}}
             onFinish={handleChangePassword}
         >
             <Form.Item
@@ -65,13 +66,22 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({handleChangePas
                             : undefined
                     }
                 >
-                    <Button
-                        type="primary"
-                        htmlType="submit"
+                    <button
+                        type="submit"
                         disabled={userProfileStore.userProfile?.method_auth !== AuthMethodEnum.CREDENTIALS}
+                        className="px-6 py-3 border-2 border-yellow-400 text-yellow-300 font-bold text-lg uppercase tracking-wider transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-transparent hover:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 rounded-md clip-cyber"
+                        onClick={() => {
+                        }} // Звук при успешном сохранении
                     >
                         Сохранить новый пароль
-                    </Button>
+                    </button>
+                    {/*<Button*/}
+                    {/*    type="primary"*/}
+                    {/*    htmlType="submit"*/}
+                    {/*    disabled={userProfileStore.userProfile?.method_auth !== AuthMethodEnum.CREDENTIALS}*/}
+                    {/*>*/}
+                    {/*    */}
+                    {/*</Button>*/}
                 </Tooltip>
             </Form.Item>
         </Form>

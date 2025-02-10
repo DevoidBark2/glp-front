@@ -42,7 +42,7 @@ const ProfilePage = () => {
                 <CyberFrame width="full">
                     <CyberTextUnderline underline>
                         <div className="flex justify-between items-center">
-                            <h1 className="">Профиль пользователя</h1>
+                            <h1>Профиль пользователя</h1>
                             <motion.button
                                 onClick={handleClick}
                                 animate={{rotate: isRotating ? 360 : 0}}
