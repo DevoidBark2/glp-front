@@ -49,8 +49,8 @@ const SettingsPage = observer(() => {
     return(
         <>
             {showDeleteAccountModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md z-50">
-                    <div className="relative w-[400px] p-6 bg-black border-2 border-neon-blue shadow-lg shadow-cyber-blue/50">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md z-50 animate-fadeIn">
+                    <div className="relative w-[400px] p-6 bg-black border-2 border-neon-blue shadow-lg shadow-cyber-blue/50 transition-all duration-500 scale-95 opacity-0 animate-scaleFadeIn">
 
                         {/* Верхняя панель */}
                         <div className="flex justify-between items-center border-b border-neon-blue pb-3">
@@ -58,7 +58,9 @@ const SettingsPage = observer(() => {
                                 SYSTEM ALERT
                             </h2>
                             <button
-                                onClick={() => setShowDeleteAccountModal(false)}
+                                onClick={() => {
+                                    setShowDeleteAccountModal(false);
+                                }}
                                 className="text-cyber-red hover:text-red-500 transition-transform hover:scale-110"
                             >
                                 ✖
@@ -66,7 +68,7 @@ const SettingsPage = observer(() => {
                         </div>
 
                         {/* Текст */}
-                        <p className="mt-4 text-neon-blue text-lg">
+                        <p className="mt-4 text-neon-blue text-white text-lg">
                             Вы действительно хотите стереть себя из системы?
                         </p>
 
@@ -94,6 +96,7 @@ const SettingsPage = observer(() => {
                     </div>
                 </div>
             )}
+
 
             <div className="container mx-auto px-48 mt-10">
                 <CyberFrame width="full">
