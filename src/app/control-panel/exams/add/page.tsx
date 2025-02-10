@@ -7,7 +7,7 @@ import Link from "next/link";
 import { observer } from "mobx-react";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { typeIcons } from "@/columnsTables/taskColumns";
+import { typeIcons } from "@/shared/columnsTables/taskColumns";
 import dayjs from "dayjs";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import {useRouter} from "next/navigation";

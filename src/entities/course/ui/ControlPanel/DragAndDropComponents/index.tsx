@@ -1,7 +1,7 @@
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {Button, Tag} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
-import {typeIcons} from "@/columnsTables/taskColumns";
+import {typeIcons} from "@/shared/columnsTables/taskColumns";
 import {StatusCourseComponentEnum} from "@/shared/api/component/model";
 import dayjs from "dayjs";
 import {FORMAT_VIEW_DATE} from "@/shared/constants";
