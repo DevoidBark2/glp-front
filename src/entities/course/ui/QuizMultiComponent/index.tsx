@@ -5,8 +5,8 @@ import { useState } from "react";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;
-    onCheckResult: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
-    onRetryQuiz: (quiz: ComponentTask, answers: number[]) => Promise<void>;
+    onCheckResult?: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
+    onRetryQuiz?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
 }
 
 export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }: QuizMultiComponentProps) => {
@@ -23,10 +23,11 @@ export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }
     };
 
     const handleCheckResult = async () => {
-        if (isRetrying) {
+        if (isRetrying && onRetryQuiz) {
             await onRetryQuiz(task, selectedAnswers);
         } else {
-            await onCheckResult(task, selectedAnswers);
+            if (onCheckResult)
+                await onCheckResult(task, selectedAnswers);
         }
     };
 
@@ -52,15 +53,15 @@ export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }
 
             {questions.map((questionItem, questionIndex) => (
                 <div key={questionIndex} className="mb-6">
-                   <div className="flex items-center justify-between mb-2">
-                       <h3 className="text-lg font-semibold text-gray-800">Вопрос: {questionItem.question}</h3>
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-lg font-semibold text-gray-800">Вопрос: {questionItem.question}</h3>
 
-                       {userAnswer && !isRetrying && (
-                           <Button onClick={handleRetryQuiz} type="default">
-                               Попробовать еще раз
-                           </Button>
-                       )}
-                   </div>
+                        {userAnswer && !isRetrying && (
+                            <Button onClick={handleRetryQuiz} type="default">
+                                Попробовать еще раз
+                            </Button>
+                        )}
+                    </div>
 
                     <div className="options">
                         {questionItem.options.map((option, optionIndex) => {

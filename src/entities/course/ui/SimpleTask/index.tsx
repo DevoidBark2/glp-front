@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React, { FC, useEffect, useRef, useState } from "react";
-import {ComponentTask} from "@/shared/api/course/model";
+import { ComponentTask } from "@/shared/api/course/model";
 import { MathJaxContext } from "better-react-mathjax";
 import { MathfieldElement } from "mathlive";
 import { Button } from "antd";
@@ -8,7 +8,7 @@ import { parseMathFormula } from "@/shared/lib/parseMathFormula";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;
-    onCheckResult: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
+    onCheckResult?: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
 }
 
 export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult }) => {
@@ -34,7 +34,8 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     }, [task.title, isEditable]);
 
     const handleCheckResult = async () => {
-        await onCheckResult(task, mathFieldRef.current?.value!);
+        if (onCheckResult)
+            await onCheckResult(task, mathFieldRef.current?.value!);
     };
 
     return (

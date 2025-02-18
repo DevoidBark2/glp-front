@@ -5,11 +5,12 @@ import { useState } from "react";
 
 interface QuizComponentProps {
     task: ComponentTask;
-    onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<void>;
-    onRetryQuiz: (quiz: ComponentTask, answers: number[]) => Promise<void>;
+    onCheckResult?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
+    onRetryQuiz?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
 }
 
 export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: QuizComponentProps) => {
+    debugger
     const { title, description, questions } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(questions.length).fill(null));
@@ -27,11 +28,13 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
     };
 
     const handleCheckResult = async () => {
-        if (isRetrying) {
+        if (isRetrying && onRetryQuiz) {
             await onRetryQuiz(task, selectedAnswers);
         } else {
-            await onCheckResult(task, selectedAnswers);
-            setDisabledCheckResultBtn(true);
+            if (onCheckResult) {
+                await onCheckResult(task, selectedAnswers);
+                setDisabledCheckResultBtn(true);
+            }
         }
     };
 

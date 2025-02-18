@@ -1,8 +1,8 @@
 import { observer } from "mobx-react";
 import { Exam } from "@/shared/api/exams/model";
 import React, { FC, useState } from "react";
-import { CourseComponentType } from "@/shared/api/course/model";
 import { QuizComponent, QuizMultiComponent, SimpleTask } from "@/entities/course/ui";
+import { CourseComponentType } from "@/shared/api/component/model";
 
 interface ExamCourseProps {
     exam?: Exam;
@@ -40,11 +40,10 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                         <div
                             key={index}
                             onClick={() => handleSelectQuestion(index)}
-                            className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 ${
-                                currentQuestionIndex === index
-                                    ? "bg-blue-500 text-white border-blue-700"
-                                    : "bg-white text-black border-gray-300 cursor-pointer hover:bg-gray-200"
-                            }`}
+                            className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 ${currentQuestionIndex === index
+                                ? "bg-blue-500 text-white border-blue-700"
+                                : "bg-white text-black border-gray-300 cursor-pointer hover:bg-gray-200"
+                                }`}
                         >
                             {index + 1}
                         </div>
@@ -52,42 +51,37 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                 </div>
             </div>
 
-            {/* Main Content */}
             <div className="flex-1 p-5">
-                {/* Render Current Question */}
                 <div className="mb-5">
-                    {currentComponent && currentComponent.component.type === CourseComponentType.Quiz && (
-                        <QuizComponent quiz={currentComponent.component} currentSection={-1}/>
+                    {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
+                        <QuizComponent task={currentComponent.componentTask} />
                     )}
-                    {currentComponent && currentComponent.component.type === CourseComponentType.MultiPlayChoice && (
-                        <QuizMultiComponent quiz={currentComponent.component} currentSection={-1}/>
+                    {currentComponent && currentComponent.componentTask.type === CourseComponentType.MultiPlayChoice && (
+                        <QuizMultiComponent task={currentComponent.componentTask} />
                     )}
-                    {currentComponent && currentComponent.component.type === CourseComponentType.SimpleTask && (
-                        <SimpleTask task={currentComponent.component} currentSection={-1}/>
+                    {currentComponent && currentComponent.componentTask.type === CourseComponentType.SimpleTask && (
+                        <SimpleTask task={currentComponent.componentTask} />
                     )}
                 </div>
 
-                {/* Navigation Buttons */}
                 <div className="flex justify-between">
                     <button
                         onClick={handlePreviousQuestion}
                         disabled={currentQuestionIndex === 0}
-                        className={`px-5 py-2 rounded-lg text-white ${
-                            currentQuestionIndex === 0
-                                ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-blue-500 hover:bg-blue-600"
-                        }`}
+                        className={`px-5 py-2 rounded-lg text-white ${currentQuestionIndex === 0
+                            ? "bg-gray-300 cursor-not-allowed"
+                            : "bg-blue-500 hover:bg-blue-600"
+                            }`}
                     >
                         Назад
                     </button>
                     <button
                         onClick={handleNextQuestion}
                         disabled={currentQuestionIndex === (exam?.components.length || 1) - 1}
-                        className={`px-5 py-2 rounded-lg text-white ${
-                            currentQuestionIndex === (exam?.components.length || 1) - 1
-                                ? "bg-gray-300 cursor-not-allowed"
-                                : "bg-blue-500 hover:bg-blue-600"
-                        }`}
+                        className={`px-5 py-2 rounded-lg text-white ${currentQuestionIndex === (exam?.components.length || 1) - 1
+                            ? "bg-gray-300 cursor-not-allowed"
+                            : "bg-blue-500 hover:bg-blue-600"
+                            }`}
                     >
                         Вперед
                     </button>

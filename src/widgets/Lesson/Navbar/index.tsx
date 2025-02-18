@@ -5,7 +5,7 @@ import {
     Tooltip,
     Skeleton, Spin, Progress,
 } from "antd";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     ExclamationCircleOutlined,
     CheckCircleOutlined,
@@ -80,17 +80,17 @@ export const NavbarLesson = observer(() => {
     };
 
 
-    const [windowW,setWindowW] = useState<number | null>(null)
+    const [windowW, setWindowW] = useState<number | null>(null)
     const [isMobile, setIsMobile] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
     const handleResize = () => {
         setWindowW(window.innerWidth)
         console.log(window.innerWidth)
-        if(window.innerWidth <= 768) {
+        if (window.innerWidth <= 768) {
             setIsMobile(true)
         }
-        else{
+        else {
             setIsMobile(false)
         }
 
@@ -111,7 +111,7 @@ export const NavbarLesson = observer(() => {
         const initialSectionId = step || courseStore.courseMenuItems?.sections?.[0]?.children?.[0]?.id;
         const isMobile = window.localStorage.getItem("platform_mobile")
         setWindowW(window.innerWidth)
-        if(isMobile) {
+        if (isMobile) {
             setIsMobile(!!isMobile)
         }
 
@@ -140,7 +140,7 @@ export const NavbarLesson = observer(() => {
             <Sider
                 width={240}
                 style={{
-                    position: "static",
+                    position: isMobile ? "fixed" : "static",
                     left: isMobile && !isHovered ? "-240px" : "0",
                     height: "calc(100vh - 64px)",
                     zIndex: 1100,
@@ -192,7 +192,7 @@ export const NavbarLesson = observer(() => {
                         selectedKeys={[selectedSection?.toString() || ""]}
                         onClick={(info) => handleMenuClick(Number(info.key))}
                         className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                        style={{paddingBottom: 100}}
+                        style={{ paddingBottom: 100 }}
                         items={[
                             ...(courseStore.courseMenuItems?.sections?.map((section) => ({
                                 key: section.id?.toString(),
@@ -209,7 +209,7 @@ export const NavbarLesson = observer(() => {
                                 })) || [],
                             })) || []),
 
-                            {type: "divider"},
+                            { type: "divider" },
 
                             {
                                 key: "-1",
@@ -217,10 +217,10 @@ export const NavbarLesson = observer(() => {
                                 icon: (
                                     <Tooltip title="Пока нельзя перейти к экзамену">
                                         <ExclamationCircleOutlined
-                                            style={{color: "#1976d2", fontSize: 25, opacity: 0.5}}/>
+                                            style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
                                     </Tooltip>
                                 ),
-                                disabled: true,
+                                // disabled: true,
                             },
                         ]}
                     />
@@ -229,9 +229,9 @@ export const NavbarLesson = observer(() => {
                 ) : (
                     <div className="h-[calc(100vh-96px)] custom-scrollbar">
                         {
-                            Array.from({length: 8}).map((_, index) => (
+                            Array.from({ length: 8 }).map((_, index) => (
                                 <Skeleton.Input key={index} active block
-                                                style={{width: 230, marginLeft: 10, marginTop: 10}}/>
+                                    style={{ width: 230, marginLeft: 10, marginTop: 10 }} />
                             ))
                         }
                     </div>
