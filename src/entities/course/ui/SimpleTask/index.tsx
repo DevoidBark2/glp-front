@@ -46,7 +46,25 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
 
             <MathJaxContext
                 config={{
-                    MatchWebFonts: false
+                    tex: {
+                        tex: {
+                            inlineMath: [['$', '$'], ['\\(', '\\)']]
+                        },
+                        processEscapes: true,
+                    },
+                    options: {
+                        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], // Пропускаем эти теги
+                        renderActions: {
+                            addMenu: [],
+                        },
+                    },
+                    "HTML-CSS": {
+                        availableFonts: ["STIX"],
+                        preferredFont: "STIX",
+                        webFont: "STIX-Web",
+                    },
+                    showMathMenu: false, // Отключаем меню
+                    showProcessingMessages: false, // Отключаем сообщения
                 }}
             >
                 <div className="bg-[#fff] p-2 border rounded border-[#ddd] mb-4 text-lg text-[#444] flex items-center flex-wrap gap-10">
