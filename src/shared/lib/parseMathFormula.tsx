@@ -10,7 +10,7 @@ export const parseMathFormula = (description: string) => {
     description.replace(regex, (match, formula, offset) => {
         if (lastIndex < offset) {
             parsedParts.push(
-                <span key={`text-${lastIndex}`} style={{ display: "flex", alignItems: "center" }}>
+                <span key={`text-${lastIndex}`} style={{ display: "flex", alignItems: "center", gap:10 }}>
                     {description.slice(lastIndex, offset)}
                 </span>
             );
@@ -38,7 +38,7 @@ export const parseMathFormula = (description: string) => {
 
     if (lastIndex < description.length) {
         parsedParts.push(
-            <span key={`text-${lastIndex}`} style={{ display: "flex", alignItems: "center" }}>
+            <span key={`text-${lastIndex}`} style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                 {description.slice(lastIndex)}
             </span>
         );

@@ -1,8 +1,8 @@
-import { CourseComponentTypeI } from "@/shared/api/course/model";
 import { observer } from "mobx-react";
+import {CourseComponent} from "@/shared/api/component/model";
 
 interface TextComponentProps {
-    component: CourseComponentTypeI
+    component: CourseComponent
 }
 
 export const TextComponent = observer(({component}: TextComponentProps) => {

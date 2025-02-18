@@ -1,14 +1,14 @@
 import { observer } from "mobx-react";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { CourseComponentTypeI } from "@/shared/api/course/model";
+import {ComponentTask} from "@/shared/api/course/model";
 import { MathJaxContext } from "better-react-mathjax";
 import { MathfieldElement } from "mathlive";
 import { Button } from "antd";
 import { parseMathFormula } from "@/shared/lib/parseMathFormula";
 
 interface QuizMultiComponentProps {
-    task: CourseComponentTypeI;
-    onCheckResult: (quiz: CourseComponentTypeI, answers: number[] | string) => Promise<void>;
+    task: ComponentTask;
+    onCheckResult: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
 }
 
 export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult }) => {
@@ -44,8 +44,12 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
                 Внимательно прочитайте условие и найдите результат. Убедитесь, что вы понимаете формулы и вычисления.
             </p>
 
-            <MathJaxContext>
-                <div className="bg-[#fff] p-2 border rounded border-[#ddd] mb-4 text-lg text-[#444] flex items-center flex-wrap">
+            <MathJaxContext
+                config={{
+                    MatchWebFonts: false
+                }}
+            >
+                <div className="bg-[#fff] p-2 border rounded border-[#ddd] mb-4 text-lg text-[#444] flex items-center flex-wrap gap-10">
                     {parseMathFormula(task.title)}
                 </div>
                 <math-field

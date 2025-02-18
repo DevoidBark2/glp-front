@@ -1,4 +1,4 @@
-import { CourseComponentTypeI } from "@/shared/api/course/model";
+import {ComponentTask} from "@/shared/api/course/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Card, Divider, Skeleton } from "antd";
 import { observer } from "mobx-react";
@@ -20,13 +20,21 @@ export const CourseSectionCard = observer(() => {
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
-    const handleCheckResult = async (quiz: CourseComponentTypeI, userAnswer: string | number[]) => {
+    const handleCheckResult = async (quiz: ComponentTask, userAnswer: string | number[]) => {
         await courseStore.handleCheckTask({
             task: quiz,
             answers: userAnswer,
             currentSection: step!,
         });
     };
+
+    const handleRetryResult = async (quiz: ComponentTask, userAnswer: string | number[]) => {
+        await courseStore.handleCheckTask({
+            task: quiz,
+            answers: userAnswer,
+            currentSection: step!,
+        });
+    }
 
     useEffect(() => {
         if (step !== null) {
@@ -72,6 +80,7 @@ export const CourseSectionCard = observer(() => {
                                 key={component.id}
                                 task={componentTask}
                                 onCheckResult={handleCheckResult}
+                                onRetryQuiz={handleRetryResult}
                             />
 
                         case CourseComponentType.SimpleTask:
@@ -86,6 +95,7 @@ export const CourseSectionCard = observer(() => {
                                 key={component.id}
                                 task={componentTask}
                                 onCheckResult={handleCheckResult}
+                                onRetryQuiz={handleRetryResult}
                             />;
 
                         default:

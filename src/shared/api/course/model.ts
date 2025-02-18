@@ -70,35 +70,6 @@ export type CourseComponentTypeI = {
     componentTask: ComponentTask
 }
 
-export type QuizAnswer = {
-    id: string
-    question: string
-    userAnswer: number,
-    isCorrect: boolean
-}
-
-export type SimpleTaskAnswer = {
-    id: string
-    question: string;
-    userAnswer: number,
-    isCorrect: boolean
-}
-
-export type MultiQuizTaskAnswer = {
-    id: string
-    question: string
-    userAnswer: number[],
-    isCorrect: boolean
-}
-
-export type UserAnswer = {
-    id: number;
-    taskType: CourseComponentType
-    answer: QuizAnswer[] | SimpleTaskAnswer[] | MultiQuizTaskAnswer[]
-}
-
-
-
 export type Course = {
     id: number;
     name: string;
@@ -135,10 +106,37 @@ export type CourseReview = {
     courseId: number
 }
 
+export type QuizAnswer = {
+    id: string
+    question: string
+    userAnswer: number,
+    isCorrect: boolean
+}
+
+export type SimpleTaskAnswer = {
+    id: string
+    question: string;
+    userAnswer: number,
+    isCorrect: boolean
+}
+
+export type MultiQuizTaskAnswer = {
+    id: string
+    question: string
+    userAnswer: number[],
+    isCorrect: boolean
+}
+
+export type UserAnswer = {
+    id: number;
+    taskType: CourseComponentType
+    answer: QuizAnswer[] | SimpleTaskAnswer[] | MultiQuizTaskAnswer[]
+}
+
 export type SectionMenu = {
     id: number
     name: string
-    userAnswer: UserAnswer
+    userAnswer?: {totalAnswers: number, correctAnswers: number} | {confirmedStep: number}
 }
 export type MainSectionMenu = {
     id: number

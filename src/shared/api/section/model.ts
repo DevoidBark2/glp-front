@@ -17,7 +17,7 @@ export type SectionCourse = {
     id: number;
     name: string;
     small_description: string,
-    components: CourseComponentTypeI[],
+    components: CourseComponent[],
     files: FileSectionType[],
     links: string[],
 }

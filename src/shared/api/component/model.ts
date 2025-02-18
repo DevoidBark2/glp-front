@@ -1,4 +1,4 @@
-import {User} from "@/shared/api/user/model";
+import {ComponentTask} from "@/shared/api/course/model";
 
 export enum CourseComponentType {
     Text = "text",
@@ -25,15 +25,7 @@ export type QuestionsType = {
 
 export type CourseComponent = {
     id: string;
-    title: string;
-    status: StatusCourseComponentEnum;
-    type: CourseComponentType;
-    created_at: Date;
-    user?: User;
     sort?: number;
-    description?: string;
-    questions?: QuestionsType[];
-    answer?: string;
-    content_description?: string;
+    componentTask: ComponentTask
 };
 

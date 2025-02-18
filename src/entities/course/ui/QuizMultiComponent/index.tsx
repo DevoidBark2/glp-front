@@ -1,37 +1,46 @@
-import { CourseComponentTypeI, UserAnswer } from "@/shared/api/course/model";
+import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
 import { Button } from "antd";
 import { observer } from "mobx-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface QuizMultiComponentProps {
-    task: CourseComponentTypeI;
-    onCheckResult: (quiz: CourseComponentTypeI, answers: number[] | string) => Promise<void>;
+    task: ComponentTask;
+    onCheckResult: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
+    onRetryQuiz: (quiz: ComponentTask, answers: number[]) => Promise<void>;
 }
 
-export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiComponentProps) => {
+export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }: QuizMultiComponentProps) => {
     const { title, description, questions, userAnswer } = task;
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array.isArray(userAnswer) ? userAnswer : []);
+    const [isRetrying, setIsRetrying] = useState(false);
 
-    // Инициализация состояния с учётом userAnswer, если оно есть
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(userAnswer);
-
-    // Функция для обновления выбранных ответов
     const handleOptionChange = (index: number) => {
-        setSelectedAnswers((prevAnswers) => {
-            if (prevAnswers.includes(index)) {
-                return prevAnswers.filter((answer) => answer !== index);
-            }
-            return [...prevAnswers, index];
-        });
+        if (userAnswer && !isRetrying) return;
+
+        setSelectedAnswers((prevAnswers = []) =>
+            prevAnswers.includes(index) ? prevAnswers.filter((answer) => answer !== index) : [...prevAnswers, index]
+        );
     };
 
-    // Функция для обработки результата
     const handleCheckResult = async () => {
-        await onCheckResult(task, selectedAnswers);
+        if (isRetrying) {
+            await onRetryQuiz(task, selectedAnswers);
+        } else {
+            await onCheckResult(task, selectedAnswers);
+        }
     };
 
-    // Функция для получения правильных ответов из userAnswer
+    const handleRetryQuiz = async () => {
+        setSelectedAnswers([]);
+        setIsRetrying(true);
+        // await onRetryQuiz(task, []);
+    };
+
     const getCorrectOptions = (userAnswer: number[] | UserAnswer | UserAnswer[]) => {
-        return userAnswer[0]?.userAnswer || []; // Если это массив объектов UserAnswer, извлекаем первый
+        if (Array.isArray(userAnswer) && typeof userAnswer[0] === "object") {
+            return userAnswer[0]?.userAnswer || [];
+        }
+        return Array.isArray(userAnswer) ? userAnswer : [];
     };
 
     const correctOptions = userAnswer ? getCorrectOptions(userAnswer) : [];
@@ -43,37 +52,35 @@ export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiCo
 
             {questions.map((questionItem, questionIndex) => (
                 <div key={questionIndex} className="mb-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Вопрос: {questionItem.question}</h3>
+                   <div className="flex items-center justify-between mb-2">
+                       <h3 className="text-lg font-semibold text-gray-800">Вопрос: {questionItem.question}</h3>
+
+                       {userAnswer && !isRetrying && (
+                           <Button onClick={handleRetryQuiz} type="default">
+                               Попробовать еще раз
+                           </Button>
+                       )}
+                   </div>
 
                     <div className="options">
                         {questionItem.options.map((option, optionIndex) => {
-                            // Проверка, является ли опция правильной для данного ответа
-                            const isCorrectOption = correctOptions?.includes(optionIndex);
-                            const isUserSelected = selectedAnswers?.includes(optionIndex);
+                            const isCorrectOption = correctOptions.includes(optionIndex);
+                            const isUserSelected = selectedAnswers.includes(optionIndex);
 
-                            // Условия для окраски
                             let optionClass = "block cursor-pointer mb-2 p-4 border rounded-lg transition-all ";
 
-                            if (userAnswer) {
-                                // Если ответ пользователя уже получен
-
+                            if (userAnswer && !isRetrying) {
                                 if (isCorrectOption) {
-                                    // Зеленый для правильных ответов
                                     optionClass += "bg-green-100 border-green-500";
                                 } else if (isUserSelected) {
-                                    // Красный для неправильных ответов, которые были выбраны
                                     optionClass += "bg-red-100 border-red-500";
                                 } else {
-                                    // Если не выбрана опция и она не правильная
                                     optionClass += "bg-white border-gray-300";
                                 }
                             } else {
-                                // Пока не получен ответ пользователя
                                 if (isUserSelected) {
-                                    // Выделяем синим для выбранных опций
                                     optionClass += "bg-blue-100 border-blue-500";
                                 } else {
-                                    // Белый для других опций
                                     optionClass += "bg-white border-gray-300";
                                 }
                             }
@@ -82,9 +89,9 @@ export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiCo
                                 <label key={optionIndex} className={optionClass}>
                                     <input
                                         type="checkbox"
-                                        disabled={!!userAnswer}  // Делаем input disabled, если уже есть ответ
+                                        disabled={!!userAnswer && !isRetrying}
                                         value={optionIndex}
-                                        checked={isUserSelected || isCorrectOption}
+                                        checked={isUserSelected || (userAnswer && isCorrectOption)}
                                         onChange={() => handleOptionChange(optionIndex)}
                                         className="mr-2"
                                     />
@@ -96,14 +103,14 @@ export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiCo
                 </div>
             ))}
 
-            <div className="flex justify-end">
+            <div className="flex justify-between mt-4">
                 <Button
                     type="primary"
-                    disabled={!!userAnswer}  // Делаем кнопку недоступной, если уже есть ответ
                     onClick={handleCheckResult}
+                    disabled={!isRetrying && !!userAnswer}
                     className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
                 >
-                    Завершить
+                    {isRetrying ? "Завершить повторное прохождение" : "Завершить"}
                 </Button>
             </div>
         </div>

@@ -3,14 +3,14 @@ import {
     Layout,
     Button,
     Tooltip,
-    Skeleton,
+    Skeleton, Spin, Progress,
 } from "antd";
-import {useEffect, useLayoutEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     ExclamationCircleOutlined,
     CheckCircleOutlined,
     CloseCircleOutlined,
-    QuestionCircleOutlined,
+    QuestionCircleOutlined, HomeOutlined,
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -19,24 +19,6 @@ import { SectionMenu } from "@/shared/api/course/model";
 import Image from "next/image";
 
 const { Sider } = Layout;
-
-function useWindowSize() {
-    const [size, setSize] = useState([0, 0]);
-    useLayoutEffect(() => {
-        function updateSize() {
-            setSize([window.innerWidth, window.innerHeight]);
-        }
-        window.addEventListener('resize', updateSize);
-        updateSize();
-        return () => window.removeEventListener('resize', updateSize);
-    }, []);
-    return size;
-}
-
-function ShowWindowDimensions() {
-    const [width, height] = useWindowSize();
-    return <span>Window size: {width} x {height}</span>;
-}
 
 export const NavbarLesson = observer(() => {
     const { courseStore } = useMobxStores();
@@ -72,7 +54,7 @@ export const NavbarLesson = observer(() => {
             );
         }
 
-        if (!Array.isArray(userAnswer) && userAnswer.confirmedStep) {
+        if ("confirmedStep" in userAnswer) {
             return (
                 <Tooltip title="Этап пройден">
                     <CheckCircleOutlined style={{ ...iconStyles, color: "green" }} />
@@ -80,22 +62,8 @@ export const NavbarLesson = observer(() => {
             );
         }
 
-        if (!Array.isArray(userAnswer) && userAnswer.value) {
-            const tooltipTitle = userAnswer.isCorrect
-                ? `Задание выполнено верно`
-                : `Задание выполнено неверно`;
-
-            const icon = userAnswer.answer
-                ? <CheckCircleOutlined style={{ ...iconStyles, color: "green" }} />
-                : <CloseCircleOutlined style={{ ...iconStyles, color: "red" }} />;
-
-            return <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
-        }
-
-        const totalAnswers = Array.isArray(userAnswer) ? userAnswer.length : userAnswer.totalAnswers;
-        const correctAnswers = Array.isArray(userAnswer)
-            ? userAnswer.filter(answer => answer.isCorrect).length
-            : userAnswer.correctAnswers;
+        const totalAnswers = userAnswer.totalAnswers;
+        const correctAnswers = userAnswer.correctAnswers
 
         let icon = <ExclamationCircleOutlined style={{ ...iconStyles, color: "orange" }} />;
         let tooltipTitle = `Часть заданий выполнена верно (${correctAnswers}/${totalAnswers})`;
@@ -111,8 +79,9 @@ export const NavbarLesson = observer(() => {
         return <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
     };
 
-    const [windowW,setWindowW] = useState(window.innerWidth)
-    const [isMobile, setIsMobile] = useState(true);
+
+    const [windowW,setWindowW] = useState<number | null>(null)
+    const [isMobile, setIsMobile] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
     const handleResize = () => {
@@ -132,9 +101,19 @@ export const NavbarLesson = observer(() => {
         }, [windowW]);
     };
 
+    const handleSetIsMobile = () => {
+        window.localStorage.setItem("platform_mobile", String(!isMobile))
+        setIsMobile(prevState => !prevState)
+    }
+
     useEffect(() => {
         const step = Number(searchParams.get("step"));
         const initialSectionId = step || courseStore.courseMenuItems?.sections?.[0]?.children?.[0]?.id;
+        const isMobile = window.localStorage.getItem("platform_mobile")
+        setWindowW(window.innerWidth)
+        if(isMobile) {
+            setIsMobile(!!isMobile)
+        }
 
         if (initialSectionId) {
             setSelectedSection(initialSectionId);
@@ -161,7 +140,7 @@ export const NavbarLesson = observer(() => {
             <Sider
                 width={240}
                 style={{
-                    position: isMobile ? "fixed" : "static",
+                    position: "static",
                     left: isMobile && !isHovered ? "-240px" : "0",
                     height: "calc(100vh - 64px)",
                     zIndex: 1100,
@@ -185,8 +164,23 @@ export const NavbarLesson = observer(() => {
                             height={30}
                             color="white"
                         />}
-                        onClick={() => setIsMobile(prevState => !prevState)}
+                        onClick={() => handleSetIsMobile()}
                     />
+                </div>
+
+                <div className="flex-1 mx-4">
+                    <p className='text-white text-xl text-center'>Прогресс по курсу</p>
+                    {!courseStore.courseMenuLoading && (
+                        <Progress
+                            percent={courseStore.courseMenuItems?.progress}
+                            strokeColor="green"
+                            trailColor="#CCCCCC"
+                            showInfo={true}
+                            format={(percent) => (
+                                <span className="text-white font-bold">{percent}%</span>
+                            )}
+                        />
+                    )}
                 </div>
 
                 {courseStore.courseMenuItems ? (
@@ -198,7 +192,7 @@ export const NavbarLesson = observer(() => {
                         selectedKeys={[selectedSection?.toString() || ""]}
                         onClick={(info) => handleMenuClick(Number(info.key))}
                         className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                        style={{ paddingBottom: 20 }}
+                        style={{paddingBottom: 100}}
                         items={[
                             ...(courseStore.courseMenuItems?.sections?.map((section) => ({
                                 key: section.id?.toString(),
@@ -207,21 +201,23 @@ export const NavbarLesson = observer(() => {
                                     key: child.id?.toString(),
                                     icon: renderIcon(child),
                                     label: (
-                                        <div className="flex items-center justify-between px-4 py-2 border-l-2 border-green-500">
+                                        <div
+                                            className="flex items-center justify-between px-4 py-2 border-l-2 border-green-500">
                                             <p className="truncate">{child.name}</p>
                                         </div>
                                     ),
                                 })) || [],
                             })) || []),
 
-                            { type: "divider" },
+                            {type: "divider"},
 
                             {
                                 key: "-1",
                                 label: <span className="text-gray-400">Экзамен</span>,
                                 icon: (
                                     <Tooltip title="Пока нельзя перейти к экзамену">
-                                        <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
+                                        <ExclamationCircleOutlined
+                                            style={{color: "#1976d2", fontSize: 25, opacity: 0.5}}/>
                                     </Tooltip>
                                 ),
                                 disabled: true,
@@ -233,8 +229,9 @@ export const NavbarLesson = observer(() => {
                 ) : (
                     <div className="h-[calc(100vh-96px)] custom-scrollbar">
                         {
-                            Array.from({ length: 8 }).map((_, index) => (
-                                <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 10, marginTop: 10 }} />
+                            Array.from({length: 8}).map((_, index) => (
+                                <Skeleton.Input key={index} active block
+                                                style={{width: 230, marginLeft: 10, marginTop: 10}}/>
                             ))
                         }
                     </div>
