@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import {Avatar, Button, MenuProps, Spin, Drawer, Dropdown} from "antd";
+import { Avatar, Button, MenuProps, Spin, Drawer, Dropdown } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { PlatformMenu } from "@/shared/constants";
@@ -9,7 +9,7 @@ import { UserRole } from "@/shared/api/user/model";
 import { UserOutlined, HomeOutlined, ReadOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {AuthMethodEnum} from "@/shared/api/auth/model";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 import nextConfig from "../../../next.config.mjs";
 
 export const Header = observer(() => {
@@ -53,8 +53,8 @@ export const Header = observer(() => {
                 label: createMenuItem("/platform/profile", "Профиль", "/static/profile_icon.svg"),
             },
             ...(userProfileStore.userProfile?.role === UserRole.TEACHER ||
-            userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN ||
-            userProfileStore.userProfile?.role === UserRole.MODERATOR
+                userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN ||
+                userProfileStore.userProfile?.role === UserRole.MODERATOR
                 ? [
                     {
                         key: "2",
@@ -93,61 +93,60 @@ export const Header = observer(() => {
 
                 <Link href="/platform">
                     <span className="text-4xl font-bold text-black dark:text-white">
-                      Learnify
+                        Learnify
                     </span>
                 </Link>
 
                 <div className="flex w-1/5 justify-between items-center space-x-4">
-                    {platformMenu.map((menuItem, index) => (
+                    {platformMenu.map((menuItem) => (
                         <Link
                             key={menuItem.key}
                             href={menuItem.link}
                             className={`text-black text-lg font-medium relative group hover:text-gray-700 transition-all duration-300
-                ${pathName.includes(menuItem.link) ? "text-gray-900" : ""}`}
+            ${pathName === menuItem.link ? "text-gray-900" : ""}`}
                         >
                             {menuItem.title}
                             <span
-                                className="absolute bottom-0 left-0 w-full h-[2px] bg-black opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                className={`absolute bottom-0 left-0 w-full h-[2px] bg-black transition-all duration-300 
+                ${pathName === menuItem.link ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
                             ></span>
                         </Link>
                     ))}
+
                 </div>
 
-
-                {/* Профиль пользователя / Кнопки входа для десктопа */}
                 <div className="hidden lg:flex items-center space-x-4">
-                    {userProfileStore.loading ? (
-                        <div className="flex items-center justify-center p-3">
-                            <Spin size="large"/>
-                        </div>
-                    ) : userProfileStore.userProfile ? (
-                        <Dropdown menu={{items}} placement="bottomRight">
+                    {userProfileStore.userProfile ? (
+                        <Dropdown menu={{ items }} placement="bottomRight">
                             <Avatar
                                 className="flex items-center cursor-pointer p-2 rounded"
                                 size={40}
                                 src={
                                     userProfileStore.userProfile?.image
                                         ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                        userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                             ? userProfileStore.userProfile?.image
                                             : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                         : undefined
                                 }
-                                icon={!userProfileStore.userProfile?.image && <UserOutlined/>}
+                                icon={!userProfileStore.userProfile?.image && <UserOutlined />}
                             />
                         </Dropdown>
                     ) : (
-                        <div className="p-3 flex space-x-4">
+                        <div className="flex space-x-4">
                             <Button
-                                className="text-white text-lg px-6 py-3 uppercase font-bold cursor-pointer border-none rounded-md
-                        bg-gradient-to-r from-[#ff0077] to-[#00bfff] transition-all hover:shadow-lg"
+                                className="text-white text-lg px-6 uppercase font-bold cursor-pointer border-none rounded-md"
+                                // variant="solid"
+                                color="default"
+                                variant="outlined"
                                 onClick={() => router.push("/platform/auth/login")}
                             >
                                 Войти
                             </Button>
                             <Button
-                                className="text-white text-lg px-6 py-3 uppercase font-bold cursor-pointer border-none rounded-md
-                        bg-gradient-to-r from-[#ff0077] to-[#00bfff] transition-all hover:shadow-lg"
+                                className="text-white text-lg px-6 uppercase font-bold cursor-pointer border-none rounded-md"
+                                color="default"
+                                variant="solid"
                                 onClick={() => router.push("/platform/auth/register")}
                             >
                                 Регистрация

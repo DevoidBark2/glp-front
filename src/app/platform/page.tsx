@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useMobxStores } from '@/shared/store/RootStore';
 import { AuthMethodEnum } from '@/shared/api/auth/model';
 import Link from 'next/link';
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 
 const PlatformPage = () => {
     const { courseStore, nomenclatureStore } = useMobxStores()
@@ -64,11 +64,12 @@ const PlatformPage = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
-                prefix={<SearchOutlined className="text-gray-500" />}
+                className="rounded-lg bg-gray-100 border border-transparent focus-within:border-gray-400 transition"
                 enterButton={
                     <Button
                         disabled={searchTerm.trim().length <= 2}
-                        type="primary"
+                        type="default"
+                        className="border border-gray-300 bg-white hover:bg-gray-100 text-gray-700"
                         icon={<SearchOutlined />}
                         onClick={handleSearch}
                     >
@@ -76,6 +77,7 @@ const PlatformPage = () => {
                     </Button>
                 }
             />
+
         </div>
 
         <Divider className="my-6" />

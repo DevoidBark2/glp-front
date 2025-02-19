@@ -14,29 +14,29 @@ export const CourseItem = observer(({ course }: CourseItemProps) => {
     return (
         <Link
             href={`platform/courses/${course.id}`}
-            className="block rounded-lg shadow hover:shadow-lg hover:cursor-pointer bg-white overflow-hidden transition-transform duration-150 ease-out transform-gpu"
+            className="block rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white overflow-hidden"
         >
-            <div className="relative w-full h-48 bg-gray-100 overflow-hidden">
+            <div className="relative w-full h-44 bg-gray-100">
                 {course.image ? (
                     <Image
                         src={`${nextConfig.env!.API_URL}${course.image}`}
                         alt={course.name}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        style={{ width: '100%', height: 'auto' }}
+                        width={400}
+                        height={176}
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                        <BookOutlined style={{ fontSize: '48px', color: '#8c8c8c' }} />
+                    <div className="flex items-center justify-center w-full h-full bg-gray-200">
+                        <BookOutlined className="text-5xl text-gray-400" />
                     </div>
                 )}
             </div>
-            <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">{course.name}</h3>
-                <p className="text-sm text-gray-500 truncate">
-                    <span className="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+
+            {/* Контент */}
+            <div className="p-5 space-y-2">
+                <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{course.name}</h3>
+                <p className="text-sm text-gray-600 line-clamp-1">
+                    <span className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium">
                         {course.category.name}
                     </span>
                 </p>

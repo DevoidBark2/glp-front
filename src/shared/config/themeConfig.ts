@@ -1,15 +1,17 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, ThemeConfig } from "antd";
 import { MAIN_COLOR } from "../constants";
 
-export const themeConfig = {
+export const themeConfig: ThemeConfig = {
     components: {
-        // Button: {
-        //     colorPrimaryBorderHover: MAIN_COLOR,
-        //     colorPrimaryHover: MAIN_COLOR,
-        //     colorPrimary: MAIN_COLOR,
-        //     colorPrimaryActive: 'lightgray',
-        //     colorPrimaryTextHover: 'lightgray',
-        // },
+        Button: {
+            colorPrimaryBorderHover: "black",
+            colorPrimaryActive: "black",
+            defaultBorderColor: "black",
+            colorPrimaryBg: "black",
+            primaryColor: "black",
+            colorPrimaryText: "white",
+            colorPrimaryTextHover: "white"
+        },
         Breadcrumb: {
             colorPrimary: MAIN_COLOR,
         },
@@ -20,10 +22,11 @@ export const themeConfig = {
             colorPrimaryHover: MAIN_COLOR
         },
         Input: {
-            colorPrimaryHover: MAIN_COLOR,
-            colorPrimaryActive: MAIN_COLOR,
-            colorPrimaryBorder: MAIN_COLOR,
-            colorPrimaryBorderHover: MAIN_COLOR,
+            colorPrimaryHover: "black",
+            colorPrimaryActive: "black",
+            colorPrimaryBorder: "black",
+            colorPrimaryBorderHover: "black",
+            colorInfoActive: "black"
         },
         DatePicker: {
             colorPrimaryHover: MAIN_COLOR,
@@ -62,7 +65,7 @@ export const themeConfig = {
         Switch: {
             colorPrimary: "#00FFFF",
             colorPrimaryHover: "#00FFFF"
-        }
+        },
     },
     token: {
 

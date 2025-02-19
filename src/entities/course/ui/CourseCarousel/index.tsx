@@ -1,6 +1,6 @@
 import { Course } from "@/shared/api/course/model";
 import { Card, Carousel, Col, Row, Skeleton, Grid, Divider } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'; // Импортируем иконки стрелок
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { observer } from "mobx-react";
 import React, { FC, useEffect, useState } from "react";
 import { CourseItem } from "../CourseItem";
@@ -13,27 +13,24 @@ interface CourseCarouselProps {
 }
 
 export const CourseCarousel: FC<CourseCarouselProps> = observer(({ courses, loading }) => {
-    const screens = useBreakpoint(); // Получаем текущую ширину экрана
+    const screens = useBreakpoint();
     const [isMobileCarousel, setIsMobileCarousel] = useState(false);
-    const [isCarouselRequired, setIsCarouselRequired] = useState(false); // Для проверки, нужно ли показывать карусель
+    const [isCarouselRequired, setIsCarouselRequired] = useState(false);
 
     useEffect(() => {
-        setIsMobileCarousel(!screens.lg); // Включаем карусель, если экран меньше lg (1024px)
-        // Если количество элементов больше 4, показываем карусель
+        setIsMobileCarousel(!screens.lg);
         setIsCarouselRequired(courses.length > 4);
     }, [screens, courses.length]);
 
     return (
         <div className="mb-12 mt-12">
-            <h2 className="text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-400 
-                    relative tracking-wide text-center md:text-left transition-all duration-500 ease-in-out glitch-text">
+            <h2 className="text-3xl font-semibold">
                 Популярные курсы
             </h2>
 
             <Divider className="dark:bg-white" orientation="center" />
 
             <div className="mt-8">
-                {/*&& courses.length < 1*/}
                 {loading ? (
                     <Row gutter={[16, 16]}>
                         {Array.from({ length: 4 }).map((_, index) => (
@@ -46,24 +43,24 @@ export const CourseCarousel: FC<CourseCarouselProps> = observer(({ courses, load
                             </Col>
                         ))}
                     </Row>
-                ) : isCarouselRequired ? ( // Показываем карусель, если нужно
+                ) : isCarouselRequired ? (
                     <Carousel
-                        autoplay={false} // Убираем автопрокрутку
-                        arrows // Включаем стрелки для перемещения
+                        autoplay={false}
+                        arrows
                         slidesToShow={4}
                         className="rounded-lg overflow-hidden"
                         nextArrow={<ArrowRightOutlined size={100} />} prevArrow={<ArrowLeftOutlined size={100} />}
                         responsive={[
                             {
-                                breakpoint: 1300, // На экранах от 1200px показываем 3 элемента
+                                breakpoint: 1300,
                                 settings: { slidesToShow: 3 }
                             },
                             {
-                                breakpoint: 1050, // На экранах от 1200px показываем 3 элемента
+                                breakpoint: 1050,
                                 settings: { slidesToShow: 2 }
                             },
                             {
-                                breakpoint: 768, // На экранах до 768px показываем 1 элемент
+                                breakpoint: 768,
                                 settings: { slidesToShow: 1 }
                             },
                         ]}
@@ -76,7 +73,7 @@ export const CourseCarousel: FC<CourseCarouselProps> = observer(({ courses, load
                     </Carousel>
                 ) : (
                     <Row gutter={[16, 16]}>
-                        {courses.slice(0, 4).map((course) => ( // Показываем только первые 4 курса
+                        {courses.slice(0, 4).map((course) => (
                             <Col key={course.id} xs={24} sm={12} md={8} lg={6}>
                                 <CourseItem course={course} />
                             </Col>

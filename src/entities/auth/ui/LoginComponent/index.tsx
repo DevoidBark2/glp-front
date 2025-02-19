@@ -54,7 +54,7 @@ export const LoginComponent = observer(() => {
     }
 
     return (
-        <div className="flex justify-center items-center mt-8">
+        <div className="flex justify-center items-center mt-8 px-4">
             <Form
                 form={form}
                 layout="vertical"
@@ -75,7 +75,7 @@ export const LoginComponent = observer(() => {
                                 height={16}
                             />
                         }
-                        className="w-full flex items-center justify-center bg-[#db4437] text-white rounded-md hover:bg-[#c23322] transition-all"
+                        className="w-full flex items-center justify-center text-white rounded-md"
                         onClick={() => handleProvider('google')}
                     >
                         Google
@@ -132,36 +132,34 @@ export const LoginComponent = observer(() => {
                             <Input.Password
                                 placeholder="Введите пароль"
                                 iconRender={(visible) =>
-                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                                    visible ? <EyeTwoTone style={{ color: "grey" }} /> : <EyeInvisibleOutlined style={{ color: "grey" }} />
                                 }
                             />
                         </Form.Item>
                     </>
                 )}
 
-
-
-                <div className="flex justify-center">
-                    <ReCAPTCHA
-                        sitekey={nextConfig.env?.GOOGLE_RECAPTCHA_SITE_KEY ?? ''}
-                        onChange={setRecaptcha}
-                    />
-                </div>
-
                 <div className="flex justify-end mb-4 mt-4">
                     <span
-                        className="hover:cursor-pointer text-primary-color text-[#00b96b]"
+                        className="hover:cursor-pointer text-gray-500 hover:text-gray-800"
                         onClick={() => router.push('reset-password')}
                     >
                         Восстановить пароль
                     </span>
                 </div>
 
+                <div className="flex justify-center mt-10">
+                    <ReCAPTCHA
+                        sitekey={nextConfig.env?.GOOGLE_RECAPTCHA_SITE_KEY ?? ''}
+                        onChange={setRecaptcha}
+                    />
+                </div>
+
                 <div className="flex flex-col items-center">
                     <Form.Item style={{ marginTop: "22px" }}>
                         <Button
-                            type="primary"
                             htmlType="submit"
+                            color="default" variant="solid"
                             loading={userStore.loading}
                             style={{ padding: "10px 43px" }}
                         >
@@ -171,7 +169,7 @@ export const LoginComponent = observer(() => {
                     <p>
                         Нет аккаунта?
                         <span
-                            className="hover:cursor-pointer ml-1 text-primary-color text-[#00b96b] transition-opacity duration-300 ease-in-out hover:opacity-70"
+                            className="hover:cursor-pointer text-gray-500 hover:text-gray-800 ml-2"
                             onClick={() => router.push('register')}
                         >
                             Зарегистрируйся

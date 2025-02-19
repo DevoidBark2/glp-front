@@ -8,7 +8,7 @@ export const Footer = observer(({ userSettings }: { userSettings?: any }) => {
 
 
     return (
-        <footer className="bg-gray-800 text-white py-10 mt-10">
+        <footer className="bg-[#2a2a2a] text-white py-10 mt-10">
             {userSettings}
             <div className="container mx-auto px-6">
                 <div className="flex flex-wrap sm:flex-nowrap justify-around items-start">

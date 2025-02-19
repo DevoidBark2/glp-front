@@ -145,8 +145,8 @@
     height: 100%;
     background-color: #050a1f;
     background-image:
-            linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
+        linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
     background-size: 40px 40px;
 }
 
@@ -167,18 +167,24 @@
 
 /* Базовые стили для темы */
 :root {
-    --bg-color: #ffffff; /* белый фон по умолчанию */
-    --text-color: #000000; /* черный текст по умолчанию */
+    --bg-color: #ffffff;
+    /* белый фон по умолчанию */
+    --text-color: #000000;
+    /* черный текст по умолчанию */
 }
 
 [data-theme='cyber-black'] {
-    --bg-color: #111111; /* черный фон */
-    --text-color: #ffffff; /* белый текст */
+    --bg-color: #111111;
+    /* черный фон */
+    --text-color: #ffffff;
+    /* белый текст */
 }
 
 [data-theme='cyber-pink'] {
-    --bg-color: #ff00cc; /* розовый фон */
-    --text-color: #ffffff; /* белый текст */
+    --bg-color: #ff00cc;
+    /* розовый фон */
+    --text-color: #ffffff;
+    /* белый текст */
 }
 
 /* Применяем переменные */
@@ -205,3 +211,30 @@ body.dark {
     --bg-color: #333;
     --text-color: #f0f0f0;
 }
+
+.ant-input-outlined:focus,
+.ant-input-outlined:focus-within {
+    border-color: #000000 !important;
+    outline: 0;
+    box-shadow: none !important;
+}
+
+
+.ant-input {
+    border-radius: 25px !important;
+    padding: 8px 15px !important;
+}
+
+.ant-input-affix-wrapper {
+    border-radius: 25px !important;
+    padding: 0px 11px !important;
+}
+
+.ant-btn-variant-outlined:hover {
+    color: rgb(77, 77, 77) !important;
+    border-color: black !important;
+}
+
+/* .ant-btn-color-default:hover {
+    color: rgb(77, 77, 77) !important;
+} */

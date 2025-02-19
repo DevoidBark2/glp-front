@@ -13,8 +13,8 @@ export const Posts = observer(() => {
 
     return (
         <div className="container mx-auto">
-            <div className="px-6">
-                <h1 className="mt-6 text-3xl font-semibold text-gray-800 mb-6">Новости</h1>
+            <div className="px-6 mt-12">
+                <h1 className="text-3xl font-semibold">Обзор новостей</h1>
                 <Divider className="my-6" />
                 <PostList loading={postStore.loading} posts={postStore.allPosts} />
             </div>

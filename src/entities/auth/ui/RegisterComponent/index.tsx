@@ -8,7 +8,7 @@ import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
 import Image from "next/image"
 import { useRouter } from "next/navigation";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 export const RegisterComponent = observer(() => {
     const router = useRouter()
@@ -33,12 +33,13 @@ export const RegisterComponent = observer(() => {
     }
 
     return (
-        <div className="flex mt-8">
+        <div className="flex mt-8 px-4">
             <div className="m-auto">
                 <Form
                     form={form}
                     layout="vertical"
                     onFinish={onSubmit}
+                    requiredMark={false}
                 >
                     <h1 className="text-3xl font-bold text-gray-900">Добро пожаловать!</h1>
                     <p className="text-sm text-gray-600 mt-2">
@@ -138,7 +139,7 @@ export const RegisterComponent = observer(() => {
                         />
                     </Form.Item>
 
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mt-10">
                         <ReCAPTCHA
                             sitekey={nextConfig.env?.GOOGLE_RECAPTCHA_SITE_KEY ?? ''}
                             onChange={setRecaptcha}
@@ -147,7 +148,7 @@ export const RegisterComponent = observer(() => {
 
                     <div className="flex flex-col items-center">
                         <Form.Item style={{ marginTop: '22px' }}>
-                            <Button type="primary" htmlType="submit" loading={userStore.loading}
+                            <Button color="default" variant="solid" htmlType="submit" loading={userStore.loading}
                                 style={{ padding: '20px 43px', display: "flex", alignItems: "center" }}>
                                 Зарегистрироваться
                             </Button>
@@ -155,7 +156,7 @@ export const RegisterComponent = observer(() => {
                         <p>Есть аккаунт? <span onClick={() => {
                             router.push('login')
                             form.resetFields();
-                        }} className="hover:cursor-pointer" style={{ color: MAIN_COLOR }}>Авторизуйся</span></p>
+                        }} className="hover:cursor-pointer text-gray-500 hover:text-gray-800">Авторизуйся</span></p>
                     </div>
                 </Form>
             </div>

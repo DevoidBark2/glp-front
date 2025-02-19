@@ -1,4 +1,4 @@
-import { Skeleton} from "antd";
+import { Skeleton } from "antd";
 import { PostRow } from "../postRow";
 import { Post } from "@/shared/api/posts/model";
 import Image from "next/image";
@@ -10,33 +10,29 @@ interface PostListProps {
 
 export const PostList = ({ loading, posts }: PostListProps) => {
     return (
-        <div className="flex items-start">
-            <div className="flex flex-col w-full lg:w-3/4 mx-auto">
+        <div className="flex justify-center">
+            <div className="w-full max-w-4xl">
                 {!loading ? (
                     posts.length > 0 ? (
-                        posts.map(post => (
-                            <PostRow key={post.id} post={post} />
-                        ))
+                        posts.map(post => <PostRow key={post.id} post={post} />)
                     ) : (
                         <div className="text-center py-10 flex flex-col items-center">
                             <Image
                                 src="/static/empty-icon.svg"
                                 alt="Empty"
-                                width={150}
-                                height={150}
+                                width={100}
+                                height={100}
+                                className="mb-4 opacity-70"
                             />
-                            <h2 className="text-2xl font-semibold text-gray-800 mb-2">Посты не найдены</h2>
-                            <p className="text-gray-600">Не переживайте, контент скоро появится. Пожалуйста, вернитесь позже!</p>
+                            <h2 className="text-xl font-medium text-gray-700">Посты не найдены</h2>
+                            <p className="text-gray-500 text-sm">Контент скоро появится, загляните позже.</p>
                         </div>
                     )
                 ) : (
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-col gap-4">
                         {Array.from({ length: 3 }).map((_, index) => (
-                            <div
-                                key={index}
-                                className="w-full lg:w-1/3 bg-white rounded-lg shadow-lg p-6"
-                            >
-                                <Skeleton active paragraph={{ rows: 2, width: ['80%', '60%'] }} title={true} />
+                            <div key={index} className="bg-gray-100 p-4 rounded-lg">
+                                <Skeleton active paragraph={{ rows: 2 }} />
                             </div>
                         ))}
                     </div>
