@@ -8,7 +8,7 @@ import { parseMathFormula } from "@/shared/lib/parseMathFormula";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;
-    onCheckResult?: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
+    onCheckResult?: (quiz: ComponentTask, answers: string) => Promise<void>;
 }
 
 export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult }) => {

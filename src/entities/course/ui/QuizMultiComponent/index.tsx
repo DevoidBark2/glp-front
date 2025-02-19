@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;
-    onCheckResult?: (quiz: ComponentTask, answers: number[] | string) => Promise<void>;
+    onCheckResult?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
     onRetryQuiz?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
 }
 

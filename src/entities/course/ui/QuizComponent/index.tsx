@@ -10,7 +10,6 @@ interface QuizComponentProps {
 }
 
 export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: QuizComponentProps) => {
-    debugger
     const { title, description, questions } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(questions.length).fill(null));

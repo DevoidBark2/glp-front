@@ -1,12 +1,16 @@
 import { observer } from "mobx-react";
 import { Exam } from "@/shared/api/exams/model";
-import React, { FC, useState } from "react";
+import React, {FC, useEffect, useState} from "react";
 import { QuizComponent, QuizMultiComponent, SimpleTask } from "@/entities/course/ui";
 import { CourseComponentType } from "@/shared/api/component/model";
+import {io} from "socket.io-client";
+import {ComponentTask} from "@/shared/api/course/model";
 
 interface ExamCourseProps {
     exam?: Exam;
 }
+
+const socket = io("http://localhost:5001");
 
 const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -29,6 +33,23 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     };
 
     const currentComponent = exam?.components[currentQuestionIndex];
+
+    const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => {
+        socket.emit("saveProgress", {
+            quiz,
+            answer,
+        });
+    }
+
+    useEffect(() => {
+        socket.on("progressSaved", (data) => {
+            console.log("Прогресс сохранен:", data);
+        });
+
+        return () => {
+            socket.off();
+        };
+    }, []);
 
     return (
         <div className="flex">
@@ -54,13 +75,13 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
             <div className="flex-1 p-5">
                 <div className="mb-5">
                     {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
-                        <QuizComponent task={currentComponent.componentTask} />
+                        <QuizComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}/>
                     )}
                     {currentComponent && currentComponent.componentTask.type === CourseComponentType.MultiPlayChoice && (
-                        <QuizMultiComponent task={currentComponent.componentTask} />
+                        <QuizMultiComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}/>
                     )}
                     {currentComponent && currentComponent.componentTask.type === CourseComponentType.SimpleTask && (
-                        <SimpleTask task={currentComponent.componentTask} />
+                        <SimpleTask task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}/>
                     )}
                 </div>
 

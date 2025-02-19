@@ -39,7 +39,9 @@ export const CourseSectionCard = observer(() => {
     useEffect(() => {
         if (step !== null) {
             courseStore.getCourseSectionByStepId(Number(courseId), step).then(() => {
-                commentsStore.getSectionComments(step);
+                if(step !== -1) {
+                    commentsStore.getSectionComments(step);
+                }
             }).catch((e) => {
                 console.error("Ошибка при загрузке данных:", e);
             });
