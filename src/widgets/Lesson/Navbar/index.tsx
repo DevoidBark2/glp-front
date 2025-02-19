@@ -17,6 +17,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { SectionMenu } from "@/shared/api/course/model";
 import Image from "next/image";
+import {useMediaQuery} from "react-responsive";
 
 const { Sider } = Layout;
 
@@ -27,6 +28,8 @@ export const NavbarLesson = observer(() => {
     const searchParams = useSearchParams();
     const [collapsed, setCollapsed] = useState(false);
     const [selectedSection, setSelectedSection] = useState<number | null>(null);
+
+    const isShowPickIcon = useMediaQuery({ query: "(max-width: 768px)" });
 
     const handleMenuClick = (key: number) => {
         courseStore.updateSectionStep(Number(selectedSection)).then(() => {
@@ -149,7 +152,7 @@ export const NavbarLesson = observer(() => {
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <div className="flex justify-end px-3">
-                    <Button
+                    {!isShowPickIcon &&  <Button
                         type="text"
                         icon={!isMobile ? <Image
                             src="/static/pin_icon_2.svg"
@@ -165,7 +168,7 @@ export const NavbarLesson = observer(() => {
                             color="white"
                         />}
                         onClick={() => handleSetIsMobile()}
-                    />
+                    />}
                 </div>
 
                 <div className="flex-1 mx-4">

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Table, TableColumnsType, Tooltip, Tag, Input, DatePicker, Button } from "antd";
+import { Table, TableColumnsType, Tooltip, Tag, Input, Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import {
@@ -118,27 +118,18 @@ const EventPage = () => {
         );
     };
 
-    const exportData = (format: "json" | "csv") => {
+    const exportData = (format: "json") => {
         const data = eventStore.userEvents.map((event) => ({
             ...event,
             createdAt: dayjs(event.createdAt).format(FORMAT_VIEW_DATE),
         }));
 
-        const content =
-            format === "json"
-                ? JSON.stringify(data, null, 2)
-                : data
-                    .map((row) =>
-                        Object.values(row)
-                            .map((field) => `"${field}"`)
-                            .join(",")
-                    )
-                    .join("\n");
+        const content = JSON.stringify(data, null, 2)
 
-        const blob = new Blob([content], { type: format === "json" ? "application/json" : "text/csv" });
+        const blob = new Blob([content], { type: "application/json" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `audit-log.${format}`;
+        link.download = `audit-log.json`;
         link.click();
     };
 
@@ -171,9 +162,6 @@ const EventPage = () => {
                     <Button type="primary" icon={<DownloadOutlined />} onClick={() => exportData("json")}>
                         Скачать JSON
                     </Button>
-                    <Button type="default" icon={<DownloadOutlined />} onClick={() => exportData("csv")}>
-                        Скачать CSV
-                    </Button>
                 </div>
             </div>
             <Table
@@ -183,11 +171,7 @@ const EventPage = () => {
                 dataSource={filteredData.length > 0 ? filteredData : eventStore.userEvents}
                 columns={columns}
                 loading={eventStore.loadingEvents}
-                rowHoverable={false}
                 rowKey={(record) => record.id}
-                rowClassName={(record) =>
-                    record.success ? "bg-green-100" : "bg-red-100"
-                }
                 expandable={{
                     expandedRowRender: (record) => (
                         <div style={{ padding: "10px 20px", background: "#fafafa", borderRadius: "8px" }}>
@@ -195,58 +179,9 @@ const EventPage = () => {
                             <p><strong>Событие:</strong> {record.action}</p>
                             <p><strong>Описание:</strong> {record.description || "Нет описания"}</p>
                             <p><strong>Статус:</strong> {record.success ? "Успешно" : "Неуспешно"}</p>
-                            <p><strong>Пользователь:</strong> {record.user.first_name} ({record.user.email})</p>
-
-                            <hr style={{ margin: "20px 0", borderColor: "#e8e8e8" }} />
-                            <h4 style={{ marginBottom: "10px" }}>Дополнительная информация:</h4>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
-                                {[
-                                    { label: "IP-адрес", value: "192.168.1.1" },
-                                    { label: "Локация", value: "Москва, Россия" },
-                                    { label: "Тип устройства", value: "Desktop" },
-                                    { label: "Операционная система", value: "Windows 10" },
-                                    { label: "Браузер", value: "Google Chrome v.112.0" },
-                                    { label: "Роль пользователя", value: "Администратор" },
-                                    { label: "Двухфакторная аутентификация", value: "Включена" },
-                                    { label: "Текущая сессия", value: "Активна" },
-                                    { label: "ID транзакции", value: "TXN123456789" },
-                                    { label: "Время обработки", value: "120 мс" },
-                                    { label: "HTTP метод", value: "POST" },
-                                    { label: "Код ответа", value: "200 OK" },
-                                    { label: "Размер запроса", value: "1.2 KB" },
-                                    { label: "Размер ответа", value: "3.4 KB" },
-                                    { label: "Источник запроса", value: "https://example.com/login" },
-                                    { label: "Токен доступа", value: "Bearer abcdefgh123456" },
-                                    { label: "Статус токена", value: "Действителен" },
-                                    { label: "Дата окончания сессии", value: "2025-01-30 15:34:12" },
-                                    { label: "Реферал", value: "https://referral.example.com" },
-                                    { label: "ID пользователя", value: record.user.id },
-                                    { label: "Версия API", value: "v1.0" },
-                                    { label: "Скорость сети", value: "100 Mbps" },
-                                    { label: "Уровень привилегий", value: "Высокий" },
-                                    { label: "Результат верификации", value: "Успешно" },
-                                    { label: "Комментарий администратора", value: "Все данные проверены." },
-                                ].map((item, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            flex: "1 1 calc(33.333% - 16px)",
-                                            padding: "10px",
-                                            background: "#fff",
-                                            borderRadius: "6px",
-                                            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                                        }}
-                                    >
-                                        <p style={{ marginBottom: "5px", fontWeight: "bold", color: "#595959" }}>
-                                            {item.label}
-                                        </p>
-                                        <p style={{ margin: 0, color: "#262626" }}>{item.value}</p>
-                                    </div>
-                                ))}
-                            </div>
+                            <p><strong>Пользователь:</strong> {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`} ({record.user.email})</p>
                         </div>
-                    ),
-                    rowExpandable: (record) => !!record, // Делаем строку раскрываемой только если есть данные
+                    )
                 }}
             />
         </PageContainerControlPanel>

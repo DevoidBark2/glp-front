@@ -10,15 +10,6 @@ interface LayoutProps {
     children: React.ReactNode;
 }
 
-const CyberpunkBackground = () => {
-    return (
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="cyber-grid"></div>
-            <div className="cyber-blur"></div>
-        </div>
-    );
-};
-
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     const { userProfileStore, generalSettingsStore } = useMobxStores();
     const pathName = usePathname();
@@ -32,20 +23,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }, [pathName, userProfileStore, generalSettingsStore]);
 
     return (
-        <div className='cursor-container relative overflow-hidden'
-             style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
-            {/* Cyberpunk Background */}
-            {!pathName.includes('/ui-test') && <CyberpunkBackground/>}
-
-            {/* Header */}
-            {!pathName.includes('/lessons/') && !pathName.includes('/3d') && !pathName.includes('/ui-test') &&
-                <Header/>}
-
+        <div className='cursor-container relative overflow-hidden' style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}}>
+            {!pathName.includes('/lessons/') && <Header/>}
             {children}
-
-            {/* Footer */}
-            {!pathName.includes('/lessons/') && !pathName.includes('/3d') && !pathName.includes('/ui-test') &&
-                <Footer/>}
+            {!pathName.includes('/lessons/') && <Footer/>}
         </div>
     );
 };
