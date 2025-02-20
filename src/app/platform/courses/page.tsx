@@ -31,14 +31,12 @@ const CoursesSearch = observer(() => {
 
         if (searchQuery) {
             setSearchTerm(searchQuery);
-
             courseStore.handleFilterCoursesBySearch(searchQuery)
         }
 
     }, []);
 
     useEffect(() => {
-        // Загружаем категории и курсы
         nomenclatureStore.getCategories();
     }, [])
 
@@ -71,11 +69,15 @@ const CoursesSearch = observer(() => {
                             Искать
                         </Button>
                     }
+                    className="w-full md:w-2/3 mb-4"
                 />
             </div>
 
-            <div className="flex gap-6">
-                <FilterBlock />
+            <div className="flex flex-col md:flex-row gap-6">
+                {/* Фильтры на мобильных устройствах будут сверху */}
+                <div className="w-full md:w-1/4">
+                    <FilterBlock />
+                </div>
 
                 <div className="flex-1">
                     {courseStore.resultSearchCourses.length > 0 ? (

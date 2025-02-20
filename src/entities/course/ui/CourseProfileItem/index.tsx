@@ -50,41 +50,82 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                 cancelText="Отмена"
             >
                 <Form form={form} layout="vertical">
-                    <Form.Item name="rating" label="Оцените курс" rules={[{ required: true, message: "Пожалуйста, поставьте оценку" }]}>
+                    <Form.Item
+                        name="rating"
+                        label="Оцените курс"
+                        rules={[{ required: true, message: "Пожалуйста, поставьте оценку" }]}
+                    >
                         <Rate allowHalf />
                     </Form.Item>
-                    <Form.Item name="review" label="Ваш отзыв" rules={[{ required: true, message: "Пожалуйста, напишите отзыв" }, { max: 300, message: "Превышен максимальный размер отзыва" }]}>
+                    <Form.Item
+                        name="review"
+                        label="Ваш отзыв"
+                        rules={[
+                            { required: true, message: "Пожалуйста, напишите отзыв" },
+                            { max: 300, message: "Превышен максимальный размер отзыва" }
+                        ]}
+                    >
                         <Input.TextArea rows={4} placeholder="Напишите свой отзыв о курсе..." />
                     </Form.Item>
                 </Form>
             </Modal>
-            <div key={course.courseId} className="p-6 shadow-lg relative overflow-hidden bg-transparent">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center">
+
+            <div key={course.courseId} className="p-4 border rounded-lg bg-white dark:bg-gray-900 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
                         {course.image ? (
-                            <Image src={`${nextConfig.env!.API_URL}${course?.image}`} alt={course.name} width={120} height={80} className="mr-4 neon-glow" />
+                            <Image
+                                src={`${nextConfig.env!.API_URL}${course.image}`}
+                                alt={course.name}
+                                width={100}
+                                height={70}
+                                className="rounded-md"
+                            />
                         ) : (
-                            <div className="w-[120px] h-[80px] bg-gray-800 flex items-center justify-center rounded-lg neon-glow">
-                                <BookOutlined style={{ fontSize: 40, color: "#ff007f" }} />
+                            <div className="w-[100px] h-[70px] bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded-md">
+                                <BookOutlined style={{ fontSize: 32, color: "#999" }} />
                             </div>
                         )}
                         <div>
-                            <h3 className="text-2xl font-bold text-neon-pink">{course.name}</h3>
-                            <p className="text-gray-400">Дата записи: {dayjs(course.enrolledAt).format(FORMAT_VIEW_DATE)}</p>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white break-words" style={{ wordBreak: "break-word" }}>{course.name}</h3>
+                            <p className="text-gray-500 text-sm">
+                                Дата записи: {dayjs(course.enrolledAt).format(FORMAT_VIEW_DATE)}
+                            </p>
                         </div>
                     </div>
-                    <div className="flex items-center">
+
+                    <div className="flex items-center gap-3">
                         <Tooltip title={`Перейти к курсу "${course.name}"`}>
-                            <Button type="primary" className="neon-button" onClick={() => router.push(`/platform/lessons/${course.courseId}`)} icon={<PlayCircleOutlined />} />
+                            <Button
+                                type="default"
+                                shape="circle"
+                                onClick={() => router.push(`/platform/lessons/${course.courseId}`)}
+                                icon={<PlayCircleOutlined />}
+                            />
                         </Tooltip>
-                        <Popconfirm title="Вы уверены?" onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)} placement="leftBottom" okText="Да" cancelText="Нет">
-                            <Button danger className="ml-2 neon-button" icon={<LogoutOutlined />} />
+
+                        <Popconfirm
+                            title="Вы уверены?"
+                            onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)}
+                            placement="leftBottom"
+                            okText="Да"
+                            cancelText="Нет"
+                        >
+                            <Button shape="circle" danger icon={<LogoutOutlined />} />
                         </Popconfirm>
-                        <Button type="default" className="ml-2 neon-button" onClick={() => setIsModalOpen(true)} icon={<MessageOutlined />} />
+
+                        <Button
+                            type="default"
+                            shape="circle"
+                            onClick={() => setIsModalOpen(true)}
+                            icon={<MessageOutlined />}
+                        />
                     </div>
                 </div>
-                <Progress percent={course.progress} strokeColor="#ff007f" className="neon-progress" />
+
+                <Progress percent={course.progress} strokeColor="#4a90e2" className="mt-4" />
             </div>
         </>
+
     );
 };

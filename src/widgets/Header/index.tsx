@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { PlatformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
-import { UserOutlined, HomeOutlined, ReadOutlined } from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, BookOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
@@ -19,10 +19,15 @@ export const Header = observer(() => {
 
     const [items, setItems] = useState<MenuProps["items"]>([]);
     const [isDrawerOpen, setDrawerOpen] = useState(false); // Для управления бургер-меню
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const handleMenuClick = () => {
+        setMenuOpen(!menuOpen);
+    };
 
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
-        { key: 2, title: "Курсы", link: '/platform/courses', icon: <HomeOutlined /> },
+        { key: 2, title: "Курсы", link: '/platform/courses', icon: <BookOutlined /> },
         { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
@@ -47,7 +52,7 @@ export const Header = observer(() => {
     useEffect(() => {
         if (userProfileStore.loading) return;
 
-        const menuItems = [
+        const menuItems: MenuProps["items"] = [
             {
                 key: "1",
                 label: createMenuItem("/platform/profile", "Профиль", "/static/profile_icon.svg"),
@@ -84,20 +89,13 @@ export const Header = observer(() => {
         <div className="dark:bg-[#1a1a1a] p-6 relative overflow-hidden">
             <div className="container mx-auto flex justify-between items-center relative z-10 border-b pb-6">
 
-                {/*<div className="lg:hidden">*/}
-                {/*    <MenuOutlined*/}
-                {/*        className="text-white text-2xl cursor-pointer hover:text-[#00bfff] transition-colors duration-200"*/}
-                {/*        onClick={() => setDrawerOpen(true)} // Открытие меню*/}
-                {/*    />*/}
-                {/*</div>*/}
-
                 <Link href="/platform">
                     <span className="text-4xl font-bold text-black dark:text-white">
                         Learnify
                     </span>
                 </Link>
 
-                <div className="flex w-1/5 justify-between items-center space-x-4">
+                <div className="w-1/5 justify-between items-center space-x-4 hidden xl:flex">
                     {platformMenu.map((menuItem) => (
                         <Link
                             key={menuItem.key}
@@ -115,7 +113,7 @@ export const Header = observer(() => {
 
                 </div>
 
-                <div className="hidden lg:flex items-center space-x-4">
+                <div className="hidden xl:flex items-center space-x-4">
                     {userProfileStore.userProfile ? (
                         <Dropdown menu={{ items }} placement="bottomRight">
                             <Avatar
@@ -155,92 +153,116 @@ export const Header = observer(() => {
                     )}
                 </div>
 
+
+                <div className="xl:hidden">
+                    <MenuOutlined
+                        className="text-2xl cursor-pointer hover:text-[#2c2c2c] transition-colors duration-200"
+                        onClick={() => setDrawerOpen(true)}
+                    />
+                </div>
+
+                <Drawer
+                    title={<span className="text-lg font-semibold text-gray-900 dark:text-gray-100">Меню</span>}
+                    placement="right"
+                    onClose={() => setDrawerOpen(false)}
+                    open={isDrawerOpen}
+                    closeIcon={<CloseOutlined className="text-gray-600 dark:text-gray-400" />}
+                    style={{ padding: 0 }}
+                >
+                    <div className="flex flex-col p-4">
+                        <div className="flex flex-col space-y-3">
+                            {platformMenu.map((menuItem) => (
+                                <Link
+                                    key={menuItem.key}
+                                    href={menuItem.link}
+                                    className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 
+                        ${pathName === menuItem.link
+                                            ? "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white"
+                                            : "text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+                                    onClick={() => setDrawerOpen(false)}
+                                >
+                                    {menuItem.icon}
+                                    <span>{menuItem.title}</span>
+                                </Link>
+                            ))}
+                        </div>
+
+                        <div className="border-t border-gray-300 dark:border-gray-600 my-4"></div>
+
+                        {userProfileStore.loading ? (
+                            <div className="flex justify-center py-4">
+                                <Spin size="large" />
+                            </div>
+                        ) : userProfileStore.userProfile ? (
+                            <div className="flex flex-col space-y-3">
+                                <Dropdown
+                                    menu={{ items: items, onClick: () => setDrawerOpen(false) }}
+                                    trigger={["click"]}
+                                    open={menuOpen}
+                                    onOpenChange={setMenuOpen}
+                                >
+                                    <div
+                                        className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-gray-800 cursor-pointer"
+                                        onClick={handleMenuClick}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <Avatar
+                                                size={48}
+                                                src={
+                                                    userProfileStore.userProfile?.image
+                                                        ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
+                                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                            ? userProfileStore.userProfile?.image
+                                                            : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
+                                                        : undefined
+                                                }
+                                                icon={!userProfileStore.userProfile?.image && <UserOutlined />}
+                                            />
+                                            <div>
+                                                <p className="text-gray-900 dark:text-white font-semibold">
+                                                    {userProfileStore.userProfile?.first_name || "Профиль"}
+                                                </p>
+                                                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                                                    {userProfileStore.userProfile?.role}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {menuOpen ? <UpOutlined /> : <DownOutlined />}
+                                    </div>
+                                </Dropdown>
+                            </div>
+                        ) : (
+                            <div className="flex justify-between gap-5">
+                                <Button
+                                    className="text-white w-full text-lg px-6 uppercase font-bold cursor-pointer border-none rounded-md"
+                                    // variant="solid"
+                                    color="default"
+                                    variant="outlined"
+                                    onClick={() => {
+                                        setDrawerOpen(false)
+                                        router.push("/platform/auth/login")
+                                    }}
+                                >
+                                    Войти
+                                </Button>
+                                <Button
+                                    className="text-white w-full text-lg px-6 uppercase font-bold cursor-pointer border-none rounded-md"
+                                    color="default"
+                                    variant="solid"
+                                    onClick={() => {
+                                        setDrawerOpen(false)
+                                        router.push("/platform/auth/register")
+                                    }}
+                                >
+                                    Регистрация
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                </Drawer>
+
             </div>
         </div>
-
     );
 });
-
-
-{/* Мобильное меню (Drawer) */
-}
-// <Drawer
-//     title={<span className="text-lg font-semibold text-gray-800">Меню</span>}
-//     placement="right"
-//     onClose={() => setDrawerOpen(false)} // Закрытие меню
-//     open={isDrawerOpen}
-//     closeIcon={<CloseOutlined className="text-gray-600" />}
-//     style={{ padding: 0 }}
-// >
-//     <div className="flex flex-col p-4">
-//         <div className="flex flex-col space-y-3">
-//             {platformMenu.map((menuItem) => (
-//                 <Link
-//                     key={menuItem.key}
-//                     href={menuItem.link}
-//                     className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 ${pathName === menuItem.link
-//                         ? "bg-blue-100 text-blue-600 font-semibold"
-//                         : "bg-gray-100 text-gray-800 hover:bg-blue-50 hover:text-blue-600"
-//                     }`}
-//                     onClick={() => setDrawerOpen(false)} // Закрытие меню после клика
-//                 >
-//                     {menuItem.icon}
-//                     <span>{menuItem.title}</span>
-//                 </Link>
-//             ))}
-//         </div>
-//
-//         <div className="border-t my-4"></div>
-//
-//         {userProfileStore.loading ? (
-//             <div className="flex justify-center py-4">
-//                 <Spin size="large" />
-//             </div>
-//         ) : userProfileStore.userProfile ? (
-//             <div className="flex flex-col space-y-3">
-//                 <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-100 shadow-sm">
-//                     <Avatar
-//                         size={48}
-//                         src={
-//                             userProfileStore.userProfile?.image
-//                                 ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-//                                 userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
-//                                     ? userProfileStore.userProfile?.image
-//                                     : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
-//                                 : undefined
-//                         }
-//                         icon={!userProfileStore.userProfile?.image && <UserOutlined />}
-//                     />
-//                     <div>
-//                         <p className="text-gray-900 font-semibold">
-//                             {userProfileStore.userProfile?.first_name || "Профиль"}
-//                         </p>
-//                         <p className="text-gray-600 text-sm">{userProfileStore.userProfile?.role}</p>
-//                     </div>
-//                 </div>
-//                 <div className="flex flex-col space-y-3">
-//                     {items!.map((item) => (
-//                         <div
-//                             key={item?.key}
-//                             className="flex items-center gap-4 p-3 rounded-lg bg-gray-100 hover:bg-blue-50 transition-all duration-300 cursor-pointer"
-//                             onClick={() => setDrawerOpen(false)} // Для выхода из аккаунта
-//                         >
-//                             {item?.label}
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-//         ) : (
-//             <Button
-//                 type="default"
-//                 onClick={() => {
-//                     router.push("/platform/auth/login");
-//                     setDrawerOpen(false);
-//                 }}
-//                 className="bg-blue-500 text-white hover:bg-blue-600 w-full rounded-lg p-3 shadow-md"
-//             >
-//                 Войти
-//             </Button>
-//         )}
-//     </div>
-// </Drawer>

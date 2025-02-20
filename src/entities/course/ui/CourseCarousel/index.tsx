@@ -23,7 +23,7 @@ export const CourseCarousel: FC<CourseCarouselProps> = observer(({ courses, load
     }, [screens, courses.length]);
 
     return (
-        <div className="mb-12 mt-12">
+        <div className="mb-12 mt-6">
             <h2 className="text-3xl font-semibold">
                 Популярные курсы
             </h2>

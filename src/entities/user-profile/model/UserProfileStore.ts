@@ -95,6 +95,7 @@ class UserProfileStore {
             .then(response => {
                 const updatedProfile = { ...this.userProfile, ...cleanedValues };
                 this.setUserProfile(updatedProfile as UserProfile);
+                notification.success({ message: response.message })
                 return response;
             })
             .catch(e => {

@@ -49,7 +49,7 @@ const PlatformPage = () => {
         nomenclatureStore.getTeachers();
     }, []);
 
-    return <div className="container mx-auto">
+    return <div className="container mx-auto max-lg:px-4 px-2">
 
         <CourseCarousel courses={courseStore.popularCourses} loading={courseStore.loadingCourses} />
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
@@ -64,12 +64,12 @@ const PlatformPage = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="rounded-lg bg-gray-100 border border-transparent focus-within:border-gray-400 transition"
+                className="rounded-lg border border-transparent focus-within:border-gray-400 transition"
                 enterButton={
                     <Button
                         disabled={searchTerm.trim().length <= 2}
                         type="default"
-                        className="border border-gray-300 bg-white hover:bg-gray-100 text-gray-700"
+                        className="border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 ml-2"
                         icon={<SearchOutlined />}
                         onClick={handleSearch}
                     >
@@ -90,7 +90,7 @@ const PlatformPage = () => {
             ) : (
                 nomenclatureStore.categories.length > 0 && (
                     <>
-                        <div
+                        <button
                             key="all-categories"
                             onClick={() => handleFilterCoursesByCategory(-1)}
                             className={`px-4 py-2 text-sm font-medium shadow-sm cursor-pointer rounded-lg ${selectedCategory === -1
@@ -99,9 +99,9 @@ const PlatformPage = () => {
                                 }`}
                         >
                             Все категории
-                        </div>
+                        </button>
                         {nomenclatureStore.categories.map((it) => (
-                            <div
+                            <button
                                 key={it.id}
                                 onClick={() => handleFilterCoursesByCategory(it.id)}
                                 className={`px-4 py-2 text-sm font-medium shadow-sm cursor-pointer rounded-lg ${selectedCategory === it.id
@@ -110,7 +110,7 @@ const PlatformPage = () => {
                                     }`}
                             >
                                 {it.name}
-                            </div>
+                            </button>
                         ))}
                     </>
                 )

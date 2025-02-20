@@ -51,9 +51,10 @@ export const themeConfig: ThemeConfig = {
             colorPrimaryHover: MAIN_COLOR
         },
         Tabs: {
-            colorPrimary: MAIN_COLOR,
-            colorPrimaryHover: MAIN_COLOR,
-            colorPrimaryActive: MAIN_COLOR,
+            colorPrimary: "black",
+            colorPrimaryHover: "black",
+            colorPrimaryActive: "black",
+            colorPrimaryBg: "grey"
         },
         Checkbox: {
             colorPrimary: MAIN_COLOR,

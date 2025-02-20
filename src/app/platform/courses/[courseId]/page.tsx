@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import nextConfig from "next.config.mjs";
 import { AccessRightEnum, Course } from "@/shared/api/course/model";
-import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined, UserOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { CourseLevelComponent, InputSecretKeyModal } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
@@ -80,8 +80,12 @@ const CoursePage = () => {
                     <div className="mt-4">
                         <Breadcrumb
                             items={[
-                                { title: <Link className="text-white" href="/platform">Главная</Link> },
-                                { title: <p>{currentCourse?.name}</p> },
+                                {
+                                    title: <Button icon={<ArrowLeftOutlined />} color="default" type="link" variant="link"
+                                        onClick={() => {
+                                            router.push('/platform')
+                                        }}>Главная</Button>
+                                },
                             ]}
                         />
                     </div>
@@ -89,9 +93,11 @@ const CoursePage = () => {
                     {currentCourse && (
                         <div className="flex justify-end my-4">
                             <Button
-                                className="px-12 py-2 rounded-lg font-medium text-white"
+                                style={{ padding: "10px 15px" }}
                                 onClick={handleClick}
                                 disabled={courseStore.subscribeCourseLoading}
+                                color="default"
+                                variant="solid"
                             >
                                 {currentCourse.isUserEnrolled ? "Перейти к курсу" : "Записаться на курс"}
                             </Button>
@@ -100,8 +106,7 @@ const CoursePage = () => {
 
                     {currentCourse ? (
                         <>
-                            <div
-                                className="bg-white shadow-md rounded-lg p-6 mt-6 flex flex-col lg:flex-row items-start lg:items-center">
+                            <div className="mt-6 flex flex-col lg:flex-row">
                                 <div className="lg:w-3/4">
                                     <h1 className="font-bold text-4xl text-gray-800 flex items-center">
                                         {currentCourse.name}
@@ -117,6 +122,7 @@ const CoursePage = () => {
                                         {currentCourse.small_description}
                                     </p>
                                 </div>
+
                                 <div className="w-full lg:w-1/4 lg:ml-6 mt-6 lg:mt-0 flex justify-center">
                                     {currentCourse.image ? (
                                         <Image
@@ -136,6 +142,7 @@ const CoursePage = () => {
                                 </div>
                             </div>
 
+                            <Divider />
                             <div
                                 className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
                                 <div className="flex items-center bg-gray-100 p-4 rounded-lg">
@@ -206,12 +213,13 @@ const CoursePage = () => {
                                 Описание курса
                             </h2>
                             <div
-                                className="text-gray-600 leading-relaxed bg-white p-6 rounded-lg shadow-md"
+                                className="text-gray-600 leading-relaxed"
                                 dangerouslySetInnerHTML={{
                                     __html: currentCourse.content_description,
                                 }}
                             ></div>
 
+                            <Divider />
                             <CourseReviews />
                         </>
 
