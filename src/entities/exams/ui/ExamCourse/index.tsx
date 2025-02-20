@@ -9,8 +9,8 @@ import {ComponentTask} from "@/shared/api/course/model";
 interface ExamCourseProps {
     exam?: Exam;
 }
-
-const socket = io("http://localhost:5001");
+//
+// const socket = io("http://localhost:5001");
 
 const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -35,21 +35,21 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     const currentComponent = exam?.components[currentQuestionIndex];
 
     const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => {
-        socket.emit("saveProgress", {
-            quiz,
-            answer,
-        });
+        // socket.emit("saveProgress", {
+        //     quiz,
+        //     answer,
+        // });
     }
 
-    useEffect(() => {
-        socket.on("progressSaved", (data) => {
-            console.log("Прогресс сохранен:", data);
-        });
-
-        return () => {
-            socket.off();
-        };
-    }, []);
+    // useEffect(() => {
+    //     socket.on("progressSaved", (data) => {
+    //         console.log("Прогресс сохранен:", data);
+    //     });
+    //
+    //     return () => {
+    //         socket.off();
+    //     };
+    // }, []);
 
     return (
         <div className="flex">
