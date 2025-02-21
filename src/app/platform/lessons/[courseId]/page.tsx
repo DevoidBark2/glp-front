@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { Layout, notification } from "antd";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { HeaderLesson, NavbarLesson } from "@/widgets/Lesson";
 import { CommentBlock, CourseSectionCard } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
@@ -37,10 +37,10 @@ const LessonPage = () => {
         <Layout>
             <HeaderLesson />
 
-            <Layout className="h-[calc(100vh-64px)]">
+            <Layout className="h-[calc(100vh-56px)] overflow-hidden">
                 <NavbarLesson />
                 <Layout className="flex-1 overflow-hidden">
-                    <Content className="m-0 p-6 flex flex-col max-h-full overflow-y-auto">
+                    <Content className="m-0 p-6 flex flex-col max-h-full overflow-y-auto dark:bg-[#1a1a1a]">
                         <CourseSectionCard />
                         <CommentBlock />
                     </Content>

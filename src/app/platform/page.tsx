@@ -51,11 +51,11 @@ const PlatformPage = () => {
 
     return <div className="container mx-auto max-lg:px-4 px-2">
 
-        <CourseCarousel courses={courseStore.popularCourses} loading={courseStore.loadingCourses} />
+        <CourseCarousel />
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
 
 
-            <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">
+            <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left dark:text-white">
                 Доступные курсы
             </h1>
             <Input.Search
@@ -128,13 +128,13 @@ const PlatformPage = () => {
         <CourseList courses={courseStore.courses} loading={courseStore.loadingCourses} notFound={noResultsFound} />
 
         <div className="container mx-auto my-12">
-            <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left">
+            <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left dark:text-white">
                 Наши преподаватели
             </h1>
             <Divider />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {nomenclatureStore.teachers.map((teacher) => (
-                    <div key={teacher.id} className="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <div key={teacher.id} className="bg-white dark:bg-[#252525] shadow-lg rounded-lg p-6 text-center">
                         <Avatar
                             size={130}
                             src={
@@ -148,9 +148,9 @@ const PlatformPage = () => {
                             icon={!teacher?.profile_url && <UserOutlined />}
                         />
                         <Link href={`/platform/users/${teacher.id}`} className='hover:underline hover:cursor-pointer'>
-                            <h3 className="text-xl font-semibold text-gray-800 mt-4">{`${teacher.second_name ?? ''} ${teacher.first_name ?? ''} ${teacher.last_name ?? ''}`}</h3>
+                            <h3 className="text-xl font-semibold text-gray-800 mt-4 dark:text-white">{`${teacher.second_name ?? ''} ${teacher.first_name ?? ''} ${teacher.last_name ?? ''}`}</h3>
                         </Link>
-                        <p className="text-gray-600 mt-4">{teacher.about_me ?? ''}</p>
+                        <p className="text-gray-600 mt-4 dark:text-white">{teacher.about_me ?? ''}</p>
                     </div>
                 ))}
             </div>

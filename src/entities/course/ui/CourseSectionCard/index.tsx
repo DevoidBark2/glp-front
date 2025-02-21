@@ -1,4 +1,4 @@
-import {ComponentTask} from "@/shared/api/course/model";
+import { ComponentTask } from "@/shared/api/course/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Card, Divider, Skeleton } from "antd";
 import { observer } from "mobx-react";
@@ -39,7 +39,7 @@ export const CourseSectionCard = observer(() => {
     useEffect(() => {
         if (step !== null) {
             courseStore.getCourseSectionByStepId(Number(courseId), step).then(() => {
-                if(step !== -1) {
+                if (step !== -1) {
                     commentsStore.getSectionComments(step);
                 }
             }).catch((e) => {
@@ -55,10 +55,10 @@ export const CourseSectionCard = observer(() => {
     return (
         <Card
             loading={courseStore.loadingSection}
-            bordered={false}
+            variant="borderless"
             title={
                 <div className="space-y-2 my-4">
-                    <h2 className="text-2xl font-bold text-gray-800">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                         {courseStore.loadingSection ? (
                             <Skeleton.Input />
                         ) : (
@@ -68,6 +68,7 @@ export const CourseSectionCard = observer(() => {
                     <p className="text-sm text-gray-500">{courseStore.sectionCourse?.small_description}</p>
                 </div>
             }
+            className="dark:bg-[#1a1a1a]"
         >
             {!isExamCoursePage(searchParams) &&
                 courseStore.sectionCourse?.components?.map((component) => {

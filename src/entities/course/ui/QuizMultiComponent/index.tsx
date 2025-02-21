@@ -1,6 +1,7 @@
 import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
 import { Button } from "antd";
 import { observer } from "mobx-react";
+import { useTheme } from "next-themes";
 import { useState } from "react";
 
 interface QuizMultiComponentProps {
@@ -13,6 +14,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }
     const { title, description, questions, userAnswer } = task;
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array.isArray(userAnswer) ? userAnswer : []);
     const [isRetrying, setIsRetrying] = useState(false);
+    const { resolvedTheme } = useTheme()
 
     const handleOptionChange = (index: number) => {
         if (userAnswer && !isRetrying) return;
@@ -47,17 +49,17 @@ export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }
     const correctOptions = userAnswer ? getCorrectOptions(userAnswer) : [];
 
     return (
-        <div className="quiz-component bg-white">
-            {title && <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">{title}</h2>}
-            {description && <p className="text-gray-600 mb-4 text-center">{description}</p>}
+        <div className="quiz-component">
+            {title && <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center dark:text-white">{title}</h2>}
+            {description && <p className="text-gray-600 mb-4 text-center dark:text-white">{description}</p>}
 
             {questions.map((questionItem, questionIndex) => (
                 <div key={questionIndex} className="mb-6">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-lg font-semibold text-gray-800">Вопрос: {questionItem.question}</h3>
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Вопрос: {questionItem.question}</h3>
 
                         {userAnswer && !isRetrying && (
-                            <Button onClick={handleRetryQuiz} type="default">
+                            <Button onClick={handleRetryQuiz} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                                 Попробовать еще раз
                             </Button>
                         )}
@@ -106,7 +108,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult, onRetryQuiz }
 
             <div className="flex justify-between mt-4">
                 <Button
-                    type="primary"
+                    color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
                     onClick={handleCheckResult}
                     disabled={!isRetrying && !!userAnswer}
                     className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"

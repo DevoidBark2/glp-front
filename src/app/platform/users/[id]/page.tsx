@@ -85,7 +85,7 @@ const UserPage = observer(() => {
 
                     <Divider />
 
-                    <Card title="О себе" bordered={false} className="mt-4">
+                    <Card title="О себе" variant="outlined" className="mt-4">
                         {loading ? (
                             <Skeleton paragraph={{ rows: 3 }} active />
                         ) : (

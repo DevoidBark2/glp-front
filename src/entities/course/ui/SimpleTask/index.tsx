@@ -5,6 +5,7 @@ import { MathJaxContext } from "better-react-mathjax";
 import { MathfieldElement } from "mathlive";
 import { Button } from "antd";
 import { parseMathFormula } from "@/shared/lib/parseMathFormula";
+import { useTheme } from "next-themes";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;
@@ -15,6 +16,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     const mathFieldRef = useRef<MathfieldElement | null>(null);
     const [isEditable, setIsEditable] = useState(!task.userAnswer);
     const [currentAnswer, setCurrentAnswer] = useState(task.userAnswer || null);
+    const { resolvedTheme } = useTheme()
 
     useEffect(() => {
         if (mathFieldRef.current && currentAnswer) {
@@ -40,8 +42,8 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
 
     return (
         <div>
-            <h1 className="text-[#333] font-bold text-2xl mb-2">Решите задачу</h1>
-            <p className="text-[#666] text-sm mb-4">
+            <h1 className="text-[#333] font-bold text-2xl mb-2 dark:text-white">Решите задачу</h1>
+            <p className="text-[#666] text-sm mb-4 dark:text-white">
                 Внимательно прочитайте условие и найдите результат. Убедитесь, что вы понимаете формулы и вычисления.
             </p>
 
@@ -68,7 +70,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
                     showProcessingMessages: false, // Отключаем сообщения
                 }}
             >
-                <div className="bg-[#fff] p-2 border rounded border-[#ddd] mb-4 text-lg text-[#444] flex items-center flex-wrap gap-10">
+                <div className="p-2 border-[#ddd] mb-4 text-lg text-[#444] dark:text-white flex items-center flex-wrap gap-10">
                     {parseMathFormula(task.title)}
                 </div>
                 <math-field
@@ -87,14 +89,14 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
             </MathJaxContext>
 
 
-            <Button className="mt-4" type="primary" onClick={handleCheckResult} disabled={!isEditable}>
+            <Button className="mt-4" color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"} onClick={handleCheckResult} disabled={!isEditable}>
                 Завершить
             </Button>
 
             {currentAnswer && (
                 <Button
                     className="mt-4 ml-2"
-                    type="primary"
+                    color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
                     onClick={() => {
                         setIsEditable(true);
                         // setCurrentAnswer(null); // Сбрасываем сохраненный ответ, чтобы поле можно было редактировать

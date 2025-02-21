@@ -1,6 +1,7 @@
 import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
 import { Button } from "antd";
 import { observer } from "mobx-react";
+import { useTheme } from "next-themes";
 import { useState } from "react";
 
 interface QuizComponentProps {
@@ -17,6 +18,7 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!task.userAnswer);
     const [OldUserAnswerId, setOldUserAnswerId] = useState<number | undefined>(undefined);
     const [isRetrying, setIsRetrying] = useState(false);
+    const { resolvedTheme } = useTheme()
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -49,18 +51,18 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
     return (
         <div className="quiz-container mb-6 transition-transform p-4">
             <div className="text-center mb-4">
-                <h3 className="text-2xl font-bold">{title}</h3>
-                <p className="text-gray-600">{description}</p>
+                <h3 className="text-2xl font-bold dark:text-white">{title}</h3>
+                <p className="text-gray-600 dark:text-white">{description}</p>
             </div>
 
             <div className="question mb-4">
                 <div className="flex justify-between items-center mb-2 flex-wrap">
-                    <h4 className="text-lg font-semibold">
+                    <h4 className="text-lg font-semibold dark:text-white">
                         Вопрос {currentQuestionIndex + 1}: {currentQuestion.question}
                     </h4>
 
                     {userAnswers && (
-                        <Button onClick={handleRetryQuiz} type="default">
+                        <Button onClick={handleRetryQuiz} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                             Попробовать еще раз
                         </Button>
                     )}
@@ -111,15 +113,20 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
 
             <div className="flex justify-between mt-4">
                 {currentQuestionIndex > 0 && (
-                    <Button onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}>
+                    <Button onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
+                        color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                    >
                         Назад
                     </Button>
                 )}
 
                 {currentQuestionIndex < questions.length - 1 ? (
-                    <Button onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}>Далее</Button>
+                    <Button
+                        onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
+                        color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                    >Далее</Button>
                 ) : (
-                    <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} type="primary">
+                    <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                         Завершить
                     </Button>
                 )}

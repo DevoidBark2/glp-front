@@ -3,41 +3,46 @@ import {
     Layout,
     Button,
     Tooltip,
-    Skeleton, Spin, Progress,
+    Skeleton,
+    Progress,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import {
     ExclamationCircleOutlined,
     CheckCircleOutlined,
     CloseCircleOutlined,
-    QuestionCircleOutlined, HomeOutlined,
+    QuestionCircleOutlined,
+    PushpinOutlined,
+    PushpinTwoTone,
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { SectionMenu } from "@/shared/api/course/model";
-import Image from "next/image";
-import {useMediaQuery} from "react-responsive";
+import { useMediaQuery } from "react-responsive";
+import { useTheme } from "next-themes";
 
 const { Sider } = Layout;
 
 export const NavbarLesson = observer(() => {
     const { courseStore } = useMobxStores();
-    const { courseId } = useParams()
+    const { courseId } = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [collapsed, setCollapsed] = useState(false);
-    const [selectedSection, setSelectedSection] = useState<number | null>(null);
 
-    const isShowPickIcon = useMediaQuery({ query: "(max-width: 768px)" });
+    const [selectedSection, setSelectedSection] = useState<number | null>(null);
+    const [isHovered, setIsHovered] = useState(false);
+    const isTablet = useMediaQuery({ query: "(max-width: 768px)" });
+    const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
+    const { resolvedTheme } = useTheme()
+    const [isPinned, setIsPinned] = useState<boolean>();
 
     const handleMenuClick = (key: number) => {
         courseStore.updateSectionStep(Number(selectedSection)).then(() => {
             setSelectedSection(key);
             router.push(`?step=${key}`);
         });
-        setIsHovered(false)
-
+        setIsHovered(false);
     };
 
     const renderIcon = (menuItem: SectionMenu) => {
@@ -45,8 +50,6 @@ export const NavbarLesson = observer(() => {
         const iconStyles = {
             marginRight: 8,
             fontSize: 25,
-            marginBottom: collapsed ? 16 : undefined,
-            marginLeft: collapsed ? -4 : undefined,
         };
 
         if (!userAnswer) {
@@ -66,7 +69,7 @@ export const NavbarLesson = observer(() => {
         }
 
         const totalAnswers = userAnswer.totalAnswers;
-        const correctAnswers = userAnswer.correctAnswers
+        const correctAnswers = userAnswer.correctAnswers;
 
         let icon = <ExclamationCircleOutlined style={{ ...iconStyles, color: "orange" }} />;
         let tooltipTitle = `Часть заданий выполнена верно (${correctAnswers}/${totalAnswers})`;
@@ -82,40 +85,19 @@ export const NavbarLesson = observer(() => {
         return <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
     };
 
-
-    const [windowW, setWindowW] = useState<number | null>(null)
-    const [isMobile, setIsMobile] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleResize = () => {
-        setWindowW(window.innerWidth)
-        console.log(window.innerWidth)
-        if (window.innerWidth <= 768) {
-            setIsMobile(true)
-        }
-        else {
-            setIsMobile(false)
-        }
-
-
-        useEffect(() => {
-            window.addEventListener("resize", handleResize);
-            return () => window.removeEventListener("resize", handleResize);
-        }, [windowW]);
+    const handlePinToggle = () => {
+        const newState = !isPinned;
+        setIsPinned(newState);
+        localStorage.setItem("sider_pinned", String(newState));
     };
-
-    const handleSetIsMobile = () => {
-        window.localStorage.setItem("platform_mobile", String(!isMobile))
-        setIsMobile(prevState => !prevState)
-    }
 
     useEffect(() => {
         const step = Number(searchParams.get("step"));
         const initialSectionId = step || courseStore.courseMenuItems?.sections?.[0]?.children?.[0]?.id;
-        const isMobile = window.localStorage.getItem("platform_mobile")
-        setWindowW(window.innerWidth)
-        if (isMobile) {
-            setIsMobile(!!isMobile)
+        const isSnipped = localStorage.getItem("sider_pinned") === "true"
+
+        if (isSnipped) {
+            setIsPinned(isSnipped)
         }
 
         if (initialSectionId) {
@@ -129,7 +111,7 @@ export const NavbarLesson = observer(() => {
 
     return (
         <>
-            {isMobile && (
+            {isSmallScreen && (
                 <div
                     className="h-full w-6 bg-gray-400 z-50 flex items-center justify-center"
                     onMouseEnter={() => setIsHovered(true)}
@@ -143,36 +125,40 @@ export const NavbarLesson = observer(() => {
             <Sider
                 width={240}
                 style={{
-                    position: isMobile ? "fixed" : "static",
-                    left: isMobile && !isHovered ? "-240px" : "0",
-                    height: "calc(100vh - 64px)",
-                    zIndex: 1100,
+                    position: isTablet ? "fixed" : "static",
+                    left: isSmallScreen
+                        ? isHovered
+                            ? "0"
+                            : "-240px"
+                        : isPinned || isHovered
+                            ? "0"
+                            : "-240px",
+                    height: "calc(100vh - 56px)",
+                    zIndex: 100,
+                    background: resolvedTheme === "dark" ? "#1a1a1a" : "white",
                     transition: "left 0.3s ease-in-out",
+                    boxShadow: "4px 0 10px rgba(0, 0, 0, 0.2)"
                 }}
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <div className="flex justify-end px-3">
-                    {!isShowPickIcon &&  <Button
-                        type="text"
-                        icon={!isMobile ? <Image
-                            src="/static/pin_icon_2.svg"
-                            alt="pin"
-                            width={30}
-                            height={30}
-                            color="white"
-                        /> : <Image
-                            src="/static/pin_icon.svg"
-                            alt="pin"
-                            width={30}
-                            height={30}
-                            color="white"
-                        />}
-                        onClick={() => handleSetIsMobile()}
-                    />}
+                    {!isSmallScreen && (
+                        <Button
+                            type="text"
+                            icon={
+                                isPinned ? (
+                                    <PushpinOutlined style={{ fontSize: 20, color: resolvedTheme === "dark" ? "white" : "black" }} />
+                                ) : (
+                                    <PushpinTwoTone style={{ fontSize: 20, color: resolvedTheme === "dark" ? "white" : "black" }} />
+                                )
+                            }
+                            onClick={handlePinToggle}
+                        />
+                    )}
                 </div>
 
-                <div className="flex-1 mx-4">
-                    <p className='text-white text-xl text-center'>Прогресс по курсу</p>
+                <div className="flex-1 mx-4 mb-4 dark:bg-[#1a1a1a]">
+                    <p className="dark:text-white text-xl text-center mt-2">Прогресс по курсу</p>
                     {!courseStore.courseMenuLoading && (
                         <Progress
                             percent={courseStore.courseMenuItems?.progress}
@@ -180,7 +166,7 @@ export const NavbarLesson = observer(() => {
                             trailColor="#CCCCCC"
                             showInfo={true}
                             format={(percent) => (
-                                <span className="text-white font-bold">{percent}%</span>
+                                <span className="dark:text-white font-bold">{percent}%</span>
                             )}
                         />
                     )}
@@ -188,28 +174,35 @@ export const NavbarLesson = observer(() => {
 
                 {courseStore.courseMenuItems ? (
                     <Menu
-                        theme="dark"
                         mode="inline"
-                        openKeys={!collapsed && courseStore.courseMenuItems?.sections?.map((section) => section.id?.toString() || "") || []}
+                        openKeys={courseStore.courseMenuItems?.sections?.map((section) => section.id?.toString() || "") || []}
                         expandIcon={() => null}
                         selectedKeys={[selectedSection?.toString() || ""]}
                         onClick={(info) => handleMenuClick(Number(info.key))}
                         className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                        style={{ paddingBottom: 50 }}
+                        style={{
+                            paddingBottom: 50,
+                            background: resolvedTheme === "dark" ? "#1a1a1a" : "white",
+                        }}
                         items={[
+                            { type: "divider" },
                             ...(courseStore.courseMenuItems?.sections?.map((section) => ({
                                 key: section.id?.toString(),
-                                label: (<span className="font-bold text-white truncate">{section.name}</span>),
-                                children: section.children?.map((child) => ({
-                                    key: child.id?.toString(),
-                                    icon: renderIcon(child),
-                                    label: (
-                                        <div
-                                            className="flex items-center justify-between px-4 py-2 border-l-2 border-green-500">
-                                            <p className="truncate">{child.name}</p>
-                                        </div>
-                                    ),
-                                })) || [],
+                                label: <Tooltip title={section.name}>
+                                    <span className="font-bold truncate dark:text-white">{section.name}</span>
+                                </Tooltip>,
+                                children:
+                                    section.children?.map((child) => ({
+                                        key: child.id?.toString(),
+                                        icon: renderIcon(child),
+                                        label: (
+                                            <div className="flex items-center justify-between px-4 dark:text-white py-2 border-l-2 border-green-500">
+                                                <Tooltip title={child.name} placement="right">
+                                                    <p className="truncate">{child.name}</p>
+                                                </Tooltip>
+                                            </div>
+                                        ),
+                                    })) || [],
                             })) || []),
 
                             { type: "divider" },
@@ -219,24 +212,17 @@ export const NavbarLesson = observer(() => {
                                 label: <span className="text-gray-400">Экзамен</span>,
                                 icon: (
                                     <Tooltip title="Пока нельзя перейти к экзамену">
-                                        <ExclamationCircleOutlined
-                                            style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
+                                        <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
                                     </Tooltip>
                                 ),
-                                // disabled: true,
                             },
                         ]}
                     />
-
-
                 ) : (
                     <div className="h-[calc(100vh-96px)] custom-scrollbar">
-                        {
-                            Array.from({ length: 8 }).map((_, index) => (
-                                <Skeleton.Input key={index} active block
-                                    style={{ width: 230, marginLeft: 10, marginTop: 10 }} />
-                            ))
-                        }
+                        {Array.from({ length: 8 }).map((_, index) => (
+                            <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 10, marginTop: 10 }} />
+                        ))}
                     </div>
                 )}
             </Sider>

@@ -1,15 +1,15 @@
 import { observer } from "mobx-react";
-import {CourseComponent} from "@/shared/api/component/model";
+import { ComponentTask } from "@/shared/api/course/model";
 
 interface TextComponentProps {
-    component: CourseComponent
+    component: ComponentTask
 }
 
-export const TextComponent = observer(({component}: TextComponentProps) => {
+export const TextComponent = observer(({ component }: TextComponentProps) => {
     return (
         <div className="mb-6">
             <div
-                className="prose prose-lg text-gray-600 leading-relaxed"
+                className="prose prose-lg text-gray-600 leading-relaxed dark:text-white"
                 dangerouslySetInnerHTML={{
                     __html: component.content_description || '',
                 }}

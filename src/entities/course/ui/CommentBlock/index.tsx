@@ -7,7 +7,8 @@ import { useSearchParams } from "next/navigation";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from "dayjs";
 import 'dayjs/locale/ru';
-import {CourseSectionComment} from "@/entities/comments/ui";
+import { CourseSectionComment } from "@/entities/comments/ui";
+import { useTheme } from "next-themes";
 
 dayjs.extend(relativeTime);
 dayjs.locale('ru');
@@ -15,6 +16,7 @@ dayjs.locale('ru');
 export const CommentBlock = observer(() => {
     const { commentsStore, courseStore } = useMobxStores()
     const searchParams = useSearchParams();
+    const { resolvedTheme } = useTheme()
 
     const sendComment = () => {
         if (!searchParams.get("step")) return;
@@ -32,16 +34,16 @@ export const CommentBlock = observer(() => {
 
     return (
         <div className="mt-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Комментарии</h3>
-            <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4 dark:text-white">Комментарии</h3>
+            <div className="p-4 rounded-lg shadow-sm">
                 <TextArea
                     value={commentsStore.comment}
                     onChange={(e) => commentsStore.setComment(e.target.value)}
                     className="w-full h-24 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Напишите комментарий..."
                 ></TextArea>
-                <div className="flex justify-end mt-2">
-                    <Button type="primary" onClick={sendComment}>
+                <div className="flex justify-end mt-4">
+                    <Button color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"} onClick={sendComment}>
                         Отправить
                     </Button>
                 </div>
@@ -49,12 +51,12 @@ export const CommentBlock = observer(() => {
             <div className="mt-6 space-y-4">
                 {commentsStore.sectionComments.length > 0 ? (
                     commentsStore.sectionComments.map((comment, index) => (
-                        <CourseSectionComment key={comment.id} comment={comment}/>
+                        <CourseSectionComment key={comment.id} comment={comment} />
                     ))
                 ) : (
                     <div className="text-center py-6">
-                        <h3 className="text-lg font-semibold text-gray-700">Комментариев пока нет</h3>
-                        <p className="text-sm text-gray-500 mt-2">Будьте первым, кто оставит комментарий!</p>
+                        <h3 className="text-lg font-semibold text-gray-700 dark:text-white">Комментариев пока нет</h3>
+                        <p className="text-sm text-gray-500 mt-2 dark:text-white">Будьте первым, кто оставит комментарий!</p>
                     </div>
                 )}
             </div>
