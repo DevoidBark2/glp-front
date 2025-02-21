@@ -7,6 +7,7 @@ import { ResetPassword } from "@/entities/user-settings/ui/ResetPassword";
 import { ManageProfile } from "@/entities/user-settings/ui/ManageProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive";
+import {PlatformSettings} from "@/entities/user-settings/ui/PlatformSettings";
 
 const SettingsPage = observer(() => {
     const { authStore } = useMobxStores()
@@ -34,13 +35,18 @@ const SettingsPage = observer(() => {
     const items: TabsProps['items'] = [
         {
             key: "1",
-            label: "Безопасность",
+            label: <label className="dark:text-white">Безопасность</label>,
             children: (<ResetPassword handleChangePassword={handleChangePassword} />),
         },
         {
             key: "2",
-            label: "Управление аккаунтом",
+            label: <label className="dark:text-white">Управление аккаунтом</label>,
             children: (<ManageProfile handleDeleteAccount={handleDeleteAccount} />),
+        },
+        {
+            key: "3",
+            label: <label className="dark:text-white">Платформа</label>,
+            children: (<PlatformSettings/>),
         },
     ];
 

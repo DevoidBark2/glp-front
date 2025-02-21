@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useTheme } from 'next-themes';
-import { Switch } from 'antd';
-import { BulbOutlined, MoonOutlined } from '@ant-design/icons';
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
+import { Switch } from "antd";
+import { BulbOutlined, MoonOutlined } from "@ant-design/icons";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ThemeSwitch() {
     const [mounted, setMounted] = useState(false);
@@ -10,18 +11,43 @@ export default function ThemeSwitch() {
     useEffect(() => setMounted(true), []);
 
     if (!mounted) return (
-        <div className="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full animate-pulse" />
+        <div className="w-10 h-10 flex items-center justify-center bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
     );
 
     return (
-        <div className="flex items-center space-x-3 p-2 bg-gray-800 rounded-full shadow-lg">
+        <motion.div
+            className="flex items-center justify-between px-3 py-1 rounded-full shadow-md bg-gray-200 dark:bg-gray-800 transition-all w-24"
+        >
+            <AnimatePresence mode="wait">
+                {resolvedTheme === "dark" ? (
+                    <motion.span
+                        key="moon"
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 5 }}
+                        className="text-blue-400 text-lg"
+                    >
+                        <MoonOutlined />
+                    </motion.span>
+                ) : (
+                    <motion.span
+                        key="bulb"
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 5 }}
+                        className="text-yellow-400 text-lg"
+                    >
+                        <BulbOutlined />
+                    </motion.span>
+                )}
+            </AnimatePresence>
+
             <Switch
-                checkedChildren={<BulbOutlined className="text-yellow-400 text-xl" />}
-                unCheckedChildren={<MoonOutlined className="text-blue-400 text-xl" />}
-                checked={resolvedTheme === 'dark'}
-                onChange={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-                className="bg-gray-500"
+                checked={resolvedTheme === "dark"}
+                onChange={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                size="small"
+                className="bg-gray-400 dark:bg-gray-600"
             />
-        </div>
+        </motion.div>
     );
 }

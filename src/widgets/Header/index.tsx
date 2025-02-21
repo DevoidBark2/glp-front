@@ -11,11 +11,13 @@ import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import nextConfig from "../../../next.config.mjs";
+import {useTheme} from "next-themes";
 
 export const Header = observer(() => {
     const { userStore, userProfileStore } = useMobxStores();
     const pathName = usePathname();
     const router = useRouter();
+    const {resolvedTheme} = useTheme()
 
     const [items, setItems] = useState<MenuProps["items"]>([]);
     const [isDrawerOpen, setDrawerOpen] = useState(false); // Для управления бургер-меню
@@ -100,17 +102,18 @@ export const Header = observer(() => {
                         <Link
                             key={menuItem.key}
                             href={menuItem.link}
-                            className={`text-black text-lg font-medium relative group hover:text-gray-700 transition-all duration-300
-            ${pathName === menuItem.link ? "text-gray-900" : ""}`}
+                            className={`text-black text-lg dark:text-white font-medium relative group transition-all duration-300 
+        ${pathName === menuItem.link ? "text-gray-900 dark:text-white" : "hover:text-gray-700 dark:hover:text-gray-300"}`}
                         >
                             {menuItem.title}
                             <span
-                                className={`absolute bottom-0 left-0 w-full h-[2px] bg-black transition-all duration-300 
-                ${pathName === menuItem.link ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                                className={`absolute bottom-0 left-0 w-full h-[2px] transition-all duration-300 
+            ${pathName === menuItem.link
+                                    ? "bg-black dark:bg-white opacity-100"  // Активный пункт: чёрный в светлой, белый в тёмной теме
+                                    : "opacity-0 group-hover:opacity-100 bg-black dark:bg-white"}`} // Наведение: подчёркивание белым в тёмной
                             ></span>
                         </Link>
                     ))}
-
                 </div>
 
                 <div className="hidden xl:flex items-center space-x-4">
@@ -156,18 +159,18 @@ export const Header = observer(() => {
 
                 <div className="xl:hidden">
                     <MenuOutlined
-                        className="text-2xl cursor-pointer hover:text-[#2c2c2c] transition-colors duration-200"
+                        className="text-2xl dark:text-white cursor-pointer hover:text-[#2c2c2c] transition-colors duration-200"
                         onClick={() => setDrawerOpen(true)}
                     />
                 </div>
 
                 <Drawer
-                    title={<span className="text-lg font-semibold text-gray-900 dark:text-gray-100">Меню</span>}
+                    title={<span className="text-lg font-semibold dark:text-white">Меню</span>}
                     placement="right"
                     onClose={() => setDrawerOpen(false)}
                     open={isDrawerOpen}
                     closeIcon={<CloseOutlined className="text-gray-600 dark:text-gray-400" />}
-                    style={{ padding: 0 }}
+                    style={{ padding: 0, backgroundColor: resolvedTheme === "dark" ? "#1a1a1a": "white" }}
                 >
                     <div className="flex flex-col p-4">
                         <div className="flex flex-col space-y-3">
@@ -228,7 +231,9 @@ export const Header = observer(() => {
                                             </div>
                                         </div>
 
-                                        {menuOpen ? <UpOutlined /> : <DownOutlined />}
+                                        {menuOpen ?
+                                            <UpOutlined style={{color: resolvedTheme === "dark" ? "white" : "black"}} /> :
+                                            <DownOutlined style={{color: resolvedTheme === "dark" ? "white" : "black"}}/>}
                                     </div>
                                 </Dropdown>
                             </div>

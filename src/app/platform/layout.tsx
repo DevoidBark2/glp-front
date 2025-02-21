@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }, [pathName, userProfileStore, generalSettingsStore]);
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen dark:bg-[#1a1a1a]">
             {!pathName.includes('/lessons/') && <Header />}
 
             <main className="flex-grow">{children}</main>

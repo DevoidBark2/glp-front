@@ -25,7 +25,7 @@ export const ManageProfile: React.FC<ManageProfileProps> = observer(({ handleDel
         >
             <Form.Item
                 name="is_two_factor_enabled"
-                label="Двухфакторная авторизация"
+                label={<label className='dark:text-white'>Двухфакторная авторизация</label>}
                 valuePropName="checked"
                 tooltip={userProfileStore.userProfile?.method_auth !== AuthMethodEnum.CREDENTIALS ? `Двухфакторная авторизация не доступна, Вы вошли через сторонний сервис` : undefined}
             >

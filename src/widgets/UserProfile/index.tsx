@@ -6,9 +6,11 @@ import nextConfig from "../../../next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { ProfileForm } from "@/entities/user-profile";
+import {useTheme} from "next-themes";
 
 export const UserProfileBlock = observer(() => {
     const { userProfileStore } = useMobxStores();
+    const {resolvedTheme} = useTheme()
 
     const handleAvatarUpload = async (file: File) => {
         userProfileStore.setUploadingProfileImage(true);
@@ -25,8 +27,8 @@ export const UserProfileBlock = observer(() => {
 
     return (
         <>
-            <h1 className="text-2xl">Профиль пользователя</h1>
-            <Divider />
+            <h1 className="text-2xl dark:text-white">Профиль пользователя</h1>
+            <Divider style={{borderColor: resolvedTheme === "dark" ? "white" : "dark"}}/>
             <div className="w-full flex flex-col md:flex-row p-6">
 
                 <div className="flex flex-col mr-10">
@@ -65,19 +67,6 @@ export const UserProfileBlock = observer(() => {
                             </div>
                         </div>
                     </Upload>
-
-                    {/* <div className="mt-4 text-xl text-neon-green font-mono">
-                   {userProfileStore.userProfile?.created_at ? (
-                       <span>
-                           <span className="text-white">Зарегистрирован:</span>
-                           <p className="text-cyber-yellow">
-                               {dayjs(userProfileStore.userProfile.created_at).format(FORMAT_VIEW_DATE)}
-                           </p>
-                       </span>
-                   ) : (
-                       <span className="italic text-gray-500">Activation time not available</span>
-                   )}
-               </div> */}
                 </div>
 
                 <ProfileForm />

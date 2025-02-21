@@ -28,17 +28,17 @@ const ProfilePage = () => {
                     items={[
                         {
                             key: '1',
-                            label: 'Профиль пользователя',
+                            label: <label className="dark:text-white">Профиль пользователя</label>,
                             children: <UserProfileBlock />,
                         },
                         {
                             key: '2',
-                            label: 'Курсы',
+                            label: <label className="dark:text-white">Курсы</label>,
                             children: <CourseUserProfile />,
                         },
                         {
                             key: '3',
-                            label: 'Дополнительная информация',
+                            label: <label className="dark:text-white">Дополнительная информация</label>,
                             children: <AddationalInfo />,
                         }
                     ]}
