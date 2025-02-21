@@ -22,7 +22,7 @@ const ProfilePage = () => {
         !userProfileStore.loading && userProfileStore.userProfile ? (
             <div className="container mx-auto mt-4">
                 <Tabs
-                    animated
+                    animated={!changeTabsPosition}
                     style={{ padding: "0 15px" }}
                     tabPosition={changeTabsPosition ? "top" : "left"}
                     items={[

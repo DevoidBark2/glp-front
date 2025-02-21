@@ -1,6 +1,6 @@
 import { FilterOption, FilterValues } from "@/shared/api/filter/model";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { Button, Checkbox, Radio, Form, Collapse } from "antd";
+import {Button, Checkbox, Radio, Form, Collapse, Divider} from "antd";
 import { observer } from "mobx-react";
 
 const { Panel } = Collapse;
@@ -45,13 +45,14 @@ const FilterBlock = observer(() => {
 
     return (
         <div
-            className="w-full sm:w-1/4 bg-gray-50 p-4 rounded-lg shadow mb-6 md:sticky top-20"
+            className="w-full bg-gray-50 p-4 rounded-lg shadow mb-6 md:sticky top-20"
             style={{ height: "fit-content" }}
         >
-            <h2 className="text-lg font-semibold mb-4">Фильтры</h2>
+            <h2 className="text-xl font-bold mb-4 text-center">Фильтры</h2>
+            <Divider/>
 
             <Collapse defaultActiveKey={['1']} className="block md:hidden">
-                <Panel header="Фильтры" key="1">
+                <Panel header={<label>Фильтры</label>} key="1">
                     <Form
                         form={form}
                         layout="vertical"
@@ -63,8 +64,7 @@ const FilterBlock = observer(() => {
                             sortOption: null,
                         }}
                     >
-                        {/* Категории */}
-                        <Form.Item name="categories" label="Категории">
+                        <Form.Item name="categories" label={<label className="text-lg font-semibold">Категории</label>}>
                             <Checkbox.Group className="flex flex-col gap-2">
                                 {nomenclatureStore.categories.map((category, index) => (
                                     <Checkbox key={index} value={category.id}>
@@ -73,9 +73,8 @@ const FilterBlock = observer(() => {
                                 ))}
                             </Checkbox.Group>
                         </Form.Item>
-
-                        {/* Уровень сложности */}
-                        <Form.Item name="levels" label="Уровень сложности">
+                        <Divider/>
+                        <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
                             <Checkbox.Group className="flex flex-col gap-2">
                                 {filters.levels.map((level, index) => (
                                     <Checkbox key={index} value={level.value}>
@@ -84,9 +83,8 @@ const FilterBlock = observer(() => {
                                 ))}
                             </Checkbox.Group>
                         </Form.Item>
-
-                        {/* Продолжительность */}
-                        <Form.Item name="durations" label="Продолжительность">
+                        <Divider/>
+                        <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
                             <Checkbox.Group className="flex flex-col gap-2">
                                 {filters.durations.map((duration, index) => (
                                     <Checkbox key={index} value={duration.value}>
@@ -95,9 +93,8 @@ const FilterBlock = observer(() => {
                                 ))}
                             </Checkbox.Group>
                         </Form.Item>
-
-                        {/* Сортировка */}
-                        <Form.Item name="sortOption" label="Сортировка">
+                        <Divider/>
+                        <Form.Item name="sortOption" label={<label className="text-lg font-semibold">Сортировка</label>}>
                             <Radio.Group className="flex flex-col gap-2">
                                 {filters.sortOptions.map((option, index) => (
                                     <Radio key={index} value={option.value}>
@@ -107,14 +104,13 @@ const FilterBlock = observer(() => {
                             </Radio.Group>
                         </Form.Item>
 
-                        <Button type="primary" htmlType="submit" block>
+                        <Button color="default" variant="solid" htmlType="submit" block>
                             Применить фильтры
                         </Button>
                     </Form>
                 </Panel>
             </Collapse>
 
-            {/* Фильтры для экранов больше 768px */}
             <div className="hidden md:block">
                 <Form
                     form={form}
@@ -127,8 +123,7 @@ const FilterBlock = observer(() => {
                         sortOption: null,
                     }}
                 >
-                    {/* Категории */}
-                    <Form.Item name="categories" label="Категории">
+                    <Form.Item name="categories" label={<label className="text-lg font-semibold">Категории</label>}>
                         <Checkbox.Group className="flex flex-col gap-2">
                             {nomenclatureStore.categories.map((category, index) => (
                                 <Checkbox key={index} value={category.id}>
@@ -138,8 +133,9 @@ const FilterBlock = observer(() => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    {/* Уровень сложности */}
-                    <Form.Item name="levels" label="Уровень сложности">
+                    <Divider/>
+
+                    <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
                         <Checkbox.Group className="flex flex-col gap-2">
                             {filters.levels.map((level, index) => (
                                 <Checkbox key={index} value={level.value}>
@@ -149,8 +145,9 @@ const FilterBlock = observer(() => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    {/* Продолжительность */}
-                    <Form.Item name="durations" label="Продолжительность">
+                    <Divider/>
+
+                    <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
                         <Checkbox.Group className="flex flex-col gap-2">
                             {filters.durations.map((duration, index) => (
                                 <Checkbox key={index} value={duration.value}>
@@ -160,9 +157,10 @@ const FilterBlock = observer(() => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    {/* Сортировка */}
-                    <Form.Item name="sortOption" label="Сортировка">
-                        <Radio.Group className="flex flex-col gap-2">
+                    <Divider/>
+
+                    <Form.Item name="sortOption" label={<label className="text-lg font-semibold">Сортировка</label>}>
+                        <Radio.Group className="flex flex-col gap-2" style={{display:"flex"}}>
                             {filters.sortOptions.map((option, index) => (
                                 <Radio key={index} value={option.value}>
                                     {option.label}
@@ -171,7 +169,7 @@ const FilterBlock = observer(() => {
                         </Radio.Group>
                     </Form.Item>
 
-                    <Button type="primary" htmlType="submit" block>
+                    <Button color="default" variant="solid" htmlType="submit" block>
                         Применить фильтры
                     </Button>
                 </Form>

@@ -1,24 +1,22 @@
 "use client"
 import { Button, Breadcrumb, Input, Divider, Empty } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {ArrowLeftOutlined, SearchOutlined} from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
 import { CourseList } from "@/entities/course/ui";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import FilterBlock from "@/entities/filters/ui/FilterBlock";
+import {useRouter} from "next/navigation";
 
 const CoursesSearch = observer(() => {
     const { courseStore, nomenclatureStore } = useMobxStores();
     const [searchTerm, setSearchTerm] = useState("");
+    const router = useRouter();
 
-    // Функция для выполнения поиска
     const handleSearch = () => {
         courseStore.handleFilterCoursesBySearch(searchTerm)
     };
 
-    // Обработка нажатия клавиши "Enter"
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && searchTerm.trim().length >= 4) {
             handleSearch();
@@ -41,11 +39,14 @@ const CoursesSearch = observer(() => {
     }, [])
 
     return (
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4">
             <Breadcrumb
                 items={[
-                    { title: <Link href={"/platform"}>Главная</Link> },
-                    { title: "Результаты поиска" },
+                    {
+                        title: <Button icon={<ArrowLeftOutlined />} color="default" type="link" variant="link"
+                                       onClick={() => router.push("/platform")}
+                        >Главная</Button>
+                    },
                 ]}
             />
             <Divider />
@@ -62,7 +63,8 @@ const CoursesSearch = observer(() => {
                     enterButton={
                         <Button
                             disabled={searchTerm.trim().length < 4}
-                            type="primary"
+                            type="default"
+                            className="border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 ml-2"
                             icon={<SearchOutlined />}
                             onClick={handleSearch}
                         >

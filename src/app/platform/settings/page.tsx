@@ -84,7 +84,7 @@ const SettingsPage = observer(() => {
             <div className="container mx-auto mt-10 px-6">
                 <Tabs
                     tabPosition={changeTabsPosition ? "top" : "left"}
-                    animated items={items} />
+                    animated={!changeTabsPosition} items={items} />
             </div>
         </>
 
