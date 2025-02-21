@@ -51,65 +51,70 @@ const FilterBlock = observer(() => {
             <h2 className="text-xl font-bold mb-4 text-center">Фильтры</h2>
             <Divider/>
 
-            <Collapse defaultActiveKey={['1']} className="block md:hidden">
-                <Panel header={<label>Фильтры</label>} key="1">
-                    <Form
-                        form={form}
-                        layout="vertical"
-                        onFinish={handleFilterCourse}
-                        initialValues={{
-                            categories: [],
-                            levels: [],
-                            durations: [],
-                            sortOption: null,
-                        }}
-                    >
-                        <Form.Item name="categories" label={<label className="text-lg font-semibold">Категории</label>}>
-                            <Checkbox.Group className="flex flex-col gap-2">
-                                {nomenclatureStore.categories.map((category, index) => (
-                                    <Checkbox key={index} value={category.id}>
-                                        {category.name}
-                                    </Checkbox>
-                                ))}
-                            </Checkbox.Group>
-                        </Form.Item>
-                        <Divider/>
-                        <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
-                            <Checkbox.Group className="flex flex-col gap-2">
-                                {filters.levels.map((level, index) => (
-                                    <Checkbox key={index} value={level.value}>
-                                        {level.label}
-                                    </Checkbox>
-                                ))}
-                            </Checkbox.Group>
-                        </Form.Item>
-                        <Divider/>
-                        <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
-                            <Checkbox.Group className="flex flex-col gap-2">
-                                {filters.durations.map((duration, index) => (
-                                    <Checkbox key={index} value={duration.value}>
-                                        {duration.label}
-                                    </Checkbox>
-                                ))}
-                            </Checkbox.Group>
-                        </Form.Item>
-                        <Divider/>
-                        <Form.Item name="sortOption" label={<label className="text-lg font-semibold">Сортировка</label>}>
-                            <Radio.Group className="flex flex-col gap-2">
-                                {filters.sortOptions.map((option, index) => (
-                                    <Radio key={index} value={option.value}>
-                                        {option.label}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        </Form.Item>
+            <Collapse defaultActiveKey={['1']} className="block md:hidden" items={[
+                {
+                    key: '1',
+                    label: <label>Фильтры</label>,
+                    children: (
+                        <Form
+                            form={form}
+                            layout="vertical"
+                            onFinish={handleFilterCourse}
+                            initialValues={{
+                                categories: [],
+                                levels: [],
+                                durations: [],
+                                sortOption: null,
+                            }}
+                        >
+                            <Form.Item name="categories" label={<label className="text-lg font-semibold">Категории</label>}>
+                                <Checkbox.Group className="flex flex-col gap-2">
+                                    {nomenclatureStore.categories.map((category, index) => (
+                                        <Checkbox key={index} value={category.id}>
+                                            {category.name}
+                                        </Checkbox>
+                                    ))}
+                                </Checkbox.Group>
+                            </Form.Item>
+                            <Divider/>
+                            <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
+                                <Checkbox.Group className="flex flex-col gap-2">
+                                    {filters.levels.map((level, index) => (
+                                        <Checkbox key={index} value={level.value}>
+                                            {level.label}
+                                        </Checkbox>
+                                    ))}
+                                </Checkbox.Group>
+                            </Form.Item>
+                            <Divider/>
+                            <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
+                                <Checkbox.Group className="flex flex-col gap-2">
+                                    {filters.durations.map((duration, index) => (
+                                        <Checkbox key={index} value={duration.value}>
+                                            {duration.label}
+                                        </Checkbox>
+                                    ))}
+                                </Checkbox.Group>
+                            </Form.Item>
+                            <Divider/>
+                            <Form.Item name="sortOption" label={<label className="text-lg font-semibold">Сортировка</label>}>
+                                <Radio.Group className="flex flex-col gap-2">
+                                    {filters.sortOptions.map((option, index) => (
+                                        <Radio key={index} value={option.value}>
+                                            {option.label}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            </Form.Item>
 
-                        <Button color="default" variant="solid" htmlType="submit" block>
-                            Применить фильтры
-                        </Button>
-                    </Form>
-                </Panel>
-            </Collapse>
+                            <Button color="default" variant="solid" htmlType="submit" block>
+                                Применить фильтры
+                            </Button>
+                        </Form>
+                    )
+                }
+            ]} />
+
 
             <div className="hidden md:block">
                 <Form

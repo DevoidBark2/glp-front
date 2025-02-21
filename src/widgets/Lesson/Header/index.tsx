@@ -8,25 +8,21 @@ export const HeaderLesson = () => {
     const { courseStore } = useMobxStores();
     const router = useRouter();
 
-
     return (
-        <div className="relative w-full">
-            <div
-                className="flex items-center justify-between w-full px-7 z-50 bg-gradient-to-r from-green-400 to-blue-500 h-16 shadow-lg backdrop-blur-md">
+        <header className="relative w-full bg-white shadow-md">
+            <div className="flex items-center justify-between w-full px-6 h-14">
                 {courseStore.courseMenuLoading ? (
-                    <Spin/>
+                    <Spin size="small" />
                 ) : (
-                    <h1 className="text-xl font-bold text-white">
-                        {courseStore.courseMenuItems?.courseName}
+                    <h1 className="text-lg font-semibold text-gray-800">
+                        {courseStore.courseMenuItems?.courseName || "Course"}
                     </h1>
                 )}
-
                 <HomeOutlined
-                    style={{color: "white"}}
-                    className="text-white text-2xl cursor-pointer hover:text-gray-300 transition"
+                    className="text-gray-600 text-xl cursor-pointer hover:text-gray-800 transition-colors"
                     onClick={() => router.push('/platform')}
                 />
             </div>
-        </div>
+        </header>
     );
 };

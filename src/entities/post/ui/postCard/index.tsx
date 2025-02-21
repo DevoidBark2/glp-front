@@ -11,7 +11,7 @@ type PostCardProps = {
 
 export const PostCard = ({ post }: PostCardProps) => {
     return (
-        <Card bordered={false} className="mt-6 shadow-lg p-6">
+        <Card variant="borderless" className="mt-6 shadow-lg p-6">
             <div className="flex flex-col sm:flex-row">
 
                 {post?.image && (

@@ -119,11 +119,19 @@ class CourseStore {
         this.courseMenuLoading = value;
     })
 
+    setAllCourses = action((courses: Course[]) => {
+        this.courses = courses
+    })
+
+    setPopularCourses = action((courses: Course[]) => {
+        this.courses = courses
+    })
+
     getAllCourses = action(async () => {
         try {
             this.setLoadingCourses(true)
             const data = await getAllCourses();
-            this.courses = data.map(courseMapper);
+            this.setAllCourses(data.map(courseMapper));
         } catch (e) {
 
         } finally {
@@ -134,7 +142,7 @@ class CourseStore {
     getAllPopularCourses = action(async () => {
         const data = await getPopularCourses()
 
-        this.popularCourses = data.map(courseMapper)
+        this.setPopularCourses(data.map(courseMapper));
     })
 
     deleteMember = action(async (id: number) => {

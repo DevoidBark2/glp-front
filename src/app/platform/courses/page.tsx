@@ -76,7 +76,6 @@ const CoursesSearch = observer(() => {
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
-                {/* Фильтры на мобильных устройствах будут сверху */}
                 <div className="w-full md:w-1/4">
                     <FilterBlock />
                 </div>

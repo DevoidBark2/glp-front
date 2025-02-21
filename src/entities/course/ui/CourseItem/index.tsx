@@ -23,6 +23,7 @@ export const CourseItem = observer(({ course }: CourseItemProps) => {
                         alt={course.name}
                         width={400}
                         height={176}
+                        priority
                         className="w-full h-full object-cover"
                     />
                 ) : (

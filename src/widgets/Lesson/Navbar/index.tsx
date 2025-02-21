@@ -195,7 +195,7 @@ export const NavbarLesson = observer(() => {
                         selectedKeys={[selectedSection?.toString() || ""]}
                         onClick={(info) => handleMenuClick(Number(info.key))}
                         className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                        style={{ paddingBottom: 100 }}
+                        style={{ paddingBottom: 50 }}
                         items={[
                             ...(courseStore.courseMenuItems?.sections?.map((section) => ({
                                 key: section.id?.toString(),

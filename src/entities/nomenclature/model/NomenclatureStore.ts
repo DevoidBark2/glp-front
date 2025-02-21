@@ -34,10 +34,18 @@ class NomenclatureStore {
         this.loadingCategories = value;
     })
 
+    setCategories = action((categories: NomenclatureItem[]) => {
+        this.categories = categories;
+    })
+
+    setTeachers = action((teachers: User[]) => {
+        this.teachers = teachers;
+    })
+
     getCategories = action(async () => {
         this.setLoadingCategories(true)
         await getAllCategory().then((response) => {
-            this.categories = response.map(categoryMapper)
+            this.setCategories(response.map(categoryMapper))
         }).finally(() => {
             this.setLoadingCategories(false)
         });
@@ -78,7 +86,7 @@ class NomenclatureStore {
 
     getTeachers = action(async () => {
         await getTeachers().then(response => {
-            this.teachers = response.map(usersMapper)
+            this.setTeachers(response.map(usersMapper))
         });
     })
 }
