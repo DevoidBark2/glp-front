@@ -4,7 +4,6 @@ import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import nextConfig from "next.config.mjs";
-import { UserRole } from "@/shared/api/user/model";
 import { IsAdmin } from "@/entities/user/selectors";
 import dayjs from "dayjs";
 
@@ -19,15 +18,15 @@ export const CourseReviews = observer(() => {
         <div>
             <div className="flex items-center space-x-4 mt-6">
                 <Rate allowHalf disabled value={averageRating} />
-                <span className="text-gray-700 text-lg">
+                <span className="text-gray-700 text-lg dark:text-white">
                     {averageRating ? `${averageRating.toFixed(1)} / 5` : "Нет оценок"}
                 </span>
-                <span className="text-gray-500 text-sm">({reviewStore.courseReviews.length} отзывов)</span>
+                <span className="text-gray-500 text-sm dark:text-white">({reviewStore.courseReviews.length} отзывов)</span>
             </div>
 
             <Divider />
 
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Отзывы пользователей</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-white">Отзывы пользователей</h2>
 
             {reviewStore.courseReviews.length > 0 ? (
                 <List
@@ -53,7 +52,7 @@ export const CourseReviews = observer(() => {
                                 }
                                 title={
                                     <div className="flex items-center justify-between mr-3">
-                                        <span className="font-semibold text-gray-900">
+                                        <span className="font-semibold text-gray-900 dark:text-white">
                                             {review.user.second_name ?? ""} {review.user.first_name ?? ""}{" "}
                                             {review.user.last_name ?? ""}
                                         </span>
@@ -80,7 +79,7 @@ export const CourseReviews = observer(() => {
                     )}
                 />
             ) : (
-                <p className="text-gray-500">Пока нет отзывов.</p>
+                <p className="text-gray-500 dark:text-white">Пока нет отзывов.</p>
             )}
         </div>
     )

@@ -1,17 +1,19 @@
 "use client"
 import { Button, Breadcrumb, Input, Divider, Empty } from "antd";
-import {ArrowLeftOutlined, SearchOutlined} from "@ant-design/icons";
+import { ArrowLeftOutlined, SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { CourseList } from "@/entities/course/ui";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import FilterBlock from "@/entities/filters/ui/FilterBlock";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 const CoursesSearch = observer(() => {
     const { courseStore, nomenclatureStore } = useMobxStores();
     const [searchTerm, setSearchTerm] = useState("");
     const router = useRouter();
+    const { resolvedTheme } = useTheme()
 
     const handleSearch = () => {
         courseStore.handleFilterCoursesBySearch(searchTerm)
@@ -43,8 +45,10 @@ const CoursesSearch = observer(() => {
             <Breadcrumb
                 items={[
                     {
+                        className: "dark:text-white",
                         title: <Button icon={<ArrowLeftOutlined />} color="default" type="link" variant="link"
-                                       onClick={() => router.push("/platform")}
+                            onClick={() => router.push("/platform")}
+                            style={{ color: resolvedTheme === "dark" ? "white" : "black" }}
                         >Главная</Button>
                     },
                 ]}

@@ -11,7 +11,7 @@ interface PostListProps {
 export const PostList = ({ loading, posts }: PostListProps) => {
     return (
         <div className="flex justify-center">
-            <div className="w-full max-w-4xl">
+            <div className="w-full max-w-5xl">
                 {!loading ? (
                     posts.length > 0 ? (
                         posts.map(post => <PostRow key={post.id} post={post} />)

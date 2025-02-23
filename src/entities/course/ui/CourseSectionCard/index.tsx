@@ -68,7 +68,7 @@ export const CourseSectionCard = observer(() => {
                     <p className="text-sm text-gray-500">{courseStore.sectionCourse?.small_description}</p>
                 </div>
             }
-            className="dark:bg-[#1a1a1a]"
+            className="dark:bg-[#1a1a1a] shadow-lg"
         >
             {!isExamCoursePage(searchParams) &&
                 courseStore.sectionCourse?.components?.map((component) => {

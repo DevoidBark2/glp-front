@@ -13,6 +13,7 @@ import { CourseLevelComponent, InputSecretKeyModal } from "@/entities/course/ui"
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseReviews } from "@/entities/review";
+import { useTheme } from "next-themes";
 
 const CoursePage = () => {
     const { courseStore, userProfileStore, reviewStore } = useMobxStores();
@@ -20,6 +21,7 @@ const CoursePage = () => {
     const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState(false);
     const router = useRouter();
+    const { resolvedTheme } = useTheme()
 
     const handleClick = () => {
         courseStore.setSubscribeCourseLoading(true);
@@ -108,7 +110,7 @@ const CoursePage = () => {
                         <>
                             <div className="mt-6 flex flex-col lg:flex-row">
                                 <div className="lg:w-3/4">
-                                    <h1 className="font-bold text-4xl text-gray-800 flex items-center">
+                                    <h1 className="font-bold text-4xl text-gray-800 flex items-center dark:text-white">
                                         {currentCourse.name}
                                         <Image
                                             src="/static/certificate_icon.svg"
@@ -118,7 +120,7 @@ const CoursePage = () => {
                                             className="ml-3"
                                         />
                                     </h1>
-                                    <p className="mt-4 text-lg text-gray-600 leading-relaxed">
+                                    <p className="mt-4 text-lg text-gray-600 leading-relaxed dark:text-white">
                                         {currentCourse.small_description}
                                     </p>
                                 </div>
@@ -182,7 +184,7 @@ const CoursePage = () => {
                             <Divider />
 
                             <div className="">
-                                <h3 className="text-xl font-semibold text-gray-800">Преподаватель</h3>
+                                <h3 className="text-xl font-semibold text-gray-800 dark:text-white">Преподаватель</h3>
 
                                 <Divider />
                                 <div className="flex items-center">
@@ -200,7 +202,7 @@ const CoursePage = () => {
                                     />
                                     <div className="ml-6">
                                         <Link href={`/platform/users/${currentCourse.user?.id}`} className="hover:underline transition-all">
-                                            <p className="text-lg font-medium text-gray-900">
+                                            <p className="text-lg font-medium text-gray-900 dark:text-white">
                                                 {currentCourse.user?.first_name} {currentCourse.user?.last_name}
                                             </p>
                                         </Link>
@@ -209,11 +211,11 @@ const CoursePage = () => {
                             </div>
 
                             <Divider />
-                            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                            <h2 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-white">
                                 Описание курса
                             </h2>
                             <div
-                                className="text-gray-600 leading-relaxed"
+                                className="text-gray-600 leading-relaxed dark:text-white"
                                 dangerouslySetInnerHTML={{
                                     __html: currentCourse.content_description,
                                 }}

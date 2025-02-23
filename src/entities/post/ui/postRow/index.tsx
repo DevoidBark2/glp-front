@@ -12,7 +12,7 @@ export const PostRow = ({ post }: PostProps) => {
         <div className="p-5 mb-4 bg-gray-50 rounded-lg transition-all hover:bg-gray-100">
             <div className="flex flex-col sm:flex-row gap-4">
                 {post.image ? (
-                    <div className="w-full sm:w-1/3 h-48 rounded-lg overflow-hidden">
+                    <div className="w-full sm:w-1/3 lg:w-2/3 h-48 rounded-lg overflow-hidden">
                         <Image
                             src={`${nextConfig.env?.API_URL}${post.image}`}
                             alt={post.name}

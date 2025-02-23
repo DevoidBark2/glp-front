@@ -18,13 +18,11 @@ const PlatformPage = () => {
     const router = useRouter()
 
     const handleSearch = () => {
-        if (searchTerm.trim().length > 2) {
-            router.push(`platform/courses?search=${encodeURIComponent(searchTerm.trim())}`);
-        }
+        router.push(`platform/courses?search=${encodeURIComponent(searchTerm.trim())}`);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter" && searchTerm.trim().length >= 3) {
+        if (e.key === "Enter") {
             handleSearch();
         }
     };
@@ -51,6 +49,32 @@ const PlatformPage = () => {
 
     return <div className="container mx-auto max-lg:px-4 px-2">
 
+        <div className="flex justify-end">
+            <div className="flex items-center w-1/2">
+                <div className="relative w-full">
+                    <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                    <Input
+                        placeholder="Название курса, автор..."
+                        allowClear
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-gray-500 transition w-full"
+                    />
+                </div>
+
+                <Button
+                    color="default" variant="solid"
+                    className="ml-5"
+                    icon={<SearchOutlined />}
+                    onClick={handleSearch}
+                >
+                    Искать
+                </Button>
+            </div>
+        </div>
+
+
         <CourseCarousel />
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
 
@@ -58,25 +82,7 @@ const PlatformPage = () => {
             <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left dark:text-white">
                 Доступные курсы
             </h1>
-            <Input.Search
-                placeholder="Название курса, автор..."
-                allowClear
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="rounded-lg border border-transparent focus-within:border-gray-400 transition"
-                enterButton={
-                    <Button
-                        disabled={searchTerm.trim().length <= 2}
-                        type="default"
-                        className="border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 ml-2"
-                        icon={<SearchOutlined />}
-                        onClick={handleSearch}
-                    >
-                        Искать
-                    </Button>
-                }
-            />
+
 
         </div>
 

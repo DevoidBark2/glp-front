@@ -135,7 +135,7 @@ export const NavbarLesson = observer(() => {
                             : "-240px",
                     height: "calc(100vh - 56px)",
                     zIndex: 100,
-                    background: resolvedTheme === "dark" ? "#1a1a1a" : "white",
+                    background: resolvedTheme === "dark" ? "" : "white",
                     transition: "left 0.3s ease-in-out",
                     boxShadow: "4px 0 10px rgba(0, 0, 0, 0.2)"
                 }}

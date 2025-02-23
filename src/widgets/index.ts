@@ -5,4 +5,3 @@ export * from "./Header";
 export * from "./UserHoverCard"
 export * from "./Notifications/SuccessfulCreateCourseModal"
 export * from "./GroupActionComponent"
-export * from "./3D"

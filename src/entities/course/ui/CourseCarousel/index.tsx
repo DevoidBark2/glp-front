@@ -1,8 +1,7 @@
-import { Course } from "@/shared/api/course/model";
-import { Card, Carousel, Col, Row, Skeleton, Grid, Divider } from "antd";
+import { Card, Carousel, Col, Row, Skeleton, Grid } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { observer } from "mobx-react";
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CourseItem } from "../CourseItem";
 import { useMobxStores } from "@/shared/store/RootStore";
 

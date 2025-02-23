@@ -33,7 +33,6 @@ export const CourseItem = observer(({ course }: CourseItemProps) => {
                 )}
             </div>
 
-            {/* Контент */}
             <div className="p-5 space-y-2">
                 <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 dark:text-white">{course.name}</h3>
                 <p className="text-sm text-gray-600 line-clamp-1">
