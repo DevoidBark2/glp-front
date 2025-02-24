@@ -31,6 +31,7 @@ const AchievementsPage = () => {
                     message.success('Достижение успешно создано!');
                     form.resetFields();
                 })}
+                className="mt-5"
             >
                 <Form.Item
                     name="title"

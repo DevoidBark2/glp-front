@@ -9,7 +9,7 @@ import {
     BarsOutlined,
     BookOutlined, LogoutOutlined,
     SettingOutlined,
-    SolutionOutlined,
+    SolutionOutlined, StarOutlined,
     ToolOutlined, UserOutlined
 } from "@ant-design/icons";
 import { UserRole } from "@/shared/api/user/model";
@@ -89,11 +89,6 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel/posts"}>Посты</Link>,
         icon: <BarsOutlined />,
     },
-    // {
-    //     key: 'banners',
-    //     label: <Link href={"/control-panel/banners"}>Баннеры</Link>,
-    //     icon: <BarsOutlined />,
-    // },
     {
         key: 'nomenclature',
         label: 'Справочники',
@@ -158,11 +153,11 @@ let dashboardMenuItems: MenuItem[] = [
     {
         type: 'divider',
     },
-    // {
-    //     key: 'achievements',
-    //     label: <Link href={"/control-panel/achievements"}>Достижения</Link>,
-    //     icon: <StarOutlined />,
-    // },
+    {
+        key: 'achievements',
+        label: <Link href={"/control-panel/achievements"}>Достижения</Link>,
+        icon: <StarOutlined />,
+    },
     // {
     //     key: "manual",
     //     label: <Link href={"/control-panel/manual"}>Руководство пользователя</Link>,

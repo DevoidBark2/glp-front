@@ -6,16 +6,21 @@ import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive"
-import { AddationalInfo } from "@/entities/user-profile";
+import {AddationalInfo, Leaderboard, UserAchievements} from "@/entities/user-profile";
 
 const ProfilePage = () => {
-    const { userProfileStore } = useMobxStores();
+    const { userProfileStore, userLevelStore } = useMobxStores();
     const changeTabsPosition = useMediaQuery({ query: "(max-width: 1100px)" });
 
     useEffect(() => {
         userProfileStore.getUserProfile().finally(() => {
             userProfileStore.setLoading(false)
         });
+
+        userLevelStore.getAllUsersLevel().then(() => {
+            console.log(userLevelStore.leaderBordUsers)
+        })
+
     }, []);
 
     return (
@@ -40,6 +45,16 @@ const ProfilePage = () => {
                             key: '3',
                             label: <label className="dark:text-white">Дополнительная информация</label>,
                             children: <AddationalInfo />,
+                        },
+                        {
+                            key: '4',
+                            label: <label className="dark:text-white">Достижения</label>,
+                            children: <UserAchievements />,
+                        },
+                        {
+                            key: '5',
+                            label: <label className="dark:text-white">🏆 Лидерборд</label>,
+                            children: <Leaderboard />, // Вставляем новый компонент
                         }
                     ]}
                 />

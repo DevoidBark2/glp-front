@@ -17,6 +17,7 @@ import {SectionStore} from "@/entities/section";
 import {EventStore} from "@/entities/events";
 import {AchievementsStore} from "@/entities/achievements";
 import CourseComponentStore from "@/entities/component-task/model/CourseComponentStore";
+import {UserLevelStore} from "@/entities/user-level";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -35,6 +36,7 @@ const reviewStore = new ReviewStore()
 const sectionCourseStore = new SectionStore()
 const eventStore = new EventStore()
 const achievementsStore = new AchievementsStore()
+const userLevelStore = new UserLevelStore()
 
 export const RootStore = {
     userStore,
@@ -53,7 +55,8 @@ export const RootStore = {
     reviewStore,
     sectionCourseStore,
     eventStore,
-    achievementsStore
+    achievementsStore,
+    userLevelStore
 };
 
 const StoreContext = React.createContext(RootStore);

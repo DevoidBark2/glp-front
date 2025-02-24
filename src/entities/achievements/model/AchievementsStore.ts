@@ -51,6 +51,7 @@ export type Condition = {
     condition: ConditionTypeEnum;
     title: string;
     type: AchievementTypeEnum;
+    description: string
 }
 
 // Тип для достижения
