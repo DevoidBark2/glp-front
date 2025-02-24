@@ -1,3 +1,4 @@
+import { getAllAchievements } from "@/shared/api/achievements";
 import { action, makeAutoObservable } from "mobx";
 
 // Определяем enum для типов условий
@@ -62,10 +63,11 @@ export type Achievement = {
     icon: string;
     condition: ConditionTypeEnum;
     targetValue: number;
+    progress: number
 }
 
 class AchievementsStore {
-    constructor(){
+    constructor() {
         makeAutoObservable(this);
     }
     achievements: Achievement[] = [];
@@ -75,10 +77,18 @@ class AchievementsStore {
         this.createLoading = value;
     })
 
-    getAllAchievement = action(async () => {
+    setAchievements = action((achievements: Achievement[]) => {
+        this.achievements = achievements
     })
 
-    createAchievements = action(async(value:any) => {
+    getAllAchievement = action(async () => {
+        const data = await getAllAchievements();
+
+        this.setAchievements(data);
+    })
+
+    createAchievements = action(async (value: Achievement) => {
+
     })
 
 }

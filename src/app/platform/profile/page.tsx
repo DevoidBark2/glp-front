@@ -6,10 +6,10 @@ import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive"
-import {AddationalInfo, Leaderboard, UserAchievements} from "@/entities/user-profile";
+import { AddationalInfo, Leaderboard, UserAchievements } from "@/entities/user-profile";
 
 const ProfilePage = () => {
-    const { userProfileStore, userLevelStore } = useMobxStores();
+    const { userProfileStore, userLevelStore, achievementsStore } = useMobxStores();
     const changeTabsPosition = useMediaQuery({ query: "(max-width: 1100px)" });
 
     useEffect(() => {
@@ -20,6 +20,8 @@ const ProfilePage = () => {
         userLevelStore.getAllUsersLevel().then(() => {
             console.log(userLevelStore.leaderBordUsers)
         })
+
+        achievementsStore.getAllAchievement()
 
     }, []);
 

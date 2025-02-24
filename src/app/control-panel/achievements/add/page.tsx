@@ -1,13 +1,13 @@
 "use client"
 import React, { useState } from "react";
-import { Form, Input, Select, Button, InputNumber, message, Upload, Breadcrumb } from "antd";
+import { Form, Input, Select, Button, InputNumber, message, Upload, Breadcrumb, Divider } from "antd";
 import { conditionForAchievements, typesConsitions } from "@/shared/constants";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { UploadOutlined } from "@ant-design/icons";
 import Image from "next/image"
-import {PageContainerControlPanel} from "@/shared/ui";
-import {useMobxStores} from "@/shared/store/RootStore";
+import { PageContainerControlPanel } from "@/shared/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const AchievementsPage = () => {
     const [form] = Form.useForm();
@@ -24,6 +24,8 @@ const AchievementsPage = () => {
                     title: "Новое достижение",
                 }]}
             />
+
+            <Divider />
             <Form
                 form={form}
                 layout="vertical"
