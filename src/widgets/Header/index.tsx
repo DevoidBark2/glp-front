@@ -6,18 +6,18 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { PlatformMenu } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
-import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, BookOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, BookOutlined, DownOutlined, UpOutlined, BarChartOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import nextConfig from "../../../next.config.mjs";
-import {useTheme} from "next-themes";
+import { useTheme } from "next-themes";
 
 export const Header = observer(() => {
     const { userStore, userProfileStore } = useMobxStores();
     const pathName = usePathname();
     const router = useRouter();
-    const {resolvedTheme} = useTheme()
+    const { resolvedTheme } = useTheme()
 
     const [items, setItems] = useState<MenuProps["items"]>([]);
     const [isDrawerOpen, setDrawerOpen] = useState(false); // Для управления бургер-меню
@@ -30,6 +30,7 @@ export const Header = observer(() => {
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
         { key: 2, title: "Курсы", link: '/platform/courses', icon: <BookOutlined /> },
+        { key: 3, title: "Лидерборд", link: '/platform/leaders', icon: <BarChartOutlined /> },
         { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
@@ -97,7 +98,7 @@ export const Header = observer(() => {
                     </span>
                 </Link>
 
-                <div className="w-1/5 justify-between items-center space-x-4 hidden xl:flex">
+                <div className="w-1/5 justify-between items-center space-x-6 hidden xl:flex">
                     {platformMenu.map((menuItem) => (
                         <Link
                             key={menuItem.key}
@@ -109,8 +110,8 @@ export const Header = observer(() => {
                             <span
                                 className={`absolute bottom-0 left-0 w-full h-[2px] transition-all duration-300 
             ${pathName === menuItem.link
-                                    ? "bg-black dark:bg-white opacity-100"  // Активный пункт: чёрный в светлой, белый в тёмной теме
-                                    : "opacity-0 group-hover:opacity-100 bg-black dark:bg-white"}`} // Наведение: подчёркивание белым в тёмной
+                                        ? "bg-black dark:bg-white opacity-100"  // Активный пункт: чёрный в светлой, белый в тёмной теме
+                                        : "opacity-0 group-hover:opacity-100 bg-black dark:bg-white"}`} // Наведение: подчёркивание белым в тёмной
                             ></span>
                         </Link>
                     ))}
@@ -170,7 +171,7 @@ export const Header = observer(() => {
                     onClose={() => setDrawerOpen(false)}
                     open={isDrawerOpen}
                     closeIcon={<CloseOutlined className="text-gray-600 dark:text-gray-400" />}
-                    style={{ padding: 0, backgroundColor: resolvedTheme === "dark" ? "#1a1a1a": "white" }}
+                    style={{ padding: 0, backgroundColor: resolvedTheme === "dark" ? "#1a1a1a" : "white" }}
                 >
                     <div className="flex flex-col p-4">
                         <div className="flex flex-col space-y-3">
@@ -232,8 +233,8 @@ export const Header = observer(() => {
                                         </div>
 
                                         {menuOpen ?
-                                            <UpOutlined style={{color: resolvedTheme === "dark" ? "white" : "black"}} /> :
-                                            <DownOutlined style={{color: resolvedTheme === "dark" ? "white" : "black"}}/>}
+                                            <UpOutlined style={{ color: resolvedTheme === "dark" ? "white" : "black" }} /> :
+                                            <DownOutlined style={{ color: resolvedTheme === "dark" ? "white" : "black" }} />}
                                     </div>
                                 </Dropdown>
                             </div>

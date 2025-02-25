@@ -6,6 +6,7 @@ import { action, makeAutoObservable } from "mobx";
 import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
+import { UserLevel } from "@/shared/api/users-level/model";
 
 export type UserProfile = {
     id: string
@@ -24,6 +25,8 @@ export type UserProfile = {
     settings_control_panel: boolean;
     is_two_factor_enabled: boolean;
     method_auth: AuthMethodEnum
+    userLevel: UserLevel,
+    coins: number,
     created_at: Date;
 }
 

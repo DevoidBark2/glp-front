@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         if (!userProfileStore.userProfile?.id) return;
 
         // Подключаем WebSocket
-        const socket = io("http://localhost:5001/", {
+        const socket = io(process.env.API_URL, {
             query: { userId: userProfileStore.userProfile.id },
         });
 
@@ -65,10 +65,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                 {!pathName.includes("/lessons/") && <Footer />}
 
-                {/* Модалка с достижением */}
                 <Modal
                     title={<span className="text-green-500 text-xl font-semibold">Поздравляем!</span>}
-                    visible={isModalVisible}
+                    open={isModalVisible}
                     onOk={handleOk}
                     onCancel={handleCancel}
                     footer={[

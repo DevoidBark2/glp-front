@@ -1,165 +1,177 @@
 import { observer } from "mobx-react";
-import { Avatar, Button, Tabs, Radio } from "antd";
-import { AuthMethodEnum } from "@/shared/api/auth/model";
-import nextConfig from "../../../../../next.config.mjs";
-import { UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { Button, Divider, Tabs, Tooltip } from "antd";
 import { useMobxStores } from "@/shared/store/RootStore";
 
-const frames = [
-    { id: "gold", name: "Золото", className: "border-4 border-yellow-400 shadow-lg shadow-yellow-300" },
-    { id: "silver", name: "Серебро", className: "border-4 border-gray-400 shadow-lg shadow-gray-300" },
-    { id: "bronze", name: "Бронза", className: "border-4 border-orange-600 shadow-lg shadow-orange-400" },
-    { id: "neon", name: "Неон", className: "border-4 border-blue-400 shadow-lg shadow-blue-400 animate-pulse" },
-    { id: "gradient", name: "Градиент", className: "border-4 bg-gradient-to-r from-purple-400 to-pink-500" },
-    { id: "double", name: "Двойная рамка", className: "border-8 border-white border-double" },
-    { id: "glow", name: "Свечение", className: "border-4 border-blue-400 shadow-2xl shadow-blue-500" },
-    { id: "none", name: "Без рамки", className: "" },
-];
+const { TabPane } = Tabs;
 
-const backgrounds = [
-    { id: "blue", name: "Синий", className: "bg-blue-500" },
-    { id: "red", name: "Красный", className: "bg-red-500" },
-    { id: "green", name: "Зеленый", className: "bg-green-500" },
-    { id: "purple", name: "Фиолетовый", className: "bg-purple-500" },
-    { id: "dark", name: "Тёмный", className: "bg-gray-800" },
-    { id: "gradient", name: "Градиент", className: "bg-gradient-to-r from-blue-500 to-pink-500" },
-    { id: "texture", name: "Текстура", className: "bg-[url('/textures/bg-texture.png')] bg-cover" },
-    { id: "none", name: "Без фона", className: "" },
-];
-
-const shapes = [
-    { id: "circle", name: "Круг", className: "rounded-full" },
-    { id: "square", name: "Квадрат", className: "rounded-none" },
-    { id: "rounded", name: "Скругленный", className: "rounded-lg" },
-];
-
-const sizes = [
-    { id: "small", name: "Маленький", size: 100 },
-    { id: "medium", name: "Средний", size: 150 },
-    { id: "large", name: "Большой", size: 200 },
-];
+const categories = {
+    frames: [
+        { id: "gold", name: "Золото", className: "border-yellow-400", price: 500 },
+        { id: "silver", name: "Серебро", className: "border-gray-400", price: 300 },
+        { id: "none", name: "Без рамки", className: "", price: 0 },
+    ],
+    backgrounds: [
+        { id: "blue", name: "Синий", className: "bg-blue-500", price: 400 },
+        { id: "red", name: "Красный", className: "bg-red-500", price: 400 },
+        { id: "green", name: "Зеленый", className: "bg-green-500", price: 400 },
+        { id: "purple", name: "Пурпурный", className: "bg-purple-500", price: 400 },
+        { id: "none", name: "Без фона", className: "", price: 0 },
+    ],
+    icons: [
+        { id: "star", name: "⭐ Звезда", price: 200 },
+        { id: "heart", name: "❤️ Сердце", price: 250 },
+        { id: "rocket", name: "🚀 Ракета", price: 350 },
+        { id: "crown", name: "👑 Корона", price: 500 },
+    ],
+    effects: [
+        { id: "glow", name: "✨ Свечение", price: 300 },
+        { id: "shadow", name: "🌑 Тень", price: 200 },
+        { id: "sparkle", name: "🌟 Искры", price: 150 },
+        { id: "rainbow", name: "🌈 Радуга", price: 450 },
+    ],
+    borders: [
+        { id: "dashed", name: "Пунктирная линия", className: "border-dashed", price: 100 },
+        { id: "solid", name: "Сплошная линия", className: "border-solid", price: 150 },
+        { id: "double", name: "Двойная линия", className: "border-double", price: 200 },
+    ],
+    fontStyles: [
+        { id: "handwriting", name: "Рукописный", className: "font-cursive", price: 250 },
+        { id: "monospace", name: "Моноширинный", className: "font-mono", price: 200 },
+        { id: "serif", name: "Сериф", className: "font-serif", price: 150 },
+    ],
+};
 
 export const CustomizeProfile = observer(() => {
-    const { userProfileStore } = useMobxStores();
-    const [selectedFrame, setSelectedFrame] = useState("none");
-    const [selectedBackground, setSelectedBackground] = useState("none");
-    const [selectedShape, setSelectedShape] = useState("circle");
-    const [selectedSize, setSelectedSize] = useState("medium");
+    const { userProfileStore } = useMobxStores()
+    const [previewModal, setPreviewModal] = useState(false);
+    const [selectedItems, setSelectedItems] = useState({
+        frames: "none",
+        backgrounds: "none",
+        icons: null,
+        effects: null,
+    });
 
-    const saveCustomization = () => {
-        console.log("Выбраны:", selectedFrame, selectedBackground, selectedShape, selectedSize);
+    // Функция для обработки выбора элемента
+    const handleSelect = (category, itemId) => {
+        setSelectedItems(prev => {
+            const newSelectedItems = { ...prev };
+            newSelectedItems[category] = itemId;
+            return newSelectedItems;
+        });
     };
 
-    const avatarSize = sizes.find((s) => s.id === selectedSize)?.size || 150;
+    const totalCost = Object.entries(selectedItems).reduce((acc, [key, value]) => {
+        const item = categories[key]?.find((el) => el.id === value);
+        if (item) {
+            return acc + item.price;
+        }
+        return acc; // Если элемент не найден, просто пропускаем
+    }, 0);
+
+    // Функция для удаления элемента
+    const removeItem = (category) => {
+        setSelectedItems(prev => {
+            const newSelectedItems = { ...prev };
+            newSelectedItems[category] = "none"; // удаляем элемент, устанавливаем на "none"
+            return newSelectedItems;
+        });
+    };
+
+    // Функция для покупки всех выбранных элементов
+    const buyAll = () => {
+        alert('Вы купили все выбранные элементы!');
+        // Реализуйте логику покупки элементов
+    };
 
     return (
-        <div className="flex flex-col items-start">
-            <h1 className="text-4xl font-extrabold mb-8">
-                Кастомизация профиля
-            </h1>
+        <div className="container mx-auto p-6">
+            <div className="flex justify-between items-center">
+                <Button onClick={() => setPreviewModal(true)}>Предпросмотр</Button>
+                <Tooltip title="Ваш баланс">
+                    <div className="flex items-center gap-2 text-lg font-semibold text-yellow-600">
+                        💰 {userProfileStore.userProfile?.coins}
+                    </div>
+                </Tooltip>
+            </div>
+            <Divider />
+            <div className="p-8">
+                <h1 className="text-3xl font-extrabold mb-8 text-center text-blue-600">🎨 Маркетплейс для кастомизации профиля</h1>
+                <h3 className="text-xl font-semibold mb-6 text-gray-700">Выберите элементы для кастомизации вашего профиля:</h3>
 
-            {/* Превью аватара */}
-            <div
-                className={`p-5 shadow-2xl transition-all duration-300 flex justify-center items-center ${backgrounds.find(b => b.id === selectedBackground)?.className || ""}`}
-            >
-                <Avatar
-                    size={avatarSize}
-                    shape="square"
-                    src={
-                        userProfileStore.userProfile?.image
-                            ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
-                                ? userProfileStore.userProfile?.image
-                                : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
-                            : undefined
-                    }
-                    icon={!userProfileStore.userAvatar && <UserOutlined />}
-                    className={`${frames.find(f => f.id === selectedFrame)?.className || ""} ${shapes.find(s => s.id === selectedShape)?.className || ""} transition-all duration-300`}
-                />
+                {/* Вкладки для категорий */}
+                <Tabs defaultActiveKey="1" className="mb-8">
+                    {Object.entries(categories).map(([key, items]) => (
+                        <TabPane tab={key} key={key}>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                {items.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className={`relative group cursor-pointer rounded-lg overflow-hidden shadow-lg transition-all duration-300 transform hover:scale-105 ${selectedItems[key] === item.id ? "border-2 border-blue-500 shadow-xl" : "border border-gray-200"}`}
+                                        onClick={() => handleSelect(key, item.id)}
+                                    >
+                                        <div className="absolute inset-0 bg-black opacity-25 group-hover:opacity-0 transition-opacity"></div>
+                                        <div className="relative z-10 p-4">
+                                            <h5 className="text-center font-medium text-gray-800">{item.name}</h5>
+                                            <p className="text-center text-green-500 font-semibold">{item.price} 💰</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </TabPane>
+                    ))}
+                </Tabs>
+
+                {/* Блок с выбранными элементами */}
+                <div className="mt-8">
+                    <h3 className="text-xl font-semibold mb-4">Выбранные элементы:</h3>
+                    <div className="flex flex-wrap gap-4">
+                        {Object.entries(selectedItems).map(([category, itemId]) => {
+                            // Проверка, если элемент выбран (не "none")
+                            if (itemId && itemId !== "none") {
+                                const item = categories[category]?.find(i => i.id === itemId);
+                                // Если элемент существует, выводим его
+                                if (item) {
+                                    return (
+                                        <div key={itemId} className="flex items-center bg-gray-100 p-2 rounded-full">
+                                            <span>{item.name} ({item.price} 💰)</span>
+                                            <Button
+                                                type="link"
+                                                className="ml-2 text-red-500"
+                                                onClick={() => removeItem(category)}
+                                            >
+                                                Удалить
+                                            </Button>
+                                        </div>
+                                    );
+                                }
+                            }
+                            return null; // Если элемент не найден или не выбран
+                        })}
+                    </div>
+
+                    {/* Кнопка для покупки всех выбранных элементов */}
+                    {Object.values(selectedItems).some(itemId => itemId !== "none") && (
+                        <Button
+                            type="primary"
+                            className="mt-6"
+                            onClick={buyAll}
+                        >
+                            Купить все
+                        </Button>
+                    )}
+                </div>
             </div>
 
-            <Tabs
-                defaultActiveKey="1"
-                items={[
-                    {
-                        key: "1",
-                        label: "Рамка",
-                        children: (
-                            <div className="mt-8 w-full max-w-2xl">
-                                <h3 className="text-xl font-semibold mb-4 text-center">Выберите рамку:</h3>
-                                <div className="flex gap-4 justify-center flex-wrap">
-                                    {frames.map((frame) => (
-                                        <div
-                                            key={frame.id}
-                                            className={`cursor-pointer p-3 rounded-xl transition-all border-4 ${
-                                                selectedFrame === frame.id ? "border-blue-500 shadow-xl scale-105" : "border-gray-600"
-                                            }`}
-                                            onClick={() => setSelectedFrame(frame.id)}
-                                        >
-                                            <div className={`w-16 h-16 ${frame.className}`}></div>
-                                            <p className="text-sm mt-2 text-center">{frame.name}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ),
-                    },
-                    {
-                        key: "2",
-                        label: "Фон",
-                        children: (
-                            <div className="mt-8 w-full max-w-2xl">
-                                <h3 className="text-xl font-semibold mb-4 text-center">Выберите фон:</h3>
-                                <div className="flex gap-4 justify-center flex-wrap">
-                                    {backgrounds.map((bg) => (
-                                        <div
-                                            key={bg.id}
-                                            className={`cursor-pointer p-3 rounded-xl transition-all border-4 ${
-                                                selectedBackground === bg.id ? "border-blue-500 shadow-xl scale-105" : "border-gray-600"
-                                            }`}
-                                            onClick={() => setSelectedBackground(bg.id)}
-                                        >
-                                            <div className={`w-16 h-16 ${bg.className}`}></div>
-                                            <p className="text-sm mt-2 text-center">{bg.name}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ),
-                    },
-                    {
-                        key: "3",
-                        label: "Форма",
-                        children: (
-                            <Radio.Group value={selectedShape} onChange={(e) => setSelectedShape(e.target.value)}>
-                                {shapes.map((shape) => (
-                                    <Radio key={shape.id} value={shape.id}>
-                                        {shape.name}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        ),
-                    },
-                    {
-                        key: "4",
-                        label: "Размер",
-                        children: (
-                            <Radio.Group value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                                {sizes.map((size) => (
-                                    <Radio key={size.id} value={size.id}>
-                                        {size.name}
-                                    </Radio>
-                                ))}
-                            </Radio.Group>
-                        ),
-                    },
-                ]}
-            />
-
-            <Button type="primary" className="mt-10 px-6 py-3 text-lg bg-blue-500 hover:bg-blue-700 transition-all rounded-xl shadow-lg hover:shadow-2xl" onClick={saveCustomization}>
-                Сохранить изменения
-            </Button>
+            {/* Итоговая стоимость и кнопка */}
+            <div className="mt-6 text-center">
+                <h2 className="text-xl font-bold">
+                    💰 Итоговая стоимость: <span className="text-green-500">{totalCost} монет</span>
+                </h2>
+                <Button type="primary" className="mt-4 px-6 py-2 bg-blue-500 hover:bg-blue-700">
+                    Купить и применить
+                </Button>
+            </div>
         </div>
     );
 });
