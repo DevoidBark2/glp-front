@@ -6,11 +6,13 @@ import nextConfig from "../../../next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { ProfileForm } from "@/entities/user-profile";
-import {useTheme} from "next-themes";
+import { useTheme } from "next-themes";
+
 
 export const UserProfileBlock = observer(() => {
     const { userProfileStore } = useMobxStores();
-    const {resolvedTheme} = useTheme()
+    const { resolvedTheme } = useTheme();
+
 
     const handleAvatarUpload = async (file: File) => {
         userProfileStore.setUploadingProfileImage(true);
@@ -19,7 +21,7 @@ export const UserProfileBlock = observer(() => {
             userProfileStore.setUserAvatar(`${nextConfig.env?.API_URL}${response.data}`);
             notification.success({ message: response.message });
         } catch (error) {
-            message.error('Ошибка загрузки аватара');
+            message.error("Ошибка загрузки аватара");
         } finally {
             userProfileStore.setUploadingProfileImage(false);
         }
@@ -27,11 +29,11 @@ export const UserProfileBlock = observer(() => {
 
     return (
         <>
-            <h1 className="text-2xl dark:text-white">Профиль пользователя</h1>
-            <Divider style={{borderColor: resolvedTheme === "dark" ? "white" : "dark"}}/>
-            <div className="w-full flex flex-col md:flex-row p-6">
 
-                <div className="flex flex-col mr-10">
+            <h1 className="text-2xl dark:text-white">Профиль пользователя</h1>
+            <Divider style={{ borderColor: resolvedTheme === "dark" ? "white" : "dark" }} />
+            <div className="w-full flex flex-col md:flex-row p-6">
+                <div className="flex flex-col mr-10 mb-5">
                     <Upload
                         name="avatar"
                         showUploadList={false}
@@ -42,20 +44,16 @@ export const UserProfileBlock = observer(() => {
                     >
                         <div className="relative cursor-pointer">
                             {userProfileStore.uploadingProfileImage ? (
-                                <Spin
-                                    size="large"
-                                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                />
+                                <Spin size="large" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                             ) : null}
-                            <div
-                                className="mb-10">
+                            <div className="mb-5">
                                 <Avatar
                                     size={200}
                                     shape="square"
                                     src={
                                         userProfileStore.userProfile?.image
                                             ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                                userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                                 ? userProfileStore.userProfile?.image
                                                 : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                             : undefined
@@ -72,5 +70,5 @@ export const UserProfileBlock = observer(() => {
                 <ProfileForm />
             </div>
         </>
-    )
-})
+    );
+});

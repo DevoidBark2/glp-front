@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         if (!userProfileStore.userProfile?.id) return;
 
         // Подключаем WebSocket
-        const socket = io("http://localhost:5000/", {
+        const socket = io("http://localhost:5001/", {
             query: { userId: userProfileStore.userProfile.id },
         });
 

@@ -6,7 +6,7 @@ import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive"
-import { AddationalInfo, Leaderboard, UserAchievements } from "@/entities/user-profile";
+import {AddationalInfo, CustomizeProfile, Leaderboard, UserAchievements} from "@/entities/user-profile";
 
 const ProfilePage = () => {
     const { userProfileStore, userLevelStore, achievementsStore } = useMobxStores();
@@ -40,21 +40,26 @@ const ProfilePage = () => {
                         },
                         {
                             key: '2',
+                            label: <label className="dark:text-white">Кастомизация</label>,
+                            children: <CustomizeProfile />,
+                        },
+                        {
+                            key: '3',
                             label: <label className="dark:text-white">Курсы</label>,
                             children: <CourseUserProfile />,
                         },
                         {
-                            key: '3',
+                            key: '4',
                             label: <label className="dark:text-white">Дополнительная информация</label>,
                             children: <AddationalInfo />,
                         },
                         {
-                            key: '4',
+                            key: '5',
                             label: <label className="dark:text-white">Достижения</label>,
                             children: <UserAchievements />,
                         },
                         {
-                            key: '5',
+                            key: '6',
                             label: <label className="dark:text-white">🏆 Лидерборд</label>,
                             children: <Leaderboard />, // Вставляем новый компонент
                         }

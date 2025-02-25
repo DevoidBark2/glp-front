@@ -238,23 +238,24 @@ class CourseStore {
     handleCheckTask = action(async (task: TaskAnswerUserDto) => {
         const data = await handleCheckUserTask(task);
 
-        runInAction(() => {
-            if (this.sectionCourse) {
-                this.sectionCourse.components.forEach(component => {
-                    if (component.componentTask) {
-                        component.componentTask.userAnswer = data.userAnswer;
-                    }
-                });
-            }
+        if (this.sectionCourse) {
+            this.sectionCourse.components.forEach(component => {
+                if (component.componentTask)
+                    component.componentTask.userAnswer = data.userAnswer;
+            });
+        }
 
-            if (this.courseMenuItems?.sections) {
-                this.courseMenuItems.sections.forEach(section => {
-                    section.children = section.children.map(child =>
-                        child.id === task.currentSection ? { ...child, userAnswer: data.userAnswer } : child
-                    );
-                });
-            }
-        });
+        if (this.courseMenuItems?.sections) {
+            this.courseMenuItems.sections.forEach(section => {
+                section.children = section.children.map(child =>
+                    child.id === task.currentSection ? { ...child, userAnswer: {
+                        totalAnswers: data.userAnswer.totalAnswers,
+                            correctAnswers: data.userAnswer.correctAnswers,
+                        } } : child
+                );
+            });
+        }
+        debugger
 
         return data;
     });

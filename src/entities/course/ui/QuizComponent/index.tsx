@@ -1,24 +1,22 @@
 import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
-import { Button } from "antd";
+import {Button, message} from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 
 interface QuizComponentProps {
     task: ComponentTask;
-    onCheckResult?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
-    onRetryQuiz?: (quiz: ComponentTask, answers: number[]) => Promise<void>;
+    onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<any>;
 }
 
-export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: QuizComponentProps) => {
-    const { title, description, questions } = task;
+export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentProps) => {
+    const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(questions.length).fill(null));
-    const [userAnswers, setUserAnswers] = useState<UserAnswer | undefined | null>(task.userAnswer);
+    const [userAnswers, setUserAnswers] = useState<UserAnswer | null>(userAnswer || null);
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!task.userAnswer);
-    const [OldUserAnswerId, setOldUserAnswerId] = useState<number | undefined>(undefined);
     const [isRetrying, setIsRetrying] = useState(false);
-    const { resolvedTheme } = useTheme()
+    const { resolvedTheme } = useTheme();
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -29,21 +27,31 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
     };
 
     const handleCheckResult = async () => {
-        if (isRetrying && onRetryQuiz) {
-            await onRetryQuiz(task, selectedAnswers);
+        if (selectedAnswers.includes(null)) {
+            message.warning("Выберите все варианты ответов!");
+            return;
+        }
+
+        if (isRetrying) {
+            await onCheckResult(task, selectedAnswers).then((result) => {
+                setUserAnswers(result.userAnswer);
+            });
         } else {
             if (onCheckResult) {
-                await onCheckResult(task, selectedAnswers);
-                setDisabledCheckResultBtn(true);
+                await onCheckResult(task, selectedAnswers).then((result) => {
+                    setUserAnswers(result.userAnswer);
+                });
+
             }
         }
+        setDisabledCheckResultBtn(true);
+        setIsRetrying(false);
     };
 
     const handleRetryQuiz = () => {
         setSelectedAnswers(Array(questions.length).fill(null));
         setCurrentQuestionIndex(0);
         setDisabledCheckResultBtn(false);
-        setOldUserAnswerId(userAnswers?.id)
         setUserAnswers(null);
         setIsRetrying(true);
     };
@@ -61,7 +69,7 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
                         Вопрос {currentQuestionIndex + 1}: {currentQuestion.question}
                     </h4>
 
-                    {userAnswers && (
+                    {userAnswer && !isRetrying && (
                         <Button onClick={handleRetryQuiz} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                             Попробовать еще раз
                         </Button>
@@ -78,11 +86,12 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
                         const isCorrect = isUserAnswer && isCorrectAnswer;
                         const isWrong = isUserAnswer && !isCorrectAnswer;
 
-                        const completedStyle = isCorrect
-                            ? "bg-green-100 border-green-500"
-                            : isWrong
-                                ? "bg-red-100 border-red-500"
-                                : "bg-gray-50 border-gray-300";
+                        const completedStyle =
+                            isCorrect
+                                ? "bg-green-100 border-green-500"
+                                : isWrong
+                                    ? "bg-red-100 border-red-500"
+                                    : "bg-gray-50 border-gray-300";
 
                         const activeStyle = isSelected ? "bg-blue-100 border-blue-500" : "bg-gray-50 border-gray-300";
                         const finalStyle = userAnswers && !isRetrying ? completedStyle : activeStyle;
@@ -114,7 +123,7 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
             <div className="flex justify-between mt-4">
                 {currentQuestionIndex > 0 && (
                     <Button onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
-                        color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                            color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
                     >
                         Назад
                     </Button>
@@ -124,7 +133,9 @@ export const QuizComponent = observer(({ task, onCheckResult, onRetryQuiz }: Qui
                     <Button
                         onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
                         color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
-                    >Далее</Button>
+                    >
+                        Далее
+                    </Button>
                 ) : (
                     <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                         Завершить

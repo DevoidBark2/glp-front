@@ -21,20 +21,12 @@ export const CourseSectionCard = observer(() => {
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
     const handleCheckResult = async (quiz: ComponentTask, userAnswer: string | number[]) => {
-        await courseStore.handleCheckTask({
+        return await courseStore.handleCheckTask({
             task: quiz,
             answers: userAnswer,
             currentSection: step!,
         });
     };
-
-    const handleRetryResult = async (quiz: ComponentTask, userAnswer: string | number[]) => {
-        await courseStore.handleCheckTask({
-            task: quiz,
-            answers: userAnswer,
-            currentSection: step!,
-        });
-    }
 
     useEffect(() => {
         if (step !== null) {
@@ -83,7 +75,6 @@ export const CourseSectionCard = observer(() => {
                                 key={component.id}
                                 task={componentTask}
                                 onCheckResult={handleCheckResult}
-                                onRetryQuiz={handleRetryResult}
                             />
 
                         case CourseComponentType.SimpleTask:
@@ -98,7 +89,6 @@ export const CourseSectionCard = observer(() => {
                                 key={component.id}
                                 task={componentTask}
                                 onCheckResult={handleCheckResult}
-                                onRetryQuiz={handleRetryResult}
                             />;
 
                         default:

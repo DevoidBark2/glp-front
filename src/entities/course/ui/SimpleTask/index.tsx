@@ -16,16 +16,17 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     const mathFieldRef = useRef<MathfieldElement | null>(null);
     const [isEditable, setIsEditable] = useState(!task.userAnswer);
     const [currentAnswer, setCurrentAnswer] = useState(task.userAnswer || null);
-    const { resolvedTheme } = useTheme()
+    const { resolvedTheme } = useTheme();
 
+    // Обновляем поле, если есть сохраненный ответ
     useEffect(() => {
         if (mathFieldRef.current && currentAnswer) {
-            if (typeof currentAnswer === "object" && !Array.isArray(currentAnswer) && "userAnswer" in currentAnswer) {
-                mathFieldRef.current.value = currentAnswer.userAnswer.toString();
-            }
+            mathFieldRef.current.setValue(currentAnswer.answer[0].userAnswer.toString());
+            setIsEditable(false);
         }
     }, [currentAnswer]);
 
+    // Обновляем MathJax при изменении условий задачи
     useEffect(() => {
         const typesetMath = async () => {
             if (window.MathJax && window.MathJax.typesetPromise) {
@@ -35,9 +36,37 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
         typesetMath();
     }, [task.title, isEditable]);
 
+    // Обновляем `disabled` у math-field при изменении `isEditable`
+    useEffect(() => {
+        if (mathFieldRef.current) {
+            if (isEditable) {
+                mathFieldRef.current.removeAttribute("disabled");
+            } else {
+                mathFieldRef.current.setAttribute("disabled", "true");
+            }
+        }
+    }, [isEditable]);
+
     const handleCheckResult = async () => {
-        if (onCheckResult)
-            await onCheckResult(task, mathFieldRef.current?.value!);
+        if (onCheckResult && mathFieldRef.current) {
+            const userAnswer = mathFieldRef.current.getValue();
+            await onCheckResult(task, userAnswer);
+
+            // Обновляем ответ пользователя
+            setCurrentAnswer({
+                answer: [{ userAnswer }],
+            });
+
+            setIsEditable(false); // Делаем поле нередактируемым
+        }
+    };
+
+    const handleRetry = () => {
+        setCurrentAnswer(null);
+        setIsEditable(true);
+        if (mathFieldRef.current) {
+            mathFieldRef.current.setValue(""); // Очищаем поле
+        }
     };
 
     return (
@@ -47,64 +76,29 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
                 Внимательно прочитайте условие и найдите результат. Убедитесь, что вы понимаете формулы и вычисления.
             </p>
 
-            <MathJaxContext
-                config={{
-                    tex: {
-                        tex: {
-                            inlineMath: [['$', '$'], ['\\(', '\\)']]
-                        },
-                        processEscapes: true,
-                    },
-                    options: {
-                        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], // Пропускаем эти теги
-                        renderActions: {
-                            addMenu: [],
-                        },
-                    },
-                    "HTML-CSS": {
-                        availableFonts: ["STIX"],
-                        preferredFont: "STIX",
-                        webFont: "STIX-Web",
-                    },
-                    showMathMenu: false, // Отключаем меню
-                    showProcessingMessages: false, // Отключаем сообщения
-                }}
-            >
+            <MathJaxContext>
                 <div className="p-2 border-[#ddd] mb-4 text-lg text-[#444] dark:text-white flex items-center flex-wrap gap-10">
                     {parseMathFormula(task.title)}
                 </div>
-                <math-field
-                    ref={mathFieldRef}
-                    //disabled={!isEditable}
-                    style={{
-                        width: "100%",
-                        fontSize: "1.2rem",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        padding: "8px",
-                        boxShadow: "inset 0px 1px 3px rgba(0, 0, 0, 0.1)",
-                    }}
-                    virtual-keyboard-mode="onfocus"
-                ></math-field>
             </MathJaxContext>
 
+            <math-field
+                ref={mathFieldRef}
+                style={{
+                    width: "100%",
+                    fontSize: "1.2rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    padding: "8px",
+                }}
+            ></math-field>
 
-            <Button className="mt-4" color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"} onClick={handleCheckResult} disabled={!isEditable}>
+            <Button className="mt-4" onClick={handleCheckResult} disabled={!isEditable}>
                 Завершить
             </Button>
 
             {currentAnswer && (
-                <Button
-                    className="mt-4 ml-2"
-                    color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
-                    onClick={() => {
-                        setIsEditable(true);
-                        // setCurrentAnswer(null); // Сбрасываем сохраненный ответ, чтобы поле можно было редактировать
-                        // if (mathFieldRef.current) {
-                        //     mathFieldRef.current.value = ""; // Очищаем поле
-                        // }
-                    }}
-                >
+                <Button className="mt-4 ml-2" onClick={handleRetry}>
                     Попробовать еще раз
                 </Button>
             )}
