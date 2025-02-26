@@ -45,6 +45,20 @@ const getLevelPointsRequired = (level: UserLevelEnum) => {
     }
 };
 
+export const userLevels = [
+    { level: "Beginner", min: 0, max: 100 },
+    { level: "Novice", min: 101, max: 300 },
+    { level: "Learner", min: 301, max: 600 },
+    { level: "Skilled", min: 601, max: 1000 },
+    { level: "Advanced", min: 1001, max: 1500 },
+    { level: "Expert", min: 1501, max: 2100 },
+    { level: "Master", min: 2101, max: 2800 },
+    { level: "Grandmaster", min: 2801, max: 3600 },
+    { level: "Legend", min: 3601, max: 4500 },
+    { level: "Immortal", min: 4501, max: Infinity }
+];
+
+
 
 export const UserAchievements = observer(() => {
     const [isModalVisible, setIsModalVisible] = useState(false); // Состояние для отображения модального окна
@@ -95,18 +109,7 @@ export const UserAchievements = observer(() => {
         }
     };
 
-    const userLevels = [
-        { level: "Beginner", min: 0, max: 100 },
-        { level: "Novice", min: 101, max: 300 },
-        { level: "Learner", min: 301, max: 600 },
-        { level: "Skilled", min: 601, max: 1000 },
-        { level: "Advanced", min: 1001, max: 1500 },
-        { level: "Expert", min: 1501, max: 2100 },
-        { level: "Master", min: 2101, max: 2800 },
-        { level: "Grandmaster", min: 2801, max: 3600 },
-        { level: "Legend", min: 3601, max: 4500 },
-        { level: "Immortal", min: 4501, max: Infinity }
-    ];
+
 
     const currentLevel = userLevels.find(l => userPoints >= l.min && userPoints <= l.max) || userLevels[0];
     const progress = ((userPoints - currentLevel.min) / (currentLevel.max - currentLevel.min)) * 100;

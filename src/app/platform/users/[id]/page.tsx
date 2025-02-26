@@ -29,24 +29,27 @@ const UserPage = observer(() => {
         <div className="container mx-auto p-6">
             <Row gutter={[16, 16]}>
                 <Col xs={24} sm={8} md={6} lg={6} className="flex flex-col items-center mb-6">
-                    <div className="w-32 h-32">
-                        {loading ? (
-                            <Skeleton.Avatar active size={130} />
-                        ) : (
+                    {loading ? (
+                        <Skeleton.Avatar active size={250} />
+                    ) : (
+                        <div
+                            className="frame"
+                        >
                             <Avatar
-                                size={130}
+                                shape="square"
+                                size={250}
                                 src={
                                     currentUser?.profile_url
                                         ? currentUser?.method_auth === AuthMethodEnum.GOOGLE ||
-                                            currentUser?.method_auth === AuthMethodEnum.YANDEX
+                                        currentUser?.method_auth === AuthMethodEnum.YANDEX
                                             ? currentUser?.profile_url
                                             : `${nextConfig.env?.API_URL}${currentUser?.profile_url}`
                                         : undefined
                                 }
                                 icon={!currentUser?.profile_url && <UserOutlined />}
                             />
-                        )}
-                    </div>
+                        </div>
+                    )}
 
                     <div className="mt-4 text-left w-full">
                         {loading ? (
