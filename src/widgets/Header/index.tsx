@@ -20,7 +20,7 @@ export const Header = observer(() => {
     const { resolvedTheme } = useTheme()
 
     const [items, setItems] = useState<MenuProps["items"]>([]);
-    const [isDrawerOpen, setDrawerOpen] = useState(false); // Для управления бургер-меню
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
     const handleMenuClick = () => {
@@ -31,7 +31,7 @@ export const Header = observer(() => {
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
         { key: 2, title: "Курсы", link: '/platform/courses', icon: <BookOutlined /> },
         { key: 3, title: "Лидерборд", link: '/platform/leaders', icon: <BarChartOutlined /> },
-        { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
+        { key: 4, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
 

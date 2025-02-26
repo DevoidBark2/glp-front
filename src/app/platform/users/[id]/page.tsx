@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Skeleton, Card, Divider, Row, Col, Avatar } from "antd";
 import { AppstoreAddOutlined, CalendarOutlined, UserOutlined } from "@ant-design/icons";
-import Image from "next/image";
 import nextConfig from "next.config.mjs";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseList } from "@/entities/course/ui";
@@ -33,7 +32,7 @@ const UserPage = observer(() => {
                         <Skeleton.Avatar active size={250} />
                     ) : (
                         <div
-                            className="frame"
+                            className="frame frame-diamond"
                         >
                             <Avatar
                                 shape="square"
@@ -41,7 +40,7 @@ const UserPage = observer(() => {
                                 src={
                                     currentUser?.profile_url
                                         ? currentUser?.method_auth === AuthMethodEnum.GOOGLE ||
-                                        currentUser?.method_auth === AuthMethodEnum.YANDEX
+                                            currentUser?.method_auth === AuthMethodEnum.YANDEX
                                             ? currentUser?.profile_url
                                             : `${nextConfig.env?.API_URL}${currentUser?.profile_url}`
                                         : undefined
@@ -74,7 +73,6 @@ const UserPage = observer(() => {
 
                 </Col>
 
-                {/* Right Column */}
                 <Col xs={24} sm={16} md={18} lg={18}>
                     {loading ? (
                         <Skeleton title={true} paragraph={{ rows: 1 }} active />

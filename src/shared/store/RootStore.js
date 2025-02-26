@@ -13,11 +13,12 @@ import { ExamStore } from "@/entities/exams";
 import { NomenclatureStore } from "@/entities/nomenclature";
 import { FilterStore } from "@/entities/filters";
 import { ReviewStore } from "@/entities/review";
-import {SectionStore} from "@/entities/section";
-import {EventStore} from "@/entities/events";
-import {AchievementsStore} from "@/entities/achievements";
+import { SectionStore } from "@/entities/section";
+import { EventStore } from "@/entities/events";
+import { AchievementsStore } from "@/entities/achievements";
 import CourseComponentStore from "@/entities/component-task/model/CourseComponentStore";
-import {UserLevelStore} from "@/entities/user-level";
+import { UserLevelStore } from "@/entities/user-level";
+import { CustomizeStore } from "@/entities/customize";
 
 const userStore = new UserStore();
 const postStore = new PostStore();
@@ -37,6 +38,7 @@ const sectionCourseStore = new SectionStore()
 const eventStore = new EventStore()
 const achievementsStore = new AchievementsStore()
 const userLevelStore = new UserLevelStore()
+const customizeStore = new CustomizeStore()
 
 export const RootStore = {
     userStore,
@@ -56,7 +58,8 @@ export const RootStore = {
     sectionCourseStore,
     eventStore,
     achievementsStore,
-    userLevelStore
+    userLevelStore,
+    customizeStore
 };
 
 const StoreContext = React.createContext(RootStore);

@@ -230,6 +230,8 @@ body.dark {
     padding: 0px 11px !important;
 }
 
+
+
 .ant-btn-variant-outlined:hover {
     color: rgb(77, 77, 77) !important;
     border-color: black !important;
@@ -237,65 +239,140 @@ body.dark {
 
 
 .frame {
-    background-color:#ddc;
-    border-radius:2px;
+    background-color: #ddc;
+    border-radius: 2px;
     border: 5vmin solid #eee;
     border-top-color: #ddd;
     border-bottom-color: #fff;
-    box-shadow:0 0 5px 0 rgba(0,0,0,.25) inset, 0 5px 10px 5px rgba(0,0,0,.25);
-    box-sizing:border-box;
-    display:inline-block;
-    position:relative;
-    text-align:center;
-    &:before {
-        border-radius:2px;
-        bottom:-2vmin;
-        box-shadow:0 2px 5px 0 rgba(0,0,0,.25) inset;
-        content:"";
-        left:-2vmin;
-        position:absolute;
-        right:-2vmin;
-        top:-2vmin;
-    }
-    &:after {
-        border-radius:2px;
-        bottom:-2.5vmin;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,.25);
-        content:"";
-        left:-2.5vmin;
-        position:absolute;
-        right:-2.5vmin;
-        top:-2.5vmin;
-    }
+    box-shadow:
+        0 0 5px 0 rgba(0, 0, 0, .25) inset,
+        0 5px 10px 5px rgba(0, 0, 0, .25);
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    text-align: center;
 }
 
-.frame-gold {
-    background-color:#eee;
-    border: 5vmin solid #ffd700;
-    border-top-color: #ffd700;
-    border-bottom-color: #ffd700;
-    box-shadow:0 0 5px 0 rgba(0,0,0,.25) inset, 0 5px 10px 5px rgba(0,0,0,.25);
+.frame::before,
+.frame::after {
+    border-radius: 2px;
+    content: "";
+    position: absolute;
+    left: -2vmin;
+    right: -2vmin;
+    top: -2vmin;
+    bottom: -2vmin;
+}
 
-    &:before {
-        border-radius:2px;
-        bottom:-2vmin;
-        box-shadow:0 2px 5px 0 rgba(0,0,0,.25) inset;
-        content:"";
-        left:-2vmin;
-        position:absolute;
-        right:-2vmin;
-        top:-2vmin;
-    }
-    &:after {
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,.25);
-        border-radius:2px;
-        bottom:-2.5vmin;
-        content:"";
-        left:-2.5vmin;
-        position:absolute;
-        right:-2.5vmin;
-        top:-2.5vmin;
-    }
-    /*border-color: #ffd700; */
-    /*box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);*/
+.frame::before {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .25) inset;
+}
+
+.frame::after {
+    bottom: -2.5vmin;
+    left: -2.5vmin;
+    right: -2.5vmin;
+    top: -2.5vmin;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .25);
+}
+
+/* Генерация рамок с разными цветами */
+.frame-gold {
+    border-color: #ffd700;
+    border-top-color: #e6c200;
+    border-bottom-color: #ffea70;
+    box-shadow:
+        0 0 5px 0 rgba(0, 0, 0, .25) inset,
+        0 5px 10px 5px rgba(0, 0, 0, .3),
+        0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.frame-silver {
+    border-color: #c0c0c0;
+    border-top-color: #a8a8a8;
+    border-bottom-color: #e0e0e0;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.6);
+}
+
+.frame-bronze {
+    border-color: #cd7f32;
+    border-top-color: #b36b29;
+    border-bottom-color: #e69b4e;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.6);
+}
+
+.frame-red {
+    border-color: #ff4444;
+    border-top-color: #cc0000;
+    border-bottom-color: #ff7777;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.6);
+}
+
+.frame-blue {
+    border-color: #448aff;
+    border-top-color: #005ecb;
+    border-bottom-color: #82b1ff;
+    box-shadow: 0 0 15px rgba(68, 138, 255, 0.6);
+}
+
+.frame-green {
+    border-color: #4caf50;
+    border-top-color: #388e3c;
+    border-bottom-color: #81c784;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+}
+
+.frame-purple {
+    border-color: #9c27b0;
+    border-top-color: #7b1fa2;
+    border-bottom-color: #ba68c8;
+    box-shadow: 0 0 15px rgba(156, 39, 176, 0.6);
+}
+
+.frame-black {
+    border-color: #000;
+    border-top-color: #222;
+    border-bottom-color: #444;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.frame-white {
+    border-color: #fff;
+    border-top-color: #ddd;
+    border-bottom-color: #eee;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.frame-rainbow {
+    border: 5vmin solid;
+    border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
+}
+
+.frame-emerald {
+    border-color: #2ecc71;
+    border-top-color: #27ae60;
+    border-bottom-color: #58d68d;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.6);
+}
+
+.frame-platinum {
+    border-color: #b3b3b3;
+    border-top-color: #999999;
+    border-bottom-color: #cccccc;
+    box-shadow: 0 0 15px rgba(179, 179, 179, 0.6);
+}
+
+.frame-diamond {
+    border-color: #00bcd4;
+    border-top-color: #008ba3;
+    border-bottom-color: #4dd0e1;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+}
+
+.frame-ruby {
+    border-color: #e74c3c;
+    border-top-color: #c0392b;
+    border-bottom-color: #f1948a;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
 }

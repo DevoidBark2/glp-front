@@ -9,7 +9,7 @@ import { useMediaQuery } from "react-responsive"
 import { AddationalInfo, CustomizeProfile, Leaderboard, UserAchievements } from "@/entities/user-profile";
 
 const ProfilePage = () => {
-    const { userProfileStore, achievementsStore } = useMobxStores();
+    const { userProfileStore, achievementsStore, customizeStore } = useMobxStores();
     const changeTabsPosition = useMediaQuery({ query: "(max-width: 1100px)" });
 
     useEffect(() => {
@@ -17,13 +17,14 @@ const ProfilePage = () => {
             userProfileStore.setLoading(false)
         });
         achievementsStore.getAllAchievement()
-
+        customizeStore.getAllCategories()
     }, []);
 
     return (
         !userProfileStore.loading && userProfileStore.userProfile ? (
             <div className="container mx-auto mt-4">
                 <Tabs
+                    defaultActiveKey="2"
                     animated={!changeTabsPosition}
                     style={{ padding: "0 15px" }}
                     tabPosition={changeTabsPosition ? "top" : "left"}
