@@ -1,7 +1,6 @@
-import { action, makeAutoObservable } from "mobx";
-import axios from "axios";
-import { Categories, Effect, Frame, Icon } from "@/shared/api/customize/model";
-import { getAllEffects, getAllFrames, getAllIcons } from "@/shared/api/customize";
+import {action, makeAutoObservable} from "mobx";
+import {Categories, CustomizeCategoryItem, Effect, Frame, Icon} from "@/shared/api/customize/model";
+import {buyItem, getAllEffects, getAllFrames, getAllIcons, selectedCustomizeItem} from "@/shared/api/customize";
 
 class CustomizeStore {
     categories: Categories = {
@@ -44,6 +43,14 @@ class CustomizeStore {
     getAllCategories = action(async () => {
         await Promise.all([this.getFrames(), this.getIcons(), this.getEffects()]);
     });
+
+    buyItem = action(async (category: keyof Categories, item: CustomizeCategoryItem) => {
+        return await buyItem(category, item)
+    })
+
+    selectItem = action(async (category: keyof Categories, item: CustomizeCategoryItem) => {
+        await selectedCustomizeItem(category, item)
+    })
 }
 
 export default CustomizeStore;

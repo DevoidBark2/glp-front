@@ -6,6 +6,8 @@ export type Icon = {
     price: number;
     minLevel: string;
     type: UserLevelEnum;
+    isPurchased: boolean;
+    isActive: boolean;
 };
 
 export type Effect = {
@@ -14,6 +16,8 @@ export type Effect = {
     price: number;
     minLevel: string;
     type: UserLevelEnum;
+    isPurchased: boolean;
+    isActive: boolean;
 };
 
 export type Frame = {
@@ -23,6 +27,8 @@ export type Frame = {
     price: number;
     minLevel: string;
     type: UserLevelEnum;
+    isPurchased: boolean;
+    isActive: boolean;
 };
 
 export type CustomizeCategoryItem = Icon | Effect | Frame;

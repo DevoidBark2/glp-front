@@ -27,6 +27,7 @@ export type UserProfile = {
     method_auth: AuthMethodEnum
     userLevel: UserLevel,
     coins: number,
+    activeCustomization: any
     created_at: Date;
 }
 

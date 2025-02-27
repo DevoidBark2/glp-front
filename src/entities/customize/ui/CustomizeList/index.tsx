@@ -5,7 +5,7 @@ import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared
 import { useMobxStores } from "@/shared/store/RootStore";
 
 interface ItemListProps {
-    items: Frame[] | Icon[] | Effect[];
+    items: Array<Frame | Icon | Effect>;
     categoryKey: keyof Categories;
     selectedItems: Categories;
     handleSelect: (category: keyof Categories, item: CustomizeCategoryItem) => void;
@@ -51,7 +51,7 @@ export const CustomizeList: React.FC<ItemListProps> = ({
                         isUnlocked={isUnlocked}
                         isSelected={isSelected}
                         handleSelect={handleSelect}
-                        handleBuy={handleBuy} // Передаем функцию для покупки
+                        handleBuy={handleBuy}
                         categoryKey={categoryKey}
                     />
                 );

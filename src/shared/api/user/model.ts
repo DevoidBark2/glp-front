@@ -1,6 +1,7 @@
 import { Course } from "../course/model";
 import { Post } from "../posts/model";
 import {AuthMethodEnum} from "@/shared/api/auth/model";
+import {CustomizeCategoryItem, Effect, Frame, Icon} from "@/shared/api/customize/model";
 
 export enum UserRole {
     SUPER_ADMIN = 'superadmin',
@@ -32,6 +33,11 @@ export type User = {
     created_at: Date;
     courses: Course[];
     posts: Post[]
+    activeCustomization: {
+        frame?: Frame;
+        icon?: Icon;
+        effect?: Effect;
+    };
     method_auth: AuthMethodEnum
     isVerified: boolean
 }

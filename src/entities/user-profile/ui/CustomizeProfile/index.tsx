@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { useState } from "react";
-import { Divider, Tabs, Tooltip } from "antd";
+import { Divider, notification, Tabs, Tooltip } from "antd";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Categories, CustomizeCategoryItem } from "@/shared/api/customize/model";
 import { CustomizeList } from "@/entities/customize/ui";
@@ -20,14 +20,20 @@ export const CustomizeProfile = observer(() => {
     });
 
     const handleSelect = (category: keyof Categories, item: CustomizeCategoryItem) => {
-        debugger
+
+        customizeStore.selectItem(category, item)
+
         setSelectedItems(prev => {
             const newCart: Categories = { ...prev };
 
-            if (!newCart[category].some(el => el.id === item.id)) {
-                newCart[category] = [...newCart[category], item];
+            if (category === 'frames' || category === 'effects') {
+                newCart[category] = [item];
             } else {
-                newCart[category] = newCart[category].filter(el => el.id !== item.id);
+                if (!newCart[category].some(el => el.id === item.id)) {
+                    newCart[category] = [...newCart[category], item];
+                } else {
+                    newCart[category] = newCart[category].filter(el => el.id !== item.id);
+                }
             }
 
             return newCart;
@@ -35,15 +41,17 @@ export const CustomizeProfile = observer(() => {
     };
 
     const handleBuy = (category: keyof Categories, item: CustomizeCategoryItem) => {
-        debugger
-        // Логика покупки (например, списание монет)
-        alert(`Вы купили ${item.name} из категории ${category}!`);
+        customizeStore.buyItem(category, item).then(response => {
+            notification.success({message: response.message})
+        }).catch(e => {
+            notification.error({ message: e.response.data.message });
+        });
     };
 
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-800">
-                🎨 Маркетплейс для кастомизации профиля
+                🎨 Маркетплейс для персонализации профиля
             </h1>
             <div className="flex justify-end items-center">
                 <Tooltip title="Ваш баланс">

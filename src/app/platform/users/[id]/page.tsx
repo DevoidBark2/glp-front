@@ -32,7 +32,7 @@ const UserPage = observer(() => {
                         <Skeleton.Avatar active size={250} />
                     ) : (
                         <div
-                            className="frame frame-diamond"
+                            className={`${currentUser?.activeCustomization?.frame ? `frame ${currentUser?.activeCustomization.frame.className}` : ''}`}
                         >
                             <Avatar
                                 shape="square"

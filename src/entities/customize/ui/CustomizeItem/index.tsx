@@ -1,8 +1,9 @@
-import { Categories, CustomizeCategoryItem } from "@/shared/api/customize/model";
+import {Categories, CustomizeCategoryItem, Effect, Frame, Icon} from "@/shared/api/customize/model";
 import { Button, Tooltip } from "antd";
+import React from "react";
 
 interface CustomizeItemProps {
-    item: any;
+    item: Frame | Icon | Effect;
     isUnlocked: boolean;
     isSelected: boolean;
     handleSelect: (category: keyof Categories, item: CustomizeCategoryItem) => void;
@@ -32,18 +33,20 @@ export const CustomizeItem: React.FC<CustomizeItemProps> = ({
                 </div>
 
                 <div className="mt-auto w-full flex gap-2 justify-center">
-                    <Button
-                        color="default"
-                        variant="solid"
-                        disabled={!isUnlocked}
-                        onClick={() => handleBuy(categoryKey, item)} // Обработка кнопки "Купить"
-                    >
-                        Купить
-                    </Button>
+                    {
+                        !item.isPurchased && <Button
+                            color="default"
+                            variant="solid"
+                            disabled={!isUnlocked}
+                            onClick={() => handleBuy(categoryKey, item)}
+                        >
+                            Купить
+                        </Button>
+                    }
                     <Button
                         color="default"
                         variant="outlined"
-                        disabled={!isUnlocked}
+                        disabled={!isUnlocked || (!item.isPurchased && !item.isActive)}
                         onClick={() => handleSelect(categoryKey, item)}
                     >
                         Применить
