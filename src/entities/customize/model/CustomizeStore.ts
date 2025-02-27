@@ -1,6 +1,6 @@
-import {action, makeAutoObservable} from "mobx";
-import {Categories, CustomizeCategoryItem, Effect, Frame, Icon} from "@/shared/api/customize/model";
-import {buyItem, getAllEffects, getAllFrames, getAllIcons, selectedCustomizeItem} from "@/shared/api/customize";
+import { action, makeAutoObservable } from "mobx";
+import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared/api/customize/model";
+import { buyItem, getAllEffects, getAllFrames, getAllIcons, selectedCustomizeItem } from "@/shared/api/customize";
 
 class CustomizeStore {
     categories: Categories = {
@@ -45,12 +45,37 @@ class CustomizeStore {
     });
 
     buyItem = action(async (category: keyof Categories, item: CustomizeCategoryItem) => {
-        return await buyItem(category, item)
+        const data = await buyItem(category, item)
+
+        this.categories = {
+            ...this.categories,
+            [category]: this.categories[category].map(el => {
+                debugger
+                return el.id === item.id ? { ...el, isPurchased: true } : el
+            }
+            )
+        };
+
+        return data
+
     })
 
     selectItem = action(async (category: keyof Categories, item: CustomizeCategoryItem) => {
-        await selectedCustomizeItem(category, item)
-    })
+        const data = await selectedCustomizeItem(category, item);
+
+        this.categories = {
+            ...this.categories,
+            [category]: this.categories[category].map(el =>
+                el.id === item.id
+                    ? { ...el, isActive: true }  // Выбранный элемент активируем
+                    : category === 'frames' || category === 'effects'
+                        ? { ...el, isActive: false } // Остальные отключаем (только для frames и effects)
+                        : el
+            )
+        };
+
+        return data;
+    });
 }
 
 export default CustomizeStore;

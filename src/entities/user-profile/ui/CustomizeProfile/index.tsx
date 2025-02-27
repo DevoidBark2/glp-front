@@ -20,29 +20,19 @@ export const CustomizeProfile = observer(() => {
     });
 
     const handleSelect = (category: keyof Categories, item: CustomizeCategoryItem) => {
-
-        customizeStore.selectItem(category, item)
-
-        setSelectedItems(prev => {
-            const newCart: Categories = { ...prev };
-
-            if (category === 'frames' || category === 'effects') {
-                newCart[category] = [item];
-            } else {
-                if (!newCart[category].some(el => el.id === item.id)) {
-                    newCart[category] = [...newCart[category], item];
-                } else {
-                    newCart[category] = newCart[category].filter(el => el.id !== item.id);
-                }
-            }
-
-            return newCart;
-        });
+        customizeStore.selectItem(category, item);
     };
+
 
     const handleBuy = (category: keyof Categories, item: CustomizeCategoryItem) => {
         customizeStore.buyItem(category, item).then(response => {
-            notification.success({message: response.message})
+            if (userProfileStore.userProfile) {
+                userProfileStore.setUserProfile({
+                    ...userProfileStore.userProfile,
+                    coins: response.balance
+                });
+            }
+            notification.success({ message: response.message })
         }).catch(e => {
             notification.error({ message: e.response.data.message });
         });

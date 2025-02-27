@@ -1,4 +1,4 @@
-import {Categories, CustomizeCategoryItem, Effect, Frame, Icon} from "@/shared/api/customize/model";
+import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared/api/customize/model";
 import { Button, Tooltip } from "antd";
 import React from "react";
 
@@ -24,7 +24,7 @@ export const CustomizeItem: React.FC<CustomizeItemProps> = ({
             <div
                 className={`relative flex flex-col items-center p-6 rounded-lg shadow-lg border transition-all
                     ${isUnlocked ? "hover:border-blue-500" : "opacity-50 cursor-not-allowed"}
-                    ${isSelected ? "border-2 border-blue-500 shadow-2xl" : "border-gray-300"}
+                    ${isSelected || item.isActive ? "border-2 border-blue-500 shadow-2xl" : "border-gray-300"}
                     bg-white h-48`}
             >
                 <div className="w-full text-center">
@@ -44,12 +44,12 @@ export const CustomizeItem: React.FC<CustomizeItemProps> = ({
                         </Button>
                     }
                     <Button
-                        color="default"
-                        variant="outlined"
+                        color={item.isActive ? "danger" : "default"}
+                        variant={item.isActive ? "solid" : "outlined"}
                         disabled={!isUnlocked || (!item.isPurchased && !item.isActive)}
                         onClick={() => handleSelect(categoryKey, item)}
                     >
-                        Применить
+                        {item.isActive ? "Отключить" : "Применить"}
                     </Button>
                 </div>
             </div>
