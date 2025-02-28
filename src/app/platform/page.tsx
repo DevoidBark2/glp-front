@@ -42,9 +42,9 @@ const PlatformPage = () => {
 
     useEffect(() => {
         courseStore.getAllCourses();
-        courseStore.getAllPopularCourses();
-        nomenclatureStore.getCategories();
-        nomenclatureStore.getTeachers();
+        // courseStore.getAllPopularCourses();
+        // nomenclatureStore.getCategories();
+        // nomenclatureStore.getTeachers();
     }, []);
 
     return <div className="container mx-auto max-lg:px-4 px-2">
@@ -75,7 +75,7 @@ const PlatformPage = () => {
         </div>
 
 
-        <CourseCarousel />
+        {/* <CourseCarousel /> */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
 
 
@@ -88,7 +88,7 @@ const PlatformPage = () => {
 
         <Divider className="my-6" />
 
-        <div className="flex flex-wrap gap-4 mb-6">
+        {/* <div className="flex flex-wrap gap-4 mb-6">
             {!nomenclatureStore.loadingCategories && nomenclatureStore.categories.length < 1 ? (
                 Array.from({ length: 3 }).map((_, index) => (
                     <Skeleton.Input key={index} active />
@@ -121,7 +121,7 @@ const PlatformPage = () => {
                     </>
                 )
             )}
-        </div>
+        </div> */}
 
         {noResultsFound && (
             <div className="text-center py-10">
@@ -133,7 +133,7 @@ const PlatformPage = () => {
 
         <CourseList courses={courseStore.courses} loading={courseStore.loadingCourses} notFound={noResultsFound} />
 
-        <div className="container mx-auto my-12">
+        {/* <div className="container mx-auto my-12">
             <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left dark:text-white">
                 Наши преподаватели
             </h1>
@@ -160,7 +160,7 @@ const PlatformPage = () => {
                     </div>
                 ))}
             </div>
-        </div>
+        </div> */}
     </div >
 }
 

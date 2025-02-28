@@ -29,9 +29,9 @@ export const Header = observer(() => {
 
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
-        { key: 2, title: "Курсы", link: '/platform/courses', icon: <BookOutlined /> },
-        { key: 3, title: "Лидерборд", link: '/platform/leaders', icon: <BarChartOutlined /> },
-        { key: 4, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
+        // { key: 2, title: "Курсы", link: '/platform/courses', icon: <BookOutlined /> },
+        { key: 2, title: "Лидерборд", link: '/platform/leaders', icon: <BarChartOutlined /> },
+        { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
 

@@ -1,5 +1,5 @@
 import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
-import {Button, message} from "antd";
+import { Button, message } from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
@@ -64,7 +64,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
             </div>
 
             <div className="question mb-4">
-                <div className="flex justify-between items-center mb-2 flex-wrap">
+                <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
                     <h4 className="text-lg font-semibold dark:text-white">
                         Вопрос {currentQuestionIndex + 1}: {currentQuestion.question}
                     </h4>
@@ -123,7 +123,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
             <div className="flex justify-between mt-4">
                 {currentQuestionIndex > 0 && (
                     <Button onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
-                            color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                        color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
                     >
                         Назад
                     </Button>

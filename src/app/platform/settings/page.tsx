@@ -7,7 +7,7 @@ import { ResetPassword } from "@/entities/user-settings/ui/ResetPassword";
 import { ManageProfile } from "@/entities/user-settings/ui/ManageProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive";
-import {PlatformSettings} from "@/entities/user-settings/ui/PlatformSettings";
+import { PlatformSettings } from "@/entities/user-settings/ui/PlatformSettings";
 
 const SettingsPage = observer(() => {
     const { authStore } = useMobxStores()
@@ -46,7 +46,7 @@ const SettingsPage = observer(() => {
         {
             key: "3",
             label: <label className="dark:text-white">Платформа</label>,
-            children: (<PlatformSettings/>),
+            children: (<PlatformSettings />),
         },
     ];
 
@@ -69,7 +69,6 @@ const SettingsPage = observer(() => {
                             key="delete"
                             danger
                             onClick={() => {
-                                console.log("Account deleted");
                                 setShowDeleteAccountModal(false);
                             }}
                             className="bg-cyber-red text-black border border-cyber-red hover:bg-red-500 transition-all shadow-md"

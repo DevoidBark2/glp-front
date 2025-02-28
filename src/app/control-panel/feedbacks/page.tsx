@@ -32,7 +32,7 @@ const feedBackPage = () => {
     const [searchQuery, setSearchQuery] = useState("");
 
     // Открытие модального окна с чатом
-    const openChatModal = (chat:any) => {
+    const openChatModal = (chat: any) => {
         setCurrentChat(chat);
         setIsModalVisible(true);
     };
@@ -47,7 +47,6 @@ const feedBackPage = () => {
     const handleSendMessage = () => {
         if (newMessage.trim() !== "") {
             // Логика для добавления сообщения в чат
-            console.log("Новое сообщение:", newMessage);
             setNewMessage("");
             // notification.success({
             //     message: 'Сообщение отправлено',
@@ -64,7 +63,7 @@ const feedBackPage = () => {
             title: "Пользователь",
             dataIndex: "user",
             key: "user",
-            render: (user:any) => (
+            render: (user: any) => (
                 <div className="flex items-center">
                     <Badge dot={user.status === "online"} offset={[-5, 5]} color={user.status === "online" ? "green" : "gray"}>
                         <Avatar src={user.avatar} alt={user.name} />
@@ -77,7 +76,7 @@ const feedBackPage = () => {
             title: "Последнее сообщение",
             dataIndex: "lastMessage",
             key: "lastMessage",
-            render: (text:string) => (
+            render: (text: string) => (
                 <span>{text.length > 30 ? `${text.slice(0, 30)}...` : text}</span>
             )
         },
@@ -94,7 +93,7 @@ const feedBackPage = () => {
         {
             title: "Действия",
             key: "actions",
-            render: (_:any, chat:any) => (
+            render: (_: any, chat: any) => (
                 <Button type="primary" onClick={() => openChatModal(chat)}>
                     Открыть чат
                 </Button>
@@ -127,70 +126,70 @@ const feedBackPage = () => {
             />
 
             {/* Модальное окно с чатом */}
-{currentChat && (
-    <Modal
-        // title={
-        //     <div className="flex items-center">
-        //         <Avatar src={currentChat.user.avatar} alt={currentChat.user.name} size={40} />
-        //         <div className="ml-3">
-        //             <h2 className="text-lg font-bold">{currentChat.user.name}</h2>
-        //             <p className={`text-sm ${currentChat.user.status === "online" ? "text-green-500" : "text-gray-400"}`}>
-        //                 {currentChat.user.status === "online" ? "В сети" : "Оффлайн"}
-        //             </p>
-        //         </div>
-        //     </div>
-        // }
-        open={isModalVisible}
-        onCancel={closeModal}
-        footer={[
-            <Button key="close" onClick={closeModal}>Закрыть</Button>,
-            <Button key="send" type="primary" onClick={handleSendMessage}>
-                Отправить сообщение
-            </Button>
-        ]}
-        bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }} // Для прокрутки длинных переписок
-    >
-        {/* История сообщений */}
-        <div className="chat-history">
-            <div className="mb-4">
-                <div className="message message-admin">
-                    <div className="message-bubble">
-                        <strong>Админ</strong>
-                        <p>Добрый день! Как можем помочь?</p>
-                        <span className="text-xs text-gray-500">10:00</span>
+            {currentChat && (
+                <Modal
+                    // title={
+                    //     <div className="flex items-center">
+                    //         <Avatar src={currentChat.user.avatar} alt={currentChat.user.name} size={40} />
+                    //         <div className="ml-3">
+                    //             <h2 className="text-lg font-bold">{currentChat.user.name}</h2>
+                    //             <p className={`text-sm ${currentChat.user.status === "online" ? "text-green-500" : "text-gray-400"}`}>
+                    //                 {currentChat.user.status === "online" ? "В сети" : "Оффлайн"}
+                    //             </p>
+                    //         </div>
+                    //     </div>
+                    // }
+                    open={isModalVisible}
+                    onCancel={closeModal}
+                    footer={[
+                        <Button key="close" onClick={closeModal}>Закрыть</Button>,
+                        <Button key="send" type="primary" onClick={handleSendMessage}>
+                            Отправить сообщение
+                        </Button>
+                    ]}
+                    bodyStyle={{ maxHeight: '60vh', overflowY: 'auto' }} // Для прокрутки длинных переписок
+                >
+                    {/* История сообщений */}
+                    <div className="chat-history">
+                        <div className="mb-4">
+                            <div className="message message-admin">
+                                <div className="message-bubble">
+                                    <strong>Админ</strong>
+                                    <p>Добрый день! Как можем помочь?</p>
+                                    <span className="text-xs text-gray-500">10:00</span>
+                                </div>
+                            </div>
+
+                            <div className="message message-user">
+                                <div className="message-bubble">
+                                    {/*<strong>{currentChat.user.name}</strong>*/}
+                                    {/*<p>{currentChat.lastMessage}</p>*/}
+                                    {/*<span className="text-xs text-gray-500">10:05</span>*/}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className="message message-user">
-                    <div className="message-bubble">
-                        {/*<strong>{currentChat.user.name}</strong>*/}
-                        {/*<p>{currentChat.lastMessage}</p>*/}
-                        {/*<span className="text-xs text-gray-500">10:05</span>*/}
+                    {/* Поле для ввода нового сообщения */}
+                    <div className="new-message-container">
+                        <Input.TextArea
+                            rows={3}
+                            placeholder="Введите ваше сообщение"
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            style={{ marginBottom: "10px", borderRadius: '10px' }}
+                        />
+
+                        {/* Кнопки для отправки */}
+                        <div className="flex justify-between items-center">
+                            <Button icon={<SmileOutlined />} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                                Emoji
+                            </Button>
+                            <Button type="primary" onClick={handleSendMessage}>Отправить</Button>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        {/* Поле для ввода нового сообщения */}
-        <div className="new-message-container">
-            <Input.TextArea
-                rows={3}
-                placeholder="Введите ваше сообщение"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                style={{ marginBottom: "10px", borderRadius: '10px' }}
-            />
-
-            {/* Кнопки для отправки */}
-            <div className="flex justify-between items-center">
-                <Button icon={<SmileOutlined />} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
-                    Emoji
-                </Button>
-                <Button type="primary" onClick={handleSendMessage}>Отправить</Button>
-            </div>
-        </div>
-    </Modal>
-)}
+                </Modal>
+            )}
 
 
         </div>

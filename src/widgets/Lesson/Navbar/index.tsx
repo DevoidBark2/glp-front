@@ -33,7 +33,7 @@ export const NavbarLesson = observer(() => {
     const [selectedSection, setSelectedSection] = useState<number | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const isTablet = useMediaQuery({ query: "(max-width: 768px)" });
-    const isSmallScreen = useMediaQuery({ query: "(max-width: 600px)" });
+    const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
     const { resolvedTheme } = useTheme()
     const [isPinned, setIsPinned] = useState<boolean>();
 
@@ -221,7 +221,7 @@ export const NavbarLesson = observer(() => {
                 ) : (
                     <div className="h-[calc(100vh-96px)] custom-scrollbar">
                         {Array.from({ length: 8 }).map((_, index) => (
-                            <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 10, marginTop: 10 }} />
+                            <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 5, marginTop: 10, marginRight: 5 }} />
                         ))}
                     </div>
                 )}

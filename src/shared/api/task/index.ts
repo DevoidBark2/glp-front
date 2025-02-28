@@ -1,11 +1,12 @@
-import {axiosInstance} from "../http-client";
-import {CurrentSectionDto, TaskAnswerUserDto} from "./model";
+import { axiosInstance } from "../http-client";
+import { CurrentSectionDto, TaskAnswerUserDto } from "./model";
 
-export const handleCheckUserTask = async (task: TaskAnswerUserDto) => {
+export const handleCheckUserTask = async (task: TaskAnswerUserDto, courseId: number) => {
     const data = (await axiosInstance.post('api/save-task-user', {
         task: task.task,
         answers: task.answers,
-        currentSection: task.currentSection
+        currentSection: task.currentSection,
+        courseId: courseId
     })).data;
 
     return data.data;

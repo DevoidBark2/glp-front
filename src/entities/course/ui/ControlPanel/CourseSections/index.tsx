@@ -1,15 +1,15 @@
 "use client"
 import { useMobxStores } from "@/shared/store/RootStore";
-import {Button, notification, Table, TableColumnsType} from "antd";
+import { Button, notification, Table, TableColumnsType } from "antd";
 import { observer } from "mobx-react";
-import {useParams, useRouter} from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { SectionCourseItem } from "@/shared/api/section/model";
-import {DragAndDropComponents, DragHandle, Row} from "@/entities/course/ui";
-import {ArrowRightOutlined, DeleteOutlined} from "@ant-design/icons";
+import { DragAndDropComponents, DragHandle, Row } from "@/entities/course/ui";
+import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons";
 import React from "react";
-import {DndContext, DragEndEvent} from "@dnd-kit/core";
-import {restrictToVerticalAxis} from "@dnd-kit/modifiers";
-import {arrayMove, SortableContext, verticalListSortingStrategy} from "@dnd-kit/sortable";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 interface ParentColumn {
     id: number;
@@ -20,11 +20,11 @@ interface ParentColumn {
 }
 
 export const CourseSections = observer(() => {
-    const {courseId} = useParams();
+    const { courseId } = useParams();
     const { courseStore, sectionCourseStore } = useMobxStores();
     const router = useRouter();
 
-    const handleDeleteComponent = (componentId: string, sectionId: number) => {};
+    const handleDeleteComponent = (componentId: string, sectionId: number) => { };
 
     const handleDragDropComponent = (result: any, record: SectionCourseItem) => {
         if (!result.destination) return;
@@ -140,10 +140,8 @@ export const CourseSections = observer(() => {
             sort: index
         }));
 
-        console.log(updatedOrder); // Проверяем актуальные данные
-
         // Обновляем порядок секций в хранилище
-        await courseStore.updateParentSectionsOrder(Number(courseId),updatedOrder);
+        await courseStore.updateParentSectionsOrder(Number(courseId), updatedOrder);
     };
 
 
@@ -178,10 +176,8 @@ export const CourseSections = observer(() => {
                 }));
 
             if (updatedSectionOrder) {
-                console.log(updatedSectionOrder); // Проверяем актуальные данные
-
                 // Сохраняем новый порядок секций в базе данных
-               // await courseStore.updateSectionOrder(Number(courseId), parentId, updatedSectionOrder);
+                // await courseStore.updateSectionOrder(Number(courseId), parentId, updatedSectionOrder);
             }
         }
     };
@@ -196,7 +192,7 @@ export const CourseSections = observer(() => {
                         rowKey={(record) => record.id}
                         bordered
                         pagination={false}
-                        components={{body: {row: Row}}}
+                        components={{ body: { row: Row } }}
                         columns={parentColumns}
                         dataSource={parentSections}
                         expandable={{
@@ -209,7 +205,7 @@ export const CourseSections = observer(() => {
                                                 key: section.id,
                                             }))}
                                             columns={sectionColumns}
-                                            components={{body: {row: Row}}}
+                                            components={{ body: { row: Row } }}
                                             pagination={false}
                                             rowKey={(record) => record.id}
                                             expandable={{

@@ -50,7 +50,6 @@ class CustomizeStore {
         this.categories = {
             ...this.categories,
             [category]: this.categories[category].map(el => {
-                debugger
                 return el.id === item.id ? { ...el, isPurchased: true } : el
             }
             )

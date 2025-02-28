@@ -25,7 +25,8 @@ export const CourseSectionCard = observer(() => {
             task: quiz,
             answers: userAnswer,
             currentSection: step!,
-        });
+
+        }, Number(courseId));
     };
 
     useEffect(() => {

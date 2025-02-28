@@ -18,10 +18,8 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     const [currentAnswer, setCurrentAnswer] = useState(task.userAnswer || null);
     const { resolvedTheme } = useTheme();
 
-    // Обновляем поле, если есть сохраненный ответ
     useEffect(() => {
         if (mathFieldRef.current && currentAnswer) {
-            debugger
             mathFieldRef.current.setValue(currentAnswer.answer[0].userAnswer.toString());
             setIsEditable(false);
         }

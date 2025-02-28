@@ -235,8 +235,8 @@ class CourseStore {
         }
     })
 
-    handleCheckTask = action(async (task: TaskAnswerUserDto) => {
-        const data = await handleCheckUserTask(task);
+    handleCheckTask = action(async (task: TaskAnswerUserDto, courseId: number) => {
+        const data = await handleCheckUserTask(task, courseId);
 
         if (this.sectionCourse) {
             this.sectionCourse.components.forEach(component => {
@@ -247,15 +247,21 @@ class CourseStore {
 
         if (this.courseMenuItems?.sections) {
             this.courseMenuItems.sections.forEach(section => {
-                section.children = section.children.map(child =>
-                    child.id === task.currentSection ? { ...child, userAnswer: {
-                        totalAnswers: data.userAnswer.totalAnswers,
-                            correctAnswers: data.userAnswer.correctAnswers,
-                        } } : child
-                );
+                {
+                    progress: data.userAnswer.progress,
+                        section.children = section.children.map(child =>
+                            child.id === task.currentSection ? {
+                                ...child, userAnswer: {
+                                    totalAnswers: data.userAnswer.totalAnswers,
+                                    correctAnswers: data.userAnswer.correctAnswers,
+                                }
+                            } : child
+                        );
+                }
             });
+
+            this.courseMenuItems.progress = data.userAnswer.progress;
         }
-        debugger
 
         return data;
     });
