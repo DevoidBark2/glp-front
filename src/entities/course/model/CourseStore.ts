@@ -151,7 +151,7 @@ class CourseStore {
         notification.success({ message: data.message })
     })
 
-    createCourse = action(async (values: any) => {
+    createCourse = action(async (values: Course) => {
         this.setLoadingCreateCourse(true)
         return await createCourse(values).catch(e => {
             notification.error({ message: e.response.data.message })

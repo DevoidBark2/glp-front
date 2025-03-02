@@ -19,19 +19,19 @@ export const getAllCoursesByUser = async (): Promise<Course[]> => {
     return data.data
 }
 
-export const createCourse = async (values: any): Promise<Course> => {
-    const hasCertificate = values.has_certificate !== undefined ? String(Boolean(values.has_certificate)) : 'false';
+export const createCourse = async (values: Course): Promise<Course> => {
+    debugger
     const form = new FormData();
     form.append('name', values.name)
     form.append('small_description', values.small_description)
-    form.append('has_certificate', hasCertificate)
-    // form.append('image',values.image.originFileObj)
-    if (values.category) {
-        form.append('category', values.category.toString());
+    form.append('has_certificate', `${values.has_certificate}`)
+    if (values.image && typeof values.image !== "string") {
+        form.append('image', values.image.originFileObj!);
     }
-    form.append('access_right', values.access_right)
-    form.append('duration', values.duration)
-    form.append('level', values.level)
+    form.append('access_right', `${values.access_right}`)
+    form.append('duration', `${values.duration}`)
+    form.append('level', `${values.level}`)
+    if (values.category) form.append('category', values.category.toString());
     if (values.content_description) form.append("content_description", values.content_description)
 
     const data = (await axiosInstance.post('/api/course', form)).data;

@@ -1,6 +1,7 @@
+import { UploadFile } from "antd";
 import { StatusSectionEnum } from "../section/model";
 import { User } from "../user/model";
-import {CourseComponentType, QuestionsType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import { CourseComponentType, QuestionsType, StatusCourseComponentEnum } from "@/shared/api/component/model";
 
 type Category = {
     id: number;
@@ -73,7 +74,7 @@ export type CourseComponentTypeI = {
 export type Course = {
     id: number;
     name: string;
-    image: string;
+    image: string | UploadFile;
     category: Category;
     access_right: number;
     level: number;
@@ -88,6 +89,7 @@ export type Course = {
     courseUsers: any
     progress: any
     enrolledAt: Date
+    has_certificate: boolean
     children: any
     isUserEnrolled: boolean
 }
@@ -136,7 +138,7 @@ export type UserAnswer = {
 export type SectionMenu = {
     id: number
     name: string
-    userAnswer?: {totalAnswers: number, correctAnswers: number} | {confirmedStep: number}
+    userAnswer?: { totalAnswers: number, correctAnswers: number } | { confirmedStep: number }
 }
 export type MainSectionMenu = {
     id: number

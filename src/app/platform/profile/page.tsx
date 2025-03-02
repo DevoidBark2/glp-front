@@ -6,7 +6,7 @@ import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive"
-import { AddationalInfo, CustomizeProfile, Leaderboard, UserAchievements } from "@/entities/user-profile";
+import { AddationalInfo, CustomizeProfile, UserAchievements } from "@/entities/user-profile";
 
 const ProfilePage = () => {
     const { userProfileStore, achievementsStore, customizeStore } = useMobxStores();
@@ -25,7 +25,6 @@ const ProfilePage = () => {
             <div className="container mx-auto mt-4">
                 <Tabs
                     defaultActiveKey="2"
-                    animated={!changeTabsPosition}
                     style={{ padding: "0 15px" }}
                     tabPosition={changeTabsPosition ? "top" : "left"}
                     items={[

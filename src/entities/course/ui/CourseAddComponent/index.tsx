@@ -1,4 +1,4 @@
-import { Button, Col, Form, notification, Row, Select, Switch, UploadProps } from "antd";
+import { Button, Col, Form, message, Row, Select, Switch, Upload, UploadProps, Image } from "antd";
 import { Input } from "antd/lib";
 import Dragger from "antd/es/upload/Dragger";
 import { InboxOutlined } from "@ant-design/icons";
@@ -8,7 +8,9 @@ import { useRouter } from "next/navigation";
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
+import { Course } from "@/shared/api/course/model";
+
 const ReactQuill = dynamic(
     () => import('react-quill'),
     { ssr: false }
@@ -18,21 +20,35 @@ export const CourseAddComponent = observer(() => {
     const { courseStore, nomenclatureStore } = useMobxStores();
     const [code, setCode] = useState('');
     const [accessRight, setAccessRight] = useState(0);
-    const [createCourseForm] = Form.useForm();
+    const [createCourseForm] = Form.useForm<Course>();
     const router = useRouter();
 
 
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+
     const props: UploadProps = {
         name: 'file',
-        multiple: true,
+        multiple: false,
+        beforeUpload: (file) => {
+            const isImage = file.type.startsWith('image/');
+            if (!isImage) {
+                message.error("Можно загружать только изображения (JPEG, PNG, GIF, WebP).");
+                return Upload.LIST_IGNORE;
+            }
+            return true;
+        },
         onChange(info: any) {
             const { status } = info.file;
             if (status === 'done') {
-                notification.success({ message: `${info.file.name} загружен успешно.` });
+                const url = URL.createObjectURL(info.file.originFileObj);
+                setImageUrl(url);
                 createCourseForm.setFieldValue("image", info.file);
             } else if (status === 'error') {
-                notification.error({ message: `${info.file.name} ошибка загрузки.` });
+                message.error(`${info.file.name} ошибка загрузки.`);
             }
+        },
+        onRemove() {
+            setImageUrl(null)
         },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
@@ -40,11 +56,12 @@ export const CourseAddComponent = observer(() => {
     };
 
 
+
     return (
         <>
             <Form
                 form={createCourseForm}
-                onFinish={(values) => courseStore.createCourse(values).then((response) => {
+                onFinish={(values) => courseStore.createCourse(values).then(() => {
                     router.push('/control-panel/courses')
                     courseStore.setSuccessCreateCourseModal(true)
                 })}
@@ -67,7 +84,7 @@ export const CourseAddComponent = observer(() => {
                             label="Краткое описание"
                         >
                             <Input placeholder="Введите краткое описание курса"
-                                   style={{ width: '100%' }} />
+                                style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -83,6 +100,8 @@ export const CourseAddComponent = observer(() => {
                         <p className="ant-upload-text">Нажмите или перенесите файл для загрузки</p>
                     </Dragger>
                 </Form.Item>
+
+                {imageUrl && <Image src={imageUrl} alt="Preview" width={100} height={100} />}
 
                 <Row gutter={24}>
                     <Col span={12}>
@@ -171,7 +190,7 @@ export const CourseAddComponent = observer(() => {
 
                 <div className="flex flex-col items-center">
                     <Form.Item style={{ marginTop: '10px' }}>
-                        <Button type="primary" htmlType="submit" loading={courseStore.loadingCreateCourse}>Создать</Button>
+                        <Button color="default" variant="solid" htmlType="submit" loading={courseStore.loadingCreateCourse}>Создать</Button>
                     </Form.Item>
                 </div>
             </Form>

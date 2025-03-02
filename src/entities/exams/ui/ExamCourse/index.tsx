@@ -7,6 +7,8 @@ import { io } from "socket.io-client";
 import { ComponentTask } from "@/shared/api/course/model";
 import { Button } from "antd";
 import { useTheme } from "next-themes";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { useParams, useSearchParams } from "next/navigation";
 
 interface ExamCourseProps {
     exam?: Exam;
@@ -15,8 +17,13 @@ interface ExamCourseProps {
 // const socket = io("http://localhost:5001");
 
 const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
+    const { courseStore } = useMobxStores()
+    const { courseId } = useParams()
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const { resolvedTheme } = useTheme()
+    const searchParams = useSearchParams();
+    const stepParam = searchParams.get("step");
+    const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
 
     const handleNextQuestion = () => {
@@ -38,10 +45,12 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     const currentComponent = exam?.components[currentQuestionIndex];
 
     const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => {
-        // socket.emit("saveProgress", {
-        //     quiz,
-        //     answer,
-        // });
+        return await courseStore.handleCheckTask({
+            task: quiz,
+            answers: answer,
+            currentSection: step!,
+
+        }, Number(courseId));
     }
 
     // useEffect(() => {
