@@ -1,9 +1,9 @@
-import {Button, Divider, Form, Input, Tooltip} from "antd";
+import { Button, Divider, Form, Input, Tooltip } from "antd";
 import React, { FC } from "react";
 import { AuthMethodEnum, ChangePasswordType } from "@/shared/api/auth/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { observer } from "mobx-react";
-import {useTheme} from "next-themes";
+import { useTheme } from "next-themes";
 
 interface ChangePasswordProps {
     handleChangePassword: (values: ChangePasswordType) => void
@@ -16,7 +16,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({ handleChangePa
 
     return <div>
         <h3 className="text-lg font-semibold dark:text-white">Смена пароля</h3>
-        <Divider style={{borderColor: resolvedTheme === "dark" ? "white" : "black"}}/>
+        <Divider style={{ borderColor: resolvedTheme === "dark" ? "white" : "gray" }} />
         <div className="space-y-4 w-1/2 max-sm:w-full">
             <Form
                 form={form}
@@ -73,7 +73,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({ handleChangePa
                     >
                         <Button
                             htmlType="submit"
-                            color="default" variant={resolvedTheme === "dark" ? "outlined": "solid"}
+                            color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
                             disabled={userProfileStore.userProfile?.method_auth !== AuthMethodEnum.CREDENTIALS}
                             className="mt-2"
                         >
