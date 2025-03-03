@@ -6,6 +6,7 @@ export type Exam = {
     title: string,
     components: CourseComponent[]
     status: ExamStatus
+    startExam: Date
     created_at: Date
 }
 

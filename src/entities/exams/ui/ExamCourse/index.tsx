@@ -3,31 +3,62 @@ import { Exam } from "@/shared/api/exams/model";
 import React, { FC, useEffect, useState } from "react";
 import { QuizComponent, QuizMultiComponent, SimpleTask } from "@/entities/course/ui";
 import { CourseComponentType } from "@/shared/api/component/model";
-import { io } from "socket.io-client";
-import { ComponentTask } from "@/shared/api/course/model";
 import { Button } from "antd";
 import { useTheme } from "next-themes";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useParams, useSearchParams } from "next/navigation";
+import dayjs from "dayjs";
+import {ComponentTask} from "@/shared/api/course/model";
 
 interface ExamCourseProps {
     exam?: Exam;
 }
-//
-// const socket = io("http://localhost:5001");
 
 const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
-    const { courseStore } = useMobxStores()
-    const { courseId } = useParams()
+    const { courseStore } = useMobxStores();
+    const { courseId } = useParams();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const { resolvedTheme } = useTheme()
+    const { resolvedTheme } = useTheme();
     const searchParams = useSearchParams();
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
+    // Таймер
+    const [timeLeft, setTimeLeft] = useState<number | null>(null);
+
+    // Логика для отсчета времени
+    useEffect(() => {
+        if (exam?.startExam) {
+            const startExamTime = dayjs(exam.startExam);
+            const endExamTime = startExamTime.add(2, "hours"); // Экзамен длится 2 часа
+            const now = dayjs();
+
+            if (now.isBefore(startExamTime)) {
+                setTimeLeft(endExamTime.diff(startExamTime, "seconds")); // Ждем старта
+            } else {
+                setTimeLeft(endExamTime.diff(now, "seconds")); // Уже идет
+            }
+        }
+    }, [exam?.startExam]);
+
+    useEffect(() => {
+        if (timeLeft === null || timeLeft <= 0) return;
+
+        const interval = setInterval(() => {
+            setTimeLeft(prev => (prev ? prev - 1 : 0));
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timeLeft]);
+
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+    };
 
     const handleNextQuestion = () => {
-        if (currentQuestionIndex < (exam?.components.length || 0) - 1) {
+        if (currentQuestionIndex < (exam?.components?.length || 0) - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
         }
     };
@@ -49,19 +80,8 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
             task: quiz,
             answers: answer,
             currentSection: step!,
-
         }, Number(courseId));
-    }
-
-    // useEffect(() => {
-    //     socket.on("progressSaved", (data) => {
-    //         console.log("Прогресс сохранен:", data);
-    //     });
-    //
-    //     return () => {
-    //         socket.off();
-    //     };
-    // }, []);
+    };
 
     return (
         <div className="flex">
@@ -76,7 +96,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                             className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 ${currentQuestionIndex === index
                                 ? "bg-blue-500 text-white border-blue-700"
                                 : "bg-white text-black border-gray-300 cursor-pointer hover:bg-gray-200"
-                                }`}
+                            }`}
                         >
                             {index + 1}
                         </div>
@@ -85,6 +105,13 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
             </div>
 
             <div className="flex-1 p-5">
+                {/* Таймер */}
+                {timeLeft !== null && (
+                    <div className="text-xl font-semibold text-red-500 text-center mt-4">
+                        ⏳ Осталось времени: {formatTime(timeLeft)}
+                    </div>
+                )}
+
                 <div className="mb-5">
                     {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
                         <QuizComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect} />
@@ -115,7 +142,6 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                 </div>
             </div>
         </div>
-
     );
 });
 

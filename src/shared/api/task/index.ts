@@ -25,3 +25,9 @@ export const handleUpdateSectionConfirmed = async (prevSection: number) => {
 export const getCurrentSection = async (currentSection: CurrentSectionDto) => {
     return (await axiosInstance.get(`api/get-current-section?courseId=${currentSection.courseId}&currentSection=${currentSection.currentSection}`)).data;
 }
+
+export const startExam = async (courseId: number) => {
+    const data = (await axiosInstance.get(`/api/start-exam?courseId=${courseId}`)).data
+
+    return data.data;
+}

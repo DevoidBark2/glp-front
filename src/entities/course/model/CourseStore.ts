@@ -21,7 +21,7 @@ import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
-import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed } from "@/shared/api/task";
+import {getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed, startExam} from "@/shared/api/task";
 import { ParentSection, SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
@@ -48,7 +48,7 @@ class CourseStore {
     courseMenuLoading: boolean = false;
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
-    messageWarning: string | null = ""
+    messageWarning: {message: string, success: boolean} | null = null
     courseMembers: CourseMember[] = []
     examCourse: Exam | null = null
     resultSearchCourses: Course[] = []
@@ -68,7 +68,7 @@ class CourseStore {
         this.coursePageTitle = value
     })
 
-    setMessageWarning = action((value: string | null) => {
+    setMessageWarning = action((value: {message: string, success: boolean} | null) => {
         this.messageWarning = value
     })
 
@@ -301,10 +301,17 @@ class CourseStore {
         this.setLoadingSection(true)
         this.setSectionCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
+        debugger
         if (currentSection === - 1) {
-            runInAction(() => {
-                this.examCourse = data.data
-            })
+            if(data.data.message) {
+                this.setLoadingSection(false)
+                this.setMessageWarning({
+                    message: data.data.message,
+                    success: data.data.success,
+                })
+                return;
+            }
+            this.examCourse = data.data
             this.setLoadingSection(false)
             return;
         }
@@ -318,6 +325,13 @@ class CourseStore {
         }
 
         this.setLoadingSection(false)
+    })
+
+    startExam = action(async (courseId: number) => {
+        const data = await startExam(courseId);
+        this.setMessageWarning(null)
+
+        this.examCourse = data;
     })
 
     searchCourseByFilter = action(async (values: FilterValues) => {
