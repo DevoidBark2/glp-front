@@ -120,7 +120,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                 </div>
             </div>
 
-            <div className="flex justify-between mt-4">
+            <div className="flex items-center gap-3 mt-4">
                 {currentQuestionIndex > 0 && (
                     <Button onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
                         color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
