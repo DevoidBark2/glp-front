@@ -5,8 +5,9 @@ export interface FilterOption {
 }
 
 export interface FilterValues {
+    searchString: string;
     categories: number[]; // Список выбранных категорий (по ID)
-    levels: FilterOption[]; // Список выбранных уровней сложности
+    levels: number[]; // Список выбранных уровней сложности
     durations: FilterOption[]; // Список выбранных продолжительностей
     sortOption: FilterOption | null; // Выбранный вариант сортировки
 }

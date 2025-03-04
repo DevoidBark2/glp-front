@@ -6,7 +6,7 @@ import { CourseList } from "@/entities/course/ui";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import FilterBlock from "@/entities/filters/ui/FilterBlock";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 
 const CoursesSearch = observer(() => {
@@ -20,9 +20,19 @@ const CoursesSearch = observer(() => {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter" && searchTerm.trim().length >= 4) {
+        if (e.key === "Enter" && searchTerm.trim().length >= 3) {
             handleSearch();
         }
+    };
+
+    const updateSearchParam = (value: string) => {
+        const params = new URLSearchParams(window.location.search);
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        router.push(`?${params.toString()}`, { scroll: false });
     };
 
     useEffect(() => {
@@ -57,26 +67,31 @@ const CoursesSearch = observer(() => {
 
             <div className="mb-6">
                 <h1 className="text-2xl font-bold mb-6">Результаты поиска</h1>
-                <Input.Search
-                    placeholder="Название курса, автор..."
-                    allowClear
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    prefix={<SearchOutlined className="text-gray-500" />}
-                    enterButton={
-                        <Button
-                            disabled={searchTerm.trim().length < 4}
-                            type="default"
-                            className="border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 ml-2"
-                            icon={<SearchOutlined />}
-                            onClick={handleSearch}
-                        >
-                            Искать
-                        </Button>
-                    }
-                    className="w-full md:w-2/3 mb-4"
-                />
+                <div className="flex items-center justify-end">
+                    <div className="relative w-full">
+                        <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                        <Input
+                            placeholder="Название курса, автор..."
+                            allowClear
+                            value={searchTerm}
+                            onChange={(e) => {
+                                updateSearchParam(e.target.value)
+                                setSearchTerm(e.target.value)
+                            }}
+                            onKeyDown={handleKeyDown}
+                            className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-gray-500 transition w-full"
+                        />
+                    </div>
+
+                    <Button
+                        color="default" variant="solid"
+                        className="ml-5"
+                        icon={<SearchOutlined />}
+                        onClick={handleSearch}
+                    >
+                        Искать
+                    </Button>
+                </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">

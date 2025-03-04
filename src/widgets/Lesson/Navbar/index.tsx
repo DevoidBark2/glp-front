@@ -38,7 +38,7 @@ export const NavbarLesson = observer(() => {
     const [isPinned, setIsPinned] = useState<boolean>();
 
     const handleMenuClick = (key: number) => {
-        courseStore.updateSectionStep(Number(selectedSection)).then(() => {
+        courseStore.updateSectionStep(Number(selectedSection),Number(courseId)).then(() => {
             setSelectedSection(key);
             router.push(`?step=${key}`);
         });

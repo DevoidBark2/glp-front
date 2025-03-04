@@ -104,22 +104,26 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                             />
                         </Tooltip>
 
-                        <Popconfirm
-                            title="Вы уверены?"
-                            onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)}
-                            placement="leftBottom"
-                            okText="Да"
-                            cancelText="Нет"
-                        >
-                            <Button shape="circle" danger icon={<LogoutOutlined />} />
-                        </Popconfirm>
+                        <Tooltip title="Покинуть курс">
+                            <Popconfirm
+                                title="Вы уверены?"
+                                onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)}
+                                placement="leftBottom"
+                                okText="Да"
+                                cancelText="Нет"
+                            >
+                                <Button shape="circle" danger icon={<LogoutOutlined />} />
+                            </Popconfirm>
+                        </Tooltip>
 
-                        <Button
-                            type="default"
-                            shape="circle"
-                            onClick={() => setIsModalOpen(true)}
-                            icon={<MessageOutlined />}
-                        />
+                        <Tooltip title="Оставить отзыв">
+                            <Button
+                                type="default"
+                                shape="circle"
+                                onClick={() => setIsModalOpen(true)}
+                                icon={<MessageOutlined />}
+                            />
+                        </Tooltip>
                     </div>
                 </div>
 

@@ -2,12 +2,12 @@ import { FilterOption, FilterValues } from "@/shared/api/filter/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import {Button, Checkbox, Radio, Form, Collapse, Divider} from "antd";
 import { observer } from "mobx-react";
-
-const { Panel } = Collapse;
+import {useSearchParams} from "next/navigation";
 
 const FilterBlock = observer(() => {
     const { nomenclatureStore, courseStore } = useMobxStores();
     const [form] = Form.useForm<FilterValues>();
+    const searchParams = useSearchParams()
 
     const filters: {
         levels: FilterOption[];
@@ -15,9 +15,9 @@ const FilterBlock = observer(() => {
         sortOptions: FilterOption[];
     } = {
         levels: [
-            { type: "level", value: "beginner", label: "Начинающий" },
-            { type: "level", value: "intermediate", label: "Средний" },
-            { type: "level", value: "advanced", label: "Высокий" },
+            { type: "level", value: 0, label: "Начинающий" },
+            { type: "level", value: 1, label: "Средний" },
+            { type: "level", value: 2, label: "Высокий" },
         ],
         durations: [
             { type: "less", value: 5, label: "До 5 часов" },
@@ -25,7 +25,6 @@ const FilterBlock = observer(() => {
             { type: "greater", value: 10, label: "Более 10 часов" },
         ],
         sortOptions: [
-            { type: "sort", value: "popularity", label: "По популярности" },
             { type: "sort", value: "newest", label: "По новизне" },
             { type: "sort", value: "rating", label: "По рейтингу" },
         ],
@@ -33,13 +32,14 @@ const FilterBlock = observer(() => {
 
     const handleFilterCourse = (values: FilterValues) => {
         const formattedFilters = {
+            searchString: searchParams.get("search"),
             categories: values.categories || [],
             levels: values.levels || [],
             durations: values.durations || [],
             sortOption: values.sortOption || null,
         };
 
-        // Отправляем данные через MobX экшн
+        debugger
         courseStore.searchCourseByFilter(formattedFilters);
     };
 

@@ -13,9 +13,10 @@ export const handleCheckUserTask = async (task: TaskAnswerUserDto, courseId: num
 }
 
 
-export const handleUpdateSectionConfirmed = async (prevSection: number) => {
+export const handleUpdateSectionConfirmed = async (prevSection: number, courseId: number) => {
     const data = (await axiosInstance.post('api/update-step', {
-        prevSection: prevSection
+        prevSection: prevSection,
+        courseId: courseId
     })).data;
 
     return data.data;

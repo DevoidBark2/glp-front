@@ -266,8 +266,8 @@ class CourseStore {
         return data;
     });
 
-    updateSectionStep = action(async (prevSection: number) => {
-        const data = await handleUpdateSectionConfirmed(prevSection);
+    updateSectionStep = action(async (prevSection: number, courseId: number) => {
+        const data = await handleUpdateSectionConfirmed(prevSection,courseId);
         if (data) {
             runInAction(() => {
                 // Создаём новый массив с изменёнными значениями
