@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Avatar, Breadcrumb, Button, Divider, List, message, notification, Rate, Spin } from "antd";
+import { Avatar, Breadcrumb, Button, Divider, message, notification, Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -60,6 +60,12 @@ const CoursePage = () => {
             })
         }).catch(e => {
             message.error(e.response.data.message)
+        })
+    }
+
+    const onDeleteComment = (id: number) => {
+        reviewStore.deleteReview(id).then(response => {
+            message.success(response.message)
         })
     }
 
@@ -222,7 +228,7 @@ const CoursePage = () => {
                             ></div>
 
                             <Divider />
-                            <CourseReviews />
+                            <CourseReviews onDeleteComment={onDeleteComment} />
                         </>
 
                     ) : (

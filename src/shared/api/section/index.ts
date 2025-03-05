@@ -1,5 +1,5 @@
 import { axiosInstance } from "../http-client";
-import {MainSection, SectionCourseItem} from "@/shared/api/section/model";
+import { MainSection, SectionCourseItem } from "@/shared/api/section/model";
 
 export const getCPAllSection = async () => {
     const data = (await axiosInstance.get('api/sections')).data
@@ -18,7 +18,7 @@ export const getSectionCourseById = async (id: number): Promise<SectionCourseIte
 }
 
 export const createMainCourseSection = async (mainSection: MainSection) => {
-    const data = (await axiosInstance.post('api/main-section',mainSection)).data;
+    const data = (await axiosInstance.post('api/main-section', mainSection)).data;
 
     return data.data;
 }
@@ -43,7 +43,6 @@ export const createSection = async (values: SectionCourseItem) => {
     //             formData.append("uploadFile", file.originFileObj || file);
     //         });
     //     } else if (key === "course" || key === "externalLinks" || key === "uploadFile") {
-    //         debugger
     //         // Преобразуем сложные структуры в JSON-строку
     //         formData.append(key, JSON.stringify(values[key]));
     //     } else {
@@ -55,6 +54,6 @@ export const createSection = async (values: SectionCourseItem) => {
     return await (await axiosInstance.post('api/sections', values)).data;
 };
 
-export const changeSection = async (values: SectionCourseItem): Promise<{message: string}> => {
+export const changeSection = async (values: SectionCourseItem): Promise<{ message: string }> => {
     return (await axiosInstance.put('api/sections', values)).data;
 }

@@ -19,11 +19,11 @@ class AuthStore {
         return await changePassword(passwordData);
     })
 
-    resetPassword = action(async (email:string) => {
+    resetPassword = action(async (email: string) => {
         return await resetPassword(email)
     })
 
-    newPassword = action(async (password: string,token: string | null) => {
+    newPassword = action(async (password: string, token: string | null) => {
         return await newPassword(password, token);
     })
 
@@ -32,9 +32,7 @@ class AuthStore {
     })
 
     deleteAccount = action(async () => {
-        return await deleteUserAccount().then(async  () => {
-            await logoutUser()
-        });
+        return await deleteUserAccount();
     })
 }
 

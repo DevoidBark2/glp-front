@@ -1,5 +1,5 @@
 import { Course, CourseReview } from "@/shared/api/course/model";
-import { Button, Form, Input, Modal, Popconfirm, Progress, Rate, Tooltip } from "antd";
+import { Button, Form, Input, message, Modal, Popconfirm, Progress, Rate, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
@@ -31,9 +31,16 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                 return;
             }
 
-            courseStore.handleReviewSubmitCourse({ ...values, courseId: course.courseId });
-            setIsModalOpen(false);
-            form.resetFields();
+            courseStore.handleReviewSubmitCourse({ ...values, courseId: course.id }).then(response => {
+                message.success(response.message)
+                setIsModalOpen(false);
+                form.resetFields();
+            }).catch(e => {
+                message.error(e.response.data.message)
+                setIsModalOpen(false);
+                form.resetFields();
+            });
+
         } catch (error) {
             console.log("Ошибка валидации:", error);
         }
@@ -70,7 +77,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                 </Form>
             </Modal>
 
-            <div key={course.courseId} className="p-4 border rounded-lg bg-white dark:bg-gray-900 shadow-sm">
+            <div key={course.id} className="p-4 border rounded-lg bg-white dark:bg-gray-900 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         {course.image ? (
@@ -99,15 +106,15 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                             <Button
                                 type="default"
                                 shape="circle"
-                                onClick={() => router.push(`/platform/lessons/${course.courseId}`)}
+                                onClick={() => router.push(`/platform/lessons/${course.id}`)}
                                 icon={<PlayCircleOutlined />}
                             />
                         </Tooltip>
 
                         <Tooltip title="Покинуть курс">
                             <Popconfirm
-                                title="Вы уверены?"
-                                onConfirm={() => userProfileStore.confirmLeaveCourse(course.courseId)}
+                                title="Вы уверены, что хотите покинь курс, весь прогресс по курсу удалится?"
+                                onConfirm={() => userProfileStore.confirmLeaveCourse(course.id)}
                                 placement="leftBottom"
                                 okText="Да"
                                 cancelText="Нет"

@@ -5,3 +5,7 @@ export const getCourseReviews = async (courseId: number) => {
 
     return data.data
 }
+
+export const deleteCourseReview = async (id: number): Promise<any> => {
+    return (await axiosInstance.delete(`api/course-reviews/${id}`)).data;
+}

@@ -55,7 +55,7 @@ class UserProfileStore {
 
     confirmLeaveCourse = action(async (courseId: number) => {
         await confirmLeaveCourse(courseId);
-        this.userProfileCourses = this.userProfileCourses.filter(it => it.courseId !== courseId);
+        this.userProfileCourses = this.userProfileCourses.filter(it => it.id !== courseId);
     })
 
     setFileForFeedBack = action((files: UploadFile[]) => {

@@ -44,7 +44,7 @@ export const CourseSectionComment: FC<CourseSectionCommentProps> = observer(({ c
                 <div className="flex justify-between items-center">
                     <h4 className="font-bold text-gray-800">
                         {userProfileStore.userProfile?.id === comment.user.id
-                            ? `Вы (${userProfileStore.userProfile.second_name} ${userProfileStore.userProfile.first_name} ${userProfileStore.userProfile.last_name})`
+                            ? `Вы (${userProfileStore.userProfile.second_name ?? ''} ${userProfileStore.userProfile.first_name ?? ''} ${userProfileStore.userProfile.last_name ?? ''})`
                             : `${comment.user.first_name ?? ''} ${comment.user.second_name ?? ''} ${comment.user.last_name ?? ''}`}
                     </h4>
                     <span className="text-sm text-gray-500">{dayjs(comment.createdAt).fromNow()}</span>

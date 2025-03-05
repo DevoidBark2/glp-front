@@ -24,7 +24,7 @@ const ProfilePage = () => {
         !userProfileStore.loading && userProfileStore.userProfile ? (
             <div className="container mx-auto mt-4">
                 <Tabs
-                    defaultActiveKey="2"
+                    defaultActiveKey="1"
                     style={{ padding: "0 15px" }}
                     tabPosition={changeTabsPosition ? "top" : "left"}
                     items={[

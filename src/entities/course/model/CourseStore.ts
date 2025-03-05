@@ -21,7 +21,7 @@ import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
-import {getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed, startExam} from "@/shared/api/task";
+import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed, startExam } from "@/shared/api/task";
 import { ParentSection, SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
@@ -48,7 +48,7 @@ class CourseStore {
     courseMenuLoading: boolean = false;
     subscribeCourseLoading: boolean = false;
     loadingSubscribeCourse: boolean = false
-    messageWarning: {message: string, success: boolean} | null = null
+    messageWarning: { message: string, success: boolean } | null = null
     courseMembers: CourseMember[] = []
     examCourse: Exam | null = null
     resultSearchCourses: Course[] = []
@@ -68,7 +68,7 @@ class CourseStore {
         this.coursePageTitle = value
     })
 
-    setMessageWarning = action((value: {message: string, success: boolean} | null) => {
+    setMessageWarning = action((value: { message: string, success: boolean } | null) => {
         this.messageWarning = value
     })
 
@@ -267,7 +267,7 @@ class CourseStore {
     });
 
     updateSectionStep = action(async (prevSection: number, courseId: number) => {
-        const data = await handleUpdateSectionConfirmed(prevSection,courseId);
+        const data = await handleUpdateSectionConfirmed(prevSection, courseId);
         if (data) {
             runInAction(() => {
                 // Создаём новый массив с изменёнными значениями
@@ -301,9 +301,8 @@ class CourseStore {
         this.setLoadingSection(true)
         this.setSectionCourse(null);
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
-        debugger
         if (currentSection === - 1) {
-            if(data.data.message) {
+            if (data.data.message) {
                 this.setLoadingSection(false)
                 this.setMessageWarning({
                     message: data.data.message,
@@ -354,7 +353,7 @@ class CourseStore {
 
 
     handleReviewSubmitCourse = action(async (values: CourseReview) => {
-        const data = await submitReviewCourse(values);
+        return await submitReviewCourse(values);
     })
 
 

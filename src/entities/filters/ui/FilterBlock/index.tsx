@@ -1,8 +1,8 @@
 import { FilterOption, FilterValues } from "@/shared/api/filter/model";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {Button, Checkbox, Radio, Form, Collapse, Divider} from "antd";
+import { Button, Checkbox, Radio, Form, Collapse, Divider } from "antd";
 import { observer } from "mobx-react";
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const FilterBlock = observer(() => {
     const { nomenclatureStore, courseStore } = useMobxStores();
@@ -39,7 +39,6 @@ const FilterBlock = observer(() => {
             sortOption: values.sortOption || null,
         };
 
-        debugger
         courseStore.searchCourseByFilter(formattedFilters);
     };
 
@@ -49,7 +48,7 @@ const FilterBlock = observer(() => {
             style={{ height: "fit-content" }}
         >
             <h2 className="text-xl font-bold mb-4 text-center">Фильтры</h2>
-            <Divider/>
+            <Divider />
 
             <Collapse defaultActiveKey={['1']} className="block md:hidden" items={[
                 {
@@ -76,7 +75,7 @@ const FilterBlock = observer(() => {
                                     ))}
                                 </Checkbox.Group>
                             </Form.Item>
-                            <Divider/>
+                            <Divider />
                             <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
                                 <Checkbox.Group className="flex flex-col gap-2">
                                     {filters.levels.map((level, index) => (
@@ -86,7 +85,7 @@ const FilterBlock = observer(() => {
                                     ))}
                                 </Checkbox.Group>
                             </Form.Item>
-                            <Divider/>
+                            <Divider />
                             <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
                                 <Checkbox.Group className="flex flex-col gap-2">
                                     {filters.durations.map((duration, index) => (
@@ -96,7 +95,7 @@ const FilterBlock = observer(() => {
                                     ))}
                                 </Checkbox.Group>
                             </Form.Item>
-                            <Divider/>
+                            <Divider />
                             <Form.Item name="sortOption" label={<label className="text-lg font-semibold">Сортировка</label>}>
                                 <Radio.Group className="flex flex-col gap-2">
                                     {filters.sortOptions.map((option, index) => (
@@ -138,7 +137,7 @@ const FilterBlock = observer(() => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    <Divider/>
+                    <Divider />
 
                     <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
                         <Checkbox.Group className="flex flex-col gap-2">
@@ -150,7 +149,7 @@ const FilterBlock = observer(() => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    <Divider/>
+                    <Divider />
 
                     <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
                         <Checkbox.Group className="flex flex-col gap-2">
@@ -162,10 +161,10 @@ const FilterBlock = observer(() => {
                         </Checkbox.Group>
                     </Form.Item>
 
-                    <Divider/>
+                    <Divider />
 
                     <Form.Item name="sortOption" label={<label className="text-lg font-semibold">Сортировка</label>}>
-                        <Radio.Group className="flex flex-col gap-2" style={{display:"flex"}}>
+                        <Radio.Group className="flex flex-col gap-2" style={{ display: "flex" }}>
                             {filters.sortOptions.map((option, index) => (
                                 <Radio key={index} value={option.value}>
                                     {option.label}

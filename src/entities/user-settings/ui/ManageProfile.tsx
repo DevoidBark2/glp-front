@@ -5,10 +5,10 @@ import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { observer } from "mobx-react";
 
 interface ManageProfileProps {
-    handleDeleteAccount: () => void;
+    showDeleteAccountModal: () => void;
 }
 
-export const ManageProfile: React.FC<ManageProfileProps> = observer(({ handleDeleteAccount }) => {
+export const ManageProfile: React.FC<ManageProfileProps> = observer(({ showDeleteAccountModal }) => {
     const [form] = Form.useForm();
     const { userProfileStore } = useMobxStores()
 
@@ -37,6 +37,6 @@ export const ManageProfile: React.FC<ManageProfileProps> = observer(({ handleDel
             </Form.Item>
 
         </Form>
-        <Button onClick={handleDeleteAccount} type="primary" danger>Удалить аккаунт</Button>
+        <Button onClick={showDeleteAccountModal} type="primary" danger>Удалить аккаунт</Button>
     </div>
 })

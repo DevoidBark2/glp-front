@@ -20,7 +20,6 @@ export const getAllCoursesByUser = async (): Promise<Course[]> => {
 }
 
 export const createCourse = async (values: Course): Promise<Course> => {
-    debugger
     const form = new FormData();
     form.append('name', values.name)
     form.append('small_description', values.small_description)
@@ -106,9 +105,7 @@ export const searchCourseByFilter = async (values: FilterValues) => {
 }
 
 export const submitReviewCourse = async (values: CourseReview) => {
-    const data = (await axiosInstance.post('/api/course-review', values)).data
-
-    return data.data
+    return (await axiosInstance.post('/api/course-review', values)).data
 }
 
 export const handleCheckCourseSecretKey = async (value: string, courseId: number) => {

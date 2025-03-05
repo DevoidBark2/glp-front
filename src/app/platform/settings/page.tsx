@@ -8,7 +8,7 @@ import { ManageProfile } from "@/entities/user-settings/ui/ManageProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive";
 import { PlatformSettings } from "@/entities/user-settings/ui/PlatformSettings";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const SettingsPage = observer(() => {
     const { authStore, userProfileStore } = useMobxStores()
@@ -26,10 +26,14 @@ const SettingsPage = observer(() => {
         });
     };
 
+    const handleShowModal = () => {
+        setShowDeleteAccountModal(true)
+    }
+
     const handleDeleteAccount = () => {
         authStore.deleteAccount().then(() => {
             userProfileStore.setUserProfile(null);
-            setShowDeleteAccountModal(true)
+            setShowDeleteAccountModal(false)
             router.push("/platform");
         })
     }
@@ -43,7 +47,7 @@ const SettingsPage = observer(() => {
         {
             key: "2",
             label: <label className="dark:text-white">Управление аккаунтом</label>,
-            children: (<ManageProfile handleDeleteAccount={handleDeleteAccount} />),
+            children: (<ManageProfile showDeleteAccountModal={handleShowModal} />),
         },
         {
             key: "3",
