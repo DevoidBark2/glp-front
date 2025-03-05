@@ -80,17 +80,17 @@ export const ProfileForm = observer(() => {
                 label={<label className="dark:text-white">Телефон</label>}
             >
                 <PhoneInput
+                    disableSearchIcon={true}
                     inputStyle={{ width: '100%', height: '20px',background: resolvedTheme === "dark" ? "#1a1a1a" : "white",
                         color: resolvedTheme === "dark" ? "white" : "black"}}
                     country={"ru"}
                     enableSearch={false}
                     onlyCountries={["ru"]}
+                    placeholder="+7 (999) 999-99-99"
+                    masks={{ru: '(...) ...-..-..'}}
                     searchPlaceholder={"Пожалуйста, введите телефонный номер!"}
                 />
             </Form.Item>
-
-            {/*color="default"*/}
-            {/*variant="outlined"*/}
 
             <div className="flex justify-end items-center mt-4">
                 <Form.Item>

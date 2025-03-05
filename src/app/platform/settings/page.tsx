@@ -8,10 +8,12 @@ import { ManageProfile } from "@/entities/user-settings/ui/ManageProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useMediaQuery } from "react-responsive";
 import { PlatformSettings } from "@/entities/user-settings/ui/PlatformSettings";
+import {useRouter} from "next/navigation";
 
 const SettingsPage = observer(() => {
-    const { authStore } = useMobxStores()
+    const { authStore, userProfileStore } = useMobxStores()
     const [form] = Form.useForm<ChangePasswordType>();
+    const router = useRouter();
     const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false)
     const changeTabsPosition = useMediaQuery({ query: "(max-width: 1100px)" });
 
@@ -25,11 +27,11 @@ const SettingsPage = observer(() => {
     };
 
     const handleDeleteAccount = () => {
-        setShowDeleteAccountModal(true)
-        // authStore.deleteAccount().then(() => {
-        //     userProfileStore.setUserProfile(null);
-        //     router.push("/platform");
-        // })
+        authStore.deleteAccount().then(() => {
+            userProfileStore.setUserProfile(null);
+            setShowDeleteAccountModal(true)
+            router.push("/platform");
+        })
     }
 
     const items: TabsProps['items'] = [
@@ -68,9 +70,7 @@ const SettingsPage = observer(() => {
                         <Button
                             key="delete"
                             danger
-                            onClick={() => {
-                                setShowDeleteAccountModal(false);
-                            }}
+                            onClick={handleDeleteAccount}
                             className="bg-cyber-red text-black border border-cyber-red hover:bg-red-500 transition-all shadow-md"
                         >
                             Удалить

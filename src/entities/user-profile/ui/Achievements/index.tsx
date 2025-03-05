@@ -66,7 +66,7 @@ export const UserAchievements = observer(() => {
     const getProgressPercentage = (current, total) => (current / total) * 100;
     const { achievementsStore, userProfileStore } = useMobxStores()
 
-    const userPoints = userProfileStore.userProfile?.userLevel.points || 0;
+    const userPoints = userProfileStore.userProfile?.userLevel?.points || 0;
 
     // const getUserLevel = (points) => {
     //     if (points <= 100) return UserLevelEnum.Beginner;
