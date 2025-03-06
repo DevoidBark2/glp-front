@@ -3,14 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Avatar, Divider, Menu, MenuProps, Skeleton, Spin } from "antd";
 import Link from "next/link";
 import { observer } from "mobx-react";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {
     AppstoreOutlined,
-    BarsOutlined,
-    BookOutlined, LogoutOutlined,
-    SettingOutlined,
-    SolutionOutlined, StarOutlined,
-    ToolOutlined, UserOutlined
+    BarsOutlined, LogoutOutlined,
+    SettingOutlined, StarOutlined, UserOutlined
 } from "@ant-design/icons";
 import { UserRole } from "@/shared/api/user/model";
 import nextConfig from "../../../next.config.mjs";
@@ -174,12 +171,17 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const { userProfileStore } = useMobxStores()
     const pathName = usePathname();
     const theme = useTheme();
+    const router = useRouter()
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
     const [loading, setLoading] = useState<boolean>(true)
     useEffect(() => {
 
         userProfileStore.getUserProfile().then((response) => {
+            if (response.role === UserRole.STUDENT) {
+                router.push("/platform");
+                return;
+            }
             if (response.role === UserRole.SUPER_ADMIN) {
                 dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
             }
@@ -212,73 +214,77 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
         })
     }, [])
 
+    if(loading) {
+        return <div className="w-full flex justify-center h-screen items-center">
+            <Spin size="large"/>
+        </div>
+    }
+
     return (
-        <>
-            <div className="flex">
-                <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
-                    <div className="flex flex-col items-center justify-center mb-2">
-                        <div className="relative mb-4 flex items-center justify-center">
-                            <div className="relative rounded-full overflow-hidden shadow-lg bg-gray-200">
-                                <Spin spinning={loading}>
-                                    <Avatar
-                                        size={100}
-                                        src={
-                                            userProfileStore.userProfile?.image
-                                                ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                                    userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
-                                                    ? userProfileStore.userProfile?.image
-                                                    : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
-                                                : undefined
-                                        }
-                                        icon={!userProfileStore.userAvatar && <UserOutlined />}
-                                        className="cursor-pointer"
-                                        style={{
-                                            opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1,
-                                            transition: 'opacity 0.3s ease',
-                                        }}
-                                    />
-                                </Spin>
-                            </div>
+        !loading && userProfileStore.userProfile?.role !== UserRole.STUDENT && <div className="flex">
+            <div className={`flex flex-col bg-white dark:bg-[#001529] h-screen p-6 shadow-xl dark:border-r`}>
+                <div className="flex flex-col items-center justify-center mb-2">
+                    <div className="relative mb-4 flex items-center justify-center">
+                        <div className="relative rounded-full overflow-hidden shadow-lg bg-gray-200">
+                            <Spin spinning={loading}>
+                                <Avatar
+                                    size={100}
+                                    src={
+                                        userProfileStore.userProfile?.image
+                                            ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
+                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                ? userProfileStore.userProfile?.image
+                                                : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
+                                            : undefined
+                                    }
+                                    icon={!userProfileStore.userAvatar && <UserOutlined />}
+                                    className="cursor-pointer"
+                                    style={{
+                                        opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1,
+                                        transition: 'opacity 0.3s ease',
+                                    }}
+                                />
+                            </Spin>
                         </div>
-
-
-                        <Skeleton loading={loading} active>
-                            <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
-                                <h1 className="text-lg font-bold mb-1 text-center">{`${userProfileStore.userProfile?.second_name ?? ''} ${userProfileStore.userProfile?.first_name ?? ''} ${userProfileStore.userProfile?.last_name ?? ''}`}</h1>
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className="text-gray-300 text-sm">{userProfileStore.userProfile?.role}</span>
-                                    <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
-                                </div>
-                            </div>
-                        </Skeleton>
                     </div>
 
-                    <Divider className="bg-gray-600 dark:bg-white" />
-                    {
-                        !loading ? (
-                            <Menu
-                                style={{ width: 240 }}
-                                selectedKeys={[selectedKey]}
-                                defaultSelectedKeys={[selectedKey]}
-                                mode="vertical"
-                                items={dashboardMenuItems}
-                                theme={theme.theme === "dark" ? "dark" : "light"}
-                            />
-                        ) : (
-                            <>
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
-                                    <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
-                                ))}
-                            </>
-                        )
-                    }
+
+                    <Skeleton loading={loading} active>
+                        <div className="flex flex-col items-center justify-center" style={{ width: 250 }}>
+                            <h1 className="text-lg font-bold mb-1 text-center">{`${userProfileStore.userProfile?.second_name ?? ''} ${userProfileStore.userProfile?.first_name ?? ''} ${userProfileStore.userProfile?.last_name ?? ''}`}</h1>
+                            <div className="flex items-center gap-2 mb-4">
+                                <span className="text-gray-300 text-sm">{userProfileStore.userProfile?.role}</span>
+                                <div className="bg-green-400 h-3 w-3 rounded-full" title="Онлайн"></div>
+                            </div>
+                        </div>
+                    </Skeleton>
                 </div>
 
-                <div className="p-6 w-full">
-                    {children}
-                </div>
+                <Divider className="bg-gray-600 dark:bg-white" />
+                {
+                    !loading ? (
+                        <Menu
+                            style={{ width: 240 }}
+                            selectedKeys={[selectedKey]}
+                            defaultSelectedKeys={[selectedKey]}
+                            mode="vertical"
+                            items={dashboardMenuItems}
+                            theme={theme.theme === "dark" ? "dark" : "light"}
+                        />
+                    ) : (
+                        <>
+                            {[1, 2, 3, 4, 5, 6, 7, 8].map(it => (
+                                <Skeleton.Input key={it} active block style={{ width: 250, marginTop: 10 }} />
+                            ))}
+                        </>
+                    )
+                }
             </div>
-        </>
+
+            <div className="p-6 w-full">
+                {children}
+            </div>
+        </div>
     );
 }
 

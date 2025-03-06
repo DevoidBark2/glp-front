@@ -20,7 +20,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const [achievementData, setAchievementData] = useState<{ title: string; message: string }>({ title: '', message: '' });
 
     useEffect(() => {
-        userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false));
+        if(!pathName.includes('profile')){
+            userProfileStore.getUserProfile().finally(() => userProfileStore.setLoading(false));
+        }
 
         if (!pathName.includes("/lessons/")) {
             generalSettingsStore.getFooter();

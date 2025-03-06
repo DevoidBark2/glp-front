@@ -2,10 +2,13 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { Table, TableColumnsType, Tag } from "antd";
+import {Breadcrumb, Button, Table, TableColumnsType, Tag} from "antd";
 import { UserLevel } from "@/shared/api/users-level/model";
 import Link from "next/link";
 import { UserLevelEnum } from "@/entities/user-profile";
+import {ArrowLeftOutlined} from "@ant-design/icons";
+import {useRouter} from "next/navigation";
+import {useTheme} from "next-themes";
 
 const getLevelColor = (level: UserLevelEnum) => {
     const colors = {
@@ -25,6 +28,8 @@ const getLevelColor = (level: UserLevelEnum) => {
 
 const LeaderboardPage = observer(() => {
     const { userLevelStore } = useMobxStores();
+    const router = useRouter()
+    const {resolvedTheme} = useTheme()
 
     const columns: TableColumnsType<UserLevel> = [
         {
@@ -38,6 +43,7 @@ const LeaderboardPage = observer(() => {
             ),
             align: "center",
             width: "10%",
+            fixed: 'left',
         },
         {
             title: "Имя",
@@ -45,7 +51,7 @@ const LeaderboardPage = observer(() => {
             key: "name",
             render: (text, record) => (
                 <Link href={`/platform/users/${record.user.id}`}>
-                    <span className="text-base font-medium text-gray-800 hover:underline">
+                    <span className="text-base font-medium text-gray-800 hover:underline break-words">
                         {`${record.user.second_name ?? ""} ${record.user.first_name ?? ""} ${record.user.last_name ?? ""}`}
                     </span>
                 </Link>
@@ -61,7 +67,6 @@ const LeaderboardPage = observer(() => {
                     {level}
                 </Tag>
             ),
-            width: "15%",
         },
         {
             title: "Баллы",
@@ -79,14 +84,27 @@ const LeaderboardPage = observer(() => {
     }, []);
 
     return (
-        <div className="container mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">🏆 Лидерборд</h2>
+        <div className="container mx-auto px-4">
+            <Breadcrumb
+                items={[
+                    {
+                        className: "dark:text-white",
+                        title: <Button icon={<ArrowLeftOutlined />} color="default" type="link" variant="link"
+                                       onClick={() => router.push("/platform")}
+                                       style={{ color: resolvedTheme === "dark" ? "white" : "black" }}
+                        >Главная</Button>
+                    },
+                ]}
+            />
+            <h2 className="text-2xl font-bold my-6 text-gray-800">🏆 Лидерборд</h2>
             <Table
+                rowKey={(record) => record.id}
                 loading={userLevelStore.loading}
                 columns={columns}
                 dataSource={userLevelStore.leaderBordUsers}
                 pagination={false}
                 className="border rounded-xl shadow-md overflow-hidden"
+                scroll={{x: 400}}
             />
         </div>
     );

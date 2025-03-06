@@ -17,7 +17,7 @@ export const Posts = observer(() => {
     }, []);
 
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4">
             <div className="px-2">
                 <Breadcrumb
                     items={[
@@ -30,9 +30,9 @@ export const Posts = observer(() => {
                         },
                     ]}
                 />
-                <Divider />
-                <h1 className="text-3xl font-semibold">Обзор новостей</h1>
-                <Divider className="my-6" />
+
+                <h1 className="text-3xl my-6 font-semibold">Обзор новостей</h1>
+                <Divider/>
                 <PostList loading={postStore.loading} posts={postStore.allPosts} />
             </div>
         </div>

@@ -38,7 +38,7 @@ const PlatformPage = () => {
     return <div className="container mx-auto max-lg:px-4 px-2">
 
         <div className="flex justify-end">
-            <div className="flex items-center w-1/2">
+            <div className="flex items-center  w-full lg:w-1/2">
                 <div className="relative w-full">
                     <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                     <Input

@@ -19,7 +19,7 @@ export const PostRow = ({ post }: PostProps) => {
                             width={0}
                             height={0}
                             sizes="100vw"
-                            className="w-full h-full object-cover"
+                            className="w-full lg:w-2/3 h-48 object-cover"
                             priority
                         />
                     </div>

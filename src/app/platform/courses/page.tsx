@@ -63,10 +63,9 @@ const CoursesSearch = observer(() => {
                     },
                 ]}
             />
-            <Divider />
 
             <div className="mb-6">
-                <h1 className="text-2xl font-bold mb-6">Результаты поиска</h1>
+                <h1 className="text-2xl font-bold my-6">Результаты поиска</h1>
                 <div className="flex items-center justify-end">
                     <div className="relative w-full">
                         <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />

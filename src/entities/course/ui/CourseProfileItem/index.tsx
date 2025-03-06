@@ -115,7 +115,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                             <Popconfirm
                                 title="Вы уверены, что хотите покинь курс, весь прогресс по курсу удалится?"
                                 onConfirm={() => userProfileStore.confirmLeaveCourse(course.id)}
-                                placement="leftBottom"
+                                placement="top"
                                 okText="Да"
                                 cancelText="Нет"
                             >
