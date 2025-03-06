@@ -127,6 +127,10 @@ class CourseStore {
         this.popularCourses = courses
     })
 
+    setResultSearchCourses = action((courses: Course[]) => {
+        this.resultSearchCourses = courses.map(courseMapper);
+    })
+
     getAllCourses = action(async () => {
         try {
             this.setLoadingCourses(true)
@@ -300,6 +304,7 @@ class CourseStore {
     getCourseSectionByStepId = action(async (courseId: number, currentSection: number) => {
         this.setLoadingSection(true)
         this.setSectionCourse(null);
+        this.examCourse = null;
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
         if (currentSection === - 1) {
             if (data.data.message) {
@@ -335,12 +340,11 @@ class CourseStore {
 
     searchCourseByFilter = action(async (values: FilterValues) => {
         const data = await searchCourseByFilter(values)
-        this.resultSearchCourses = data.data.map(courseMapper)
+        this.setResultSearchCourses(data.data)
     })
 
     handleFilterCoursesByCategory = action(async (id: number) => {
         this.setLoadingCourses(true)
-        // this.courses = []
         const data = await handleFilterByCategory(id)
         this.courses = data.map(courseMapper)
         this.setLoadingCourses(false)
@@ -348,7 +352,7 @@ class CourseStore {
 
     handleFilterCoursesBySearch = action(async (value: string) => {
         const data = await handleFilterBySearch(value)
-        this.resultSearchCourses = data.map(courseMapper)
+        this.setResultSearchCourses(data)
     })
 
 

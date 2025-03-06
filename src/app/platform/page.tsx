@@ -6,12 +6,14 @@ import { CourseList } from "@/entities/course/ui";
 import { useRouter } from 'next/navigation';
 import { useMobxStores } from '@/shared/store/RootStore';
 import { observer } from "mobx-react";
+import { useTheme } from "next-themes";
 
 const PlatformPage = () => {
     const { courseStore } = useMobxStores()
     const [searchTerm, setSearchTerm] = useState("");
     const [noResultsFound, setNoResultsFound] = useState(false);
     const router = useRouter()
+    const { resolvedTheme } = useTheme()
 
     const handleSearch = () => {
         router.push(`platform/courses?search=${encodeURIComponent(searchTerm.trim())}`);
@@ -30,6 +32,8 @@ const PlatformPage = () => {
             setNoResultsFound(false);
         }
     }, [courseStore.courses, searchTerm]);
+
+
 
     useEffect(() => {
         courseStore.getAllCourses();
@@ -52,7 +56,7 @@ const PlatformPage = () => {
                 </div>
 
                 <Button
-                    color="default" variant="solid"
+                    variant={resolvedTheme && resolvedTheme === "dark" ? "outlined" : "solid"}
                     className="ml-5"
                     icon={<SearchOutlined />}
                     onClick={handleSearch}

@@ -53,7 +53,7 @@ const FilterBlock = observer(() => {
             <Collapse defaultActiveKey={['1']} className="block md:hidden" items={[
                 {
                     key: '1',
-                    label: <label>Фильтры</label>,
+                    label: "Фильтры",
                     children: (
                         <Form
                             form={form}
@@ -66,7 +66,7 @@ const FilterBlock = observer(() => {
                                 sortOption: null,
                             }}
                         >
-                            <Form.Item name="categories" label={<label className="text-lg font-semibold">Категории</label>}>
+                            <Form.Item name="categories" label={<label id="categories" className="text-lg font-semibold">Категории</label>}>
                                 <Checkbox.Group className="flex flex-col gap-2">
                                     {nomenclatureStore.categories.map((category, index) => (
                                         <Checkbox key={index} value={category.id}>
@@ -76,7 +76,7 @@ const FilterBlock = observer(() => {
                                 </Checkbox.Group>
                             </Form.Item>
                             <Divider />
-                            <Form.Item name="levels" label={<label className="text-lg font-semibold">Уровень сложности</label>}>
+                            <Form.Item name="levels" label={<label id="levels" className="text-lg font-semibold">Уровень сложности</label>}>
                                 <Checkbox.Group className="flex flex-col gap-2">
                                     {filters.levels.map((level, index) => (
                                         <Checkbox key={index} value={level.value}>
@@ -86,7 +86,7 @@ const FilterBlock = observer(() => {
                                 </Checkbox.Group>
                             </Form.Item>
                             <Divider />
-                            <Form.Item name="durations" label={<label className="text-lg font-semibold">Продолжительность</label>}>
+                            <Form.Item name="durations" label={<label id="durations" className="text-lg font-semibold">Продолжительность</label>}>
                                 <Checkbox.Group className="flex flex-col gap-2">
                                     {filters.durations.map((duration, index) => (
                                         <Checkbox key={index} value={duration.value}>

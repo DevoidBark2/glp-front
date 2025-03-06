@@ -21,10 +21,10 @@ export const CourseItem = observer(({ course }: CourseItemProps) => {
                     <Image
                         src={`${nextConfig.env!.API_URL}${course.image}`}
                         alt={course.name}
-                        width={400}
-                        height={176}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
                         priority
-                        className="w-full h-full object-cover"
+                        style={{ objectFit: "cover" }}
                     />
                 ) : (
                     <div className="flex items-center justify-center w-full h-full bg-gray-200 dark:bg-gray-700">

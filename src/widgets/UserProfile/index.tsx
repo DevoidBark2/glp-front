@@ -31,7 +31,7 @@ export const UserProfileBlock = observer(() => {
         <>
 
             <h1 className="text-2xl dark:text-white">Профиль пользователя</h1>
-            <Divider style={{ borderColor: resolvedTheme === "dark" ? "white" : "dark" }} />
+            <Divider style={{ borderColor: resolvedTheme === "dark" ? "gray" : undefined }} />
             <div className="w-full flex flex-col md:flex-row p-6">
                 <div className="flex flex-col mr-10 mb-5">
                     <Upload
@@ -53,7 +53,7 @@ export const UserProfileBlock = observer(() => {
                                     src={
                                         userProfileStore.userProfile?.image
                                             ? userProfileStore.userProfile.method_auth === AuthMethodEnum.GOOGLE ||
-                                            userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
+                                                userProfileStore.userProfile.method_auth === AuthMethodEnum.YANDEX
                                                 ? userProfileStore.userProfile?.image
                                                 : `${nextConfig.env?.API_URL}${userProfileStore.userProfile?.image}`
                                             : undefined

@@ -83,7 +83,7 @@ const CoursesSearch = observer(() => {
                     </div>
 
                     <Button
-                        color="default" variant="solid"
+                        color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
                         className="ml-5"
                         icon={<SearchOutlined />}
                         onClick={handleSearch}

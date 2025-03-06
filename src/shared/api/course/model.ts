@@ -2,6 +2,7 @@ import { UploadFile } from "antd";
 import { StatusSectionEnum } from "../section/model";
 import { User } from "../user/model";
 import { CourseComponentType, QuestionsType, StatusCourseComponentEnum } from "@/shared/api/component/model";
+import { Exam } from "../exams/model";
 
 type Category = {
     id: number;

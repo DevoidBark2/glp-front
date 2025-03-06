@@ -20,6 +20,7 @@ export const PostList = ({ loading, posts }: PostListProps) => {
                             <Image
                                 src="/static/empty-icon.svg"
                                 alt="Empty"
+                                priority
                                 width={100}
                                 height={100}
                                 className="mb-4 opacity-70"

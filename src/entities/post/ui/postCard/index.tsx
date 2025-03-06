@@ -19,6 +19,7 @@ export const PostCard = ({ post }: PostCardProps) => {
                         <Image
                             width={0}
                             height={0}
+                            priority
                             sizes="100vw"
                             style={{ width: '100%', height: 'auto' }}
                             src={`${nextConfig.env?.API_URL}${post?.image}`}
@@ -31,16 +32,16 @@ export const PostCard = ({ post }: PostCardProps) => {
                 <div className="flex-grow">
                     <h1 className="text-3xl font-bold mb-2 break-words">{post?.name}</h1>
                     <p className="text-gray-600 mb-4">{post?.description}</p>
-                    <p className="text-sm text-gray-500 mt-4">
+                    {post && <p className="text-sm text-gray-500 mt-4">
                         Опубликовано: {dayjs(post?.created_at).format(FORMAT_VIEW_DATE)}
-                    </p>
+                    </p>}
                 </div>
 
             </div>
-            <Divider/>
+            <Divider />
             <div
                 className="prose max-w-none my-4"
-                dangerouslySetInnerHTML={{__html: post?.content || "" }}
+                dangerouslySetInnerHTML={{ __html: post?.content || "" }}
             />
         </Card>
     );

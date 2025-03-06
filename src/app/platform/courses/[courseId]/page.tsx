@@ -139,6 +139,7 @@ const CoursePage = () => {
                                             width={0}
                                             height={0}
                                             sizes="100vw"
+                                            priority
                                             style={{ width: '100%', height: 'auto' }}
                                             className="w-full h-full object-cover"
                                         />

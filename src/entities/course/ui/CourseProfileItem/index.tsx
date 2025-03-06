@@ -86,8 +86,9 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                                 alt={course.name}
                                 width={100}
                                 height={70}
-                                className="rounded-md"
+                                className="rounded-md w-auto h-auto"
                             />
+
                         ) : (
                             <div className="w-[100px] h-[70px] bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded-md">
                                 <BookOutlined style={{ fontSize: 32, color: "#999" }} />

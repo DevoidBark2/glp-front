@@ -1,6 +1,6 @@
 import { ComponentTask } from "@/shared/api/course/model";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {Button, Card, Divider, Result, Skeleton} from "antd";
+import { Button, Card, Divider, Result, Skeleton } from "antd";
 import { observer } from "mobx-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import { FileAttachment, LinksAttachment } from "@/widgets/Lesson";
 import ExamCourse from "@/entities/exams/ui/ExamCourse";
 import { isExamCoursePage } from "../../selectors";
 import { CourseComponentType } from "@/shared/api/component/model";
+import dayjs from "dayjs";
 
 export const CourseSectionCard = observer(() => {
     const { courseStore, commentsStore } = useMobxStores();
@@ -30,7 +31,7 @@ export const CourseSectionCard = observer(() => {
     };
 
     const startExam = () => {
-      courseStore.startExam(Number(courseId))
+        courseStore.startExam(Number(courseId))
     }
 
     useEffect(() => {
@@ -55,15 +56,30 @@ export const CourseSectionCard = observer(() => {
                 loading={courseStore.loadingSection}
                 variant="borderless"
                 title={
-                    <div className="space-y-2 my-4">
-                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                            {courseStore.loadingSection ? (
-                                <Skeleton.Input />
-                            ) : (
-                                courseStore.sectionCourse?.name || `Экзамен - ${courseStore.examCourse?.title || ""}`
-                            )}
-                        </h2>
-                        <p className="text-sm text-gray-500">{courseStore.sectionCourse?.small_description}</p>
+                    <div className="flex items-center justify-between gap-2 flex-wrap space-y-2 my-4">
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                                {courseStore.loadingSection ? (
+                                    <Skeleton.Input />
+                                ) : (
+                                    courseStore.sectionCourse?.name || `Экзамен - ${courseStore.examCourse?.title || ""}`
+                                )}
+                            </h2>
+                            <p className="text-sm text-gray-500">{courseStore.sectionCourse?.small_description}</p>
+                        </div>
+                        {courseStore.examCourse &&
+                            <div>
+                                <p className="dark:text-gray-400 text-sm flex gap-2 justify-between">
+                                    <span className="text-gray-500">Начало экзамена:</span>
+                                    <span className="font-medium">{dayjs(courseStore.examCourse?.startExamAt).format("DD.MM.YYYY HH:mm")}</span>
+                                </p>
+                                <p className="dark:text-gray-400 text-sm flex gap-2 justify-between">
+                                    <span className="text-gray-500">Конец экзамена:</span>
+                                    <span className="font-medium">{dayjs(courseStore.examCourse?.endExamAt).format("DD.MM.YYYY HH:mm")}</span>
+                                </p>
+                            </div>
+
+                        }
                     </div>
                 }
                 className="dark:bg-[#1a1a1a] shadow-lg"

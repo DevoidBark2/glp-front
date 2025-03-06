@@ -10,15 +10,18 @@ class ReviewStore {
 
     courseReviews: Review[] = []
 
+    setCourseReviews = action((reviews: Review[]) => {
+        this.courseReviews = reviews.map(reviewsMapper)
+    })
+
     getCourseReviews = action(async (courseId: number) => {
         const data = await getCourseReviews(courseId)
-
-        this.courseReviews = data.map(reviewsMapper)
+        this.setCourseReviews(data)
     })
 
     deleteReview = action(async (id: number) => {
         const data = await deleteCourseReview(id)
-        this.courseReviews = this.courseReviews.filter(it => it.id !== id)
+        this.setCourseReviews(this.courseReviews.filter(it => it.id !== id))
 
         return data;
     })

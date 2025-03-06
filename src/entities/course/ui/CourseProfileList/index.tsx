@@ -4,18 +4,18 @@ import { CourseProfileItem } from "../CourseProfileItem";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {useTheme} from "next-themes";
+import { useTheme } from "next-themes";
 
 export const CourseProfileList = observer(() => {
     const { userProfileStore } = useMobxStores();
     const router = useRouter();
-    const {resolvedTheme} = useTheme()
+    const { resolvedTheme } = useTheme()
     return (
         <>
             {userProfileStore.userProfileCourses.length > 0 ? (
                 <>
                     <h1 className="text-2xl dark:text-white">Ваши курсы</h1>
-                    <Divider style={{borderColor: resolvedTheme === "dark" ? "white" : "dark"}}/>
+                    <Divider style={{ borderColor: resolvedTheme === "dark" ? "gray" : undefined }} />
                     <div className="grid grid-cols-1 gap-4 mt-5">
                         {userProfileStore.userProfileCourses.map((course) => (
                             <CourseProfileItem key={course.id} course={course} />

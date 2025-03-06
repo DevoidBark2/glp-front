@@ -16,7 +16,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({ handleChangePa
 
     return <div>
         <h3 className="text-lg font-semibold dark:text-white">Смена пароля</h3>
-        <Divider style={{ borderColor: resolvedTheme === "dark" ? "white" : "gray" }} />
+        <Divider style={{ borderColor: resolvedTheme === "dark" ? "gray" : undefined }} />
         <div className="space-y-4 w-1/2 max-sm:w-full">
             <Form
                 form={form}
