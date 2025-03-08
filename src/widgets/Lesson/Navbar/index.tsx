@@ -209,11 +209,9 @@ export const NavbarLesson = observer(() => {
 
                             {
                                 key: "-1",
-                                label: <span className="text-gray-400">Экзамен</span>,
+                                label: <span>Экзамен</span>,
                                 icon: (
-                                    <Tooltip title="Пока нельзя перейти к экзамену">
-                                        <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
-                                    </Tooltip>
+                                    <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
                                 ),
                             },
                         ]}

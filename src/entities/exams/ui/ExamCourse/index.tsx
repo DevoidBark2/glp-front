@@ -50,11 +50,11 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     };
 
     return (
-        <div className="flex">
+        <div className="flex flex-col md:flex-row">
             {/* Sidebar */}
-            <div className="w-64 p-5 border-r border-gray-300 overflow-y-auto">
+            <div className="w-full md:w-64 p-5 md:border-b lg:border-r border-gray-300 overflow-y-auto">
                 <h3 className="mb-5 text-center text-lg font-semibold dark:text-white">Вопросы</h3>
-                <div className="grid grid-cols-4 gap-2 justify-center">
+                <div className="flex items-center flex-wrap gap-3 p-4">
                     {exam?.components.map((_, index) => (
                         <div
                             key={index}
