@@ -7,9 +7,10 @@ import { useState } from "react";
 interface QuizComponentProps {
     task: ComponentTask;
     onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<any>;
+    examTask?: boolean
 }
 
-export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentProps) => {
+export const QuizComponent = observer(({ task, onCheckResult, examTask }: QuizComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(questions.length).fill(null));
@@ -19,7 +20,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
     const { resolvedTheme } = useTheme();
 
     const currentQuestion = questions[currentQuestionIndex];
-
+    console.log(userAnswers)
     const handleOptionChange = (index: number) => {
         const newAnswers = [...selectedAnswers];
         newAnswers[currentQuestionIndex] = index;
@@ -66,7 +67,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
             <div className="question mb-4">
                 <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
                     <h4 className="text-lg font-semibold dark:text-white">
-                        Вопрос {currentQuestionIndex + 1}: {currentQuestion.question}
+                        Вопрос {currentQuestionIndex + 1}: {currentQuestion?.question}
                     </h4>
 
                     {userAnswer && !isRetrying && (
@@ -77,7 +78,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                 </div>
 
                 <div className="space-y-3">
-                    {currentQuestion.options.map((option, index) => {
+                    {currentQuestion?.options.map((option, index) => {
                         const userSelectedIndex = userAnswers?.answer[currentQuestionIndex]?.userAnswer;
                         const isCorrectAnswer = userAnswers?.answer[currentQuestionIndex]?.isCorrect;
 
@@ -138,7 +139,7 @@ export const QuizComponent = observer(({ task, onCheckResult }: QuizComponentPro
                     </Button>
                 ) : (
                     <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
-                        Завершить
+                        {examTask ? "Сохранить ответ" : "Завершить"}
                     </Button>
                 )}
             </div>
