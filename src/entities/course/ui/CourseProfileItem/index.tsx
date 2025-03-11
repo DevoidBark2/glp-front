@@ -1,10 +1,17 @@
 import { Course, CourseReview } from "@/shared/api/course/model";
-import { Button, Form, Input, message, Modal, Popconfirm, Progress, Rate, Tooltip } from "antd";
+import {Button, Dropdown, Form, Input, Menu, message, Modal, Popconfirm, Progress, Rate, Tooltip} from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import Image from "next/image";
-import { BookOutlined, PlayCircleOutlined, LogoutOutlined, MessageOutlined } from "@ant-design/icons";
+import {
+    BookOutlined,
+    PlayCircleOutlined,
+    LogoutOutlined,
+    MessageOutlined,
+    DownloadOutlined,
+    EllipsisOutlined
+} from "@ant-design/icons";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { useMobxStores } from "@/shared/store/RootStore";
 import nextConfig from "next.config.mjs";
@@ -45,6 +52,34 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
             console.log("Ошибка валидации:", error);
         }
     };
+
+    const handleDownloadCertificate = () => {
+        // if (course.certificateUrl) {
+        //     const link = document.createElement("a");
+        //     link.href = ""; // Ссылка на сертификат
+        //     link.download = `certificate-${course.name}.pdf`; // Имя файла для сертификата
+        //     link.click();
+        // } else {
+        //     message.error("Сертификат недоступен.");
+        // }
+    };
+
+    const menu = (
+        <Menu>
+            <Menu.Item key="1" icon={<PlayCircleOutlined />} onClick={() => router.push(`/platform/lessons/${course.id}`)}>
+                Перейти к курсу
+            </Menu.Item>
+            <Menu.Item key="2" icon={<LogoutOutlined />} onClick={() => userProfileStore.confirmLeaveCourse(course.id)}>
+                Покинуть курс
+            </Menu.Item>
+            <Menu.Item key="3" icon={<MessageOutlined />} onClick={() => setIsModalOpen(true)}>
+                Оставить отзыв
+            </Menu.Item>
+            <Menu.Item key="4" icon={<DownloadOutlined />} onClick={handleDownloadCertificate}>
+                Скачать сертификат
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <>
@@ -103,34 +138,14 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Tooltip title={`Перейти к курсу "${course.name}"`}>
-                            <Button
-                                type="default"
-                                shape="circle"
-                                onClick={() => router.push(`/platform/lessons/${course.id}`)}
-                                icon={<PlayCircleOutlined />}
-                            />
-                        </Tooltip>
-
-                        <Tooltip title="Покинуть курс">
-                            <Popconfirm
-                                title="Вы уверены, что хотите покинь курс, весь прогресс по курсу удалится?"
-                                onConfirm={() => userProfileStore.confirmLeaveCourse(course.id)}
-                                placement="top"
-                                okText="Да"
-                                cancelText="Нет"
-                            >
-                                <Button shape="circle" danger icon={<LogoutOutlined />} />
-                            </Popconfirm>
-                        </Tooltip>
-
-                        <Tooltip title="Оставить отзыв">
-                            <Button
-                                type="default"
-                                shape="circle"
-                                onClick={() => setIsModalOpen(true)}
-                                icon={<MessageOutlined />}
-                            />
+                        <Tooltip title="Дополнительные действия">
+                            <Dropdown overlay={menu} trigger={['click']}>
+                                <Button
+                                    type="default"
+                                    shape="default"
+                                    icon={<EllipsisOutlined />}
+                                />
+                            </Dropdown>
                         </Tooltip>
                     </div>
                 </div>
