@@ -10,9 +10,10 @@ import { useTheme } from "next-themes";
 interface QuizMultiComponentProps {
     task: ComponentTask;
     onCheckResult?: (quiz: ComponentTask, answers: string) => Promise<void>;
+    isExamTask?: boolean;
 }
 
-export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult }) => {
+export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult,isExamTask }) => {
     const mathFieldRef = useRef<MathfieldElement | null>(null);
     const [isEditable, setIsEditable] = useState(!task.userAnswer);
     const [currentAnswer, setCurrentAnswer] = useState(task.userAnswer || null);
@@ -93,7 +94,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
             ></math-field>
 
             <Button className="mt-4" onClick={handleCheckResult} disabled={!isEditable}>
-                Завершить
+                {isExamTask ? "Сохранить ответ" : "Завершить"}
             </Button>
 
             {currentAnswer && (

@@ -97,85 +97,95 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     });
 
     return (
-       <>
-           <Modal
-               open={openPreviewModal}
-               centered
-               onCancel={() => setOpenPreviewModal(false)}
-               onOk={handleConfirmSubmit}
-               okText="Да, отправить"
-               cancelText="Отмена"
-               title="Подтверждение отправки"
-           >
-               <Typography.Paragraph>Проверьте свои ответы перед отправкой:</Typography.Paragraph>
-               <Table columns={columns} dataSource={data} pagination={false} />
-           </Modal>
+        <>
+            <Modal
+                open={openPreviewModal}
+                centered
+                onCancel={() => setOpenPreviewModal(false)}
+                onOk={handleConfirmSubmit}
+                okText="Да, отправить"
+                cancelText="Отмена"
+                title="Подтверждение отправки"
+            >
+                <Typography.Paragraph>Проверьте свои ответы перед отправкой:</Typography.Paragraph>
+                <Table columns={columns} dataSource={data} pagination={false}/>
+            </Modal>
 
-           <div className="flex flex-col md:flex-row">
-               {/* Sidebar */}
-               <div className="w-full flex flex-col justify-between md:w-64 p-5 border-r border-gray-300 overflow-y-auto">
-                   <div>
-                       <h3 className="mb-5 text-center text-lg font-semibold dark:text-white">Вопросы</h3>
-                       <div className="flex items-center flex-wrap gap-3 p-4">
-                           {exam?.components.map((component, index) => (
-                               <div
-                                   key={index}
-                                   onClick={() => handleSelectQuestion(index)}
-                                   className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 relative ${
-                                       currentQuestionIndex === index
-                                           ? "bg-blue-500 text-white border-blue-700"
-                                           : "bg-white text-black border-gray-300 cursor-pointer hover:bg-gray-200"
-                                   }`}
-                               >
-                                   {index + 1}
+            <div className="flex flex-col lg:flex-row xl:flex-row 2xl:flex-row">
+                <div
+                    className="flex flex-col justify-between p-5 border-b border-gray-300 overflow-y-auto w-full lg:w-64 xl:w-64 2xl:w-64 md:border-b-0 md:border-r">
+                    <div>
+                        <h3 className="mb-5 text-center text-lg font-semibold dark:text-white">Вопросы</h3>
+                        <div className="flex items-center flex-wrap gap-3 p-4">
+                            {exam?.components.map((component, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => handleSelectQuestion(index)}
+                                    className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 relative ${
+                                        currentQuestionIndex === index
+                                            ? "bg-blue-500 text-white border-blue-700"
+                                            : "bg-white text-black border-gray-300 cursor-pointer hover:bg-gray-200"
+                                    }`}
+                                >
+                                    {index + 1}
 
-                                   {component.componentTask.userAnswer &&  <div
-                                       className={`absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500`}
-                                   ><CheckCircleOutlined className="text-blue-600 text-xl" />
-                                   </div>}
+                                    {component.componentTask.userAnswer && (
+                                        <div
+                                            className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500"
+                                        >
+                                            <CheckCircleOutlined className="text-blue-600 text-xl"/>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
 
-                               </div>
-                           ))}
-                       </div>
-                   </div>
+                    <div className="flex justify-end">
+                        <Button color="default" variant="solid" onClick={() => setOpenPreviewModal(true)}>
+                            Отправить на проверку
+                        </Button>
+                    </div>
+                </div>
 
-                   <Button color="default" variant="solid" onClick={() => setOpenPreviewModal(true)}>
-                       Отправить на проверку
-                   </Button>
-               </div>
+                <div className="flex-1 p-5 relative">
+                    <div className="mb-5">
+                    {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
+                            <QuizComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
+                                           isExamTask/>
+                        )}
+                        {currentComponent && currentComponent.componentTask.type === CourseComponentType.MultiPlayChoice && (
+                            <QuizMultiComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
+                                                isExamTask/>
+                        )}
+                        {currentComponent && currentComponent.componentTask.type === CourseComponentType.SimpleTask && (
+                            <SimpleTask task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
+                                        isExamTask/>
+                        )}
+                    </div>
 
-               <div className="flex-1 p-5 relative">
-                   <div className="mb-5">
-                       {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
-                           <QuizComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect} examTask/>
-                       )}
-                       {currentComponent && currentComponent.componentTask.type === CourseComponentType.MultiPlayChoice && (
-                           <QuizMultiComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect} />
-                       )}
-                       {currentComponent && currentComponent.componentTask.type === CourseComponentType.SimpleTask && (
-                           <SimpleTask task={currentComponent.componentTask} onCheckResult={handleAnswerSelect} />
-                       )}
-                   </div>
+                    <div className="flex justify-between">
+                        <Button
+                            onClick={handlePreviousQuestion}
+                            color="default"
+                            variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                            disabled={currentQuestionIndex === 0}
+                        >
+                            Назад
+                        </Button>
+                        <Button
+                            onClick={handleNextQuestion}
+                            color="default"
+                            variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                            disabled={currentQuestionIndex === (exam?.components.length || 1) - 1}
+                        >
+                            Вперед
+                        </Button>
+                    </div>
+                </div>
+            </div>
 
-                   <div className="flex justify-between">
-                       <Button
-                           onClick={handlePreviousQuestion}
-                           color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
-                           disabled={currentQuestionIndex === 0}
-                       >
-                           Назад
-                       </Button>
-                       <Button
-                           onClick={handleNextQuestion}
-                           color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}
-                           disabled={currentQuestionIndex === (exam?.components.length || 1) - 1}
-                       >
-                           Вперед
-                       </Button>
-                   </div>
-               </div>
-           </div>
-       </>
+        </>
     );
 });
 

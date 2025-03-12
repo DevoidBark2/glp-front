@@ -7,9 +7,10 @@ import { useState, useEffect } from "react";
 interface QuizMultiComponentProps {
     task: ComponentTask;
     onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<any>;
+    isExamTask?: boolean;
 }
 
-export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiComponentProps) => {
+export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: QuizMultiComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
     const [isRetrying, setIsRetrying] = useState(false);
@@ -109,7 +110,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult }: QuizMultiCo
                     disabled={!isRetrying && !!userAnswer}
                     className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
                 >
-                    Завершить
+                    {isExamTask ? "Сохранить ответ" : "Завершить"}
                 </Button>
             </div>
         </div>

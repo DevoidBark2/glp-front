@@ -7,10 +7,10 @@ import { useState } from "react";
 interface QuizComponentProps {
     task: ComponentTask;
     onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<any>;
-    examTask?: boolean
+    isExamTask?: boolean
 }
 
-export const QuizComponent = observer(({ task, onCheckResult, examTask }: QuizComponentProps) => {
+export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: QuizComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(questions.length).fill(null));
@@ -96,7 +96,7 @@ export const QuizComponent = observer(({ task, onCheckResult, examTask }: QuizCo
                                     : "bg-gray-50 border-gray-300";
 
                         const activeStyle = isSelected
-                            ? examTask
+                            ? isExamTask
                                 ? "bg-blue-100 border-blue-500"
                                 : "bg-blue-100 border-blue-500"
                             : "bg-gray-50 border-gray-300";
@@ -145,7 +145,7 @@ export const QuizComponent = observer(({ task, onCheckResult, examTask }: QuizCo
                     </Button>
                 ) : (
                     <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
-                        {examTask ? "Сохранить ответ" : "Завершить"}
+                        {isExamTask ? "Сохранить ответ" : "Завершить"}
                     </Button>
                 )}
             </div>
