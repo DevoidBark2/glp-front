@@ -2,13 +2,10 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
-import {Breadcrumb, Button, Table, TableColumnsType, Tag} from "antd";
+import {Table, TableColumnsType, Tag} from "antd";
 import { UserLevel } from "@/shared/api/users-level/model";
 import Link from "next/link";
 import { UserLevelEnum } from "@/entities/user-profile";
-import {ArrowLeftOutlined} from "@ant-design/icons";
-import {useRouter} from "next/navigation";
-import {useTheme} from "next-themes";
 
 const getLevelColor = (level: UserLevelEnum) => {
     const colors = {
@@ -28,8 +25,6 @@ const getLevelColor = (level: UserLevelEnum) => {
 
 const LeaderboardPage = observer(() => {
     const { userLevelStore } = useMobxStores();
-    const router = useRouter()
-    const {resolvedTheme} = useTheme()
 
     const columns: TableColumnsType<UserLevel> = [
         {
@@ -85,17 +80,6 @@ const LeaderboardPage = observer(() => {
 
     return (
         <div className="container mx-auto px-4">
-            <Breadcrumb
-                items={[
-                    {
-                        className: "dark:text-white",
-                        title: <Button icon={<ArrowLeftOutlined />} color="default" type="link" variant="link"
-                                       onClick={() => router.push("/platform")}
-                                       style={{ color: resolvedTheme === "dark" ? "white" : "black" }}
-                        >Главная</Button>
-                    },
-                ]}
-            />
             <h2 className="text-2xl font-bold my-6 text-gray-800">🏆 Лидерборд</h2>
             <Table
                 rowKey={(record) => record.id}

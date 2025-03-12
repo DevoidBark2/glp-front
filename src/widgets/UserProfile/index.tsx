@@ -1,5 +1,5 @@
 import { Avatar, Divider, message, notification, Spin, Upload } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import {UploadOutlined, UserOutlined} from "@ant-design/icons";
 import { observer } from "mobx-react";
 import "react-phone-input-2/lib/bootstrap.css";
 import nextConfig from "../../../next.config.mjs";
@@ -62,6 +62,7 @@ export const UserProfileBlock = observer(() => {
                                     className="border-4 border-neon-blue"
                                     style={{ opacity: userProfileStore.uploadingProfileImage ? 0.5 : 1 }}
                                 />
+                                <UploadOutlined className="absolute bottom-1 right-1 bg-white p-2 rounded"/>
                             </div>
                         </div>
                     </Upload>
