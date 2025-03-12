@@ -79,6 +79,7 @@ export const QuizComponent = observer(({ task, onCheckResult, examTask }: QuizCo
 
                 <div className="space-y-3">
                     {currentQuestion?.options.map((option, index) => {
+
                         const userSelectedIndex = userAnswers?.answer[currentQuestionIndex]?.userAnswer;
                         const isCorrectAnswer = userAnswers?.answer[currentQuestionIndex]?.isCorrect;
 
@@ -94,7 +95,12 @@ export const QuizComponent = observer(({ task, onCheckResult, examTask }: QuizCo
                                     ? "bg-red-100 border-red-500"
                                     : "bg-gray-50 border-gray-300";
 
-                        const activeStyle = isSelected ? "bg-blue-100 border-blue-500" : "bg-gray-50 border-gray-300";
+                        const activeStyle = isSelected
+                            ? examTask
+                                ? "bg-blue-100 border-blue-500"
+                                : "bg-blue-100 border-blue-500"
+                            : "bg-gray-50 border-gray-300";
+
                         const finalStyle = userAnswers && !isRetrying ? completedStyle : activeStyle;
 
                         return (
