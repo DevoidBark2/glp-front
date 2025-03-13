@@ -16,8 +16,8 @@ const ProfilePage = () => {
         userProfileStore.getUserProfile().finally(() => {
             userProfileStore.setLoading(false)
         });
-        achievementsStore.getAllAchievement()
-        customizeStore.getAllCategories()
+        // achievementsStore.getAllAchievement()
+        // customizeStore.getAllCategories()
     }, []);
 
     return (
@@ -35,6 +35,7 @@ const ProfilePage = () => {
                         },
                         {
                             key: '2',
+                            disabled: true,
                             label: <label className="dark:text-white">Кастомизация</label>,
                             children: <CustomizeProfile />,
                         },
@@ -50,6 +51,7 @@ const ProfilePage = () => {
                         },
                         {
                             key: '5',
+                            disabled: true,
                             label: <label className="dark:text-white">Достижения</label>,
                             children: <UserAchievements />,
                         }

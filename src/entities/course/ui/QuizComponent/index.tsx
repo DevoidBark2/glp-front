@@ -60,13 +60,13 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
     return (
         <div className="quiz-container mb-6 transition-transform p-4">
             <div className="text-center mb-4">
-                <h3 className="text-2xl font-bold dark:text-white">{title}</h3>
-                <p className="text-gray-600 dark:text-white">{description}</p>
+                <h3 className="text-2xl font-bold dark:text-white break-all">{title}</h3>
+                <p className="text-gray-600 dark:text-white break-all">{description}</p>
             </div>
 
             <div className="question mb-4">
                 <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
-                    <h4 className="text-lg font-semibold dark:text-white">
+                    <h4 className="text-lg font-semibold dark:text-white break-all">
                         Вопрос {currentQuestionIndex + 1}: {currentQuestion?.question}
                     </h4>
 
@@ -106,7 +106,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
                         return (
                             <div
                                 key={index}
-                                className={`border rounded-lg p-4 cursor-pointer transition duration-200 ${finalStyle}`}
+                                className={`border rounded-lg p-4 cursor-pointer transition duration-200 break-all ${finalStyle}`}
                                 onClick={() => (!userAnswers || isRetrying) && handleOptionChange(index)}
                             >
                                 <label className="flex items-center">

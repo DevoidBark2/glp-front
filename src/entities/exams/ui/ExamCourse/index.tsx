@@ -113,7 +113,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
 
             <div className="flex flex-col lg:flex-row xl:flex-row 2xl:flex-row">
                 <div
-                    className="flex flex-col justify-between p-5 border-b border-gray-300 overflow-y-auto w-full lg:w-64 xl:w-64 2xl:w-64 md:border-b-0 md:border-r">
+                    className="flex flex-col justify-between p-5 border-b border-gray-300 overflow-y-auto w-full lg:w-64 xl:w-64 2xl:w-64 lg:border-r lg:border-b-0 xl:border-r xl:border-b-0 2xl:border-r 2xl:border-b-0">
                     <div>
                         <h3 className="mb-5 text-center text-lg font-semibold dark:text-white">Вопросы</h3>
                         <div className="flex items-center flex-wrap gap-3 p-4">

@@ -58,7 +58,7 @@ export const CourseSectionCard = observer(() => {
                 title={
                     <div className="flex items-center justify-between gap-2 flex-wrap space-y-2 my-4">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="text-2xl font-bold text-gray-800 dark:text-white break-all">
                                 {courseStore.loadingSection ? (
                                     <Skeleton.Input />
                                 ) : (

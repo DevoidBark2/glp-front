@@ -1,6 +1,6 @@
 import React from "react";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { Spin } from "antd";
+import {Button, Spin} from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 
@@ -19,10 +19,11 @@ export const HeaderLesson = () => {
                     </h1>
                 )}
                 <div className="flex gap-4">
-                    <HomeOutlined
+                    <Button onClick={() => router.push('/platform')} icon={<HomeOutlined
                         className="text-gray-600 text-xl cursor-pointer hover:text-gray-800 transition-colors dark:text-white"
-                        onClick={() => router.push('/platform')}
-                    />
+                    />}>
+                        На главную
+                    </Button>
                 </div>
             </div>
         </header>

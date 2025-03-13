@@ -32,10 +32,10 @@ export const NavbarLesson = observer(() => {
 
     const [selectedSection, setSelectedSection] = useState<number | null>(null);
     const [isHovered, setIsHovered] = useState(false);
-    const isTablet = useMediaQuery({ query: "(max-width: 768px)" });
-    const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+    const [isClient, setIsClient] = useState(false)
+    const [isTablet, setIsTablet] = useState(false);
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
     const { resolvedTheme } = useTheme()
-    const [isPinned, setIsPinned] = useState<boolean>();
 
     const handleMenuClick = (key: number) => {
         courseStore.updateSectionStep(Number(selectedSection), Number(courseId)).then(() => {
@@ -85,20 +85,30 @@ export const NavbarLesson = observer(() => {
         return <Tooltip title={tooltipTitle}>{icon}</Tooltip>;
     };
 
-    const handlePinToggle = () => {
-        const newState = !isPinned;
-        setIsPinned(newState);
-        localStorage.setItem("sider_pinned", String(newState));
-    };
+    useEffect(() => {
+        const handleResize = () => {
+            const isTabletScreen = window.matchMedia("(max-width: 768px)").matches;
+            setIsTablet(isTabletScreen);
+            setIsSmallScreen(isTabletScreen);
+
+            if (isTabletScreen) {
+                setIsHovered(false);
+            }
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
+        setIsClient(true);
+
         const step = Number(searchParams.get("step"));
         const initialSectionId = step || courseStore.courseMenuItems?.sections?.[0]?.children?.[0]?.id;
-        const isSnipped = localStorage.getItem("sider_pinned") === "true"
-
-        if (isSnipped) {
-            setIsPinned(isSnipped)
-        }
 
         if (initialSectionId) {
             setSelectedSection(initialSectionId);
@@ -122,108 +132,95 @@ export const NavbarLesson = observer(() => {
                 </div>
             )}
 
-            <Sider
-                width={240}
-                style={{
-                    position: isTablet ? "fixed" : "static",
-                    left: isSmallScreen
-                        ? isHovered
-                            ? "0"
-                            : "-240px"
-                        : isPinned || isHovered
-                            ? "0"
-                            : "-240px",
-                    height: "calc(100vh - 56px)",
-                    zIndex: 100,
-                    background: resolvedTheme === "dark" ? "" : "white",
-                    transition: "left 0.3s ease-in-out",
-                    boxShadow: "4px 0 10px rgba(0, 0, 0, 0.2)"
-                }}
-                onMouseLeave={() => setIsHovered(false)}
-            >
-                <div className="flex justify-end px-3">
-                    {!isSmallScreen && (
-                        <Button
-                            type="text"
-                            icon={
-                                isPinned ? (
-                                    <PushpinOutlined style={{ fontSize: 20, color: resolvedTheme === "dark" ? "white" : "black" }} />
-                                ) : (
-                                    <PushpinTwoTone style={{ fontSize: 20, color: resolvedTheme === "dark" ? "white" : "black" }} />
-                                )
-                            }
-                            onClick={handlePinToggle}
-                        />
-                    )}
-                </div>
-
-                <div className="flex-1 mx-4 mb-4 dark:bg-[#1a1a1a]">
-                    <p className="dark:text-white text-xl text-center mt-2">Прогресс по курсу</p>
-                    {!courseStore.courseMenuLoading && (
-                        <Progress
-                            percent={courseStore.courseMenuItems?.progress}
-                            strokeColor="green"
-                            trailColor="#CCCCCC"
-                            showInfo={true}
-                            format={(percent) => (
-                                <span className="dark:text-white font-bold">{percent}%</span>
-                            )}
-                        />
-                    )}
-                </div>
-
-                {courseStore.courseMenuItems ? (
-                    <Menu
-                        mode="inline"
-                        openKeys={courseStore.courseMenuItems?.sections?.map((section) => section.id?.toString() || "") || []}
-                        expandIcon={() => null}
-                        selectedKeys={[selectedSection?.toString() || ""]}
-                        onClick={(info) => handleMenuClick(Number(info.key))}
-                        className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
-                        style={{
-                            paddingBottom: 50,
-                            background: resolvedTheme === "dark" ? "#1a1a1a" : "white",
-                        }}
-                        items={[
-                            { type: "divider" },
-                            ...(courseStore.courseMenuItems?.sections?.map((section) => ({
-                                key: section.id?.toString(),
-                                label: <Tooltip title={section.name}>
-                                    <span className="font-bold truncate dark:text-white">{section.name}</span>
-                                </Tooltip>,
-                                children:
-                                    section.children?.map((child) => ({
-                                        key: child.id?.toString(),
-                                        icon: renderIcon(child),
-                                        label: (
-                                            <div className="flex items-center justify-between px-4 dark:text-white py-2 border-l-2 border-green-500">
-                                                <Tooltip title={child.name} placement="right">
-                                                    <p className="truncate">{child.name}</p>
-                                                </Tooltip>
-                                            </div>
-                                        ),
-                                    })) || [],
-                            })) || []),
-
-                            { type: "divider" },
-
-                            {
-                                key: "-1",
-                                label: <span>Экзамен</span>,
-                                icon: (
-                                    <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
-                                ),
-                            },
-                        ]}
-                    />
-                ) : (
-                    <div className="h-[calc(100vh-96px)] custom-scrollbar">
-                        {Array.from({ length: 8 }).map((_, index) => (
-                            <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 5, marginTop: 10, marginRight: 5 }} />
-                        ))}
+            {
+                isClient && <Sider
+                    width={240}
+                    style={{
+                        position: isTablet ? "fixed" : "static",
+                        left: isSmallScreen
+                            ? isHovered
+                                ? "0"
+                                : "-240px"
+                            :  isHovered
+                                ? "0"
+                                : "-240px",
+                        height: isTablet ? "100%" : "calc(100vh - 56px)",
+                        top: isTablet ? "0" : undefined,
+                        zIndex: 100,
+                        background: resolvedTheme === "dark" ? "" : "white",
+                        transition: "left 0.3s ease-in-out",
+                        boxShadow: "4px 0 10px rgba(0, 0, 0, 0.2)"
+                    }}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    <div className="flex-1 mx-4 mb-4 dark:bg-[#1a1a1a]">
+                        <p className="dark:text-white text-xl text-center mt-2">Прогресс по курсу</p>
+                        {!courseStore.courseMenuLoading && (
+                            <Progress
+                                percent={courseStore.courseMenuItems?.progress}
+                                strokeColor="green"
+                                trailColor="#CCCCCC"
+                                showInfo={true}
+                                format={(percent) => (
+                                    <span className="dark:text-white font-bold">{percent}%</span>
+                                )}
+                            />
+                        )}
                     </div>
-                )}
-            </Sider>
+
+                    {courseStore.courseMenuItems ? (
+                        <Menu
+                            mode="inline"
+                            openKeys={courseStore.courseMenuItems?.sections?.map((section) => section.id?.toString() || "") || []}
+                            expandIcon={() => null}
+                            selectedKeys={[selectedSection?.toString() || ""]}
+                            onClick={(info) => handleMenuClick(Number(info.key))}
+                            className="h-[calc(100vh-96px)] overflow-y-auto custom-scrollbar"
+                            style={{
+                                paddingBottom: 50,
+                                background: resolvedTheme === "dark" ? "#1a1a1a" : "white",
+                            }}
+                            items={[
+                                { type: "divider" },
+                                ...(courseStore.courseMenuItems?.sections?.map((section) => ({
+                                    key: section.id?.toString(),
+                                    label: <Tooltip title={section.name}>
+                                        <span className="font-bold truncate dark:text-white">{section.name}</span>
+                                    </Tooltip>,
+                                    children:
+                                        section.children?.map((child) => ({
+                                            key: child.id?.toString(),
+                                            icon: renderIcon(child),
+                                            label: (
+                                                <div className="flex items-center justify-between px-4 dark:text-white py-2 border-l-2 border-green-500">
+                                                    <Tooltip title={child.name} placement="right">
+                                                        <p className="truncate">{child.name}</p>
+                                                    </Tooltip>
+                                                </div>
+                                            ),
+                                        })) || [],
+                                })) || []),
+
+                                { type: "divider" },
+
+                                {
+                                    key: "-1",
+                                    label: <span>Экзамен</span>,
+                                    icon: (
+                                        <ExclamationCircleOutlined style={{ color: "#1976d2", fontSize: 25, opacity: 0.5 }} />
+                                    ),
+                                },
+                            ]}
+                        />
+                    ) : (
+                        <div className="h-[calc(100vh-96px)] custom-scrollbar">
+                            {Array.from({ length: 8 }).map((_, index) => (
+                                <Skeleton.Input key={index} active block style={{ width: 230, marginLeft: 5, marginTop: 10, marginRight: 5 }} />
+                            ))}
+                        </div>
+                    )}
+                </Sider>
+            }
         </>
     );
 });

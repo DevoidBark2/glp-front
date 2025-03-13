@@ -52,7 +52,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
     const isCorrect = userAnswer?.answer[0]?.isCorrect;
 
     const getOptionClass = (optionIndex: number) => {
-        let optionClass = "block cursor-pointer mb-2 p-4 border rounded-lg transition-all ";
+        let optionClass = "block cursor-pointer mb-2 p-4 border rounded-lg break-all transition-all ";
 
         if (userAnswer && !isRetrying) {
             if (selectedAnswers.includes(optionIndex)) {
@@ -69,12 +69,12 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
 
     return (
         <div className="quiz-component">
-            {title && <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center dark:text-white">{title}</h2>}
-            {description && <p className="text-gray-600 mb-4 text-center dark:text-white">{description}</p>}
+            {title && <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center dark:text-white break-words">{title}</h2>}
+            {description && <p className="text-gray-600 mb-4 text-center dark:text-white break-words">{description}</p>}
 
             <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Вопрос: {questions[0].question}</h3>
+                    <h2 className="text-lg font-semibold text-gray-800 dark:text-white break-all">Вопрос: {questions[0].question}</h2>
 
                     {userAnswer && !isRetrying && (
                         <Button onClick={handleRetryQuiz} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
