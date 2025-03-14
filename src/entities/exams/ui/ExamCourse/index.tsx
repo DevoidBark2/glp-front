@@ -3,12 +3,12 @@ import { Exam } from "@/shared/api/exams/model";
 import React, { FC, useState } from "react";
 import { QuizComponent, QuizMultiComponent, SimpleTask } from "@/entities/course/ui";
 import { CourseComponentType } from "@/shared/api/component/model";
-import {Button, Modal, Table, Typography} from "antd";
+import {Button, Modal, Typography} from "antd";
 import { useTheme } from "next-themes";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { useParams, useSearchParams } from "next/navigation";
 import { ComponentTask } from "@/shared/api/course/model";
-import {CheckCircleOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {CheckCircleOutlined} from "@ant-design/icons";
 
 interface ExamCourseProps {
     exam?: Exam;
@@ -54,47 +54,6 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
         setOpenPreviewModal(false);
     };
 
-    const columns = [
-        {
-            title: "№",
-            dataIndex: "index",
-            key: "index",
-            render: (text: string) => <b>{text}</b>
-        },
-        {
-            title: "Статус",
-            dataIndex: "status",
-            key: "status",
-            render: (status: string) => (
-                <div className="flex items-center gap-2">
-                    {status === "Отвечен" ? (
-                        <CheckCircleOutlined className="text-green-500" />
-                    ) : (
-                        <InfoCircleOutlined className="text-gray-500" />
-                    )}
-                    {status}
-                </div>
-            )
-        },
-        {
-            title: "Ответ",
-            dataIndex: "answer",
-            key: "answer",
-        }
-    ];
-
-    const data = exam?.components.map(({ componentTask }, index) => {
-        const userAnswer = componentTask.userAnswer?.answer[0]?.userAnswer;
-
-        return {
-            key: index,
-            index: index + 1,
-            status: userAnswer ? "Отвечен" : "Не отвечен",
-            answer: Array.isArray(userAnswer)
-                ? userAnswer.join(', ')
-                : userAnswer ?? "—"
-        };
-    });
 
     return (
         <>
@@ -102,14 +61,29 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                 open={openPreviewModal}
                 centered
                 onCancel={() => setOpenPreviewModal(false)}
-                onOk={handleConfirmSubmit}
                 okText="Да, отправить"
                 cancelText="Отмена"
                 title="Подтверждение отправки"
+                footer={
+                    <div>
+                        <Button onClick={() => setOpenPreviewModal(false)}>Отмена</Button>
+                        <Button onClick={handleConfirmSubmit} className="ml-2" color="default" variant="solid">Да, отправить</Button>
+                    </div>
+                }
             >
-                <Typography.Paragraph>Проверьте свои ответы перед отправкой:</Typography.Paragraph>
-                <Table columns={columns} dataSource={data} pagination={false}/>
+                <Typography.Paragraph>
+                    Проверьте свои ответы перед отправкой. Убедитесь, что все заполнено правильно.
+                </Typography.Paragraph>
+
+                <Typography.Paragraph>
+                    Если вы наберете <b>более 75%</b> правильных ответов, вы получите сертификат.
+                </Typography.Paragraph>
+
+                <Typography.Paragraph>
+                    Обратите внимание, что после отправки результаты будут окончательными и не подлежат изменению. Убедитесь, что все ответы верны.
+                </Typography.Paragraph>
             </Modal>
+
 
             <div className="flex flex-col lg:flex-row xl:flex-row 2xl:flex-row">
                 <div

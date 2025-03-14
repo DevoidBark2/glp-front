@@ -12,7 +12,9 @@ interface QuizMultiComponentProps {
 
 export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: QuizMultiComponentProps) => {
     const { title, description, questions, userAnswer } = task;
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(userAnswer
+        ? userAnswer.answer.map((ans) => ans.userAnswer)
+        : Array(questions.length).fill(null));
     const [isRetrying, setIsRetrying] = useState(false);
     const { resolvedTheme } = useTheme();
 
@@ -56,7 +58,11 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
 
         if (userAnswer && !isRetrying) {
             if (selectedAnswers.includes(optionIndex)) {
-                optionClass += isCorrect ? "bg-green-100 border-green-500" : "bg-red-100 border-red-500";
+                optionClass += isCorrect === true
+                    ? "bg-green-100 border-green-500"
+                    : isCorrect === false
+                        ? "bg-red-100 border-red-500"
+                        : "bg-blue-100 border-blue-500";
             } else {
                 optionClass += "bg-white border-gray-300";
             }

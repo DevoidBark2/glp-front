@@ -13,7 +13,11 @@ interface QuizComponentProps {
 export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: QuizComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(Array(questions.length).fill(null));
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(
+        userAnswer
+            ? userAnswer.answer.map((ans) => ans.userAnswer)
+            : Array(questions.length).fill(null)
+    );
     const [userAnswers, setUserAnswers] = useState<UserAnswer | null>(userAnswer || null);
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!task.userAnswer);
     const [isRetrying, setIsRetrying] = useState(false);
@@ -79,29 +83,32 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
 
                 <div className="space-y-3">
                     {currentQuestion?.options.map((option, index) => {
-
                         const userSelectedIndex = userAnswers?.answer[currentQuestionIndex]?.userAnswer;
                         const isCorrectAnswer = userAnswers?.answer[currentQuestionIndex]?.isCorrect;
 
                         const isSelected = selectedAnswers[currentQuestionIndex] === index;
                         const isUserAnswer = userSelectedIndex === index;
-                        const isCorrect = isUserAnswer && isCorrectAnswer;
-                        const isWrong = isUserAnswer && !isCorrectAnswer;
+                        const isCorrect = isCorrectAnswer !== undefined && isUserAnswer && isCorrectAnswer;
+                        const isWrong = isCorrectAnswer !== undefined && isUserAnswer && !isCorrectAnswer;
 
                         const completedStyle =
-                            isCorrect
-                                ? "bg-green-100 border-green-500"
-                                : isWrong
-                                    ? "bg-red-100 border-red-500"
-                                    : "bg-gray-50 border-gray-300";
+                            isCorrectAnswer === undefined && isSelected
+                                ? "bg-blue-100 border-blue-500"
+                                : isCorrect
+                                    ? "bg-green-100 border-green-500"
+                                    : isWrong
+                                        ? "bg-red-100 border-red-500"
+                                        : "bg-gray-50 border-gray-300";
 
                         const activeStyle = isSelected
-                            ? isExamTask
-                                ? "bg-blue-100 border-blue-500"
-                                : "bg-blue-100 border-blue-500"
+                            ? "bg-blue-100 border-blue-500"
                             : "bg-gray-50 border-gray-300";
 
-                        const finalStyle = userAnswers && !isRetrying ? completedStyle : activeStyle;
+                        const finalStyle = userAnswers && !isRetrying
+                            ? isCorrectAnswer !== undefined
+                                ? completedStyle
+                                : activeStyle
+                            : activeStyle;
 
                         return (
                             <div
@@ -109,7 +116,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
                                 className={`border rounded-lg p-4 cursor-pointer transition duration-200 break-all ${finalStyle}`}
                                 onClick={() => (!userAnswers || isRetrying) && handleOptionChange(index)}
                             >
-                                <label className="flex items-center">
+                                <label className="flex items-center cursor-pointer">
                                     <input
                                         type="radio"
                                         name={`question-${currentQuestionIndex}`}
