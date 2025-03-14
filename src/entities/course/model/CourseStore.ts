@@ -239,6 +239,11 @@ class CourseStore {
         }
     })
 
+    submitExamAnswerUser = action(async () => {
+        const a = this.examCourse;
+        debugger
+    })
+
     handleCheckTask = action(async (task: TaskAnswerUserDto, courseId: number) => {
         const data = await handleCheckUserTask(task, courseId);
 

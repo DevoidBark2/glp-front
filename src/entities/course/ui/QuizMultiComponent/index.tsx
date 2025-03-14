@@ -74,7 +74,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
     };
 
     return (
-        <div className="quiz-component">
+        <div className="quiz-component p-4">
             {title && <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center dark:text-white break-words">{title}</h2>}
             {description && <p className="text-gray-600 mb-4 text-center dark:text-white break-words">{description}</p>}
 

@@ -50,7 +50,8 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
         }, Number(courseId));
     };
 
-    const handleConfirmSubmit = () => {
+    const handleConfirmSubmit = async () => {
+        await courseStore.submitExamAnswerUser();
         setOpenPreviewModal(false);
     };
 
@@ -122,7 +123,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                     </div>
                 </div>
 
-                <div className="flex-1 p-5 relative">
+                <div className="flex-1 relative">
                     <div className="mb-5">
                     {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
                             <QuizComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
@@ -138,7 +139,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                         )}
                     </div>
 
-                    <div className="flex justify-between">
+                    <div className="flex justify-between px-4">
                         <Button
                             onClick={handlePreviousQuestion}
                             color="default"
