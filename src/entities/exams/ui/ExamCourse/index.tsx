@@ -97,17 +97,17 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                                     onClick={() => handleSelectQuestion(index)}
                                     className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 relative ${
                                         currentQuestionIndex === index
-                                            ? "bg-blue-500 text-white border-blue-700"
-                                            : "bg-white text-black border-gray-300 cursor-pointer hover:bg-gray-200"
+                                            ? "bg-blue-500 border-blue-700"
+                                            : "bg-white border-gray-300 cursor-pointer hover:bg-gray-200"
                                     }`}
                                 >
-                                    {index + 1}
+                                    <p className={currentQuestionIndex !== index ? "text-black" : "text-white"}>{index + 1}</p>
 
                                     {component.componentTask.userAnswer && (
                                         <div
-                                            className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500"
+                                            className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500 text-white"
                                         >
-                                            <CheckCircleOutlined className="text-blue-600 text-xl"/>
+                                            <CheckCircleOutlined className="text-xl"/>
                                         </div>
                                     )}
                                 </div>
