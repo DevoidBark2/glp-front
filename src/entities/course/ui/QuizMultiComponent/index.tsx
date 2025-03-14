@@ -1,5 +1,5 @@
 import { ComponentTask } from "@/shared/api/course/model";
-import { Button } from "antd";
+import {Button, message} from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
@@ -41,6 +41,10 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
     };
 
     const handleCheckResult = async () => {
+        if (selectedAnswers.length === 0) {
+            message.warning("Выберите варианты ответов!");
+            return;
+        }
         await onCheckResult(task, selectedAnswers).then(result => {
             setSelectedAnswers(result.userAnswer?.answer[0]?.userAnswer || []);
         });

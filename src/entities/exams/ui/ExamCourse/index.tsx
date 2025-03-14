@@ -51,8 +51,14 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     };
 
     const handleConfirmSubmit = async () => {
-        await courseStore.submitExamAnswerUser();
-        setOpenPreviewModal(false);
+        await courseStore.submitExamAnswerUser(Number(courseId)).then(response => {
+
+        }).catch(e => {
+
+        }).finally(() => {
+            setOpenPreviewModal(false);
+        });
+
     };
 
 
@@ -94,7 +100,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                         <div className="flex items-center flex-wrap gap-3 p-4">
                             {exam?.components.map((component, index) => (
                                 <div
-                                    key={index}
+                                    key={component.id}
                                     onClick={() => handleSelectQuestion(index)}
                                     className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 relative ${
                                         currentQuestionIndex === index
@@ -104,7 +110,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                                 >
                                     <p className={currentQuestionIndex !== index ? "text-black" : "text-white"}>{index + 1}</p>
 
-                                    {component.componentTask.userAnswer && (
+                                    {component?.componentTask?.userAnswer && (
                                         <div
                                             className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500 text-white"
                                         >

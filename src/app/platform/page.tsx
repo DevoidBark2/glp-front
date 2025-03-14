@@ -41,30 +41,30 @@ const PlatformPage = () => {
 
     return <div className="container mx-auto max-lg:px-4 px-2">
 
-        <div className="flex justify-end">
-            <div className="flex items-center  w-full lg:w-1/2">
-                <div className="relative w-full">
-                    <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                    <Input
-                        placeholder="Название курса, автор..."
-                        allowClear
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-gray-500 transition w-full"
-                    />
-                </div>
+        {/*<div className="flex justify-end">*/}
+        {/*    <div className="flex items-center  w-full lg:w-1/2">*/}
+        {/*        <div className="relative w-full">*/}
+        {/*            <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />*/}
+        {/*            <Input*/}
+        {/*                placeholder="Название курса, автор..."*/}
+        {/*                allowClear*/}
+        {/*                value={searchTerm}*/}
+        {/*                onChange={(e) => setSearchTerm(e.target.value)}*/}
+        {/*                onKeyDown={handleKeyDown}*/}
+        {/*                className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-gray-500 transition w-full"*/}
+        {/*            />*/}
+        {/*        </div>*/}
 
-                <Button
-                    variant={resolvedTheme && resolvedTheme === "dark" ? "outlined" : "solid"}
-                    className="ml-5"
-                    icon={<SearchOutlined />}
-                    onClick={handleSearch}
-                >
-                    Искать
-                </Button>
-            </div>
-        </div>
+        {/*        <Button*/}
+        {/*            variant={resolvedTheme && resolvedTheme === "dark" ? "outlined" : "solid"}*/}
+        {/*            className="ml-5"*/}
+        {/*            icon={<SearchOutlined />}*/}
+        {/*            onClick={handleSearch}*/}
+        {/*        >*/}
+        {/*            Искать*/}
+        {/*        </Button>*/}
+        {/*    </div>*/}
+        {/*</div>*/}
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6 mt-6">
             <h1 className="text-3xl font-semibold text-gray-800 md:w-9/12 w-full text-center md:text-left dark:text-white">

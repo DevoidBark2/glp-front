@@ -24,7 +24,6 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
     const { resolvedTheme } = useTheme();
 
     const currentQuestion = questions[currentQuestionIndex];
-    console.log(userAnswers)
     const handleOptionChange = (index: number) => {
         const newAnswers = [...selectedAnswers];
         newAnswers[currentQuestionIndex] = index;
@@ -33,7 +32,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
 
     const handleCheckResult = async () => {
         if (selectedAnswers.includes(null)) {
-            message.warning("Выберите все варианты ответов!");
+            message.warning("Выберите варианты ответов!");
             return;
         }
 
@@ -60,6 +59,8 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
         setUserAnswers(null);
         setIsRetrying(true);
     };
+
+    console.log(userAnswer)
 
     return (
         <div className="quiz-container mb-6 transition-transform p-4">

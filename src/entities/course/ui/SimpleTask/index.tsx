@@ -3,7 +3,7 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import { ComponentTask } from "@/shared/api/course/model";
 import { MathJaxContext } from "better-react-mathjax";
 import { MathfieldElement } from "mathlive";
-import { Button } from "antd";
+import {Button, message} from "antd";
 import { parseMathFormula } from "@/shared/lib/parseMathFormula";
 import { useTheme } from "next-themes";
 
@@ -50,6 +50,10 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     const handleCheckResult = async () => {
         if (onCheckResult && mathFieldRef.current) {
             const userAnswer = mathFieldRef.current.getValue();
+            if(!userAnswer) {
+                message.warning("Введите ваш ответ на задачу.")
+                return;
+            }
             await onCheckResult(task, userAnswer);
 
             // Обновляем ответ пользователя
@@ -57,7 +61,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
                 answer: [{ userAnswer }],
             });
 
-            setIsEditable(false); // Делаем поле нередактируемым
+            setIsEditable(false);
         }
     };
 
@@ -70,7 +74,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     };
 
     return (
-        <div>
+        <div className="p-4">
             <h1 className="text-[#333] font-bold text-2xl mb-2 dark:text-white">Решите задачу</h1>
             <p className="text-[#666] text-sm mb-4 dark:text-white">
                 Внимательно прочитайте условие и найдите результат. Убедитесь, что вы понимаете формулы и вычисления.

@@ -21,7 +21,13 @@ import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
 import { axiosInstance } from "@/shared/api/http-client";
 import { TaskAnswerUserDto } from "@/shared/api/task/model";
-import { getCurrentSection, handleCheckUserTask, handleUpdateSectionConfirmed, startExam } from "@/shared/api/task";
+import {
+    getCurrentSection,
+    handleCheckUserTask,
+    handleUpdateSectionConfirmed,
+    startExam,
+    submitExamUserAnswer
+} from "@/shared/api/task";
 import { ParentSection, SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
@@ -239,13 +245,23 @@ class CourseStore {
         }
     })
 
-    submitExamAnswerUser = action(async () => {
-        const a = this.examCourse;
-        debugger
+    submitExamAnswerUser = action(async (courseId: number) => {
+        const data = await submitExamUserAnswer(courseId)
     })
 
     handleCheckTask = action(async (task: TaskAnswerUserDto, courseId: number) => {
         const data = await handleCheckUserTask(task, courseId);
+
+        if(this.examCourse) {
+            this.examCourse.components.forEach(it => {
+                if(it.componentTask.id === task.task.id) {
+                    it.componentTask.userAnswer = data.userAnswer;
+                }
+            })
+
+            return data;
+        }
+
 
         if (this.sectionCourse) {
             this.sectionCourse.components.forEach(component => {
