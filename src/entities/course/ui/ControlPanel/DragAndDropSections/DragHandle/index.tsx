@@ -1,7 +1,8 @@
 import React, {useContext} from "react";
-import {RowContext} from "@/entities/course/ui";
 import {Button} from "antd";
 import {HolderOutlined} from "@ant-design/icons";
+
+import {RowContext} from "@/entities/course/ui";
 
 export const DragHandle: React.FC = () => {
     const { setActivatorNodeRef, listeners } = useContext(RowContext);

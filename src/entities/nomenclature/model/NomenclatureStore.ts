@@ -1,5 +1,6 @@
 import { action, makeAutoObservable } from "mobx";
 import { notification } from "antd";
+
 import { NomenclatureItem } from "@/shared/api/nomenclature/model";
 import { createCategory, deleteCategory, getAllCategory, getTeachers, updateCategory } from "@/shared/api/nomenclature";
 import { User } from "@/shared/api/user/model";
@@ -63,7 +64,7 @@ class NomenclatureStore {
     })
 
     changeCategory = action(async (values: NomenclatureItem) => {
-        if (values.name === this.selectedCategory?.name) return;
+        if (values.name === this.selectedCategory?.name) {return;}
 
         await updateCategory({ ...values }).then(response => {
             notification.success({ message: response.data.message })

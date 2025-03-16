@@ -1,9 +1,11 @@
 import { action, makeAutoObservable } from "mobx"
+
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import {deleteUser, getAllUsers, getUserById, handleBlockUser, searchUsers, updateRole} from "@/shared/api/user";
 import { login, logoutUser, oauthByProvider, register } from "@/shared/api/auth";
-import { usersMapper } from "../mappers";
 import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
+
+import { usersMapper } from "../mappers";
 
 class UserStore {
     constructor() {
@@ -109,9 +111,7 @@ class UserStore {
         }
     });
 
-    oauthByProvider = action(async (provider: 'google' | 'yandex') => {
-        return oauthByProvider(provider)
-    })
+    oauthByProvider = action(async (provider: 'google' | 'yandex') => oauthByProvider(provider))
 
     registerUser = action(async (values: any) => {
         this.setLoading(true)
@@ -120,10 +120,10 @@ class UserStore {
         });
     })
 
-    logout = action(async () => {
+    logout = action(async () => 
         // delete_cookie();
-        return await logoutUser();
-    })
+         await logoutUser()
+    )
 
     setAllUsers = action((values: User[]) => {
         this.allUsers = values;
@@ -147,17 +147,11 @@ class UserStore {
         }
     })
 
-    getUserById = action(async (userId: string): Promise<User> => {
-        return await getUserById(userId);
-    })
+    getUserById = action(async (userId: string): Promise<User> => await getUserById(userId))
 
-    updateUserRole = action(async (userId: string, role: UserRole) => {
-        return await updateRole({ userId: userId, role: role });
-    })
+    updateUserRole = action(async (userId: string, role: UserRole) => await updateRole({ userId: userId, role: role }))
 
-    blockUser = action(async (id: number, status: StatusUserEnum) => {
-        return await handleBlockUser({ userId: id, status: status });
-    })
+    blockUser = action(async (id: number, status: StatusUserEnum) => await handleBlockUser({ userId: id, status: status }))
 }
 
 export default UserStore;

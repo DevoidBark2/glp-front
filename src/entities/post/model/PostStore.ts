@@ -1,8 +1,11 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
-import { postMapper } from "../mappers";
+import { notification } from "antd";
+
 import { Post, PostCreateForm, PostStatusEnum } from "@/shared/api/posts/model";
 import { changePost, createPost, deletePost, getAllPost, getCPAllPost, getPostById, publishPost, submitReviewPost } from "@/shared/api/posts";
-import { notification } from "antd";
+
+import { postMapper } from "../mappers";
+
 
 class PostStore {
     constructor() {

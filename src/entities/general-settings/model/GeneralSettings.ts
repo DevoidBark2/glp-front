@@ -1,5 +1,6 @@
 import { action, makeAutoObservable } from "mobx";
 import { notification } from "antd";
+
 import { GeneralSettingsType } from "@/shared/api/general-settings/model";
 import { changeGeneralSettings, getFooterInfo, getGeneralSettings } from "@/shared/api/general-settings";
 

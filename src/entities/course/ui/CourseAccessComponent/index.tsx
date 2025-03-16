@@ -1,6 +1,7 @@
-import { AccessRightEnum } from "@/shared/api/course/model";
 import Image from "next/image";
 import React from "react";
+
+import { AccessRightEnum } from "@/shared/api/course/model";
 
 type CourseAccessComponentProps = {
     access_level: AccessRightEnum;

@@ -1,12 +1,68 @@
 {
   "extends": [
     "next/core-web-vitals",
-    "plugin:testing-library/react",
-    "plugin:jest-dom/recommended"
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:jest-dom/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "plugins": [
+    "react",
+    "jsx-a11y",
+    "import"
   ],
   "rules": {
-    "react-hooks/exhaustive-deps": "off",
-    "react-hooks/rules-of-hooks": "off",
-    "@next/next/no-img-element": "off"
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "@next/next/no-img-element": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/no-autofocus": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "import/no-unresolved": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.test.{js,jsx,ts,tsx}",
+          "**/__tests__/**",
+          "**/setupTests.{js,jsx,ts,tsx}"
+        ]
+      }
+    ],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "none",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "no-shadow": "error",
+    "no-duplicate-imports": "error",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "arrow-body-style": ["error", "as-needed"],
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }

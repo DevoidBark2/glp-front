@@ -1,6 +1,6 @@
 "use client"
 import { PageContainerControlPanel } from "@/shared/ui";
-import { Post, PostStatusEnum } from "@/shared/api/posts/model";
+
 import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Upload, UploadProps } from "antd";
 import { observer } from "mobx-react";
 import Link from "next/link";
@@ -18,6 +18,8 @@ const ReactQuill = dynamic(
 )
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
+
+import { Post, PostStatusEnum } from "@/shared/api/posts/model";
 import nextConfig from "next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";
 

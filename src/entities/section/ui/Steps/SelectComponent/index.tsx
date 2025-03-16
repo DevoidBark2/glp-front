@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { FormInstance } from "antd/lib";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
 import {renderType} from "@/shared/lib/course/course.lib";

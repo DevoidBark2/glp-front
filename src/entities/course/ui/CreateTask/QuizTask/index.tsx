@@ -8,8 +8,7 @@ interface QuizTaskProps {
     form?: FormInstance;
 }
 
-export const QuizTask: FC<QuizTaskProps> = ({ form }) => {
-    return (
+export const QuizTask: FC<QuizTaskProps> = ({ form }) => (
         <>
             <Form.Item
                 label="Заголовок"
@@ -123,4 +122,3 @@ export const QuizTask: FC<QuizTaskProps> = ({ form }) => {
             </Form.List>
         </>
     );
-};

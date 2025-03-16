@@ -1,6 +1,7 @@
-import { StatusUserEnum } from "@/shared/api/user/model";
 import {Button, Input, Select, Space} from "antd";
 import React from "react";
+
+import { StatusUserEnum } from "@/shared/api/user/model";
 
 export interface GroupActionComponentProps {
     loading: boolean;
@@ -11,8 +12,7 @@ export interface GroupActionComponentProps {
     submitSelectedAction?: () => Promise<void>,
 }
 
-export const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loading,searchText,setSearchText,selectedAction,setSelectedAction,submitSelectedAction}) => {
-    return <div>
+export const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loading,searchText,setSearchText,selectedAction,setSelectedAction,submitSelectedAction}) => <div>
         <Space style={{marginBottom: 16}}>
             <Input.Search
                 placeholder="Поиск по имени или email"
@@ -40,4 +40,3 @@ export const GroupActionComponent: React.FC<GroupActionComponentProps>= ({loadin
             </>}
         </Space>
     </div>
-}

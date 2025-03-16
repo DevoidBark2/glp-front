@@ -2,6 +2,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { useRouter } from "next/navigation";
+
 import {PageContainerControlPanel} from "@/shared/ui";
 import {PageHeader} from "@/shared/ui/PageHeader";
 import { CourseControlList } from "@/entities/course/ui";

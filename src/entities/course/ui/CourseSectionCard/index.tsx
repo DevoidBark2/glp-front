@@ -1,18 +1,22 @@
-import { ComponentTask } from "@/shared/api/course/model";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { Button, Card, Divider, Result, Skeleton } from "antd";
 import { observer } from "mobx-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { TextComponent } from "../TextComponent";
-import { QuizComponent } from "../QuizComponent";
+import dayjs from "dayjs";
+
+import { ComponentTask } from "@/shared/api/course/model";
+import { useMobxStores } from "@/shared/store/RootStore";
 import { QuizMultiComponent } from "@/entities/course/ui";
-import { SimpleTask } from "../SimpleTask";
 import { FileAttachment, LinksAttachment } from "@/widgets/Lesson";
 import ExamCourse from "@/entities/exams/ui/ExamCourse";
-import { isExamCoursePage } from "../../selectors";
 import { CourseComponentType } from "@/shared/api/component/model";
-import dayjs from "dayjs";
+
+import { TextComponent } from "../TextComponent";
+import { QuizComponent } from "../QuizComponent";
+import { SimpleTask } from "../SimpleTask";
+import { isExamCoursePage } from "../../selectors";
+
+
 
 export const CourseSectionCard = observer(() => {
     const { courseStore, commentsStore } = useMobxStores();
@@ -21,14 +25,12 @@ export const CourseSectionCard = observer(() => {
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
 
-    const handleCheckResult = async (quiz: ComponentTask, userAnswer: string | number[]) => {
-        return await courseStore.handleCheckTask({
+    const handleCheckResult = async (quiz: ComponentTask, userAnswer: string | number[]) => await courseStore.handleCheckTask({
             task: quiz,
             answers: userAnswer,
             currentSection: step!,
 
         }, Number(courseId));
-    };
 
     const startExam = () => {
         courseStore.startExam(Number(courseId))

@@ -2,6 +2,7 @@ import Image from "next/image"
 import {
     FileOutlined
 } from "@ant-design/icons";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 
 export const FileAttachment = () => {

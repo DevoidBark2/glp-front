@@ -1,8 +1,9 @@
-import { ComponentTask } from "@/shared/api/course/model";
 import {Button, message} from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+
+import { ComponentTask } from "@/shared/api/course/model";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;
@@ -33,7 +34,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
 
 
     const handleOptionChange = (index: number) => {
-        if (userAnswer && !isRetrying) return;
+        if (userAnswer && !isRetrying) {return;}
 
         setSelectedAnswers((prevAnswers = []) =>
             prevAnswers.includes(index) ? prevAnswers.filter((answer) => answer !== index) : [...prevAnswers, index]
@@ -94,8 +95,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
                 </div>
 
                 <div className="options">
-                    {questions[0].options.map((option, optionIndex) => {
-                        return (
+                    {questions[0].options.map((option, optionIndex) => (
                             <label key={optionIndex} className={getOptionClass(optionIndex)}>
                                 <input
                                     type="checkbox"
@@ -107,8 +107,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
                                 />
                                 {option}
                             </label>
-                        );
-                    })}
+                        ))}
                 </div>
             </div>
 

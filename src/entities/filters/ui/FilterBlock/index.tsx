@@ -1,8 +1,9 @@
-import { FilterOption, FilterValues } from "@/shared/api/filter/model";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { Button, Checkbox, Radio, Form, Collapse, Divider } from "antd";
 import { observer } from "mobx-react";
 import { useSearchParams } from "next/navigation";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { FilterOption, FilterValues } from "@/shared/api/filter/model";
 
 const FilterBlock = observer(() => {
     const { nomenclatureStore, courseStore } = useMobxStores();

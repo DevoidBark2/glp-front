@@ -9,8 +9,9 @@ import {
     CheckOutlined, CloseOutlined
 } from "@ant-design/icons";
 import dayjs from "dayjs";
-import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/shared/constants";
 import { useRouter } from "next/navigation";
+
+import { FILTER_ROLE_USER, FILTER_STATUS_USER, FORMAT_VIEW_DATE, userRoleColors } from "@/shared/constants";
 import { usersTable } from "@/shared/config";
 import { User } from "@/shared/api/user/model";
 import { PageHeader } from "@/shared/ui/PageHeader";
@@ -76,8 +77,7 @@ const UsersPage = () => {
         {
             title: "Действия",
             key: "actions",
-            render: (_, record) => {
-                return (
+            render: (_, record) => (
                     <div className="flex justify-end gap-2">
                         <Tooltip title="Редактировать">
                             <Button
@@ -104,8 +104,7 @@ const UsersPage = () => {
                             </Popconfirm>
                         </Tooltip>
                     </div>
-                );
-            },
+                ),
         },
     ];
 

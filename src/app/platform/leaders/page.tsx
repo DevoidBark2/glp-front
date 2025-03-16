@@ -1,11 +1,17 @@
 "use client";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/shared/store/RootStore";
-import {Table, TableColumnsType, Tag} from "antd";
-import { UserLevel } from "@/shared/api/users-level/model";
+import {Avatar, Table, TableColumnsType, Tag} from "antd";
 import Link from "next/link";
+import {UserOutlined} from "@ant-design/icons";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { UserLevel } from "@/shared/api/users-level/model";
 import { UserLevelEnum } from "@/entities/user-profile";
+import {AuthMethodEnum} from "@/shared/api/auth/model";
+
+import nextConfig from "../../../../next.config.mjs";
+
 
 const getLevelColor = (level: UserLevelEnum) => {
     const colors = {
@@ -45,11 +51,26 @@ const LeaderboardPage = observer(() => {
             dataIndex: "name",
             key: "name",
             render: (text, record) => (
-                <Link href={`/platform/users/${record.user.id}`}>
+                <>
+                    <Avatar
+                        shape="square"
+                        size={50}
+                        src={
+                            record.user?.profile_url
+                                ? record.user?.method_auth === AuthMethodEnum.GOOGLE ||
+                                record.user?.method_auth === AuthMethodEnum.YANDEX
+                                    ? record.user?.profile_url
+                                    : `${nextConfig.env?.API_URL}${record.user?.profile_url}`
+                                : undefined
+                        }
+                        icon={!record.user?.profile_url && <UserOutlined />}
+                    />
+                    <Link href={`/platform/users/${record.user.id}`} className="ml-2">
                     <span className="text-base font-medium text-gray-800 hover:underline break-words">
                         {`${record.user.second_name ?? ""} ${record.user.first_name ?? ""} ${record.user.last_name ?? ""}`}
                     </span>
-                </Link>
+                    </Link>
+                </>
             ),
         },
         {

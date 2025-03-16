@@ -2,8 +2,10 @@ import { Card, Carousel, Col, Row, Skeleton, Grid } from "antd";
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
-import { CourseItem } from "../CourseItem";
+
 import { useMobxStores } from "@/shared/store/RootStore";
+
+import { CourseItem } from "../CourseItem";
 
 const { useBreakpoint } = Grid;
 

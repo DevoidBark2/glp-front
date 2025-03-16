@@ -1,6 +1,7 @@
 import { Breadcrumb, ThemeConfig } from "antd";
-import { MAIN_COLOR } from "../constants";
 import {Theme} from "emoji-picker-react";
+
+import { MAIN_COLOR } from "../constants";
 
 export const themeConfig: ThemeConfig = {
     components: {

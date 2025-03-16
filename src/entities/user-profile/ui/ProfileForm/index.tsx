@@ -1,10 +1,13 @@
 import { Button, Form, Input } from "antd";
 import PhoneInput from "react-phone-input-2";
+
 import "react-phone-input-2/lib/bootstrap.css";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { observer } from "mobx-react";
-import { UserProfile } from "@/entities/user-profile/model/UserProfileStore";
 import {useTheme} from "next-themes";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { UserProfile } from "@/entities/user-profile/model/UserProfileStore";
+
 
 export const ProfileForm = observer(() => {
     const { userProfileStore } = useMobxStores();

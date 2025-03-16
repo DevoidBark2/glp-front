@@ -1,5 +1,6 @@
 "use client"
 import React from "react";
+
 import { PostStore } from "@/entities/post";
 import { CourseStore } from "@/entities/course";
 import { FaqStore } from "@/entities/faq";

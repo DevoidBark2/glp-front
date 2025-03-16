@@ -1,11 +1,12 @@
 "use client";
-import { User } from "@/shared/api/user/model";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Skeleton, Card, Divider, Row, Col, Avatar } from "antd";
 import { AppstoreAddOutlined, CalendarOutlined, UserOutlined } from "@ant-design/icons";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { User } from "@/shared/api/user/model";
 import nextConfig from "next.config.mjs";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseList } from "@/entities/course/ui";

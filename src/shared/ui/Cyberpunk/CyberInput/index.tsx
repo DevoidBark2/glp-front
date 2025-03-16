@@ -8,8 +8,7 @@ interface CyberInputProps {
     disabled?: boolean;
 }
 
-const CyberInput: React.FC<CyberInputProps> = ({placeholder,value, onChange,disabled}) => {
-    return (
+const CyberInput: React.FC<CyberInputProps> = ({placeholder,value, onChange,disabled}) => (
         <Input
             placeholder={placeholder}
             value={value}
@@ -35,6 +34,5 @@ const CyberInput: React.FC<CyberInputProps> = ({placeholder,value, onChange,disa
             }}
         />
     );
-};
 
 export default CyberInput;

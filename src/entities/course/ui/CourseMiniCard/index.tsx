@@ -1,8 +1,9 @@
-import { Course } from "@/shared/api/course/model"
 import {Badge, Card, List, Tag, Tooltip} from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { FormInstance } from "antd/lib";
+
+import { Course } from "@/shared/api/course/model"
 import {useMobxStores} from "@/shared/store/RootStore";
 
 interface CourseMiniCardProps {

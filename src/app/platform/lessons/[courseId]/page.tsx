@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { Layout, notification } from "antd";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+
 import { HeaderLesson, NavbarLesson } from "@/widgets/Lesson";
 import { CommentBlock, CourseSectionCard } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";

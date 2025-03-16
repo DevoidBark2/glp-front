@@ -1,8 +1,9 @@
 import React from "react";
-import { useMobxStores } from "@/shared/store/RootStore";
 import {Button, Spin} from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
+
+import { useMobxStores } from "@/shared/store/RootStore";
 
 export const HeaderLesson = () => {
     const { courseStore } = useMobxStores();

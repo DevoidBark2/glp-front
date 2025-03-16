@@ -7,14 +7,12 @@ interface FrameNeonUnderlineProps {
     underlineColor?: string;
 }
 
-const FrameNeonUnderline: React.FC<FrameNeonUnderlineProps> = ({ children, underline = false,textColor }) => {
-    return (
+const FrameNeonUnderline: React.FC<FrameNeonUnderlineProps> = ({ children, underline = false,textColor }) => (
         <div className="relative inline-block w-full">
             <h1 className={`text-2xl py-4 font-bold text-${textColor}-300 ${underline && "border-b-2 border-b-cyan-400"}`}>
                 {children}
             </h1>
         </div>
     );
-};
 
 export default FrameNeonUnderline;

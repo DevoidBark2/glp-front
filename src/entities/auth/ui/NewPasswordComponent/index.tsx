@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { Button, Form, Input, notification } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import ReCAPTCHA from "react-google-recaptcha";
+
+import { useMobxStores } from "@/shared/store/RootStore";
 import nextConfig from "next.config.mjs";
 
 const NewPasswordComponent = () => {

@@ -1,10 +1,11 @@
 "use client"
 import React from "react";
 import { observer } from "mobx-react";
+import { useRouter } from "next/navigation";
+
 import { PageContainerControlPanel } from "@/shared/ui";
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { FaqControlList } from "@/entities/faq";
-import { useRouter } from "next/navigation";
 
 const FaqPage = () => {
     const router = useRouter()

@@ -1,16 +1,17 @@
-import { Post } from "@/shared/api/posts/model";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { Card, Divider } from "antd";
 import dayjs from "dayjs";
-import nextConfig from "next.config.mjs";
 import Image from "next/image";
+
+import { Post } from "@/shared/api/posts/model";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
+import nextConfig from "next.config.mjs";
+
 
 type PostCardProps = {
     post: Post
 }
 
-export const PostCard = ({ post }: PostCardProps) => {
-    return (
+export const PostCard = ({ post }: PostCardProps) => (
         <Card variant="borderless" className="mt-6 shadow-lg p-6">
             <div className="flex flex-col sm:flex-row">
 
@@ -44,5 +45,4 @@ export const PostCard = ({ post }: PostCardProps) => {
                 dangerouslySetInnerHTML={{ __html: post?.content || "" }}
             />
         </Card>
-    );
-}
+    )

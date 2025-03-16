@@ -1,6 +1,7 @@
-import { useMobxStores } from "@/shared/store/RootStore"
 import Image from "next/image"
 import Link from "next/link"
+
+import { useMobxStores } from "@/shared/store/RootStore"
 
 export const LinksAttachment = () => {
     const { courseStore } = useMobxStores()

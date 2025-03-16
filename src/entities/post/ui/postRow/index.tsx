@@ -1,14 +1,15 @@
-import nextConfig from "next.config.mjs";
 import Image from "next/image";
-import { Post } from "@/shared/api/posts/model";
 import Link from "next/link";
+
+import nextConfig from "next.config.mjs";
+import { Post } from "@/shared/api/posts/model";
+
 
 type PostProps = {
     post: Post;
 };
 
-export const PostRow = ({ post }: PostProps) => {
-    return (
+export const PostRow = ({ post }: PostProps) => (
         <div className="p-5 mb-4 bg-gray-50 rounded-lg transition-all hover:bg-gray-100">
             <div className="flex flex-col sm:flex-row gap-4">
                 {post.image ? (
@@ -43,4 +44,3 @@ export const PostRow = ({ post }: PostProps) => {
             </div>
         </div>
     );
-};

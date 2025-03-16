@@ -1,12 +1,22 @@
-import { Form, Input } from "antd"
-import dynamic from "next/dynamic"
-import 'react-quill/dist/quill.snow.css';
-const ReactQuill = dynamic(
-    () => import('react-quill'),
-    { ssr: false }
-)
+import React, { useState } from "react";
+import { Form, Input } from "antd";
+import dynamic from "next/dynamic";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import {EditorState} from "draft-js";
+
+// Динамически загружаем компонент Editor
+const Editor = dynamic(
+    () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+    { ssr: false } // Отключаем серверный рендеринг
+);
 
 export const TextTask = () => {
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const handleEditorChange = (state: any) => {
+        setEditorState(state);
+    };
+
     return (
         <>
             <Form.Item
@@ -22,8 +32,13 @@ export const TextTask = () => {
                 label="Содержание"
                 rules={[{ required: true, message: "Пожалуйста, введите содержание!" }]}
             >
-                <ReactQuill theme="snow" />
+                <div className="editor-container">
+                    <Editor
+                        editorState={editorState}
+                        onEditorStateChange={handleEditorChange}
+                    />
+                </div>
             </Form.Item>
         </>
-    )
-}
+    );
+};

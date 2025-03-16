@@ -1,6 +1,7 @@
 import { observer } from "mobx-react";
 import { useState } from "react";
 import { Divider, notification, Tabs, Tooltip } from "antd";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Categories, CustomizeCategoryItem } from "@/shared/api/customize/model";
 import { CustomizeList } from "@/entities/customize/ui";

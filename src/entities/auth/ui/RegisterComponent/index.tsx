@@ -3,12 +3,14 @@ import { Button, Divider, Form, Input, notification } from "antd";
 import React, { useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { observer } from "mobx-react";
-import { MAIN_COLOR } from "@/shared/constants";
-import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
 import Image from "next/image"
 import { useRouter } from "next/navigation";
+
+import { MAIN_COLOR } from "@/shared/constants";
 import { useMobxStores } from "@/shared/store/RootStore";
+
+import nextConfig from "../../../../../next.config.mjs";
 
 export const RegisterComponent = observer(() => {
     const router = useRouter()

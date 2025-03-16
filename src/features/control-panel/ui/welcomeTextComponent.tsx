@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import 'dayjs/locale/ru';
 import { useEffect, useState } from "react";
 import {SmileOutlined, CloudOutlined, MoonOutlined} from "@ant-design/icons";
+
 import {welcomeTextRender} from "@/shared/lib/welcomeText";
 
 export const WelcomeTextComponent = () => {

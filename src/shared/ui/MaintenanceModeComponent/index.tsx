@@ -8,8 +8,7 @@ interface MaintenanceModeProps {
     serviceModeText?: string;
 }
 
-export const MaintenanceModeComponent: FC<MaintenanceModeProps> = ({ serviceModeText }) => {
-    return (
+export const MaintenanceModeComponent: FC<MaintenanceModeProps> = ({ serviceModeText }) => (
         <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-blue-200 via-pink-200 to-yellow-200 text-center p-4 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-full bg-opacity-30 bg-cover bg-center animate-pulse" />
             <div className="bg-white p-10 rounded-3xl shadow-3xl transform transition-transform hover:scale-105 relative z-10">
@@ -25,4 +24,3 @@ export const MaintenanceModeComponent: FC<MaintenanceModeProps> = ({ serviceMode
             </div>
         </div>
     );
-};

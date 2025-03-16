@@ -1,15 +1,18 @@
-import { Course, StatusCourseEnum, statusLabels } from "@/shared/api/course/model";
-import { LEVEL_COURSE } from "@/shared/constants";
-import { useMobxStores } from "@/shared/store/RootStore";
-import { Button, Col, Form, FormInstance, Input, Row, Select, Spin, Switch, Upload, message, Image } from "antd";
+import React, { FC, useState, useEffect } from "react";
+import { Button, Col, Form, FormInstance, Input, Row, Select, Spin, Switch, Upload, message } from "antd";
 import { observer } from "mobx-react";
 import dynamic from "next/dynamic";
-import { FC, useState, useEffect } from "react";
 import { InboxOutlined } from "@ant-design/icons";
-import nextConfig from "next.config.mjs";
 import Dragger from "antd/lib/upload/Dragger";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+import nextConfig from "next.config.mjs";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { LEVEL_COURSE } from "@/shared/constants";
+import { Course, StatusCourseEnum, statusLabels } from "@/shared/api/course/model";
+
+// Динамически загружаем компонент Editor из react-draft-wysiwyg
+const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Editor), { ssr: false });
 
 interface CourseDetailsMainProps {
     form: FormInstance<Course>;
@@ -185,7 +188,8 @@ export const CourseDetailsMain: FC<CourseDetailsMainProps> = observer(({ form })
                 </Row>
 
                 <Form.Item name="content_description" label="Содержание курса">
-                    {typeof window !== 'undefined' && <ReactQuill theme="snow" />}
+                    {/* Используем динамическую загрузку для компонента Editor */}
+                    {typeof window !== 'undefined' && <Editor />}
                 </Form.Item>
 
                 <div className="flex flex-col items-center">

@@ -1,6 +1,8 @@
+import { action, makeAutoObservable } from "mobx";
+
 import { deleteCourseReview, getCourseReviews } from "@/shared/api/reviews";
 import { Review } from "@/shared/api/reviews/model";
-import { action, makeAutoObservable } from "mobx";
+
 import { reviewsMapper } from "../mapper";
 
 class ReviewStore {

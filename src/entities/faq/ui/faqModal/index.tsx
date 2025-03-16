@@ -1,6 +1,7 @@
-import { Faq } from "@/shared/api/faq/model"
 import { Form, Input, Modal } from "antd"
 import { observer } from "mobx-react"
+
+import { Faq } from "@/shared/api/faq/model"
 
 interface FaqModalProps {
     editingItem: Faq,

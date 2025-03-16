@@ -1,7 +1,8 @@
-import { useMobxStores } from "@/shared/store/RootStore"
 import { Button, Collapse, Popconfirm, Progress, Tooltip } from "antd"
 import { observer } from "mobx-react"
 import { DeleteOutlined } from "@ant-design/icons";
+
+import { useMobxStores } from "@/shared/store/RootStore"
 
 const { Panel } = Collapse;
 

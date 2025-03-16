@@ -1,10 +1,12 @@
 "use client"
 import { Button, Divider, Empty } from "antd";
-import { CourseProfileItem } from "../CourseProfileItem";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { useTheme } from "next-themes";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+
+import { CourseProfileItem } from "../CourseProfileItem";
 
 export const CourseProfileList = observer(() => {
     const { userProfileStore } = useMobxStores();

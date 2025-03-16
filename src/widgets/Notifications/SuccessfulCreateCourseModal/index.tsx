@@ -7,8 +7,7 @@ interface SuccessfulCreateCourseModalProps {
     onCancel: () => void;
 }
 
-export const SuccessfulCreateCourseModal: FC<SuccessfulCreateCourseModalProps> = ({ openModal, onCancel }) => {
-    return (
+export const SuccessfulCreateCourseModal: FC<SuccessfulCreateCourseModalProps> = ({ openModal, onCancel }) => (
         <Modal
             open={openModal}
             onCancel={onCancel}
@@ -26,5 +25,4 @@ export const SuccessfulCreateCourseModal: FC<SuccessfulCreateCourseModalProps> =
                 ]}
             />
         </Modal>
-    );
-}
+    )

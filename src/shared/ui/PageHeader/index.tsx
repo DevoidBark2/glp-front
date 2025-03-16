@@ -10,8 +10,7 @@ interface PageHeaderProps {
     showMoreAction?: boolean
 }
 
-export const PageHeader: FC<PageHeaderProps> = ({ title, onClickButton, buttonTitle, showBottomDivider, showMoreAction }) => {
-    return (
+export const PageHeader: FC<PageHeaderProps> = ({ title, onClickButton, buttonTitle, showBottomDivider, showMoreAction }) => (
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-gray-800 font-bold text-3xl mb-2">{title}</h1>
@@ -29,5 +28,4 @@ export const PageHeader: FC<PageHeaderProps> = ({ title, onClickButton, buttonTi
             </div>
             {showBottomDivider && <Divider />}
         </>
-    );
-}
+    )

@@ -1,7 +1,6 @@
 import { Post } from "@/shared/api/posts/model";
 
-export const postMapper = (post: Post): Post => {
-    return {
+export const postMapper = (post: Post): Post => ({
         id: post.id,
         name: post.name,
         image: post.image,
@@ -12,5 +11,4 @@ export const postMapper = (post: Post): Post => {
         created_at: post.created_at,
         user: post.user,
         moderatorFeedBack: post.moderatorFeedBack
-    };
-}
+    })

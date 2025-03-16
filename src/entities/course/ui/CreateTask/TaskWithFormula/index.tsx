@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import {Divider, Form, FormInstance, Input} from "antd";
-import "mathlive";
 import { MathfieldElement } from "mathlive";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 

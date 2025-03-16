@@ -1,8 +1,11 @@
+import { action, makeAutoObservable } from "mobx";
+
 import { createExam, deleteExam, getUserExams, setExamForCourse } from "@/shared/api/exams";
 import { Exam } from "@/shared/api/exams/model";
-import { action, makeAutoObservable } from "mobx";
-import { examMapper } from "../mappers";
 import { CourseComponentTypeI } from "@/shared/api/course/model";
+
+import { examMapper } from "../mappers";
+
 
 class ExamStore {
     constructor() {
@@ -17,9 +20,7 @@ class ExamStore {
         this.exams = data.map(examMapper)
     })
 
-    createExam = action(async (title: string, components: CourseComponentTypeI[]) => {
-        return await createExam(title, components)
-    })
+    createExam = action(async (title: string, components: CourseComponentTypeI[]) => await createExam(title, components))
 
     deleteExam = action(async (id: number) => {
         const data = await deleteExam(id);
@@ -27,9 +28,7 @@ class ExamStore {
         return data
     })
 
-    setExamForCourse = action(async (examId: number, courseId: number) => {
-        return await setExamForCourse(examId, courseId)
-    })
+    setExamForCourse = action(async (examId: number, courseId: number) => await setExamForCourse(examId, courseId))
 }
 
 export default ExamStore

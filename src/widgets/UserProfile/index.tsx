@@ -1,12 +1,16 @@
 import { Avatar, Divider, message, notification, Spin, Upload } from "antd";
 import {UploadOutlined, UserOutlined} from "@ant-design/icons";
 import { observer } from "mobx-react";
+
 import "react-phone-input-2/lib/bootstrap.css";
-import nextConfig from "../../../next.config.mjs";
+import { useTheme } from "next-themes";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { ProfileForm } from "@/entities/user-profile";
-import { useTheme } from "next-themes";
+
+import nextConfig from "../../../next.config.mjs";
+
 
 
 export const UserProfileBlock = observer(() => {

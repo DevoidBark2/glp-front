@@ -1,9 +1,10 @@
-import { useMobxStores } from "@/shared/store/RootStore";
 import { observer } from "mobx-react";
 import { Divider, Typography } from "antd";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { useTheme } from "next-themes";
+
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 const { Text } = Typography;
 

@@ -1,5 +1,6 @@
-import { getAllAchievements } from "@/shared/api/achievements";
 import { action, makeAutoObservable } from "mobx";
+
+import { getAllAchievements } from "@/shared/api/achievements";
 
 // Определяем enum для типов условий
 export enum ConditionTypeEnum {

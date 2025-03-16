@@ -1,8 +1,9 @@
 import { action, makeAutoObservable } from "mobx";
+import { message } from "antd";
+
 import { Comment } from "@/shared/api/comments/model";
 import { deleteSectionComment, getSectionComments, sendSectionComment } from "@/shared/api/comments";
 import { commentMapper } from "@/entities/comments/mappers";
-import { message } from "antd";
 
 class CommentsStore {
     constructor() {

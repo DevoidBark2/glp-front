@@ -1,14 +1,16 @@
 import { observer } from "mobx-react";
-import { Exam } from "@/shared/api/exams/model";
 import React, { FC, useState } from "react";
-import { QuizComponent, QuizMultiComponent, SimpleTask } from "@/entities/course/ui";
-import { CourseComponentType } from "@/shared/api/component/model";
 import {Button, Modal, Typography} from "antd";
 import { useTheme } from "next-themes";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { useParams, useSearchParams } from "next/navigation";
-import { ComponentTask } from "@/shared/api/course/model";
 import {CheckCircleOutlined} from "@ant-design/icons";
+
+import { Exam } from "@/shared/api/exams/model";
+import { QuizComponent, QuizMultiComponent, SimpleTask } from "@/entities/course/ui";
+import { CourseComponentType } from "@/shared/api/component/model";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { ComponentTask } from "@/shared/api/course/model";
+
 
 interface ExamCourseProps {
     exam?: Exam;
@@ -42,13 +44,11 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
 
     const currentComponent = exam?.components[currentQuestionIndex];
 
-    const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => {
-        return await courseStore.handleCheckTask({
+    const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => await courseStore.handleCheckTask({
             task: quiz,
             answers: answer,
             currentSection: step!,
         }, Number(courseId));
-    };
 
     const handleConfirmSubmit = async () => {
         await courseStore.submitExamAnswerUser(Number(courseId)).then(response => {

@@ -8,17 +8,11 @@ export const getAllCategory = async (): Promise<NomenclatureItem[]> => {
     return data.data;
 }
 
-export const createCategory = async (values: NomenclatureItem): Promise<{data: {category: NomenclatureItem, message: string}}> => {
-    return (await axiosInstance.post('/api/category', values)).data;
-}
+export const createCategory = async (values: NomenclatureItem): Promise<{data: {category: NomenclatureItem, message: string}}> => (await axiosInstance.post('/api/category', values)).data
 
-export const updateCategory = async (values: NomenclatureItem): Promise<{data: {message: string}}> => {
-    return (await axiosInstance.put('/api/category', values)).data;
-}
+export const updateCategory = async (values: NomenclatureItem): Promise<{data: {message: string}}> => (await axiosInstance.put('/api/category', values)).data
 
-export const deleteCategory = async (id: number): Promise<{data: {message: string}}> => {
-    return (await axiosInstance.delete(`/api/category?id=${id}`)).data;
-}
+export const deleteCategory = async (id: number): Promise<{data: {message: string}}> => (await axiosInstance.delete(`/api/category?id=${id}`)).data
 
 export const getTeachers = async (): Promise<User[]> => {
     const data = (await axiosInstance.get('/api/get-teachers')).data

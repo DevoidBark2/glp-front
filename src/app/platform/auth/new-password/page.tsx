@@ -1,10 +1,8 @@
 import NewPasswordComponent from "@/entities/auth/ui/NewPasswordComponent";
 
-const NewPasswordPage = () => {
-    return (
+const NewPasswordPage = () => (
        <NewPasswordComponent/>
     )
-}
 
 
 export default NewPasswordPage;

@@ -2,12 +2,13 @@
 import { observer } from "mobx-react";
 import { Button, Empty, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
 import React, {useEffect, useState} from "react";
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+
 import {PageHeader} from "@/shared/ui/PageHeader";
 import {PageContainerControlPanel} from "@/shared/ui";
 import {CreateCategoryModal} from "@/entities/category/ui/CreateCategoryModal";
 import {ChangeCategoryModal} from "@/entities/category/ui/ChangeCategoryModal";
 import { NomenclatureItem } from "@/shared/api/nomenclature/model";
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import {SettingControlPanel} from "@/shared/model";
 import {useMobxStores} from "@/shared/store/RootStore";
 

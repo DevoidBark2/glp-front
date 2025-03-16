@@ -10,9 +10,9 @@ export default function ThemeSwitch() {
 
     useEffect(() => setMounted(true), []);
 
-    if (!mounted) return (
+    if (!mounted) {return (
         <div className="w-10 h-10 flex items-center justify-center bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
-    );
+    );}
 
     return (
         <motion.div

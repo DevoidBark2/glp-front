@@ -1,8 +1,10 @@
-import { Course } from "@/shared/api/course/model";
 import { observer } from "mobx-react";
-import { CourseItem } from "../CourseItem";
 import { Skeleton } from "antd";
 import React from "react";
+
+import { Course } from "@/shared/api/course/model";
+
+import { CourseItem } from "../CourseItem";
 
 type CourseListProps = {
     courses: Course[];
@@ -10,8 +12,7 @@ type CourseListProps = {
     notFound: boolean
 };
 
-export const CourseList = observer(({ courses, loading, notFound }: CourseListProps) => {
-    return (
+export const CourseList = observer(({ courses, loading, notFound }: CourseListProps) => (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {!loading && courses.length < 1 && !notFound
                 ? Array.from({ length: 8 }).map((_, index) => (
@@ -30,5 +31,4 @@ export const CourseList = observer(({ courses, loading, notFound }: CourseListPr
                     <CourseItem key={course.id} course={course} />
                 ))}
         </div>
-    );
-});
+    ));

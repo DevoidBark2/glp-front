@@ -1,6 +1,7 @@
-import { StatusCourseEnum } from "@/shared/api/course/model";
 import {Tag} from "antd";
 import React from "react";
+
+import { StatusCourseEnum } from "@/shared/api/course/model";
 
 export const showCourseStatus = (status: StatusCourseEnum) => {
     switch (status) {

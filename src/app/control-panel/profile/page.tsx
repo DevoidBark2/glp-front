@@ -24,10 +24,12 @@ import {
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
+
 import "react-phone-input-2/lib/bootstrap.css";
-import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
+
+import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { AuthMethodEnum } from "@/shared/api/auth/model";

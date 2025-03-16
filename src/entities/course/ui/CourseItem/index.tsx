@@ -1,17 +1,17 @@
 import React from "react";
-import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
-import { Course } from "@/shared/api/course/model";
 import Link from "next/link";
 import Image from "next/image";
 import { BookOutlined } from "@ant-design/icons";
+
+import { Course } from "@/shared/api/course/model";
+import nextConfig from "next.config.mjs";
 
 interface CourseItemProps {
     course: Course;
 }
 
-export const CourseItem = observer(({ course }: CourseItemProps) => {
-    return (
+export const CourseItem = observer(({ course }: CourseItemProps) => (
         <Link
             href={`platform/courses/${course.id}`}
             className="block rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white dark:bg-[#252525] overflow-hidden"
@@ -42,5 +42,4 @@ export const CourseItem = observer(({ course }: CourseItemProps) => {
                 </p>
             </div>
         </Link>
-    );
-});
+    ));

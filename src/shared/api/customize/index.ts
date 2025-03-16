@@ -1,4 +1,5 @@
 import { axiosInstance } from "../http-client"
+
 import {Categories, CustomizeCategoryItem, Effect, Frame, Icon} from "./model"
 
 export const getAllFrames = async (): Promise<Frame[]> => {

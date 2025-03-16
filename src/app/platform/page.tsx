@@ -2,11 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, Divider, Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { CourseList } from "@/entities/course/ui";
 import { useRouter } from 'next/navigation';
-import { useMobxStores } from '@/shared/store/RootStore';
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
+
+import { useMobxStores } from '@/shared/store/RootStore';
+import { CourseList } from "@/entities/course/ui";
 
 const PlatformPage = () => {
     const { courseStore } = useMobxStores()

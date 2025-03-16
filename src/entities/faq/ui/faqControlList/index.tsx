@@ -1,12 +1,13 @@
 "use client"
-import { Faq } from "@/shared/api/faq/model";
 import { Button, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
 import { observer } from "mobx-react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { faqTable } from "@/shared/config/tableConfig";
-import { useRouter } from "next/navigation";
+import { Faq } from "@/shared/api/faq/model";
 import {SettingControlPanel} from "@/shared/model";
 
 export const FaqControlList = observer(() => {

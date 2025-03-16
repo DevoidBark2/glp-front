@@ -1,6 +1,7 @@
-import { SupportItem } from "@/shared/api/support/model"
 import { Button, Form, Input, Modal, Result } from "antd"
 import { useState } from "react"
+
+import { SupportItem } from "@/shared/api/support/model"
 
 export const SupportBlock = () => {
     const [form] = Form.useForm<SupportItem>()

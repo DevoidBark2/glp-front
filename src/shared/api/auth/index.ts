@@ -1,4 +1,5 @@
 import { axiosInstance } from "../http-client"
+
 import { ChangePasswordType } from "./model"
 
 export const register = async (body: any) => {
@@ -6,9 +7,7 @@ export const register = async (body: any) => {
     return data.data;
 }
 
-export const login = async (body: any) => {
-    return (await axiosInstance.post('/api/login', body)).data
-}
+export const login = async (body: any) => (await axiosInstance.post('/api/login', body)).data
 
 export const oauthByProvider = async (provider: 'google' | 'yandex') => {
     const data = (await axiosInstance.get(`/api/auth/oauth/connect/${[provider]}`)).data
@@ -35,9 +34,7 @@ export const resetPassword = async (email: string) => {
     return data.data
 }
 
-export const changePassword = async (values: ChangePasswordType) => {
-    return (await axiosInstance.post('/api/change-password',values)).data;
-}
+export const changePassword = async (values: ChangePasswordType) => (await axiosInstance.post('/api/change-password',values)).data
 
 
 export const logoutUser = async () => {

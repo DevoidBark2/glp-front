@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import { Button, Form, Input, notification } from "antd";
 import { useRouter } from "next/navigation";
-import { useMobxStores } from "@/shared/store/RootStore";
 import ReCAPTCHA from "react-google-recaptcha";
-import nextConfig from "next.config.mjs";
 import { observer } from "mobx-react";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
+
+import nextConfig from "next.config.mjs";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 export const ForgotPasswordComponent = observer(() => {
     const [recaptcha, setRecaptcha] = useState<string | null>(null);

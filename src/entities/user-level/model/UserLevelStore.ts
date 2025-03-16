@@ -1,4 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
+
 import { UserLevel } from "@/shared/api/users-level/model";
 import { getAllUsersLevel } from "@/shared/api/users-level";
 

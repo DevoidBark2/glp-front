@@ -4,14 +4,17 @@ import Link from "next/link";
 import { Avatar, Button, MenuProps, Spin, Drawer, Dropdown } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { PlatformMenu } from "@/shared/constants";
-import { UserRole } from "@/shared/api/user/model";
 import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, BookOutlined, DownOutlined, UpOutlined, BarChartOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
+import { useTheme } from "next-themes";
+
+import { PlatformMenu } from "@/shared/constants";
+import { UserRole } from "@/shared/api/user/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
+
 import nextConfig from "../../../next.config.mjs";
-import { useTheme } from "next-themes";
+
 
 export const Header = observer(() => {
     const { userStore, userProfileStore } = useMobxStores();
@@ -53,7 +56,7 @@ export const Header = observer(() => {
     );
 
     useEffect(() => {
-        if (userProfileStore.loading) return;
+        if (userProfileStore.loading) {return;}
 
         const menuItems: MenuProps["items"] = [
             {

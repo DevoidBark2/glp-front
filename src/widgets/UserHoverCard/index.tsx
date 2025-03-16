@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Button, Typography } from "antd";
 import Link from "next/link";
+
 import { User } from "@/shared/api/user/model";
 
 interface UserHoverCardProps {

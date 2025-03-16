@@ -1,5 +1,6 @@
-import {CourseComponent} from "@/shared/api/component/model";
 import dayjs from "dayjs";
+
+import {CourseComponent} from "@/shared/api/component/model";
 
 export const componentTaskMapper = (state: CourseComponent) => {
     const component: any = {

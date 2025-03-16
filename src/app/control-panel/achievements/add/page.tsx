@@ -1,11 +1,12 @@
 "use client"
 import React, { useState } from "react";
 import { Form, Input, Select, Button, InputNumber, message, Upload, Breadcrumb, Divider } from "antd";
-import { conditionForAchievements, typesConsitions } from "@/shared/constants";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { UploadOutlined } from "@ant-design/icons";
 import Image from "next/image"
+
+import { conditionForAchievements, typesConsitions } from "@/shared/constants";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
 

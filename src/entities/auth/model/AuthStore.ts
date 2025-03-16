@@ -1,3 +1,5 @@
+import { action, makeAutoObservable } from "mobx";
+
 import {
     changePassword,
     deleteUserAccount,
@@ -7,7 +9,6 @@ import {
     verificationEmail
 } from "@/shared/api/auth";
 import { ChangePasswordType } from "@/shared/api/auth/model";
-import { action, makeAutoObservable } from "mobx";
 
 class AuthStore {
     constructor() {
@@ -19,21 +20,13 @@ class AuthStore {
         return await changePassword(passwordData);
     })
 
-    resetPassword = action(async (email: string) => {
-        return await resetPassword(email)
-    })
+    resetPassword = action(async (email: string) => await resetPassword(email))
 
-    newPassword = action(async (password: string, token: string | null) => {
-        return await newPassword(password, token);
-    })
+    newPassword = action(async (password: string, token: string | null) => await newPassword(password, token))
 
-    verification = action(async (token: string | null) => {
-        return await verificationEmail(token)
-    })
+    verification = action(async (token: string | null) => await verificationEmail(token))
 
-    deleteAccount = action(async () => {
-        return await deleteUserAccount();
-    })
+    deleteAccount = action(async () => await deleteUserAccount())
 }
 
 

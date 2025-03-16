@@ -8,6 +8,7 @@ import {
     UploadOutlined,
     UserOutlined
 } from "@ant-design/icons";
+
 import { UserRole } from "@/shared/api/user/model";
 import { ModeratorFeedback, Post, PostStatusEnum } from "@/shared/api/posts/model";
 import { UserHoverCard } from "@/widgets";
@@ -24,8 +25,7 @@ interface getPostColumnsProps {
 
 
 
-export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deletePost, handleChangePost }: getPostColumnsProps): TableColumnsType<Post> => {
-    return [
+export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deletePost, handleChangePost }: getPostColumnsProps): TableColumnsType<Post> => [
         {
             title: 'Название',
             dataIndex: 'name',
@@ -57,14 +57,14 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
         {
             title: "Опубликован",
             dataIndex: "is_publish",
-            render: (_, record) => {
+            render: (_, record) => 
                 // const isSuperAdmin = currentUser?.role === UserRole.SUPER_ADMIN;
                 // const isUnderReview = record.status !== PostStatusEnum.APPROVED;
                 // const isDisabled =
                 //     (isSuperAdmin && isUnderReview) ||
                 //     (!isSuperAdmin && record.status !== PostStatusEnum.APPROVED);
 
-                return (
+                 (
                     <Tooltip
                         // title={
                         //     isDisabled
@@ -81,15 +81,14 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
                             onChange={(checked) => publishPost(record.id, checked)}
                         />
                     </Tooltip>
-                );
-            },
+                )
+            ,
         },
         {
             title: "Создатель",
             dataIndex: "user",
             hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
-            render: (_, record) => {
-                return record.user.role === UserRole.SUPER_ADMIN ? (
+            render: (_, record) => record.user.role === UserRole.SUPER_ADMIN ? (
                     <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                         <Tooltip title="Перейти в профиль">
                             <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
@@ -104,8 +103,7 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
                             {`${record.user.second_name ?? ''} ${record.user.first_name ?? ''} ${record.user.last_name ?? ''}`}
                         </Link>
                     </Popover>
-                )
-            },
+                ),
         },
         {
             title: "Действия",
@@ -151,4 +149,3 @@ export const getPostColumns = ({ getStatusTag, currentUser, publishPost, deleteP
             ),
         },
     ];
-};

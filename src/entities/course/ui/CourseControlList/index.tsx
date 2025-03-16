@@ -1,7 +1,3 @@
-import { Course, StatusCourseEnum } from "@/shared/api/course/model";
-import {UserRole} from "@/shared/api/user/model";
-import { coursesTable } from "@/shared/config/tableConfig";
-import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from "@/shared/constants";
 import {Button, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { observer } from "mobx-react";
@@ -9,11 +5,17 @@ import Link from "next/link";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
+
+import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from "@/shared/constants";
+import { coursesTable } from "@/shared/config/tableConfig";
+import {UserRole} from "@/shared/api/user/model";
+import { Course, StatusCourseEnum } from "@/shared/api/course/model";
 import {UserHoverCard} from "@/widgets";
-import { isEditedCourse } from "../../selectors";
 import {SettingControlPanel} from "@/shared/model";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {showCourseStatus} from "@/shared/lib/showCourseStatusInTable";
+
+import { isEditedCourse } from "../../selectors";
 
 export const CourseControlList = observer(() => {
     const { courseStore, userProfileStore } = useMobxStores()

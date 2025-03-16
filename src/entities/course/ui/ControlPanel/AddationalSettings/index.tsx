@@ -1,10 +1,11 @@
-import { useMobxStores } from "@/shared/store/RootStore";
 import { Button, Empty, FormInstance, List, notification, Radio } from "antd";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { Exam } from "@/shared/api/exams/model";
 import Link from "next/link";
+
+import { Exam } from "@/shared/api/exams/model";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface AddationalSettingsProps {
     form: FormInstance

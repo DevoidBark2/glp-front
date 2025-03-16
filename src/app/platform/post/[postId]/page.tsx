@@ -1,14 +1,15 @@
 "use client";
 import { Breadcrumb, Button, notification } from "antd";
 import { observer } from "mobx-react";
-import { useParams } from "next/navigation";
+import { useParams , useRouter } from "next/navigation";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { PostCard } from "@/entities/post";
 import { Post } from "@/shared/api/posts/model";
-import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
+
 
 const PostPage = () => {
     const { postId } = useParams();

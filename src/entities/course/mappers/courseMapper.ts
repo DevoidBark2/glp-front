@@ -1,9 +1,9 @@
-import { Course, CourseMember } from "@/shared/api/course/model";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import dayjs from "dayjs";
 
-export const courseMapper = (course: Course): any => {
-    return {
+import { Course, CourseMember } from "@/shared/api/course/model";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
+
+export const courseMapper = (course: Course): any => ({
         id: course.id,
         name: course.name,
         image: course.image,
@@ -18,14 +18,11 @@ export const courseMapper = (course: Course): any => {
         user: course.user,
         sections: course.sections,
         courseUsers: course.courseUsers
-    };
-}
+    })
 
-export const courseMemberMapper = (courseMember: CourseMember): CourseMember => {
-    return {
+export const courseMemberMapper = (courseMember: CourseMember): CourseMember => ({
         id: courseMember.id,
         enrolledAt: courseMember.enrolledAt,
         progress: courseMember.progress,
         user: courseMember.user
-    }
-}
+    })

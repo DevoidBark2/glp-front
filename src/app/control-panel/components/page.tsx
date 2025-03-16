@@ -2,11 +2,12 @@
 import React, {useEffect, useState} from "react";
 import { Table } from "antd";
 import { observer } from "mobx-react";
+import { useRouter } from "next/navigation";
+
 import {PageHeader} from "@/shared/ui/PageHeader";
 import {PageContainerControlPanel} from "@/shared/ui";
 import { taskColumns } from "@/shared/columnsTables/taskColumns";
 import { taskTable } from "@/shared/config";
-import { useRouter } from "next/navigation";
 import {SettingControlPanel} from "@/shared/model";
 import {useMobxStores} from "@/shared/store/RootStore";
 

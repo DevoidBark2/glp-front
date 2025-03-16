@@ -1,4 +1,3 @@
-import { Course, CourseReview } from "@/shared/api/course/model";
 import {Button, Dropdown, Form, Input, Menu, message, Modal, Popconfirm, Progress, Rate, Tooltip} from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
@@ -12,6 +11,8 @@ import {
     DownloadOutlined,
     EllipsisOutlined
 } from "@ant-design/icons";
+
+import { Course, CourseReview } from "@/shared/api/course/model";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import { useMobxStores } from "@/shared/store/RootStore";
 import nextConfig from "next.config.mjs";

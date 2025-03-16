@@ -7,8 +7,7 @@ interface MultiPlayChoiceProps {
     form?: FormInstance;
 }
 
-export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
-    return (
+export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => (
         <>
             <Form.Item
                 label="Заголовок"
@@ -136,4 +135,3 @@ export const MultiPlayChoice: FC<MultiPlayChoiceProps> = ({ form }) => {
             </Form.List>
         </>
     );
-};

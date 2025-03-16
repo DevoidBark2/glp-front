@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { notification, Button, Form, Input, Modal, Divider } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import nextConfig from "../../../../../next.config.mjs";
 import ReCAPTCHA from "react-google-recaptcha"
 import { useRouter } from "next/navigation";
 import Image from "next/image"
+
 import { useMobxStores } from "@/shared/store/RootStore";
+
+import nextConfig from "../../../../../next.config.mjs";
 
 export const LoginComponent = observer(() => {
     const [recaptcha, setRecaptcha] = useState<string | null>(null);

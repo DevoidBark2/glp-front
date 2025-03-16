@@ -1,4 +1,5 @@
 import { axiosInstance } from "../http-client"
+
 import {Comments, Post, PostCreateForm, PostStatusEnum} from "./model";
 
 export const getAllPost = async (): Promise<Post[]> => {
@@ -20,7 +21,7 @@ export const createPost = async (values: PostCreateForm) => {
     const form = new FormData();
     form.append("name", values.name);
     form.append("content", values.content);
-    if (values.description) form.append("description", values.description);
+    if (values.description) {form.append("description", values.description);}
     if (values.image) {
         form.append("image", values.image);
     }
@@ -35,8 +36,8 @@ export const changePost = async (post: Post) => {
     const form = new FormData();
     form.append("name", post.name);
     form.append("content", post.content);
-    if (post.description) form.append("description", post.description);
-    if (post.image) form.append("image", post.image);
+    if (post.description) {form.append("description", post.description);}
+    if (post.image) {form.append("image", post.image);}
     const data = (await axiosInstance.put('api/post', post)).data
 
     return data.data;

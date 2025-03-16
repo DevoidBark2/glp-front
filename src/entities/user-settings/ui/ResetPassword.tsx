@@ -1,9 +1,10 @@
 import { Button, Divider, Form, Input, Tooltip } from "antd";
 import React, { FC } from "react";
-import { AuthMethodEnum, ChangePasswordType } from "@/shared/api/auth/model";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
+
+import { AuthMethodEnum, ChangePasswordType } from "@/shared/api/auth/model";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface ChangePasswordProps {
     handleChangePassword: (values: ChangePasswordType) => void

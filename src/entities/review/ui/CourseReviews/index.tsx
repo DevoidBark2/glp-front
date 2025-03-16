@@ -1,11 +1,12 @@
 import { Avatar, Button, Divider, List, Rate } from "antd"
 import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
+import dayjs from "dayjs";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import nextConfig from "next.config.mjs";
 import { IsAdmin } from "@/entities/user/selectors";
-import dayjs from "dayjs";
 
 interface CourseReviewsProps {
     onDeleteComment: (id: number) => void

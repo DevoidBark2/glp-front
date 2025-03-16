@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import nextConfig from "next.config.mjs";
 
 export const axiosInstance = axios.create({

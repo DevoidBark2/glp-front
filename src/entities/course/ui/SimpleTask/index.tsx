@@ -1,11 +1,12 @@
 import { observer } from "mobx-react";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { ComponentTask } from "@/shared/api/course/model";
 import { MathJaxContext } from "better-react-mathjax";
 import { MathfieldElement } from "mathlive";
 import {Button, message} from "antd";
-import { parseMathFormula } from "@/shared/lib/parseMathFormula";
 import { useTheme } from "next-themes";
+
+import { parseMathFormula } from "@/shared/lib/parseMathFormula";
+import { ComponentTask } from "@/shared/api/course/model";
 
 interface QuizMultiComponentProps {
     task: ComponentTask;

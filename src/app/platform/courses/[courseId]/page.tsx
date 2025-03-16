@@ -2,18 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Avatar, Breadcrumb, Button, Divider, message, notification, Spin } from "antd";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams , useRouter } from "next/navigation";
 import Link from "next/link";
-import nextConfig from "next.config.mjs";
-import { AccessRightEnum, Course } from "@/shared/api/course/model";
 import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined, UserOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { useTheme } from "next-themes";
+
+import nextConfig from "next.config.mjs";
+import { AccessRightEnum, Course } from "@/shared/api/course/model";
 import { CourseLevelComponent, InputSecretKeyModal } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseReviews } from "@/entities/review";
-import { useTheme } from "next-themes";
+
 
 const CoursePage = () => {
     const { courseStore, userProfileStore, reviewStore } = useMobxStores();

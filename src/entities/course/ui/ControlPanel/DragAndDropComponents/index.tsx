@@ -1,9 +1,10 @@
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {Button, Tag} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
+import dayjs from "dayjs";
+
 import {typeIcons} from "@/shared/columnsTables/taskColumns";
 import {StatusCourseComponentEnum} from "@/shared/api/component/model";
-import dayjs from "dayjs";
 import {FORMAT_VIEW_DATE} from "@/shared/constants";
 import {SectionCourseItem} from "@/shared/api/section/model";
 
@@ -13,8 +14,7 @@ interface DragAndDropComponentsProps {
     section: SectionCourseItem;
 }
 
-export const DragAndDropComponents = ({handleDragDropComponent,handleDeleteComponent,section} : DragAndDropComponentsProps) => {
-    return (
+export const DragAndDropComponents = ({handleDragDropComponent,handleDeleteComponent,section} : DragAndDropComponentsProps) => (
         <DragDropContext
             onDragEnd={(result) => handleDragDropComponent(result, section)}>
             <Droppable droppableId={`droppable-${section.id}`}>
@@ -70,4 +70,3 @@ export const DragAndDropComponents = ({handleDragDropComponent,handleDeleteCompo
             </Droppable>
         </DragDropContext>
     )
-}

@@ -1,8 +1,9 @@
 "use client"
-import { useMobxStores } from "@/shared/store/RootStore"
 import { notification, Spin } from "antd"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+
+import { useMobxStores } from "@/shared/store/RootStore"
 
 const NewVerificationPage = () => {
     const {authStore} = useMobxStores()

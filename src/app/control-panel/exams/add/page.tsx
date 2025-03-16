@@ -1,16 +1,17 @@
 "use client"
 import React, { useState } from "react";
-import { PageContainerControlPanel } from "@/shared/ui";
 import {Divider, Breadcrumb, Input, AutoComplete, Button, Tag, message, notification, Empty} from "antd";
-import { useMobxStores } from "@/shared/store/RootStore";
 import Link from "next/link";
 import { observer } from "mobx-react";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { typeIcons } from "@/shared/columnsTables/taskColumns";
 import dayjs from "dayjs";
-import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import {useRouter} from "next/navigation";
+
+import { typeIcons } from "@/shared/columnsTables/taskColumns";
+import { FORMAT_VIEW_DATE } from "@/shared/constants";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { PageContainerControlPanel } from "@/shared/ui";
 import {StatusCourseComponentEnum} from "@/shared/api/component/model";
 import {renderType} from "@/shared/lib/course/course.lib";
 
@@ -44,7 +45,7 @@ const ExamAddPage = observer(() => {
 
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
-        if (!destination) return;
+        if (!destination) {return;}
 
         const items = Array.from(addedComponents);
         const [removed] = items.splice(source.index, 1);

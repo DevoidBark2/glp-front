@@ -1,5 +1,6 @@
 import { action, makeAutoObservable } from "mobx";
 import {notification} from "antd";
+
 import { CourseComponent } from "@/shared/api/component/model";
 import {
     changeComponent,

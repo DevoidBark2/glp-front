@@ -1,8 +1,9 @@
-import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
 import { Button, message } from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+
+import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
 
 interface QuizComponentProps {
     task: ComponentTask;

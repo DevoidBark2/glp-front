@@ -9,14 +9,16 @@ import {
     BarsOutlined, LogoutOutlined,
     SettingOutlined, StarOutlined, UserOutlined
 } from "@ant-design/icons";
-import { UserRole } from "@/shared/api/user/model";
-import nextConfig from "../../../next.config.mjs";
-import { useMobxStores } from "@/shared/store/RootStore";
-import { AuthMethodEnum } from "@/shared/api/auth/model";
 import {useTheme} from "next-themes";
 
+import { UserRole } from "@/shared/api/user/model";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
+
+import nextConfig from "../../../next.config.mjs";
+
 const findKeyByPathname = (pathName: string, items: any): string => {
-    if (!items.length) return '0';
+    if (!items.length) {return '0';}
     for (const item of items) {
         const it = item as any
         if (pathName.endsWith(item.key)) {

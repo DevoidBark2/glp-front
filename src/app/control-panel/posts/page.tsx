@@ -11,13 +11,13 @@ import {
     ClockCircleOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 import { PageHeader } from "@/shared/ui/PageHeader";
 import { getPostColumns } from "@/shared/columnsTables/postColumns";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { postTable } from "@/shared/config";
 import { ModeratorFeedback, PostStatusEnum } from "@/shared/api/posts/model";
-import { useRouter } from "next/navigation";
 import { SettingControlPanel } from "@/shared/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 

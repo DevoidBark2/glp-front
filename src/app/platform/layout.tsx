@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { usePathname } from "next/navigation";
-import { Footer } from "@/widgets/Footer";
-import { Header } from "@/widgets";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { io } from "socket.io-client";
 import { Button, Modal, notification } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
+
+import { Footer } from "@/widgets/Footer";
+import { Header } from "@/widgets";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -29,7 +30,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         }
     }, [pathName, userProfileStore, generalSettingsStore]);
 
-    // Закрытие модалки
     const handleOk = () => {
         setIsModalVisible(false);
     };
@@ -38,25 +38,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         setIsModalVisible(false);
     };
 
-    useEffect(() => {
-        if (!userProfileStore.userProfile?.id) return;
-
-        // Подключаем WebSocket
-        const socket = io(process.env.API_URL, {
-            query: { userId: userProfileStore.userProfile.id },
-        });
-
-        // Слушаем событие достижения
-        socket.on("achievementNotification", (data: { title: string; message: string }) => {
-            setAchievementData(data);
-            setIsModalVisible(true);
-        });
-
-        // Очистка соединения при размонтировании
-        return () => {
-            socket.disconnect();
-        };
-    }, [userProfileStore.userProfile?.id]);
+    // useEffect(() => {
+    //     if (!userProfileStore.userProfile?.id) return;
+    //
+    //     // Подключаем WebSocket
+    //     const socket = io(process.env.API_URL, {
+    //         query: { userId: userProfileStore.userProfile.id },
+    //     });
+    //
+    //     // Слушаем событие достижения
+    //     socket.on("achievementNotification", (data: { title: string; message: string }) => {
+    //         setAchievementData(data);
+    //         setIsModalVisible(true);
+    //     });
+    //
+    //     // Очистка соединения при размонтировании
+    //     return () => {
+    //         socket.disconnect();
+    //     };
+    // }, [userProfileStore.userProfile?.id]);
 
     return (
         <>

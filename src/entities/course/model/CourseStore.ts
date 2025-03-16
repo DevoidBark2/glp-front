@@ -1,5 +1,6 @@
 import { action, makeAutoObservable, runInAction } from "mobx";
 import { notification } from "antd";
+
 import {
     changeCourse,
     createCourse,
@@ -188,9 +189,7 @@ class CourseStore {
         })
     })
 
-    getCourseDetailsById = action(async (courseId: number) => {
-        return await getCourseById(courseId);
-    })
+    getCourseDetailsById = action(async (courseId: number) => await getCourseById(courseId))
 
     getCourseDetailsSections = action(async (courseId: number) => {
         await getCourseDetailsSections(courseId).then(response => {
@@ -266,7 +265,7 @@ class CourseStore {
         if (this.sectionCourse) {
             this.sectionCourse.components.forEach(component => {
                 if (component.componentTask)
-                    component.componentTask.userAnswer = data.userAnswer;
+                    {component.componentTask.userAnswer = data.userAnswer;}
             });
         }
 
@@ -296,8 +295,7 @@ class CourseStore {
         if (data) {
             runInAction(() => {
                 // Создаём новый массив с изменёнными значениями
-                const updatedSections = this.courseMenuItems?.sections.map(section => {
-                    return {
+                const updatedSections = this.courseMenuItems?.sections.map(section => ({
                         ...section,
                         children: section.children.map(child => {
                             if (child.id === prevSection) {
@@ -308,8 +306,7 @@ class CourseStore {
                             }
                             return child;
                         }),
-                    };
-                });
+                    }));
 
                 // Заменяем sections новым массивом
                 // @ts-ignore
@@ -377,19 +374,15 @@ class CourseStore {
     })
 
 
-    handleReviewSubmitCourse = action(async (values: CourseReview) => {
-        return await submitReviewCourse(values);
-    })
+    handleReviewSubmitCourse = action(async (values: CourseReview) => await submitReviewCourse(values))
 
 
-    handleCheckSecretKey = action(async (value: string, courseId: number) => {
-        return await handleCheckCourseSecretKey(value, courseId)
-    })
+    handleCheckSecretKey = action(async (value: string, courseId: number) => await handleCheckCourseSecretKey(value, courseId))
 
     updateSectionComponentsOrder = action((sectionId: number, updatedComponents: any[]) => {
         const sectionIndex = this.courseDetailsSections.findIndex(section => section.id === sectionId);
 
-        if (sectionIndex === -1) return;
+        if (sectionIndex === -1) {return;}
 
         // Обновляем порядок компонентов в указанном разделе
         this.courseDetailsSections[sectionIndex].sectionComponents = updatedComponents;
@@ -398,9 +391,7 @@ class CourseStore {
         this.courseDetailsSections = [...this.courseDetailsSections];
     })
 
-    updateComponentOrder = action(async (sectionId: number, components: { id: string; sort: number }[]) => {
-        return await updateComponentOrder(sectionId, components)
-    });
+    updateComponentOrder = action(async (sectionId: number, components: { id: string; sort: number }[]) => await updateComponentOrder(sectionId, components));
 
     updateParentSectionsOrder = action(async (courseId: number, sections: { id: number, sort: number }[]) => {
         await updateOrderParentSection(courseId, sections);

@@ -1,6 +1,7 @@
-import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared/api/customize/model";
 import { Button, Tooltip } from "antd";
 import React from "react";
+
+import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared/api/customize/model";
 
 interface CustomizeItemProps {
     item: Frame | Icon | Effect;
@@ -18,8 +19,7 @@ export const CustomizeItem: React.FC<CustomizeItemProps> = ({
     handleSelect,
     handleBuy,
     categoryKey
-}) => {
-    return (
+}) => (
         <Tooltip title={!isUnlocked ? `Требуется уровень: ${item.minLevel}` : ""} placement="top">
             <div
                 className={`relative flex flex-col items-center p-6 rounded-lg shadow-lg border transition-all
@@ -55,4 +55,3 @@ export const CustomizeItem: React.FC<CustomizeItemProps> = ({
             </div>
         </Tooltip>
     );
-};

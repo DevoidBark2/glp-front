@@ -1,8 +1,9 @@
 "use client"
 import React from "react";
 import { observer } from "mobx-react";
-import {PageHeader} from "@/shared/ui/PageHeader";
 import { useRouter } from "next/navigation";
+
+import {PageHeader} from "@/shared/ui/PageHeader";
 import { SectionList } from "@/entities/section/ui/SectionList.tsx";
 import {PageContainerControlPanel} from "@/shared/ui";
 

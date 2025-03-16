@@ -1,5 +1,6 @@
 import { FilterValues } from "../filter/model";
 import { axiosInstance } from "../http-client";
+
 import { Course, CourseReview } from "./model";
 
 export const getAllCourses = async (): Promise<Course[]> => {
@@ -30,8 +31,8 @@ export const createCourse = async (values: Course): Promise<Course> => {
     form.append('access_right', `${values.access_right}`)
     form.append('duration', `${values.duration}`)
     form.append('level', `${values.level}`)
-    if (values.category) form.append('category', values.category.toString());
-    if (values.content_description) form.append("content_description", values.content_description)
+    if (values.category) {form.append('category', values.category.toString());}
+    if (values.content_description) {form.append("content_description", values.content_description)}
 
     const data = (await axiosInstance.post('/api/course', form)).data;
     return data.data;
@@ -49,17 +50,11 @@ export const getCourseById = async (courseId: number) => {
     return data.data;
 }
 
-export const deleteCourseById = async (id: number) => {
-    return (await axiosInstance.delete(`api/course/${id}`)).data
-}
+export const deleteCourseById = async (id: number) => (await axiosInstance.delete(`api/course/${id}`)).data
 
-export const changeCourse = async (course: Course) => {
-    return (await axiosInstance.put('api/course', course)).data;
-}
+export const changeCourse = async (course: Course) => (await axiosInstance.put('api/course', course)).data
 
-export const sendToReviewCourse = async (id: number) => {
-    return (await axiosInstance.post('api/publish-course', { courseId: id })).data;
-}
+export const sendToReviewCourse = async (id: number) => (await axiosInstance.post('api/publish-course', { courseId: id })).data
 
 export const getCourseDetailsSections = async (courseId: number) => {
     const data = (await axiosInstance.get(`api/course-sections/${courseId}`)).data
@@ -68,9 +63,7 @@ export const getCourseDetailsSections = async (courseId: number) => {
 }
 
 
-export const getCourseTitleAndMenuById = async (courserId: number) => {
-    return (await axiosInstance.get(`api/get-course-menu?courseId=${courserId}`)).data
-}
+export const getCourseTitleAndMenuById = async (courserId: number) => (await axiosInstance.get(`api/get-course-menu?courseId=${courserId}`)).data
 
 export const handleFilterByCategory = async (id: number) => {
     const data = (await axiosInstance.get(`api/get-courses?categoryId=${id}`)).data
@@ -90,9 +83,7 @@ export const getAllMembersCourse = async (courseId: number) => {
     return data.data;
 }
 
-export const deleteCourseMember = async (id: number) => {
-    return (await axiosInstance.delete(`api/delete-course-member?id=${id}`)).data
-}
+export const deleteCourseMember = async (id: number) => (await axiosInstance.delete(`api/delete-course-member?id=${id}`)).data
 
 export const getAllExams = async () => {
     const data = (await axiosInstance.get(`api/get-user-exams`)).data
@@ -104,9 +95,7 @@ export const searchCourseByFilter = async (values: FilterValues) => {
     return data.data
 }
 
-export const submitReviewCourse = async (values: CourseReview) => {
-    return (await axiosInstance.post('/api/course-review', values)).data
-}
+export const submitReviewCourse = async (values: CourseReview) => (await axiosInstance.post('/api/course-review', values)).data
 
 export const handleCheckCourseSecretKey = async (value: string, courseId: number) => {
     const data = (await axiosInstance.post('/api/check-secret-key', { secret_key: value, courseId: courseId })).data

@@ -1,3 +1,1 @@
-export const Post = () => {
-    return <div></div>
-}
+export const Post = () => <div></div>

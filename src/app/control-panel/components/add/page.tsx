@@ -1,10 +1,11 @@
 "use client"
-import {PageContainerControlPanel} from "@/shared/ui";
 import { Breadcrumb, Button, Divider, Form, Select } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+
+import {PageContainerControlPanel} from "@/shared/ui";
 import { MultiPlayChoice, QuizTask, TextTask } from "@/entities/course/ui";
 import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
 import {useMobxStores} from "@/shared/store/RootStore";

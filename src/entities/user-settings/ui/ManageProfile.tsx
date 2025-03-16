@@ -1,8 +1,9 @@
 import { Button, Divider, Form, Switch } from "antd";
 import React from "react";
+import { observer } from "mobx-react";
+
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
-import { observer } from "mobx-react";
 
 interface ManageProfileProps {
     showDeleteAccountModal: () => void;

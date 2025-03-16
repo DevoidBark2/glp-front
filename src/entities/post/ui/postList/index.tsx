@@ -1,15 +1,16 @@
 import { Skeleton } from "antd";
-import { PostRow } from "../postRow";
-import { Post } from "@/shared/api/posts/model";
 import Image from "next/image";
+
+import { Post } from "@/shared/api/posts/model";
+
+import { PostRow } from "../postRow";
 
 interface PostListProps {
     loading: boolean;
     posts: Post[];
 }
 
-export const PostList = ({ loading, posts }: PostListProps) => {
-    return (
+export const PostList = ({ loading, posts }: PostListProps) => (
         <div className="flex justify-center">
             <div className="w-full max-w-5xl">
                 {!loading ? (
@@ -41,4 +42,3 @@ export const PostList = ({ loading, posts }: PostListProps) => {
             </div>
         </div>
     );
-};

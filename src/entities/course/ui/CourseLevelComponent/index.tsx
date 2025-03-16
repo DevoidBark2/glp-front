@@ -1,5 +1,6 @@
 import React from "react";
 import { TrophyOutlined } from "@ant-design/icons";
+
 import { LevelCourseEnum } from "@/shared/api/course/model";
 
 type CourseLevelComponentProps = {

@@ -1,5 +1,3 @@
-export const Commenting = () => {
-    return (
+export const Commenting = () => (
         <div></div>
     )
-}

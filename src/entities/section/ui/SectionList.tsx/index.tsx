@@ -1,8 +1,5 @@
-import { StatusSectionEnum, SectionCourseItem } from "@/shared/api/section/model";
-import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip } from "antd"
 import dayjs, { Dayjs } from "dayjs";
-import { sectionsTable } from "@/shared/config";
 import {
     CrownOutlined,
     DeleteOutlined,
@@ -12,6 +9,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
+
+import { sectionsTable } from "@/shared/config";
+import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
+import { StatusSectionEnum, SectionCourseItem } from "@/shared/api/section/model";
 import { UserRole } from "@/shared/api/user/model";
 import { UserHoverCard } from "@/widgets";
 import { SettingControlPanel } from "@/shared/model";
@@ -41,15 +42,13 @@ export const SectionList = observer(() => {
             dataIndex: 'course',
             width: '20%',
             ellipsis: true,
-            render: (_, record) => {
-                return (
+            render: (_, record) => (
                     <Tooltip title={`Перейти к курсу "${record.course.name}"`}>
                         <Link className="text-gray-800 hover:text-gray-600" href={`courses/${record.course.id}`}>
                             {record.course.name.length > 50 ? `${record.course.name.slice(0, 50)}...` : record.course.name}
                         </Link>
                     </Tooltip>
-                );
-            }
+                )
         },
         {
             title: 'Дата публикации',
@@ -68,13 +67,11 @@ export const SectionList = observer(() => {
                 { text: 'Неактивен', value: StatusSectionEnum.DEACTIVE }
             ],
             onFilter: (value, record) => record.status === value,
-            render: (value) => {
-                return value === StatusSectionEnum.ACTIVE ? (
+            render: (value) => value === StatusSectionEnum.ACTIVE ? (
                     <Tag color="green">Активен</Tag>
                 ) : (
                     <Tag color="red">Неактивен</Tag>
-                );
-            }
+                )
         },
         {
             title: "Создатель",

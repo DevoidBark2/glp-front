@@ -11,6 +11,7 @@ import {
     DownloadOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
+
 import { ActionEvent } from "@/shared/api/action-user";
 import { eventColors, eventTooltips, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { EventUser } from "@/shared/api/events/model";
@@ -69,8 +70,7 @@ const EventPage = () => {
             dataIndex: "success",
             title: "Статус",
             width: "10%",
-            render: (success) => {
-                return success ? (
+            render: (success) => success ? (
                     <Tag color="green">
                         <CheckCircleOutlined style={{ marginRight: 4 }} />
                         Успех
@@ -80,8 +80,7 @@ const EventPage = () => {
                         <CloseCircleOutlined style={{ marginRight: 4 }} />
                         Неуспех
                     </Tag>
-                );
-            },
+                ),
         },
         {
             dataIndex: "user",

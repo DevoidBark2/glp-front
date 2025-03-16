@@ -1,5 +1,6 @@
-import { axiosInstance } from "../http-client";
 import { MainSection, SectionCourseItem } from "@/shared/api/section/model";
+
+import { axiosInstance } from "../http-client";
 
 export const getCPAllSection = async () => {
     const data = (await axiosInstance.get('api/sections')).data
@@ -7,9 +8,7 @@ export const getCPAllSection = async () => {
     return data.data
 }
 
-export const deleteSectionCourse = async (id: number) => {
-    return (await axiosInstance.delete(`api/sections/${id}`)).data;
-}
+export const deleteSectionCourse = async (id: number) => (await axiosInstance.delete(`api/sections/${id}`)).data
 
 export const getSectionCourseById = async (id: number): Promise<SectionCourseItem> => {
     const data = (await axiosInstance.get(`api/sections/${id}`)).data;
@@ -29,11 +28,9 @@ export const getMainCourseSection = async () => {
     return data.data;
 }
 
-export const createMainSection = async (values: MainSection) => {
-    return (await axiosInstance.post('api/main-section', values)).data;
-}
+export const createMainSection = async (values: MainSection) => (await axiosInstance.post('api/main-section', values)).data
 
-export const createSection = async (values: SectionCourseItem) => {
+export const createSection = async (values: SectionCourseItem) => 
     // const formData = new FormData();
     //
     // Object.keys(values).forEach((key) => {
@@ -51,9 +48,7 @@ export const createSection = async (values: SectionCourseItem) => {
     //     }
     // });
 
-    return await (await axiosInstance.post('api/sections', values)).data;
-};
+     await (await axiosInstance.post('api/sections', values)).data
+;
 
-export const changeSection = async (values: SectionCourseItem): Promise<{ message: string }> => {
-    return (await axiosInstance.put('api/sections', values)).data;
-}
+export const changeSection = async (values: SectionCourseItem): Promise<{ message: string }> => (await axiosInstance.put('api/sections', values)).data

@@ -1,11 +1,12 @@
 "use client"
-import {PageContainerControlPanel} from "@/shared/ui";
 import { Breadcrumb, Form } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
-import { FormSteps } from "@/entities/section/ui"
 import { useParams } from "next/navigation"
 import {useEffect, useState} from "react"
+
+import { FormSteps } from "@/entities/section/ui"
+import {PageContainerControlPanel} from "@/shared/ui";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {SectionCourseItem} from "@/shared/api/section/model";
 

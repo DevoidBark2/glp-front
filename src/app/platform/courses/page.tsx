@@ -2,12 +2,14 @@
 import { Button, Breadcrumb, Input, Divider, Empty } from "antd";
 import { ArrowLeftOutlined, SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
-import { CourseList } from "@/entities/course/ui";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/shared/store/RootStore";
-import FilterBlock from "@/entities/filters/ui/FilterBlock";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
+
+import { CourseList } from "@/entities/course/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
+import FilterBlock from "@/entities/filters/ui/FilterBlock";
+
 
 const CoursesSearch = observer(() => {
     const { courseStore, nomenclatureStore } = useMobxStores();

@@ -1,11 +1,14 @@
 import "./globals.css";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { StoresProvider } from "@/shared/store/RootStore"
-import { roboto } from "@/app/fonts";
 import { ConfigProvider } from "antd";
 import React from "react";
-import { themeConfig } from "@/shared/config/themeConfig";
 import { Metadata } from "next";
+
+import { StoresProvider } from "@/shared/store/RootStore"
+import { roboto } from "@/app/fonts";
+import { themeConfig } from "@/shared/config/themeConfig";
+
+
 import { ThemeProviders } from "./themeProviders";
 
 export const metadata: Metadata = {

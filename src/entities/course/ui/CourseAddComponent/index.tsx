@@ -2,13 +2,14 @@ import { Button, Col, Form, message, Row, Select, Switch, Upload, UploadProps, I
 import { Input } from "antd/lib";
 import Dragger from "antd/es/upload/Dragger";
 import { InboxOutlined } from "@ant-design/icons";
-import { LEVEL_COURSE } from "@/shared/constants";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { observer } from "mobx-react";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { LEVEL_COURSE } from "@/shared/constants";
 import { Course } from "@/shared/api/course/model";
 
 const ReactQuill = dynamic(

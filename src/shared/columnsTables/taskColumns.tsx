@@ -1,4 +1,3 @@
-import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { Button, Popconfirm, Popover, TableColumnsType, Tag, Tooltip } from "antd";
 import {
     BookOutlined,
@@ -13,6 +12,8 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import Link from "next/link";
+
+import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
 import { UserHoverCard } from "@/widgets";
 import {CourseComponent, CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
@@ -87,8 +88,7 @@ export const taskColumns = ({ handleChangeComponentById, handleDeleteComponentBy
         title: "Создатель",
         dataIndex: "user",
         hidden: currentUser?.role !== UserRole.SUPER_ADMIN,
-        render: (_, record) => {
-            return record.user?.role === UserRole.SUPER_ADMIN ? (
+        render: (_, record) => record.user?.role === UserRole.SUPER_ADMIN ? (
                 <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
                     <Tooltip title="Перейти в профиль">
                         <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
@@ -103,8 +103,7 @@ export const taskColumns = ({ handleChangeComponentById, handleDeleteComponentBy
                         {`${record.user?.second_name ?? ''} ${record.user?.first_name ?? ''} ${record.user?.last_name ?? ''}`}
                     </Link>
                 </Popover>
-            )
-        },
+            ),
     },
     {
         title: "Действия",

@@ -1,6 +1,7 @@
-import ThemeSwitch from "@/shared/ui/themeSwitch";
 import { Divider } from "antd";
 import { useTheme } from "next-themes";
+
+import ThemeSwitch from "@/shared/ui/themeSwitch";
 
 export const PlatformSettings = () => {
     const { resolvedTheme } = useTheme()

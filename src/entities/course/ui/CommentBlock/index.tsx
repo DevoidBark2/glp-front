@@ -1,14 +1,16 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { useMobxStores } from "@/shared/store/RootStore";
 import { Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useSearchParams } from "next/navigation";
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from "dayjs";
+
 import 'dayjs/locale/ru';
-import { CourseSectionComment } from "@/entities/comments/ui";
 import { useTheme } from "next-themes";
+
+import { CourseSectionComment } from "@/entities/comments/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 dayjs.extend(relativeTime);
 dayjs.locale('ru');
@@ -19,7 +21,7 @@ export const CommentBlock = observer(() => {
     const { resolvedTheme } = useTheme()
 
     const sendComment = () => {
-        if (!searchParams.get("step")) return;
+        if (!searchParams.get("step")) {return;}
 
         if (commentsStore.comment.length < 1) {
             message.warning("Введите текст комментария!")

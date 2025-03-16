@@ -1,14 +1,16 @@
 "use client"
 import React, { useState } from "react";
-import { ChangePasswordType } from "@/shared/api/auth/model";
 import { Button, Form, Modal, notification, Tabs, TabsProps } from "antd";
 import { observer } from "mobx-react";
+import { useMediaQuery } from "react-responsive";
+import { useRouter } from "next/navigation";
+
+import { ChangePasswordType } from "@/shared/api/auth/model";
 import { ResetPassword } from "@/entities/user-settings/ui/ResetPassword";
 import { ManageProfile } from "@/entities/user-settings/ui/ManageProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { useMediaQuery } from "react-responsive";
 import { PlatformSettings } from "@/entities/user-settings/ui/PlatformSettings";
-import { useRouter } from "next/navigation";
+
 
 const SettingsPage = observer(() => {
     const { authStore, userProfileStore } = useMobxStores()

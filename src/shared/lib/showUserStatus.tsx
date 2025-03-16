@@ -1,7 +1,8 @@
 
-import { StatusUserEnum } from "@/shared/api/user/model";
 import {Tag} from "antd";
 import React from "react";
+
+import { StatusUserEnum } from "@/shared/api/user/model";
 
 export const showUserStatus = (userStatus: StatusUserEnum) => {
     switch (userStatus) {

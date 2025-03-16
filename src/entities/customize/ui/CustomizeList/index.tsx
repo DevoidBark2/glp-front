@@ -1,8 +1,10 @@
 import React from "react";
-import { CustomizeItem } from "../CustomizeItem";
+
 import { userLevels } from "@/entities/user-profile/ui/Achievements";
 import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared/api/customize/model";
 import { useMobxStores } from "@/shared/store/RootStore";
+
+import { CustomizeItem } from "../CustomizeItem";
 
 interface ItemListProps {
     items: Array<Frame | Icon | Effect>;
@@ -32,8 +34,8 @@ export const CustomizeList: React.FC<ItemListProps> = ({
             const isAUnlocked = userLevelData && aLevelData ? userLevelData.min >= aLevelData.min : false;
             const isBUnlocked = userLevelData && bLevelData ? userLevelData.min >= bLevelData.min : false;
 
-            if (isAUnlocked && !isBUnlocked) return -1;
-            if (!isAUnlocked && isBUnlocked) return 1;
+            if (isAUnlocked && !isBUnlocked) {return -1;}
+            if (!isAUnlocked && isBUnlocked) {return 1;}
             return 0;
         });
 

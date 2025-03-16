@@ -3,6 +3,7 @@ import { Breadcrumb, Divider } from "antd";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
+
 import { PageContainerControlPanel } from "@/shared/ui";
 import { CourseAddComponent } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";

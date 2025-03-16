@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Breadcrumb, Collapse, notification, Select } from "antd";
+import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Breadcrumb, Collapse, notification, Select , Modal } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { AppstoreOutlined, FileTextOutlined, UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { Modal } from "antd";
+
 import nextConfig from "next.config.mjs";
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
 import { PageContainerControlPanel } from "@/shared/ui";
@@ -47,7 +47,7 @@ const UserDetailsPage = () => {
     };
 
     const handleConfirmRoleChange = async () => {
-        if (!user || !selectedRole) return;
+        if (!user || !selectedRole) {return;}
         setIsModalOpen(false);
         setRoleUpdating(true);
 

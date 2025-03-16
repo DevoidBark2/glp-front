@@ -1,6 +1,7 @@
-import {CourseComponentType} from "@/shared/api/component/model";
 import {Tag} from "antd";
 import React from "react";
+
+import {CourseComponentType} from "@/shared/api/component/model";
 
 export const renderType = (type: CourseComponentType) => {
     switch (type) {

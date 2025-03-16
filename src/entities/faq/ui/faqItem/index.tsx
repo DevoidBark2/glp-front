@@ -1,6 +1,7 @@
-import { Faq } from '@/shared/api/faq/model';
 import { Collapse } from 'antd';
 import { FC } from 'react';
+
+import { Faq } from '@/shared/api/faq/model';
 
 const { Panel } = Collapse;
 

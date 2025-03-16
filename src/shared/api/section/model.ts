@@ -1,6 +1,7 @@
-import { Course, CourseComponentTypeI } from "../course/model";
 import { User } from "@/shared/api/user/model";
 import { CourseComponent } from "@/shared/api/component/model";
+
+import { Course, CourseComponentTypeI } from "../course/model";
 
 export enum StatusSectionEnum {
     ACTIVE = 'active',

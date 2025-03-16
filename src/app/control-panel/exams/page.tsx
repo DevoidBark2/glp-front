@@ -1,10 +1,4 @@
 "use client"
-import { Exam, ExamStatus } from "@/shared/api/exams/model";
-import { UserRole } from "@/shared/api/user/model";
-import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
-import { useMobxStores } from "@/shared/store/RootStore";
-import { PageContainerControlPanel, PageHeader } from "@/shared/ui"
-import { UserHoverCard } from "@/widgets";
 import {Button, notification, Popconfirm, Popover, Table, TableColumnsType, Tag, Tooltip} from "antd";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -12,6 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
 import {observer} from "mobx-react";
+
+import { UserHoverCard } from "@/widgets";
+import { PageContainerControlPanel, PageHeader } from "@/shared/ui"
+import { useMobxStores } from "@/shared/store/RootStore";
+import { FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
+import { UserRole } from "@/shared/api/user/model";
+import { Exam, ExamStatus } from "@/shared/api/exams/model";
 import {SettingControlPanel} from "@/shared/model";
 
 const ExamsPage = observer(() => {

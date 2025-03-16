@@ -1,11 +1,12 @@
 "use client"
 import { Button, Empty, Form, List } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { CourseMiniCard } from "@/entities/course/ui/CourseMiniCard";
 import { FormInstance } from "antd/lib";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
+
+import { CourseMiniCard } from "@/entities/course/ui/CourseMiniCard";
 import { useMobxStores } from "@/shared/store/RootStore";
 import {SectionCourseItem} from "@/shared/api/section/model";
 

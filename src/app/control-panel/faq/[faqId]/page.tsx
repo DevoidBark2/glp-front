@@ -1,12 +1,13 @@
 "use client"
-import { Faq } from "@/shared/api/faq/model";
-import { useMobxStores } from "@/shared/store/RootStore";
-import { PageContainerControlPanel } from "@/shared/ui";
 import { Breadcrumb, Button, Divider, Form, Input, notification } from "antd";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { PageContainerControlPanel } from "@/shared/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { Faq } from "@/shared/api/faq/model";
 
 const FaqEdit = observer(() => {
     const { faqId } = useParams();

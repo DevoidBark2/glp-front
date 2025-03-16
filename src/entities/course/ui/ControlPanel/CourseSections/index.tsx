@@ -1,15 +1,16 @@
 "use client"
-import { useMobxStores } from "@/shared/store/RootStore";
 import { Button, notification, Table, TableColumnsType } from "antd";
 import { observer } from "mobx-react";
 import { useParams, useRouter } from "next/navigation";
-import { SectionCourseItem } from "@/shared/api/section/model";
-import { DragAndDropComponents, DragHandle, Row } from "@/entities/course/ui";
 import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+
+import { DragAndDropComponents, DragHandle, Row } from "@/entities/course/ui";
+import { SectionCourseItem } from "@/shared/api/section/model";
+import { useMobxStores } from "@/shared/store/RootStore";
 
 interface ParentColumn {
     id: number;
@@ -27,7 +28,7 @@ export const CourseSections = observer(() => {
     const handleDeleteComponent = (componentId: string, sectionId: number) => { };
 
     const handleDragDropComponent = (result: any, record: SectionCourseItem) => {
-        if (!result.destination) return;
+        if (!result.destination) {return;}
 
         const sectionId = record.id;
         const updatedComponents = [...record.sectionComponents];
@@ -120,7 +121,7 @@ export const CourseSections = observer(() => {
     const [parentSections, setParentSections] = React.useState<ParentColumn[]>(Object.values(groupedSections).sort((a, b) => a.sort_number - b.sort_number));
 
     const onDragEndParentSection = async ({ active, over }: DragEndEvent) => {
-        if (!over || active.id === over.id) return;
+        if (!over || active.id === over.id) {return;}
 
         // Обновляем состояние и получаем новое значение
         const updatedSections = await new Promise<ParentColumn[]>((resolve) => {
@@ -151,7 +152,7 @@ export const CourseSections = observer(() => {
             const updatedParentSections = await new Promise<ParentColumn[]>((resolve) => {
                 setParentSections((prevState) => {
                     const parentIndex = prevState.findIndex((record) => record.id === parentId);
-                    if (parentIndex === -1) return prevState;
+                    if (parentIndex === -1) {return prevState;}
 
                     const updatedParent = { ...prevState[parentIndex] };
                     const activeIndex = updatedParent.sections.findIndex((record) => record.id === active?.id);

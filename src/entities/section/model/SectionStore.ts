@@ -1,4 +1,6 @@
 import {action, makeAutoObservable, runInAction} from "mobx";
+import dayjs from "dayjs";
+
 import {Course, CourseComponentTypeI} from "@/shared/api/course/model";
 import {StatusSectionEnum} from "@/shared/api/section/model";
 import {
@@ -11,7 +13,6 @@ import {
     getSectionCourseById
 } from "@/shared/api/section";
 import {User} from "@/shared/api/user/model";
-import dayjs from "dayjs";
 
 export type SectionCourseItem = {
     id: number;
@@ -80,9 +81,7 @@ class SectionStore {
         return await deleteSectionCourse(id);
     })
 
-    getCourseSectionById = action (async (id: number) => {
-        return await getSectionCourseById(id);
-    })
+    getCourseSectionById = action (async (id: number) => await getSectionCourseById(id))
 
     getMainSections = action(async () => {
         this.mainSections = await getMainCourseSection();

@@ -7,8 +7,7 @@ interface EmptyContentProps {
     description?: string
 }
 
-export const EmptyContent: FC<EmptyContentProps> = ({image, title, description}) => {
-    return (
+export const EmptyContent: FC<EmptyContentProps> = ({image, title, description}) => (
         <div className="text-center py-10 flex flex-col items-center">
             <Image
                 src={image}
@@ -20,4 +19,3 @@ export const EmptyContent: FC<EmptyContentProps> = ({image, title, description})
             <p className="text-gray-600">{description}</p>
         </div>
     )
-}

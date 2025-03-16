@@ -1,15 +1,20 @@
 "use client";
-import { PageContainerControlPanel } from "@/shared/ui";
+import React, { useState } from "react";
+import dynamic from "next/dynamic"; // Импортируем dynamic
 import { observer } from "mobx-react";
-import { Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, UploadProps, Upload } from "antd";
-import dynamic from "next/dynamic";
+import { Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, Upload } from "antd";
+const Editor = dynamic(
+    () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+    { ssr: false }
+);
+import { EditorState, convertToRaw } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { InboxOutlined } from "@ant-design/icons";
-import { PostCreateForm } from "@/shared/api/posts/model";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-import "react-quill/dist/quill.snow.css";
+import { PostCreateForm } from "@/shared/api/posts/model";
+import { PageContainerControlPanel } from "@/shared/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
 
 const CreatePostPage = () => {
@@ -17,7 +22,18 @@ const CreatePostPage = () => {
     const [form] = Form.useForm<PostCreateForm>();
     const router = useRouter();
 
-    const props: UploadProps = {
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const handleEditorChange = (state) => {
+        setEditorState(state);
+    };
+
+    const getContentAsHTML = () => {
+        const content = convertToRaw(editorState.getCurrentContent());
+        return JSON.stringify(content);
+    };
+
+    const props = {
         name: "file",
         multiple: false,
         listType: "picture",
@@ -42,12 +58,8 @@ const CreatePostPage = () => {
         <PageContainerControlPanel>
             <Breadcrumb
                 items={[
-                    {
-                        title: <Link href={"/control-panel/posts"}>Доступные посты</Link>,
-                    },
-                    {
-                        title: "Новый пост",
-                    },
+                    { title: <Link href={"/control-panel/posts"}>Доступные посты</Link> },
+                    { title: "Новый пост" },
                 ]}
             />
             <div className="flex justify-center items-center">
@@ -58,7 +70,7 @@ const CreatePostPage = () => {
                 form={form}
                 layout="vertical"
                 onFinish={(values) =>
-                    postStore.createPost(values).then(() => {
+                    postStore.createPost({ ...values, content: getContentAsHTML() }).then(() => {
                         router.push("/control-panel/posts");
                     })
                 }
@@ -107,7 +119,12 @@ const CreatePostPage = () => {
                     label="Контент поста"
                     rules={[{ required: true, message: "Пожалуйста, введите содержание!" }]}
                 >
-                    <ReactQuill theme="snow" />
+                    <div className="border p-3 rounded-md shadow-md">
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={handleEditorChange}
+                        />
+                    </div>
                 </Form.Item>
 
                 <div className="flex flex-col items-center">

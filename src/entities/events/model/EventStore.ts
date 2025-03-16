@@ -1,4 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
+
 import {EventUser} from "@/shared/api/events/model";
 import {getAllEvents} from "@/shared/api/events";
 
@@ -22,14 +23,12 @@ class EventStore {
     })
 }
 
-const eventMapper = (value: any) => {
-    return {
+const eventMapper = (value: any) => ({
         id: value.id,
         action: value.action,
         description: value.description,
         createdAt: value.created_at,
         success: value.success,
         user: value.user
-    }
-}
+    })
 export default EventStore;

@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
+
 import {PageContainerControlPanel, PageHeader} from "@/shared/ui";
 
-const ManualPage = () => {
-    return (
+const ManualPage = () => (
         <PageContainerControlPanel>
             <PageHeader
                 title="Руководство пользователя"
@@ -11,6 +11,5 @@ const ManualPage = () => {
             />
         </PageContainerControlPanel>
     );
-};
 
 export default ManualPage;

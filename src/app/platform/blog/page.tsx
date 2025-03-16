@@ -1,9 +1,8 @@
 "use client"
 import React from "react";
+
 import {Posts} from "@/widgets";
 
-const BlogPage = () => {
-    return <Posts/>
-}
+const BlogPage = () => <Posts/>
 
 export default BlogPage;

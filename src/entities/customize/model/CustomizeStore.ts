@@ -1,4 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
+
 import { Categories, CustomizeCategoryItem, Effect, Frame, Icon } from "@/shared/api/customize/model";
 import { buyItem, getAllEffects, getAllFrames, getAllIcons, selectedCustomizeItem } from "@/shared/api/customize";
 
@@ -49,9 +50,7 @@ class CustomizeStore {
 
         this.categories = {
             ...this.categories,
-            [category]: this.categories[category].map(el => {
-                return el.id === item.id ? { ...el, isPurchased: true } : el
-            }
+            [category]: this.categories[category].map(el => el.id === item.id ? { ...el, isPurchased: true } : el
             )
         };
 

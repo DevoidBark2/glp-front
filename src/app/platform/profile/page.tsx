@@ -2,10 +2,11 @@
 import { Spin, Tabs } from "antd";
 import { observer } from "mobx-react";
 import React, { useEffect } from "react";
+import { useMediaQuery } from "react-responsive"
+
 import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { useMediaQuery } from "react-responsive"
 import { AddationalInfo, CustomizeProfile, UserAchievements } from "@/entities/user-profile";
 
 const ProfilePage = () => {

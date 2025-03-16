@@ -1,9 +1,11 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { useMobxStores } from "@/shared/store/RootStore";
 import {Table, TableColumnsType, Tag} from "antd";
-import { UserLevel } from "@/shared/api/users-level/model";
 import Link from "next/link";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { UserLevel } from "@/shared/api/users-level/model";
+
 
 // Функция для получения цвета уровня
 const getLevelColor = (level: string) => {

@@ -17,10 +17,11 @@ import {
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useMobxStores } from "@/shared/store/RootStore";
-import { SectionMenu } from "@/shared/api/course/model";
 import { useMediaQuery } from "react-responsive";
 import { useTheme } from "next-themes";
+
+import { useMobxStores } from "@/shared/store/RootStore";
+import { SectionMenu } from "@/shared/api/course/model";
 
 const { Sider } = Layout;
 

@@ -1,14 +1,16 @@
 import { observer } from "mobx-react";
-import { AuthMethodEnum } from "@/shared/api/auth/model";
 import Image from "next/image";
-import nextConfig from "../../../../../next.config.mjs";
 import dayjs from "dayjs";
-import { UserRole } from "@/shared/api/user/model";
 import { Button } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import React, { FC } from "react";
+
+import { UserRole } from "@/shared/api/user/model";
+import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { Comment } from "@/shared/api/comments/model";
 import { useMobxStores } from "@/shared/store/RootStore";
+
+import nextConfig from "../../../../../next.config.mjs";
 
 interface CourseSectionCommentProps {
     comment: Comment
