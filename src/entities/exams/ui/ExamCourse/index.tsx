@@ -51,14 +51,15 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
         }, Number(courseId));
 
     const handleConfirmSubmit = async () => {
-        await courseStore.submitExamAnswerUser(Number(courseId)).then(response => {
+        if(courseStore.examCourse?.exam) {
+            await courseStore.submitExamAnswerUser(courseId, courseStore.examCourse?.exam?.id).then(response => {
 
-        }).catch(e => {
+            }).catch(e => {
 
-        }).finally(() => {
-            setOpenPreviewModal(false);
-        });
-
+            }).finally(() => {
+                setOpenPreviewModal(false);
+            });
+        }
     };
 
 
@@ -98,27 +99,47 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                     <div>
                         <h3 className="mb-5 text-center text-lg font-semibold dark:text-white">Вопросы</h3>
                         <div className="flex items-center flex-wrap gap-3 p-4">
-                            {exam?.components.map((component, index) => (
-                                <div
-                                    key={component.id}
-                                    onClick={() => handleSelectQuestion(index)}
-                                    className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 relative ${
-                                        currentQuestionIndex === index
-                                            ? "bg-blue-500 border-blue-700"
-                                            : "bg-white border-gray-300 cursor-pointer hover:bg-gray-200"
-                                    }`}
-                                >
-                                    <p className={currentQuestionIndex !== index ? "text-black" : "text-white"}>{index + 1}</p>
+                            {exam?.components.map((component, index) => {
+                                const { componentTask } = component;
+                                const userAnswer = componentTask?.userAnswer;
+                                const totalQuestions = componentTask?.questions?.length || 0;
+                                const correctAnswers = componentTask?.userAnswer?.answer?.filter(ans => ans.isCorrect).length || 0;
+                                const isSuccess = correctAnswers === totalQuestions;
 
-                                    {component?.componentTask?.userAnswer && (
-                                        <div
-                                            className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500 text-white"
-                                        >
-                                            <CheckCircleOutlined className="text-xl"/>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                return (
+                                    <button
+                                        key={component.id}
+                                        onClick={() => handleSelectQuestion(index)}
+                                        className={`w-12 h-12 flex justify-center items-center rounded-lg border shadow-sm transition-all duration-300 relative ${
+                                            currentQuestionIndex === index
+                                                ? "bg-blue-500 border-blue-700"
+                                                : "bg-white border-gray-300 cursor-pointer hover:bg-gray-200"
+                                        }`}
+                                    >
+                                        <p className={currentQuestionIndex !== index ? "text-black" : "text-white"}>
+                                            {index + 1}
+                                        </p>
+
+                                        {component?.componentTask?.userAnswer && (
+                                            <div
+                                                className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500 text-white"
+                                            >
+                                                <CheckCircleOutlined className="text-xl"/>
+                                            </div>
+                                        )}
+
+                                        {userAnswer && totalQuestions > 0 && (
+                                            <div
+                                                className={`absolute -bottom-2 -right-2 text-xs p-1 rounded-lg ${
+                                                    isSuccess ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                                                }`}
+                                            >
+                                                {correctAnswers}/{totalQuestions}
+                                            </div>
+                                        )}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 

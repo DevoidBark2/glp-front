@@ -32,8 +32,8 @@ export const startExam = async (courseId: number) => {
     return data.data;
 }
 
-export const submitExamUserAnswer = async (courseId: number) => {
-    const data = (await axiosInstance.post(`api/submit-exam-user?courseId=${courseId}`)).data
+export const submitExamUserAnswer = async (courseId: number, examId: number) => {
+    const data = (await axiosInstance.post(`api/submit-exam-user?examId=${examId}&courseId=${courseId}`)).data
 
     return data.data;
 }

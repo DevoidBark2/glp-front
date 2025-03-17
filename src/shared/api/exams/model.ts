@@ -10,6 +10,7 @@ export type Exam = {
 }
 
 export type ExamBlock = {
+    id: number
     startExamAt: Date
     endExamAt: Date
     isEndExam: boolean,

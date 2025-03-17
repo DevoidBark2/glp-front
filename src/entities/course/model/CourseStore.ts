@@ -244,8 +244,8 @@ class CourseStore {
         }
     })
 
-    submitExamAnswerUser = action(async (courseId: number) => {
-        const data = await submitExamUserAnswer(courseId)
+    submitExamAnswerUser = action(async (courseId:number, examId: number) => {
+        const data = await submitExamUserAnswer(courseId,examId)
     })
 
     handleCheckTask = action(async (task: TaskAnswerUserDto, courseId: number) => {
@@ -320,7 +320,7 @@ class CourseStore {
 
     endExamUser: {success: boolean, message: string} | null = null;
 
-    setEndExamUser = action((data: {success: boolean, message: string}) => {
+    setEndExamUser = action((data: {success: boolean, message: string} | null) => {
         this.endExamUser = data
     })
 
@@ -329,7 +329,18 @@ class CourseStore {
         this.setSectionCourse(null);
         this.examCourse = null;
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
+        debugger
         if (currentSection === - 1) {
+            if(data.data.exam?.isEndExam) {
+                this.setEndExamUser({
+                    success: data.data.success,
+                    message: data.data.message,
+                })
+
+                this.examCourse = data.data
+                this.setLoadingSection(false)
+                return;
+            }
             if (data.data.message) {
                 this.setLoadingSection(false)
                 this.setMessageWarning({
@@ -338,10 +349,13 @@ class CourseStore {
                 })
                 return;
             }
-            this.setEndExamUser({
-                success: data.data.success,
-                message: data.data.message,
-            })
+            if(data.data.success){
+                this.setEndExamUser({
+                    success: data.data.success,
+                    message: data.data.message,
+                })
+            }
+
             this.examCourse = data.data
             this.setLoadingSection(false)
             return;
