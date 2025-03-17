@@ -122,26 +122,28 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                         </div>
                     </div>
 
-                    <div className="flex justify-end">
-                        <Button color="default" variant="solid" onClick={() => setOpenPreviewModal(true)}>
-                            Отправить на проверку
-                        </Button>
-                    </div>
+                    {
+                        !exam?.exam.isEndExam && <div className="flex justify-end">
+                            <Button color="default" variant="solid" onClick={() => setOpenPreviewModal(true)}>
+                                Отправить на проверку
+                            </Button>
+                        </div>
+                    }
                 </div>
 
                 <div className="flex-1 relative">
                     <div className="mb-5">
                     {currentComponent && currentComponent.componentTask.type === CourseComponentType.Quiz && (
                             <QuizComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
-                                           isExamTask/>
+                                           isExamTask isEndExam={exam?.exam.isEndExam}/>
                         )}
                         {currentComponent && currentComponent.componentTask.type === CourseComponentType.MultiPlayChoice && (
                             <QuizMultiComponent task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
-                                                isExamTask/>
+                                                isExamTask isEndExam={exam?.exam.isEndExam}/>
                         )}
                         {currentComponent && currentComponent.componentTask.type === CourseComponentType.SimpleTask && (
                             <SimpleTask task={currentComponent.componentTask} onCheckResult={handleAnswerSelect}
-                                        isExamTask/>
+                                        isExamTask isEndExam={exam?.exam.isEndExam}/>
                         )}
                     </div>
 

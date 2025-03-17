@@ -1,7 +1,7 @@
+import React, {useEffect, useState} from "react";
 import { Button, Card, Divider, Result, Skeleton } from "antd";
 import { observer } from "mobx-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import dayjs from "dayjs";
 
 import { ComponentTask } from "@/shared/api/course/model";
@@ -24,6 +24,12 @@ export const CourseSectionCard = observer(() => {
     const { courseId } = useParams();
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
+
+    const [showStats, setShowStats] = useState(false); // Состояние для контроля видимости статистики
+
+    const toggleStats = () => {
+        setShowStats(!showStats); // Переключение видимости
+    };
 
     const handleCheckResult = async (quiz: ComponentTask, userAnswer: string | number[]) => await courseStore.handleCheckTask({
             task: quiz,
@@ -54,6 +60,61 @@ export const CourseSectionCard = observer(() => {
 
     return (
         <>
+            {(courseStore.examCourse && courseStore.endExamUser) && (
+                <>
+                    <div className={`p-4 rounded-2xl shadow-lg text-xl text-center text-white mb-2 ${courseStore.endExamUser.success ? 'bg-green-400' : 'bg-red-400'}`}>
+                        {courseStore.endExamUser.message}
+                    </div>
+
+                    <button
+                        className="text-gray-500 mb-2"
+                        onClick={toggleStats}
+                    >
+                        {showStats ? 'Скрыть статистику' : 'Узнать подробнее'}
+                    </button>
+
+                    {showStats && <p className="text-center text-lg font-bold">Результат экзамена</p>}
+                    {showStats && <Divider/>}
+                    {showStats && courseStore.examCourse?.components.map((component) => {
+                        const { componentTask } = component;
+                        const totalQuestions = componentTask.questions.length;
+                        const correctAnswers = componentTask.userAnswer?.answer.filter(ans => ans.isCorrect).length;
+                        const isSuccess = correctAnswers === totalQuestions;
+
+                        return (
+                            <div key={component.id} className="mb-2 p-2 rounded-lg">
+                                <h3 className="text-xl font-semibold">{componentTask.title}</h3>
+                                <p className={`font-medium ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>
+                                    {correctAnswers} из {totalQuestions} правильных
+                                </p>
+                            </div>
+                        );
+                    })}
+
+                    {showStats && courseStore.examCourse && (
+                        <div className="mt-6 mb-3 text-center p-4 rounded-lg shadow-lg bg-blue-100">
+                            <p className="text-lg font-semibold">Итоговый результат</p>
+                            <p className="text-xl">
+                                {courseStore.examCourse?.components?.reduce((total, component) => {
+                                    const correctAnswersInComponent = component.componentTask?.userAnswer?.answer.filter(ans => ans.isCorrect).length;
+                                    return total + Number(correctAnswersInComponent);
+                                }, 0)} из {" "}
+                                {courseStore.examCourse?.components?.reduce((total, component) => total + component.componentTask.questions.length, 0)} правильных
+                            </p>
+                            <p className="mt-2 text-lg font-bold">
+                                Итоговый результат: {Math.round(
+                                (courseStore.examCourse?.components?.reduce((total, component) => {
+                                    const correctAnswersInComponent = component.componentTask?.userAnswer?.answer.filter(ans => ans.isCorrect).length;
+                                    return total + Number(correctAnswersInComponent);
+                                }, 0) / courseStore.examCourse?.components?.reduce((total, component) => total + component.componentTask.questions.length, 0)) * 100
+                            )}% правильных
+                            </p>
+                        </div>
+                    )}
+                </>
+            )}
+
+
             {!courseStore.messageWarning ? <Card
                 loading={courseStore.loadingSection}
                 variant="borderless"
@@ -73,11 +134,11 @@ export const CourseSectionCard = observer(() => {
                             <div>
                                 <p className="dark:text-gray-400 text-sm flex gap-2 justify-between">
                                     <span className="text-gray-500">Начало экзамена:</span>
-                                    <span className="font-medium">{dayjs(courseStore.examCourse?.startExamAt).format("DD.MM.YYYY HH:mm")}</span>
+                                    <span className="font-medium">{dayjs(courseStore.examCourse?.exam.startExamAt).format("DD.MM.YYYY HH:mm")}</span>
                                 </p>
                                 <p className="dark:text-gray-400 text-sm flex gap-2 justify-between">
                                     <span className="text-gray-500">Конец экзамена:</span>
-                                    <span className="font-medium">{dayjs(courseStore.examCourse?.endExamAt).format("DD.MM.YYYY HH:mm")}</span>
+                                    <span className="font-medium">{dayjs(courseStore.examCourse?.exam.endExamAt).format("DD.MM.YYYY HH:mm")}</span>
                                 </p>
                             </div>
 

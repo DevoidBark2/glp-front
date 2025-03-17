@@ -12,18 +12,22 @@ interface QuizMultiComponentProps {
     task: ComponentTask;
     onCheckResult?: (quiz: ComponentTask, answers: string) => Promise<void>;
     isExamTask?: boolean;
+    isEndExam?: boolean;
 }
 
-export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult,isExamTask }) => {
+export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheckResult,isExamTask, isEndExam }) => {
     const mathFieldRef = useRef<MathfieldElement | null>(null);
     const [isEditable, setIsEditable] = useState(!task.userAnswer);
     const [currentAnswer, setCurrentAnswer] = useState(task.userAnswer || null);
     const { resolvedTheme } = useTheme();
 
     useEffect(() => {
-        if (mathFieldRef.current && currentAnswer) {
-            mathFieldRef.current.setValue(currentAnswer.answer[0].userAnswer.toString());
-            setIsEditable(false);
+        const mathField = mathFieldRef.current as MathfieldElement | null;
+        if (mathField && currentAnswer) {
+            customElements.whenDefined('math-field').then(() => {
+                mathField.setValue(currentAnswer.answer[0].userAnswer.toString());
+                setIsEditable(false);
+            });
         }
     }, [currentAnswer]);
 
@@ -69,8 +73,11 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     const handleRetry = () => {
         setCurrentAnswer(null);
         setIsEditable(true);
-        if (mathFieldRef.current) {
-            mathFieldRef.current.setValue(""); // Очищаем поле
+        const mathField = mathFieldRef.current as MathfieldElement | null;
+        if (mathField) {
+            customElements.whenDefined('math-field').then(() => {
+                mathField.setValue(""); // Очищаем поле
+            });
         }
     };
 
@@ -103,7 +110,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
             </Button>
 
             {currentAnswer && (
-                <Button className="mt-4 ml-2" onClick={handleRetry}>
+                <Button className="mt-4 ml-2" disabled={isEndExam} onClick={handleRetry}>
                     Попробовать еще раз
                 </Button>
             )}

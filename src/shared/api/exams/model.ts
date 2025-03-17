@@ -6,8 +6,14 @@ export type Exam = {
     title: string,
     components: CourseComponent[]
     status: ExamStatus
+    exam: ExamBlock
+}
+
+export type ExamBlock = {
     startExamAt: Date
     endExamAt: Date
+    isEndExam: boolean,
+    progress:number
 }
 
 export enum ExamStatus {

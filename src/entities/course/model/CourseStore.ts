@@ -318,6 +318,11 @@ class CourseStore {
         }
     });
 
+    endExamUser: {success: boolean, message: string} | null = null;
+
+    setEndExamUser = action((data: {success: boolean, message: string}) => {
+        this.endExamUser = data
+    })
 
     getCourseSectionByStepId = action(async (courseId: number, currentSection: number) => {
         this.setLoadingSection(true)
@@ -333,6 +338,10 @@ class CourseStore {
                 })
                 return;
             }
+            this.setEndExamUser({
+                success: data.data.success,
+                message: data.data.message,
+            })
             this.examCourse = data.data
             this.setLoadingSection(false)
             return;

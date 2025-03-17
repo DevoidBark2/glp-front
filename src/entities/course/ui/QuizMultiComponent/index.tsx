@@ -9,9 +9,10 @@ interface QuizMultiComponentProps {
     task: ComponentTask;
     onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<any>;
     isExamTask?: boolean;
+    isEndExam?: boolean;
 }
 
-export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: QuizMultiComponentProps) => {
+export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask,isEndExam }: QuizMultiComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(userAnswer
         ? userAnswer.answer.map((ans) => ans.userAnswer)
@@ -87,7 +88,7 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
                 <div className="flex items-center justify-between mb-2">
                     <h2 className="text-lg font-semibold text-gray-800 dark:text-white break-all">Вопрос: {questions[0].question}</h2>
 
-                    {userAnswer && !isRetrying && (
+                    {!isEndExam && userAnswer && !isRetrying && (
                         <Button onClick={handleRetryQuiz} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                             Попробовать еще раз
                         </Button>
@@ -112,15 +113,17 @@ export const QuizMultiComponent = observer(({ task, onCheckResult,isExamTask }: 
             </div>
 
             <div className="flex justify-between mt-4">
-                <Button
-                    color="default"
-                    variant={resolvedTheme === "dark" ? "outlined" : "solid"}
-                    onClick={handleCheckResult}
-                    disabled={!isRetrying && !!userAnswer}
-                    className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
-                >
-                    {isExamTask ? "Сохранить ответ" : "Завершить"}
-                </Button>
+                {
+                    !isEndExam && <Button
+                        color="default"
+                        variant={resolvedTheme === "dark" ? "outlined" : "solid"}
+                        onClick={handleCheckResult}
+                        disabled={!isRetrying && !!userAnswer}
+                        className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 transition-all"
+                    >
+                        {isExamTask ? "Сохранить ответ" : "Завершить"}
+                    </Button>
+                }
             </div>
         </div>
     );

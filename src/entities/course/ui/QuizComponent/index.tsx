@@ -9,9 +9,10 @@ interface QuizComponentProps {
     task: ComponentTask;
     onCheckResult: (quiz: ComponentTask, answers: number[]) => Promise<any>;
     isExamTask?: boolean
+    isEndExam?: boolean
 }
 
-export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: QuizComponentProps) => {
+export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndExam }: QuizComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<number[]>(
@@ -76,7 +77,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
                         Вопрос {currentQuestionIndex + 1}: {currentQuestion?.question}
                     </h4>
 
-                    {userAnswer && !isRetrying && (
+                    {!isEndExam && userAnswer && !isRetrying && (
                         <Button onClick={handleRetryQuiz} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                             Попробовать еще раз
                         </Button>
@@ -153,7 +154,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask }: Quiz
                         Далее
                     </Button>
                 ) : (
-                    <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
+                    !isEndExam && <Button onClick={handleCheckResult} disabled={disabledCheckResultBtn} color="default" variant={resolvedTheme === "dark" ? "outlined" : "solid"}>
                         {isExamTask ? "Сохранить ответ" : "Завершить"}
                     </Button>
                 )}
