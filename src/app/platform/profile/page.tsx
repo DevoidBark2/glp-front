@@ -10,15 +10,13 @@ import { useMobxStores } from "@/shared/store/RootStore";
 import { AddationalInfo, CustomizeProfile, UserAchievements } from "@/entities/user-profile";
 
 const ProfilePage = () => {
-    const { userProfileStore, achievementsStore, customizeStore } = useMobxStores();
+    const { userProfileStore } = useMobxStores();
     const changeTabsPosition = useMediaQuery({ query: "(max-width: 1100px)" });
 
     useEffect(() => {
         userProfileStore.getUserProfile().finally(() => {
             userProfileStore.setLoading(false)
         });
-        // achievementsStore.getAllAchievement()
-        // customizeStore.getAllCategories()
     }, []);
 
     return (
@@ -31,29 +29,29 @@ const ProfilePage = () => {
                     items={[
                         {
                             key: '1',
-                            label: <label className="dark:text-white">Профиль пользователя</label>,
+                            label: <span className="dark:text-white">Профиль пользователя</span>,
                             children: <UserProfileBlock />,
                         },
                         {
                             key: '2',
-                            disabled: true,
-                            label: <label className="dark:text-white">Кастомизация</label>,
-                            children: <CustomizeProfile />,
-                        },
-                        {
-                            key: '3',
-                            label: <label className="dark:text-white">Курсы</label>,
+                            label: <span className="dark:text-white">Курсы</span>,
                             children: <CourseUserProfile />,
                         },
                         {
-                            key: '4',
-                            label: <label className="dark:text-white">Дополнительная информация</label>,
+                            key: '3',
+                            label: <span className="dark:text-white">Дополнительная информация</span>,
                             children: <AddationalInfo />,
+                        },
+                        {
+                            key: '4',
+                            disabled: true,
+                            label: <span className="dark:text-white">Кастомизация</span>,
+                            children: <CustomizeProfile />,
                         },
                         {
                             key: '5',
                             disabled: true,
-                            label: <label className="dark:text-white">Достижения</label>,
+                            label: <span className="dark:text-white">Достижения</span>,
                             children: <UserAchievements />,
                         }
                     ]}

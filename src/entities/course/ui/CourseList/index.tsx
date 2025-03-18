@@ -13,7 +13,7 @@ type CourseListProps = {
 };
 
 export const CourseList = observer(({ courses, loading, notFound }: CourseListProps) => (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-4 gap-6">
             {!loading && courses.length < 1 && !notFound
                 ? Array.from({ length: 8 }).map((_, index) => (
                     <div key={index} className="bg-white rounded-lg shadow">

@@ -36,26 +36,6 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel"}>Главная</Link>,
         icon: <AppstoreOutlined />,
     },
-    // {
-    //     key: 'moderators_items',
-    //     type: "submenu",
-    //     label: 'Панель модератора',
-    //     icon: <ToolOutlined />,
-    //     children: [
-    //         {
-    //             key: 'manage-courses',
-    //             label: <Link href={"/control-panel/manage-courses"}>Управление курсами</Link>,
-    //             title: "Управление курсами",
-    //             icon: <BookOutlined />,
-    //         },
-    //         {
-    //             key: 'manage-posts',
-    //             label: <Link href={"/control-panel/manage-posts"}>Управление постами</Link>,
-    //             title: "Управление постами",
-    //             icon: <SolutionOutlined />
-    //         },
-    //     ]
-    // },
     {
         key: 'courses-parent',
         label: 'Курсы',
@@ -117,33 +97,11 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel/users"}>Пользователи</Link>,
         icon: <BarsOutlined />,
     },
-    // {
-    //     key: 'feedbacks',
-    //     label: <Link href={"/control-panel/feedbacks"}>Обратная связь</Link>,
-    //     icon: <BarsOutlined />,
-    // },
     {
         key: 'settings',
         label: <Link href={"/control-panel/settings"}>Настройки</Link>,
         icon: <SettingOutlined />,
     },
-    // {
-    //     key: 'general',
-    //     label: 'Общее',
-    //     icon: <BarsOutlined />,
-    //     children: [
-    //         {
-    //             key: 'faq',
-    //             label: <Link href={"/control-panel/faq"}>Вопросы и ответы</Link>,
-    //             icon: <BarsOutlined />,
-    //         },
-    //         // {
-    //         //     key: 'support',
-    //         //     label: <Link href={"/control-panel/support"}>Поддержка</Link>,
-    //         //     icon: <BarsOutlined />,
-    //         // }
-    //     ]
-    // },
     {
         key: 'profile',
         label: <Link href={"/control-panel/profile"}>Профиль</Link>,
@@ -157,11 +115,6 @@ let dashboardMenuItems: MenuItem[] = [
         label: <Link href={"/control-panel/achievements"}>Достижения</Link>,
         icon: <StarOutlined />,
     },
-    // {
-    //     key: "manual",
-    //     label: <Link href={"/control-panel/manual"}>Руководство пользователя</Link>,
-    //     icon: <BookOutlined />,
-    // },
     {
         key: 'platform',
         label: <Link href={"/platform"}>Вернуться на платформу</Link>,

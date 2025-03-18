@@ -329,7 +329,6 @@ class CourseStore {
         this.setSectionCourse(null);
         this.examCourse = null;
         const data = await getCurrentSection({ courseId: courseId, currentSection: currentSection })
-        debugger
         if (currentSection === - 1) {
             if(data.data.exam?.isEndExam) {
                 this.setEndExamUser({

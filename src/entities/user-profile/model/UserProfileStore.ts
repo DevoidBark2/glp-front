@@ -96,19 +96,17 @@ class UserProfileStore {
             window.localStorage.setItem('user_settings', JSON.stringify(values));
         }
 
-        await updateProfile(cleanedValues as UserProfile)
-            .then(response => {
-                const updatedProfile = { ...this.userProfile, ...cleanedValues };
-                this.setUserProfile(updatedProfile as UserProfile);
-                notification.success({ message: response.message })
-                return response;
-            })
-            .catch(e => {
-                console.error("Ошибка при обновлении профиля:", e);
-            })
-            .finally(() => {
-                this.setSaveProfile(false);
-            });
+        try {
+            const data = await updateProfile(cleanedValues as UserProfile)
+            const updatedProfile = { ...this.userProfile, ...cleanedValues };
+            this.setUserProfile(updatedProfile as UserProfile);
+            return data;
+        }catch (e) {
+            return e;
+        }
+        finally {
+            this.setSaveProfile(false);
+        }
     });
 
 

@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { usePathname } from "next/navigation";
-import { io } from "socket.io-client";
-import { Button, Modal, notification } from "antd";
+import { Button, Modal } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
 
 import { Footer } from "@/widgets/Footer";
@@ -18,7 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const { userProfileStore, generalSettingsStore } = useMobxStores();
     const pathName = usePathname();
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [achievementData, setAchievementData] = useState<{ title: string; message: string }>({ title: '', message: '' });
+    const [achievementData] = useState<{ title: string; message: string }>({ title: '', message: '' });
 
     useEffect(() => {
         if(!pathName.includes('profile')){
@@ -37,26 +36,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
-
-    // useEffect(() => {
-    //     if (!userProfileStore.userProfile?.id) return;
-    //
-    //     // Подключаем WebSocket
-    //     const socket = io(process.env.API_URL, {
-    //         query: { userId: userProfileStore.userProfile.id },
-    //     });
-    //
-    //     // Слушаем событие достижения
-    //     socket.on("achievementNotification", (data: { title: string; message: string }) => {
-    //         setAchievementData(data);
-    //         setIsModalVisible(true);
-    //     });
-    //
-    //     // Очистка соединения при размонтировании
-    //     return () => {
-    //         socket.disconnect();
-    //     };
-    // }, [userProfileStore.userProfile?.id]);
 
     return (
         <>

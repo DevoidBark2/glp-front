@@ -1,4 +1,6 @@
 "use client"
+import React from "react";
+
 import { SupportBlock } from "@/widgets/Support";
 
 const SupportPage = () => (

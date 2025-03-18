@@ -4,7 +4,6 @@ import {
   Card,
   Divider,
   Tooltip,
-  Typography,
   Row,
   Col,
   Statistic,
@@ -139,34 +138,6 @@ const ControlPanel = () => {
                       )}
                   />
                 </Skeleton>
-                {/*<Skeleton active loading={statisticsStore.loadingStatisticsData}>*/}
-                {/*  <Progress*/}
-                {/*      type="circle"*/}
-                {/*      strokeColor="orange"*/}
-                {/*      percent={statisticsStore.statisticsData?.courseCountIsProcessing}*/}
-                {/*      format={(percent) => (*/}
-                {/*          <p className="text-black text-sm leading-5">*/}
-                {/*            <span>{`${percent}%`}</span>*/}
-                {/*            <br/>*/}
-                {/*            <span>в обработке</span>*/}
-                {/*          </p>*/}
-                {/*      )}*/}
-                {/*  />*/}
-                {/*</Skeleton>*/}
-                {/*<Skeleton active loading={statisticsStore.loadingStatisticsData}>*/}
-                {/*  <Progress*/}
-                {/*      type="circle"*/}
-                {/*      strokeColor="red"*/}
-                {/*      percent={statisticsStore.statisticsData?.courseCountReject}*/}
-                {/*      format={(percent) => (*/}
-                {/*          <p className="text-black text-sm leading-5">*/}
-                {/*            <span>{`${percent}%`}</span>*/}
-                {/*            <br/>*/}
-                {/*            <span>отклонено</span>*/}
-                {/*          </p>*/}
-                {/*      )}*/}
-                {/*  />*/}
-                {/*</Skeleton>*/}
               </div>
             </Card>
           </Col>}
@@ -201,34 +172,6 @@ const ControlPanel = () => {
                       )}
                   />
                 </Skeleton>
-                {/*<Skeleton active loading={statisticsStore.loadingStatisticsData}>*/}
-                {/*  <Progress*/}
-                {/*      type="circle"*/}
-                {/*      strokeColor="orange"*/}
-                {/*      percent={statisticsStore.statisticsData?.postsCountIsProcessing}*/}
-                {/*      format={(percent) => (*/}
-                {/*          <p className="text-black text-sm leading-5">*/}
-                {/*            <span>{`${percent}%`}</span>*/}
-                {/*            <br/>*/}
-                {/*            <span>в обработке</span>*/}
-                {/*          </p>*/}
-                {/*      )}*/}
-                {/*  />*/}
-                {/*</Skeleton>*/}
-                {/*<Skeleton active loading={statisticsStore.loadingStatisticsData}>*/}
-                {/*  <Progress*/}
-                {/*      type="circle"*/}
-                {/*      strokeColor="red"*/}
-                {/*      percent={statisticsStore.statisticsData?.postsCountReject}*/}
-                {/*      format={(percent) => (*/}
-                {/*          <p className="text-black text-sm leading-5">*/}
-                {/*            <span>{`${percent}%`}</span>*/}
-                {/*            <br/>*/}
-                {/*            <span>отклонено</span>*/}
-                {/*          </p>*/}
-                {/*      )}*/}
-                {/*  />*/}
-                {/*</Skeleton>*/}
               </div>
             </Card>
           </Col>}

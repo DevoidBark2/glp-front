@@ -65,22 +65,33 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
         // }
     };
 
-    const menu = (
-        <Menu>
-            <Menu.Item key="1" icon={<PlayCircleOutlined />} onClick={() => router.push(`/platform/lessons/${course.id}`)}>
-                Перейти к курсу
-            </Menu.Item>
-            <Menu.Item key="2" icon={<LogoutOutlined />} onClick={() => userProfileStore.confirmLeaveCourse(course.id)}>
-                Покинуть курс
-            </Menu.Item>
-            <Menu.Item key="3" icon={<MessageOutlined />} onClick={() => setIsModalOpen(true)}>
-                Оставить отзыв
-            </Menu.Item>
-            <Menu.Item key="4" icon={<DownloadOutlined />} onClick={handleDownloadCertificate}>
-                Скачать сертификат
-            </Menu.Item>
-        </Menu>
-    );
+    const items = [
+        {
+            key: "1",
+            label: "Перейти к курсу",
+            icon: <PlayCircleOutlined />,
+            onClick: () => router.push(`/platform/lessons/${course.id}`)
+        },
+        {
+            key: "2",
+            label: "Покинуть курс",
+            icon: <LogoutOutlined />,
+            onClick: () => userProfileStore.confirmLeaveCourse(course.id)
+        },
+        {
+            key: "3",
+            label: "Оставить отзыв",
+            icon: <MessageOutlined />,
+            onClick: () => setIsModalOpen(true)
+        },
+        {
+            key: "4",
+            label: "Скачать сертификат",
+            icon: <DownloadOutlined />,
+            onClick: handleDownloadCertificate
+        }
+    ];
+
 
     return (
         <>
@@ -139,15 +150,13 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Tooltip title="Дополнительные действия">
-                            <Dropdown overlay={menu} trigger={['click']}>
-                                <Button
-                                    type="default"
-                                    shape="default"
-                                    icon={<EllipsisOutlined />}
-                                />
-                            </Dropdown>
-                        </Tooltip>
+                        <Dropdown menu={{items}} trigger={['click']}>
+                            <Button
+                                type="default"
+                                shape="default"
+                                icon={<EllipsisOutlined />}
+                            />
+                        </Dropdown>
                     </div>
                 </div>
 

@@ -1,7 +1,7 @@
 "use client"
+import React, { useEffect } from "react";
 import { Divider } from "antd";
 import { observer } from "mobx-react"
-import { useEffect } from "react";
 
 import { useMobxStores } from "@/shared/store/RootStore"
 import { FaqList } from "@/entities/faq"

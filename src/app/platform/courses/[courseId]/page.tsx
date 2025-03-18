@@ -6,7 +6,6 @@ import { useParams , useRouter } from "next/navigation";
 import Link from "next/link";
 import { ClockCircleOutlined, BarsOutlined, BookOutlined, UnlockOutlined, LockOutlined, UserOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 
 import nextConfig from "next.config.mjs";
 import { AccessRightEnum, Course } from "@/shared/api/course/model";
@@ -22,7 +21,6 @@ const CoursePage = () => {
     const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
     const [inputSecretKeyModal, setInputSecretKeyModal] = useState(false);
     const router = useRouter();
-    const { resolvedTheme } = useTheme()
 
     const handleClick = () => {
         courseStore.setSubscribeCourseLoading(true);

@@ -1,7 +1,7 @@
 "use client"
+import React, { useEffect } from "react";
 import { notification, Spin } from "antd"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect } from "react"
 
 import { useMobxStores } from "@/shared/store/RootStore"
 

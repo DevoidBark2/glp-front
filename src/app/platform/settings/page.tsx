@@ -43,17 +43,17 @@ const SettingsPage = observer(() => {
     const items: TabsProps['items'] = [
         {
             key: "1",
-            label: <label className="dark:text-white">Безопасность</label>,
+            label: <span className="dark:text-white">Безопасность</span>,
             children: (<ResetPassword handleChangePassword={handleChangePassword} />),
         },
         {
             key: "2",
-            label: <label className="dark:text-white">Управление аккаунтом</label>,
+            label: <span className="dark:text-white">Управление аккаунтом</span>,
             children: (<ManageProfile showDeleteAccountModal={handleShowModal} />),
         },
         {
             key: "3",
-            label: <label className="dark:text-white">Платформа</label>,
+            label: <span className="dark:text-white">Платформа</span>,
             children: (<PlatformSettings />),
         },
     ];

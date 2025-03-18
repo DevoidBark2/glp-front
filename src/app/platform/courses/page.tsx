@@ -1,9 +1,9 @@
 "use client"
-import { Button, Breadcrumb, Input, Divider, Empty } from "antd";
+import { Button, Breadcrumb, Input, Empty } from "antd";
 import { ArrowLeftOutlined, SearchOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
 import { CourseList } from "@/entities/course/ui";

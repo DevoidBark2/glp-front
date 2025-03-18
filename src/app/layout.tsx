@@ -1,6 +1,6 @@
 import "./globals.css";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { ConfigProvider } from "antd";
+import {ConfigProvider} from "antd";
 import React from "react";
 import { Metadata } from "next";
 
@@ -31,15 +31,15 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={roboto.className}>
-                <ThemeProviders>
-                    <ConfigProvider theme={themeConfig}>
-                        <StoresProvider>
-                            <AntdRegistry>
-                                {children}
-                            </AntdRegistry>
-                        </StoresProvider>
-                    </ConfigProvider>
-                </ThemeProviders>
+            <ThemeProviders>
+                <ConfigProvider theme={themeConfig}>
+                    <StoresProvider>
+                        <AntdRegistry>
+                            {children}
+                        </AntdRegistry>
+                    </StoresProvider>
+                </ConfigProvider>
+            </ThemeProviders>
             </body>
         </html>
     );
