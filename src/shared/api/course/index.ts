@@ -38,11 +38,7 @@ export const createCourse = async (values: Course): Promise<Course> => {
     return data.data;
 }
 
-export const confirmLeaveCourse = async (courseId: number) => {
-    const data = (await axiosInstance.delete(`api/leave-course/${courseId}`)).data
-
-    return data.data;
-}
+export const confirmLeaveCourse = async (courseId: number) => (await axiosInstance.delete(`api/leave-course/${courseId}`)).data
 
 export const getCourseById = async (courseId: number) => {
     const data = (await axiosInstance.get(`api/course/${courseId}`)).data;

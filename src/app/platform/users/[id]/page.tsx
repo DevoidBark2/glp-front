@@ -19,7 +19,7 @@ const UserPage = observer(() => {
 
     useEffect(() => {
         setLoading(true);
-        userStore.getUserById(String(id)).then(response => {
+        userStore.getPlatformUserById(String(id)).then(response => {
             setCurrentUser(response);
             setLoading(false);
         });

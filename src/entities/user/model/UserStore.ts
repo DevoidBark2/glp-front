@@ -1,7 +1,15 @@
 import { action, makeAutoObservable } from "mobx"
 
 import { StatusUserEnum, User, UserRole } from "@/shared/api/user/model";
-import {deleteUser, getAllUsers, getUserById, handleBlockUser, searchUsers, updateRole} from "@/shared/api/user";
+import {
+    deleteUser,
+    getAllUsers,
+    getPlatformUserById,
+    getUserById,
+    handleBlockUser,
+    searchUsers,
+    updateRole
+} from "@/shared/api/user";
 import { login, logoutUser, oauthByProvider, register } from "@/shared/api/auth";
 import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
 
@@ -148,6 +156,8 @@ class UserStore {
     })
 
     getUserById = action(async (userId: string): Promise<User> => await getUserById(userId))
+
+    getPlatformUserById = action(async (userId: string): Promise<User> => await getPlatformUserById(userId))
 
     updateUserRole = action(async (userId: string, role: UserRole) => await updateRole({ userId: userId, role: role }))
 

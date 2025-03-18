@@ -76,6 +76,7 @@ const SettingsPage = observer(() => {
                         <Button
                             key="delete"
                             danger
+                            type="primary"
                             onClick={handleDeleteAccount}
                             className="bg-cyber-red text-black border border-cyber-red hover:bg-red-500 transition-all shadow-md"
                         >

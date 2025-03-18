@@ -1,7 +1,7 @@
-import {Button, Dropdown, Form, Input, Menu, message, Modal, Popconfirm, Progress, Rate, Tooltip} from "antd";
+import {Button, Dropdown, Form, Input, message, Modal, notification, Progress, Rate, Typography} from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import Image from "next/image";
 import {
     BookOutlined,
@@ -27,6 +27,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
 
     const [form] = Form.useForm<CourseReview>();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalLeaveCourse, setIsModalLeaveCourse] = useState(false);
 
     const handleReviewSubmit = async () => {
         try {
@@ -50,20 +51,11 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
             });
 
         } catch (error) {
-            console.log("Ошибка валидации:", error);
+            console.error("Ошибка валидации:", error);
         }
     };
 
-    const handleDownloadCertificate = () => {
-        // if (course.certificateUrl) {
-        //     const link = document.createElement("a");
-        //     link.href = ""; // Ссылка на сертификат
-        //     link.download = `certificate-${course.name}.pdf`; // Имя файла для сертификата
-        //     link.click();
-        // } else {
-        //     message.error("Сертификат недоступен.");
-        // }
-    };
+    const handleDownloadCertificate = () => {};
 
     const items = [
         {
@@ -76,7 +68,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
             key: "2",
             label: "Покинуть курс",
             icon: <LogoutOutlined />,
-            onClick: () => userProfileStore.confirmLeaveCourse(course.id)
+            onClick: () => setIsModalLeaveCourse(true)
         },
         {
             key: "3",
@@ -96,12 +88,11 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
     return (
         <>
             <Modal
+                centered
                 title={`Оставить отзыв для курса "${course.name}"`}
                 open={isModalOpen}
                 onCancel={() => { setIsModalOpen(false); form.resetFields(); }}
-                onOk={handleReviewSubmit}
-                okText="Отправить"
-                cancelText="Отмена"
+                footer={null}
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
@@ -121,8 +112,48 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
                     >
                         <Input.TextArea rows={4} placeholder="Напишите свой отзыв о курсе..." />
                     </Form.Item>
+
+                    <div className="flex items-center justify-end gap-2">
+                        <Button onClick={() => { setIsModalOpen(false); form.resetFields(); }}>Отменить</Button>
+                        <Button variant="solid" color="default" onClick={() => handleReviewSubmit()}>Отправить</Button>
+                    </div>
                 </Form>
             </Modal>
+
+            <Modal
+                open={isModalLeaveCourse}
+                onCancel={() => setIsModalLeaveCourse(false)}
+                footer={null}
+                centered
+                className="custom-modal"
+            >
+                <div className="text-center p-4">
+                    <Typography.Title level={4} className="mb-3">
+                        Вы уверены, что хотите покинуть курс?
+                    </Typography.Title>
+
+                    <Typography.Text type="secondary">
+                        Это действие нельзя отменить. Убедитесь, что вы приняли верное решение.
+                    </Typography.Text>
+
+                    <div className="flex justify-center gap-4 mt-6">
+                        <Button onClick={() => setIsModalLeaveCourse(false)}>
+                            Отмена
+                        </Button>
+
+                        <Button
+                            type="primary"
+                            danger
+                            onClick={() => userProfileStore.confirmLeaveCourse(course.id).then(response => {
+                                notification.success({message: response.message})
+                            })}
+                        >
+                            Покинуть курс
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+
 
             <div key={course.id} className="p-4 border rounded-lg bg-white dark:bg-gray-900 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-4">

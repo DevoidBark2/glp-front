@@ -1,3 +1,4 @@
+import React from "react";
 import {Button, Form, Input, notification} from "antd";
 import PhoneInput from "react-phone-input-2";
 
@@ -75,6 +76,7 @@ export const ProfileForm = observer(() => {
                     label={<label className="dark:text-white">Email</label>}
                 >
                     <Input
+                        disabled
                         placeholder="Введите email"
                         style={{
                             background: resolvedTheme === "dark" ? "#1a1a1a" : "white",

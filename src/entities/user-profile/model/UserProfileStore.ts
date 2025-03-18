@@ -1,4 +1,4 @@
-import { notification, UploadFile } from "antd";
+import { UploadFile } from "antd";
 import { action, makeAutoObservable } from "mobx";
 
 import { confirmLeaveCourse } from "@/shared/api/course";
@@ -55,8 +55,11 @@ class UserProfileStore {
     })
 
     confirmLeaveCourse = action(async (courseId: number) => {
-        await confirmLeaveCourse(courseId);
+        const data = await confirmLeaveCourse(courseId);
         this.userProfileCourses = this.userProfileCourses.filter(it => it.id !== courseId);
+
+        debugger
+        return data;
     })
 
     setFileForFeedBack = action((files: UploadFile[]) => {

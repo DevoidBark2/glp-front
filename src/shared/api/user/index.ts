@@ -18,6 +18,12 @@ export const getUserById = async (userId: string) => {
     return data.data;
 }
 
+export const getPlatformUserById = async (userId: string) => {
+    const data = (await axiosInstance.get(`api/user/${userId}`)).data;
+
+    return data.data;
+}
+
 export const updateRole = async (body: ChangeUserRoleDto) => (await axiosInstance.put('/api/change-user-role', {
         userId: body.userId,
         role: body.role

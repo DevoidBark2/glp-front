@@ -1,7 +1,7 @@
 import { Button, message } from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
 
@@ -15,7 +15,7 @@ interface QuizComponentProps {
 export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndExam }: QuizComponentProps) => {
     const { title, description, questions, userAnswer } = task;
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswers, setSelectedAnswers] = useState<number[]>(
+    const [selectedAnswers, setSelectedAnswers] = useState<(number[] | null)>(() =>
         userAnswer
             ? userAnswer.answer.map((ans) => ans.userAnswer)
             : Array(questions.length).fill(null)
@@ -27,27 +27,29 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
 
     const currentQuestion = questions[currentQuestionIndex];
     const handleOptionChange = (index: number) => {
-        const newAnswers = [...selectedAnswers];
+        const newAnswers = [...(selectedAnswers || [])];
         newAnswers[currentQuestionIndex] = index;
         setSelectedAnswers(newAnswers);
     };
 
     const handleCheckResult = async () => {
-        if (selectedAnswers.includes(null)) {
+        if (selectedAnswers && selectedAnswers.includes(null)) {
             message.warning("Выберите варианты ответов!");
             return;
         }
 
-        if (isRetrying) {
-            await onCheckResult(task, selectedAnswers).then((result) => {
-                setUserAnswers(result.userAnswer);
-            });
-        } else {
-            if (onCheckResult) {
+        if(selectedAnswers) {
+            if (isRetrying) {
                 await onCheckResult(task, selectedAnswers).then((result) => {
                     setUserAnswers(result.userAnswer);
                 });
+            } else {
+                if (onCheckResult) {
+                    await onCheckResult(task, selectedAnswers).then((result) => {
+                        setUserAnswers(result.userAnswer);
+                    });
 
+                }
             }
         }
         setDisabledCheckResultBtn(true);
@@ -61,8 +63,6 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
         setUserAnswers(null);
         setIsRetrying(true);
     };
-
-    console.log(userAnswer)
 
     return (
         <div className="quiz-container mb-6 transition-transform p-4">
@@ -84,12 +84,12 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
                     )}
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-3 flex flex-col">
                     {currentQuestion?.options.map((option, index) => {
                         const userSelectedIndex = userAnswers?.answer[currentQuestionIndex]?.userAnswer;
                         const isCorrectAnswer = userAnswers?.answer[currentQuestionIndex]?.isCorrect;
 
-                        const isSelected = selectedAnswers[currentQuestionIndex] === index;
+                        const isSelected = selectedAnswers && selectedAnswers[currentQuestionIndex] === index;
                         const isUserAnswer = userSelectedIndex === index;
                         const isCorrect = isCorrectAnswer !== undefined && isUserAnswer && isCorrectAnswer;
                         const isWrong = isCorrectAnswer !== undefined && isUserAnswer && !isCorrectAnswer;
@@ -114,7 +114,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
                             : activeStyle;
 
                         return (
-                            <div
+                            <button
                                 key={index}
                                 className={`border rounded-lg p-4 cursor-pointer transition duration-200 break-all ${finalStyle}`}
                                 onClick={() => (!userAnswers || isRetrying) && handleOptionChange(index)}
@@ -124,14 +124,14 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
                                         type="radio"
                                         name={`question-${currentQuestionIndex}`}
                                         value={index}
-                                        checked={isUserAnswer || isSelected}
+                                        checked={Boolean(isUserAnswer || isSelected)}
                                         onChange={() => handleOptionChange(index)}
                                         disabled={!!userAnswers && !isRetrying}
                                         className="mr-2"
                                     />
                                     {option}
                                 </label>
-                            </div>
+                            </button>
                         );
                     })}
                 </div>

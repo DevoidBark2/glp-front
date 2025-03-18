@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, Divider, message, notification, Spin, Upload } from "antd";
 import {UploadOutlined, UserOutlined} from "@ant-design/icons";
 import { observer } from "mobx-react";
