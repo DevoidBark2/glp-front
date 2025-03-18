@@ -251,15 +251,18 @@ class CourseStore {
     handleCheckTask = action(async (task: TaskAnswerUserDto, courseId: number) => {
         const data = await handleCheckUserTask(task, courseId);
 
-        if(this.examCourse) {
-            this.examCourse.components.forEach(it => {
-                if(it.componentTask.id === task.task.id) {
-                    it.componentTask.userAnswer = data.userAnswer;
-                }
-            })
+        if (this.examCourse) {
+            const targetComponent = this.examCourse.components.find(
+                it => it.componentTask.id === task.task.id
+            );
+
+            if (targetComponent) {
+                targetComponent.componentTask.userAnswer = data.userAnswer;
+            }
 
             return data;
         }
+
 
 
         if (this.sectionCourse) {

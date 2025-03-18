@@ -1,9 +1,10 @@
 import { Button, message } from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
 import { ComponentTask, UserAnswer } from "@/shared/api/course/model";
+import {QuestionsType} from "@/shared/api/component/model";
 
 interface QuizComponentProps {
     task: ComponentTask;
@@ -14,6 +15,7 @@ interface QuizComponentProps {
 
 export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndExam }: QuizComponentProps) => {
     const { title, description, questions, userAnswer } = task;
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState<(number[] | null)>(() =>
         userAnswer
@@ -22,10 +24,13 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
     );
     const [userAnswers, setUserAnswers] = useState<UserAnswer | null>(userAnswer || null);
     const [disabledCheckResultBtn, setDisabledCheckResultBtn] = useState(!!task.userAnswer);
+    const [question,setQuestion] = useState<QuestionsType[] | null>(questions);
     const [isRetrying, setIsRetrying] = useState(false);
     const { resolvedTheme } = useTheme();
 
-    const currentQuestion = questions[currentQuestionIndex];
+    console.log(task)
+    const currentQuestion = question![currentQuestionIndex];
+
     const handleOptionChange = (index: number) => {
         const newAnswers = [...(selectedAnswers || [])];
         newAnswers[currentQuestionIndex] = index;
@@ -63,6 +68,26 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
         setUserAnswers(null);
         setIsRetrying(true);
     };
+
+
+    useEffect(() => {
+        if (userAnswer) {
+            const normalizedAnswers = userAnswer.answer.map((ans) =>
+                Array.isArray(ans.userAnswer)
+                    ? ans.userAnswer[0]
+                    : ans.userAnswer
+            );
+            setSelectedAnswers(normalizedAnswers as number[]);
+        } else {
+            setSelectedAnswers(Array(questions.length).fill(null));
+        }
+        debugger
+        setUserAnswers(userAnswer!)
+        setQuestion(questions)
+        setCurrentQuestionIndex(0)
+        setDisabledCheckResultBtn(!!task.userAnswer);
+    }, [task]);
+
 
     return (
         <div className="quiz-container mb-6 transition-transform p-4">

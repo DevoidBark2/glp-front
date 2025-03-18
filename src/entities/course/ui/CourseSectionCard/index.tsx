@@ -66,32 +66,6 @@ export const CourseSectionCard = observer(() => {
                         {courseStore.endExamUser.message}
                     </div>
 
-                    {/*<button*/}
-                    {/*    className="text-gray-500 mb-2"*/}
-                    {/*    onClick={toggleStats}*/}
-                    {/*>*/}
-                    {/*    {showStats ? 'Скрыть статистику' : 'Узнать подробнее'}*/}
-                    {/*</button>*/}
-
-                    {/*{showStats && <p className="text-center text-lg font-bold">Результат экзамена</p>}*/}
-                    {/*{showStats && <Divider/>}*/}
-                    {/*{showStats && courseStore.examCourse?.components.map((component) => {*/}
-                    {/*    debugger*/}
-                    {/*    const { componentTask } = component;*/}
-                    {/*    const totalQuestions = componentTask.questions?.length;*/}
-                    {/*    const correctAnswers = componentTask.userAnswer?.answer.filter(ans => ans.isCorrect).length;*/}
-                    {/*    const isSuccess = correctAnswers === totalQuestions;*/}
-
-                    {/*    return (*/}
-                    {/*        <div key={component.id} className="mb-2 p-2 rounded-lg">*/}
-                    {/*            <h3 className="text-xl font-semibold">{componentTask.title}</h3>*/}
-                    {/*            <p className={`font-medium ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>*/}
-                    {/*                {correctAnswers} из {totalQuestions} правильных*/}
-                    {/*            </p>*/}
-                    {/*        </div>*/}
-                    {/*    );*/}
-                    {/*})}*/}
-
                     {showStats && courseStore.examCourse && (
                         <div className="mt-6 mb-3 text-center p-4 rounded-lg shadow-lg bg-blue-100">
                             <p className="text-lg font-semibold">Итоговый результат</p>

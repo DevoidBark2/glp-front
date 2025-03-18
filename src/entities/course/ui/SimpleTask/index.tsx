@@ -25,10 +25,20 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
         customElements.whenDefined('math-field').finally(() => {
             if (mathFieldRef.current) {
                 mathFieldRef.current.setValue(currentAnswer?.answer[0].userAnswer.toString() || "");
-                // mathFieldRef.current.disabled = !isEditable;
+                mathFieldRef.current.disabled = !isEditable;
             }
         });
     }, [currentAnswer, isEditable]);
+
+    useEffect(() => {
+        if (mathFieldRef.current) {
+            if (isEditable) {
+                mathFieldRef.current.removeAttribute("disabled");
+            } else {
+                mathFieldRef.current.setAttribute("disabled", "true");
+            }
+        }
+    }, [isEditable]);
 
     useEffect(() => {
         const typesetMath = async () => {

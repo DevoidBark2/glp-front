@@ -13,7 +13,7 @@ interface CourseItemProps {
 
 export const CourseItem = observer(({ course }: CourseItemProps) => (
         <Link
-            href={`platform/courses/${course.id}`}
+            href={`/platform/courses/${course.id}`}
             className="block rounded-2xl shadow-md hover:shadow-lg transition-shadow bg-white dark:bg-[#252525] overflow-hidden"
         >
             <div className="relative w-full h-44 bg-gray-100">

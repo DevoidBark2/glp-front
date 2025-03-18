@@ -44,6 +44,8 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
 
     const currentComponent = exam?.components[currentQuestionIndex];
 
+    console.log(currentComponent);
+
     const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => await courseStore.handleCheckTask({
             task: quiz,
             answers: answer,
@@ -52,7 +54,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
 
     const handleConfirmSubmit = async () => {
         if(courseStore.examCourse?.exam) {
-            await courseStore.submitExamAnswerUser(courseId, courseStore.examCourse?.exam?.id).then(response => {
+            await courseStore.submitExamAnswerUser(Number(courseId), courseStore.examCourse?.exam?.id).then(response => {
 
             }).catch(e => {
 
@@ -102,8 +104,8 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                             {exam?.components.map((component, index) => {
                                 const { componentTask } = component;
                                 const userAnswer = componentTask?.userAnswer;
-                                const totalQuestions = componentTask?.questions?.length || 0;
-                                const correctAnswers = componentTask?.userAnswer?.answer?.filter(ans => ans.isCorrect).length || 0;
+                                const totalQuestions = componentTask?.questions?.length || 1;
+                                const correctAnswers = componentTask?.userAnswer?.answer?.filter(ans => ans.isCorrect !== undefined).length || 0;
                                 const isSuccess = correctAnswers === totalQuestions;
 
                                 return (
@@ -116,19 +118,15 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                                                 : "bg-white border-gray-300 cursor-pointer hover:bg-gray-200"
                                         }`}
                                     >
-                                        <p className={currentQuestionIndex !== index ? "text-black" : "text-white"}>
-                                            {index + 1}
-                                        </p>
+                                        <p className={currentQuestionIndex !== index ? "text-black" : "text-white"}>{index + 1}</p>
 
                                         {component?.componentTask?.userAnswer && (
-                                            <div
-                                                className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500 text-white"
-                                            >
+                                            <div className="absolute -top-2 -right-2 p-1 rounded-lg shadow-lg bg-blue-500 text-white">
                                                 <CheckCircleOutlined className="text-xl"/>
                                             </div>
                                         )}
 
-                                        {userAnswer && totalQuestions > 0 && (
+                                        {userAnswer?.answer.some(ans => ans.isCorrect !== undefined) && (
                                             <div
                                                 className={`absolute -bottom-2 -right-2 text-xs p-1 rounded-lg ${
                                                     isSuccess ? "bg-green-500 text-white" : "bg-red-500 text-white"
@@ -140,6 +138,7 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                                     </button>
                                 );
                             })}
+
                         </div>
                     </div>
 
