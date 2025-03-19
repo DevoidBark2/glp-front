@@ -32,7 +32,7 @@ import {
 import { ParentSection, SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
 import { Exam } from "@/shared/api/exams/model";
 import { FilterValues } from "@/shared/api/filter/model";
-import { updateComponentOrder, updateOrderParentSection } from "@/shared/api/component";
+import {handleDownloadCertificate, updateComponentOrder, updateOrderParentSection} from "@/shared/api/component";
 
 class CourseStore {
     constructor() {
@@ -244,9 +244,37 @@ class CourseStore {
         }
     })
 
-    submitExamAnswerUser = action(async (courseId:number, examId: number) => {
-        const data = await submitExamUserAnswer(courseId,examId)
-    })
+    submitExamAnswerUser = action(async (courseId: number, examId: number) => {
+        const data = await submitExamUserAnswer(courseId, examId);
+
+        this.setEndExamUser({
+            success: data.success,
+            message: data.message,
+        })
+
+        this.examCourse = {
+            title: data.title,
+            exam: data.exam,
+            components: this.examCourse?.components.map(component => {
+                const matchingComponent = data.components.find(
+                    newComponent => newComponent.componentTask.id === component.componentTask.id
+                );
+
+                if (matchingComponent) {
+                    return {
+                        ...component,
+                        componentTask: {
+                            ...component.componentTask,
+                            userAnswer: matchingComponent.componentTask.userAnswer
+                        }
+                    };
+                }
+
+                return component;
+            })
+        };
+    });
+
 
     handleCheckTask = action(async (task: TaskAnswerUserDto, courseId: number) => {
         const data = await handleCheckUserTask(task, courseId);
@@ -420,6 +448,10 @@ class CourseStore {
 
     updateParentSectionsOrder = action(async (courseId: number, sections: { id: number, sort: number }[]) => {
         await updateOrderParentSection(courseId, sections);
+    })
+
+    handleDownloadCertificate = action(async (courseId: number) => {
+        await handleDownloadCertificate(courseId)
     })
 
 }

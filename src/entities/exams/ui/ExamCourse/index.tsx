@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React, { FC, useState } from "react";
-import {Button, Modal, Typography} from "antd";
+import {Button, Divider, Modal, Typography} from "antd";
 import { useTheme } from "next-themes";
 import { useParams, useSearchParams } from "next/navigation";
 import {CheckCircleOutlined} from "@ant-design/icons";
@@ -99,13 +99,17 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
                 <div
                     className="flex flex-col justify-between p-5 border-b border-gray-300 overflow-y-auto w-full lg:w-64 xl:w-64 2xl:w-64 lg:border-r lg:border-b-0 xl:border-r xl:border-b-0 2xl:border-r 2xl:border-b-0">
                     <div>
+                        {exam?.exam.isEndExam && <>
+                            <p className="text-lg font-bold">Результат: {exam?.exam.progress} %</p>
+                            <Divider/>
+                        </>}
                         <h3 className="mb-5 text-center text-lg font-semibold dark:text-white">Вопросы</h3>
                         <div className="flex items-center flex-wrap gap-3 p-4">
                             {exam?.components.map((component, index) => {
                                 const { componentTask } = component;
                                 const userAnswer = componentTask?.userAnswer;
                                 const totalQuestions = componentTask?.questions?.length || 1;
-                                const correctAnswers = componentTask?.userAnswer?.answer?.filter(ans => ans.isCorrect !== undefined).length || 0;
+                                const correctAnswers = componentTask?.userAnswer?.answer?.filter(ans => ans.isCorrect !== undefined && ans.isCorrect).length || 0;
                                 const isSuccess = correctAnswers === totalQuestions;
 
                                 return (

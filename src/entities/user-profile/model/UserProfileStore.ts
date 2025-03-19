@@ -58,7 +58,6 @@ class UserProfileStore {
         const data = await confirmLeaveCourse(courseId);
         this.userProfileCourses = this.userProfileCourses.filter(it => it.id !== courseId);
 
-        debugger
         return data;
     })
 

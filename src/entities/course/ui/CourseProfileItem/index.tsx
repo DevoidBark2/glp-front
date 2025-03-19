@@ -25,6 +25,7 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
     const { userProfileStore, courseStore } = useMobxStores();
     const router = useRouter();
 
+    console.log(course)
     const [form] = Form.useForm<CourseReview>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalLeaveCourse, setIsModalLeaveCourse] = useState(false);
@@ -55,7 +56,9 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
         }
     };
 
-    const handleDownloadCertificate = () => {};
+    const handleDownloadCertificate = () => {
+        courseStore.handleDownloadCertificate(course.id)
+    };
 
     const items = [
         {
@@ -75,15 +78,17 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
             label: "Оставить отзыв",
             icon: <MessageOutlined />,
             onClick: () => setIsModalOpen(true)
-        },
-        {
+        }
+    ];
+
+    if (course.has_certificate) {
+        items.push({
             key: "4",
             label: "Скачать сертификат",
             icon: <DownloadOutlined />,
             onClick: handleDownloadCertificate
-        }
-    ];
-
+        });
+    }
 
     return (
         <>

@@ -81,7 +81,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
         } else {
             setSelectedAnswers(Array(questions.length).fill(null));
         }
-        debugger
+
         setUserAnswers(userAnswer!)
         setQuestion(questions)
         setCurrentQuestionIndex(0)

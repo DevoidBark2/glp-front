@@ -47,3 +47,7 @@ export const updateOrderParentSection = async (courseId: number, section: { id: 
 
     return data.data
 }
+
+export const handleDownloadCertificate = async (courseId: number) => (await axiosInstance.get(`api/get-certificate?courseId=${courseId}`, {
+    responseType: "blob"
+}))
