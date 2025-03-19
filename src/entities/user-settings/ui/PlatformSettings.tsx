@@ -1,3 +1,4 @@
+import React from "react";
 import { Divider } from "antd";
 import { useTheme } from "next-themes";
 

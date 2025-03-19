@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Switch } from "antd";
+import { Button, Form, Switch } from "antd";
 import React from "react";
 import { observer } from "mobx-react";
 
@@ -26,7 +26,7 @@ export const ManageProfile: React.FC<ManageProfileProps> = observer(({ showDelet
         >
             <Form.Item
                 name="is_two_factor_enabled"
-                label={<label className='dark:text-white'>Двухфакторная авторизация</label>}
+                label={<p className='dark:text-white'>Двухфакторная авторизация</p>}
                 valuePropName="checked"
                 tooltip={userProfileStore.userProfile?.method_auth !== AuthMethodEnum.CREDENTIALS ? `Двухфакторная авторизация не доступна, Вы вошли через сторонний сервис` : undefined}
             >

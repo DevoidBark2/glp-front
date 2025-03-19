@@ -4,18 +4,18 @@ import Dragger from "antd/es/upload/Dragger";
 import { InboxOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import 'react-quill/dist/quill.snow.css';
 import dynamic from "next/dynamic";
 import { observer } from "mobx-react";
+import {convertToRaw, EditorState} from "draft-js";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import { LEVEL_COURSE } from "@/shared/constants";
 import { Course } from "@/shared/api/course/model";
 
-const ReactQuill = dynamic(
-    () => import('react-quill'),
+const Editor = dynamic(
+    () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
-)
+);
 
 export const CourseAddComponent = observer(() => {
     const { courseStore, nomenclatureStore } = useMobxStores();
@@ -56,13 +56,25 @@ export const CourseAddComponent = observer(() => {
         },
     };
 
+    const getContentAsHTML = () => {
+        const content = convertToRaw(editorState.getCurrentContent());
+        return JSON.stringify(content);
+    };
+
+
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const handleEditorChange = (state) => {
+        setEditorState(state);
+    };
+
 
 
     return (
         <>
             <Form
                 form={createCourseForm}
-                onFinish={(values) => courseStore.createCourse(values).then(() => {
+                onFinish={(values) => courseStore.createCourse({...values, content_description:  getContentAsHTML()}).then(() => {
                     router.push('/control-panel/courses')
                     courseStore.setSuccessCreateCourseModal(true)
                 })}
@@ -186,12 +198,18 @@ export const CourseAddComponent = observer(() => {
                     name="content_description"
                     label="Содержание курса"
                 >
-                    {typeof window !== 'undefined' && <ReactQuill theme="snow" />}
+                    <div className="border p-3 rounded-md shadow-md">
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={handleEditorChange}
+                        />
+                    </div>
                 </Form.Item>
 
                 <div className="flex flex-col items-center">
-                    <Form.Item style={{ marginTop: '10px' }}>
-                        <Button color="default" variant="solid" htmlType="submit" loading={courseStore.loadingCreateCourse}>Создать</Button>
+                    <Form.Item style={{marginTop: '10px'}}>
+                        <Button color="default" variant="solid" htmlType="submit"
+                                loading={courseStore.loadingCreateCourse}>Создать</Button>
                     </Form.Item>
                 </div>
             </Form>

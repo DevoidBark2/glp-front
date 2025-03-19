@@ -27,7 +27,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({ handleChangePa
             >
                 <Form.Item
                     name="currentPassword"
-                    label={<label className="dark:text-white">Текущий пароль</label>}
+                    label={<p className="dark:text-white">Текущий пароль</p>}
                     rules={[
                         { required: true, message: 'Введите текущий пароль' },
                     ]}
@@ -37,7 +37,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({ handleChangePa
 
                 <Form.Item
                     name="newPassword"
-                    label={<label className="dark:text-white">Новый пароль</label>}
+                    label={<p className="dark:text-white">Новый пароль</p>}
                     rules={[
                         { required: true, message: 'Введите новый пароль' }
                     ]}
@@ -47,7 +47,7 @@ export const ResetPassword: FC<ChangePasswordProps> = observer(({ handleChangePa
 
                 <Form.Item
                     name="confirmNewPassword"
-                    label={<label className="dark:text-white">Подтвердите новый пароль</label>}
+                    label={<p className="dark:text-white">Подтвердите новый пароль</p>}
                     dependencies={['newPassword']}
                     rules={[
                         { required: true, message: 'Подтвердите новый пароль' },

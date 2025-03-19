@@ -48,6 +48,19 @@ export const updateOrderParentSection = async (courseId: number, section: { id: 
     return data.data
 }
 
-export const handleDownloadCertificate = async (courseId: number) => (await axiosInstance.get(`api/get-certificate?courseId=${courseId}`, {
-    responseType: "blob"
-}))
+export const handleDownloadCertificate = async (courseId: number) => {
+    const response= (await axiosInstance.get(`api/get-certificate?courseId=${courseId}`, {
+        responseType: "blob"
+    }))
+
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const downloadUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", "certificate.pdf");
+    document.body.appendChild(link);
+    link.click();
+
+    URL.revokeObjectURL(downloadUrl)
+}

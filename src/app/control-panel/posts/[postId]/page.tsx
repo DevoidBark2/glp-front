@@ -5,23 +5,24 @@ import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Up
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     ClockCircleOutlined,
     InboxOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
 
-const ReactQuill = dynamic(
-    () => import('react-quill'),
+const Editor = dynamic(
+    () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
-)
-import 'react-quill/dist/quill.snow.css';
-import dynamic from "next/dynamic";
+);
 
-import { Post, PostStatusEnum } from "@/shared/api/posts/model";
-import nextConfig from "next.config.mjs";
+import dynamic from "next/dynamic";
+import {convertToRaw, EditorState} from "draft-js";
+
 import { useMobxStores } from "@/shared/store/RootStore";
+import nextConfig from "next.config.mjs";
+import { Post, PostStatusEnum } from "@/shared/api/posts/model";
 
 const postPage = () => {
     const { postStore } = useMobxStores();
@@ -31,6 +32,18 @@ const postPage = () => {
 
     const [currentPost, setCurrentPost] = useState<Post | null>(null);
     const [fileList, setFileList] = useState<any[]>([]);
+
+    const getContentAsHTML = () => {
+        const content = convertToRaw(editorState.getCurrentContent());
+        return JSON.stringify(content);
+    };
+
+
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const handleEditorChange = (state) => {
+        setEditorState(state);
+    };
 
 
     const props: UploadProps = {
@@ -171,11 +184,16 @@ const postPage = () => {
                     name="content"
                     label="Контент поста"
                 >
-                    <ReactQuill theme="snow" />
+                    <div className="border p-3 rounded-md shadow-md">
+                        <Editor
+                            editorState={editorState}
+                            onEditorStateChange={handleEditorChange}
+                        />
+                    </div>
                 </Form.Item>
 
                 <div className="flex flex-col items-center">
-                    <Form.Item style={{ marginTop: '10px' }}>
+                    <Form.Item style={{marginTop: '10px'}}>
                         <Button type="primary" htmlType="submit" loading={postStore.loading}>Изменить</Button>
                     </Form.Item>
                 </div>

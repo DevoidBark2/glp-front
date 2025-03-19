@@ -6,7 +6,6 @@ import Link from "next/link";
 import { observer } from "mobx-react";
 
 import { PageContainerControlPanel } from "@/shared/ui";
-import 'react-quill/dist/quill.snow.css';
 import { useMobxStores } from "@/shared/store/RootStore";
 import { CourseSections } from "@/entities/course/ui";
 import { CourseMembers } from "@/entities/course/ui/ControlPanel/CourseMembers";

@@ -12,11 +12,9 @@ import StatisticsStore from "@/entities/statistics/model/StatisticsStore";
 import CommentsStore from "@/entities/comments/model/CommentsStore";
 import { ExamStore } from "@/entities/exams";
 import { NomenclatureStore } from "@/entities/nomenclature";
-import { FilterStore } from "@/entities/filters";
 import { ReviewStore } from "@/entities/review";
 import { SectionStore } from "@/entities/section";
 import { EventStore } from "@/entities/events";
-import { AchievementsStore } from "@/entities/achievements";
 import CourseComponentStore from "@/entities/component-task/model/CourseComponentStore";
 import { UserLevelStore } from "@/entities/user-level";
 import { CustomizeStore } from "@/entities/customize";
@@ -33,11 +31,9 @@ const commentsStore = new CommentsStore();
 const examStore = new ExamStore();
 const courseComponentStore = new CourseComponentStore();
 const nomenclatureStore = new NomenclatureStore()
-const filterStore = new FilterStore()
 const reviewStore = new ReviewStore()
 const sectionCourseStore = new SectionStore()
 const eventStore = new EventStore()
-const achievementsStore = new AchievementsStore()
 const userLevelStore = new UserLevelStore()
 const customizeStore = new CustomizeStore()
 
@@ -54,11 +50,9 @@ export const RootStore = {
     courseComponentStore,
     examStore,
     nomenclatureStore,
-    filterStore,
     reviewStore,
     sectionCourseStore,
     eventStore,
-    achievementsStore,
     userLevelStore,
     customizeStore
 };

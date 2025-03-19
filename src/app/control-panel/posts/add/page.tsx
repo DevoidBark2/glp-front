@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import dynamic from "next/dynamic"; // Импортируем dynamic
+import dynamic from "next/dynamic";
 import { observer } from "mobx-react";
 import { Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, Upload } from "antd";
 const Editor = dynamic(

@@ -1,4 +1,3 @@
-import { AchievementTypeEnum, Condition, ConditionTypeEnum } from "@/entities/achievements/model/AchievementsStore";
 import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 import {StatusCourseEnum} from "@/shared/api/course/model";
 
@@ -89,56 +88,6 @@ export const eventColors = {
     [ActionEvent.UNPUBLISH_COURSE]: "orange",
     [ActionEvent.ENROLL_STUDENT]: "purple",
     [ActionEvent.UNENROLL_STUDENT]: "magenta",
-// [ActionEvent.UPDATE_COURSE]: "blue",
-    // [ActionEvent.CREATE_LESSON]: "cyan",
-    // [ActionEvent.UPDATE_LESSON]: "geekblue",
-    // [ActionEvent.DELETE_LESSON]: "volcano",
-
-    // [ActionEvent.ADD_COMMENT]: "lime",
-    // [ActionEvent.DELETE_COMMENT]: "pink",
-    // [ActionEvent.UPDATE_COMMENT]: "yellow",
-    // [ActionEvent.PASSWORD_RESET]: "purple",
-    // [ActionEvent.UPDATE_PROFILE]: "orange",
-    //
-    // [ActionEvent.ADD_TEACHER]: "green",
-    // [ActionEvent.REMOVE_TEACHER]: "red",
-    // [ActionEvent.UPDATE_TEACHER]: "blue",
-    //
-    // [ActionEvent.CREATE_CATEGORY]: "cyan",
-    // [ActionEvent.UPDATE_CATEGORY]: "blue",
-    // [ActionEvent.DELETE_CATEGORY]: "red",
-};
-
-export const eventTooltips = {
-    [ActionEvent.LOGIN]: "Вход пользователя",
-    [ActionEvent.LOGOUT]: "Выход пользователя",
-    [ActionEvent.CREATE_COURSE]: "Создание нового курса",
-    [ActionEvent.DELETE_COURSE]: "Удаление курса",
-    [ActionEvent.PUBLISH_COURSE]: "Публикация курса",
-    [ActionEvent.UNPUBLISH_COURSE]: "Снятие курса с публикации",
-    [ActionEvent.ENROLL_STUDENT]: "Запись студента на курс",
-    [ActionEvent.UNENROLL_STUDENT]: "Удаление студента с курса",
-    // [ActionEvent.UPDATE_COURSE]: "Обновление существующего курса",
-    // [ActionEvent.CREATE_LESSON]: "Создание нового урока",
-    // [ActionEvent.UPDATE_LESSON]: "Обновление урока",
-    // [ActionEvent.DELETE_LESSON]: "Удаление урока",
-    //
-    // [ActionEvent.ADD_COMMENT]: "Добавление комментария",
-    // [ActionEvent.DELETE_COMMENT]: "Удаление комментария",
-    // [ActionEvent.UPDATE_COMMENT]: "Обновление комментария",
-
-
-
-    // [ActionEvent.PASSWORD_RESET]: "Сброс пароля",
-    // [ActionEvent.UPDATE_PROFILE]: "Обновление профиля пользователя",
-    //
-    // [ActionEvent.ADD_TEACHER]: "Добавление учителя",
-    // [ActionEvent.REMOVE_TEACHER]: "Удаление учителя",
-    // [ActionEvent.UPDATE_TEACHER]: "Обновление данных учителя",
-    //
-    // [ActionEvent.CREATE_CATEGORY]: "Создание новой категории курса",
-    // [ActionEvent.UPDATE_CATEGORY]: "Обновление категории курса",
-    // [ActionEvent.DELETE_CATEGORY]: "Удаление категории курса",
 };
 
 
@@ -210,21 +159,3 @@ export const GeneralSettingTooltips = {
 
 export const FORMAT_VIEW_DATE = "YYYY-MM-DD HH:mm"
 
-
-export const conditionForAchievements: Condition[] = [
-    { id: 1, condition: ConditionTypeEnum.COMPLETE_COURSES, title: "Пройди N курсов", type: AchievementTypeEnum.LEARNING, description: "Поздравляем! Ты сделал первый шаг к знаниям!" },
-    { id: 2, condition: ConditionTypeEnum.EARN_POINTS, title: "Заработай N баллов на платформе", type: AchievementTypeEnum.POINTS, description: "Ты уверенно движешься к вершине!" },
-    { id: 3, condition: ConditionTypeEnum.LOGIN_STREAK, title: "Заходи на платформу каждый день в течение N дней", type: AchievementTypeEnum.ACTIVITY, description: "Ты не останавливаешься! Так держать!" },
-    { id: 4, condition: ConditionTypeEnum.COMPLETE_ASSESSMENT, title: "Пройди N тестов с результатом выше 80%", type: AchievementTypeEnum.LEARNING, description: "Твои мозги работают на полную мощность!" },
-    { id: 5, condition: ConditionTypeEnum.SUBMIT_ASSIGNMENTS, title: "Отправь N домашних заданий", type: AchievementTypeEnum.LEARNING, description: "Ты в числе лучших учеников этой недели!" },
-    { id: 6, condition: ConditionTypeEnum.LOGIN_STREAK, title: "В огне! – Заходить на платформу 7 дней подряд", type: AchievementTypeEnum.ACTIVITY, description: "Ты не останавливаешься! Так держать!" },
-    { id: 7, condition: ConditionTypeEnum.EARN_POINTS, title: "Будущий эксперт – Набрать 500 XP", type: AchievementTypeEnum.POINTS, description: "Ты уверенно движешься к вершине!" },
-    { id: 8, condition: ConditionTypeEnum.TOP_LEARNER, title: "ТОП недели – Попасть в ТОП-10 пользователей недели", type: AchievementTypeEnum.ACHIEVEMENTS, description: "Ты в числе лучших учеников этой недели!" },
-];
-
-export const typesConsitions = [
-    "Обучение",
-    "Баллы",
-    "Активность",
-    "Достижения"
-];
