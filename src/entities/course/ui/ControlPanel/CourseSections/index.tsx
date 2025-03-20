@@ -177,7 +177,7 @@ export const CourseSections = observer(() => {
                 }));
 
             if (updatedSectionOrder) {
-                // Сохраняем новый порядок секций в базе данных
+                debugger
                 // await courseStore.updateSectionOrder(Number(courseId), parentId, updatedSectionOrder);
             }
         }

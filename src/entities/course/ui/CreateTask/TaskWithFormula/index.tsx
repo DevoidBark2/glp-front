@@ -11,7 +11,7 @@ interface TaskWithFormulaProps {
   form?: FormInstance;
 }
 
-const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
+export const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
   const [formula, setFormula] = useState<string>("");
   const [taskDescription, setTaskDescription] = useState<string>("");
   const [parsedDescription, setParsedDescription] = useState<JSX.Element[]>([]);
@@ -150,5 +150,3 @@ const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
       </MathJaxContext>
   );
 };
-
-export default TaskWithFormula;

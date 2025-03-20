@@ -3,13 +3,17 @@ import { Breadcrumb, Button, Divider, Form, Select } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import React, { lazy, Suspense, useState } from "react"
 
-import {PageContainerControlPanel} from "@/shared/ui";
-import { MultiPlayChoice, QuizTask, TextTask } from "@/entities/course/ui";
-import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
-import {useMobxStores} from "@/shared/store/RootStore";
-import {CourseComponent, CourseComponentType} from "@/shared/api/component/model";
+import { PageContainerControlPanel } from "@/shared/ui";
+import { useMobxStores } from "@/shared/store/RootStore";
+import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
+
+const TextTask = lazy(() => import("@/entities/course/ui").then(module => ({ default: module.TextTask })));
+
+const QuizTask = lazy(() => import("@/entities/course/ui").then(module => ({ default: module.QuizTask })));
+const MultiPlayChoice = lazy(() => import("@/entities/course/ui").then(module => ({ default: module.MultiPlayChoice })));
+const TaskWithFormula =lazy(() => import("@/entities/course/ui").then(module => ({ default: module.TaskWithFormula })));
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()
@@ -25,6 +29,7 @@ const TaskAddPage = () => {
         }, {});
         setOptions(updatedOptions!);
     };
+
     const onFinish = (values: CourseComponent) => {
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
@@ -32,7 +37,7 @@ const TaskAddPage = () => {
             courseComponentStore.setCreateLoading(false)
         });
     }
-    
+
     return (
         <PageContainerControlPanel>
             <Breadcrumb
@@ -66,10 +71,12 @@ const TaskAddPage = () => {
                     </Select>
                 </Form.Item>
 
-                {typeTask === CourseComponentType.Text && <TextTask />}
-                {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
-                {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
-                {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula form={form} />}
+                <Suspense fallback={<div>Загрузка...</div>}>
+                    {typeTask === CourseComponentType.Text && <TextTask />}
+                    {typeTask === CourseComponentType.Quiz && <QuizTask form={form} />}
+                    {typeTask === CourseComponentType.MultiPlayChoice && <MultiPlayChoice form={form} />}
+                    {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula form={form} />}
+                </Suspense>
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" loading={courseComponentStore.createLoading}>Добавить</Button>

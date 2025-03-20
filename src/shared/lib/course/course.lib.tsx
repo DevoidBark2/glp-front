@@ -11,6 +11,8 @@ export const renderType = (type: CourseComponentType) => {
             return <Tag color="green">Квиз</Tag>;
         case CourseComponentType.Coding:
             return <Tag color="purple">Программирование</Tag>;
+        case CourseComponentType.MultiPlayChoice:
+            return <Tag color="yellow">Множ. выбор</Tag>;
         default:
             return <Tag color="default">Неизвестно</Tag>;
     }

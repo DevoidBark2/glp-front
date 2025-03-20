@@ -2,7 +2,7 @@
 import { Button, Empty, Form, List } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { FormInstance } from "antd/lib";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import Link from "next/link";
 

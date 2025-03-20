@@ -1,16 +1,18 @@
-import { Button, Form, message, notification, Steps } from "antd"
+import { Button, Form, message, notification, Steps } from "antd";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { observer } from "mobx-react";
 import { FormInstance } from "antd/lib";
 
 import { useMobxStores } from "@/shared/store/RootStore";
-import {SectionCourseItem} from "@/shared/api/section/model";
+import { SectionCourseItem } from "@/shared/api/section/model";
 
-import { SelectCourse, General, SelectComponent } from "../Steps";
+const SelectCourse = lazy(() => import("../Steps/SelectCourse").then(module => ({ default: module.SelectCourse })));
+const General = lazy(() => import("../Steps/General").then(module => ({default: module.General})));
+const SelectComponent = lazy(() => import("../Steps/SelectComponent").then(module => ({ default: module.SelectComponent })));
 
 interface FormStepsProps {
-    sectionCourseForm?: FormInstance<SectionCourseItem>,
+    sectionCourseForm?: FormInstance<SectionCourseItem>;
 }
 
 export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
@@ -22,15 +24,33 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
     const steps = [
         {
             title: "Выбор курса",
-            content: <SelectCourse createSectionForm={sectionCourseForm ?? createSectionForm} />,
+            content: (
+                <Suspense fallback={<p>Загрузка...</p>}>
+                    <SelectCourse createSectionForm={sectionCourseForm ?? createSectionForm} />
+                </Suspense>
+            ),
         },
-        General(),
-        SelectComponent({ createSectionForm: sectionCourseForm ? sectionCourseForm: createSectionForm })
+        {
+            title: "Общее",
+            content: (
+                <Suspense fallback={<p>Загрузка...</p>}>
+                    <General />
+                </Suspense>
+            ),
+        },
+        {
+            title: "Выбор компонентов",
+            content: (
+                <Suspense fallback={<p>Загрузка...</p>}>
+                    <SelectComponent createSectionForm={sectionCourseForm ?? createSectionForm} />
+                </Suspense>
+            ),
+        },
     ];
 
     const next = async () => {
         if (current === 0 && !courseStore.selectedIdCourse) {
-            message.warning("Выберите курс!")
+            message.warning("Выберите курс!");
             return;
         }
 
@@ -41,6 +61,7 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
             setCurrent(current + 1);
         }
     };
+
     const prev = () => setCurrent(current - 1);
 
     const onFinish = async () => {
@@ -53,28 +74,21 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
             return;
         }
 
-        if (sectionCourseForm) {
-            await sectionCourseStore.updateSection(values).then(response => {
-                notification.success({message: response.message})
-            }).finally(() => {
-                sectionCourseStore.setCreateSectionLoading(false);
-            })
-        }
-        else {
-            sectionCourseStore.addSection(values).then((response) => {
-                router.push("/control-panel/sections");
-                notification.success({ message: response.message })
+        const action = sectionCourseForm
+            ? sectionCourseStore.updateSection(values)
+            : sectionCourseStore.addSection(values);
+
+        action
+            .then((response) => {
+                notification.success({ message: response.message });
+                if (!sectionCourseForm) {router.push("/control-panel/sections");}
                 courseStore.setSelectedCourse(null);
                 courseComponentStore.setSearchResult([]);
                 courseComponentStore.setSelectedComponent([]);
-            }).catch(e => {
-                notification.error({ message: e.response.data.message })
-            }).finally(() => {
-                sectionCourseStore.setCreateSectionLoading(false);
             })
-        }
+            .catch((e) => notification.error({ message: e.response.data.message }))
+            .finally(() => sectionCourseStore.setCreateSectionLoading(false));
     };
-
 
     return (
         <Form form={sectionCourseForm ?? createSectionForm} onFinish={onFinish} layout="vertical">
@@ -102,5 +116,7 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
                 )}
             </div>
         </Form>
-    )
-})
+    );
+});
+
+export default FormSteps;

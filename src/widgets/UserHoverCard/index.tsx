@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React,{ FC } from "react";
 import { Button, Typography } from "antd";
 import Link from "next/link";
 

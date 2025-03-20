@@ -30,7 +30,8 @@ const CreatePostPage = () => {
 
     const getContentAsHTML = () => {
         const content = convertToRaw(editorState.getCurrentContent());
-        return JSON.stringify(content);
+        const isEmpty = !content.blocks.some(block => block.text.trim() !== "");
+        return isEmpty ? "" : JSON.stringify(content);
     };
 
     const props = {
@@ -69,11 +70,18 @@ const CreatePostPage = () => {
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={(values) =>
+                onFinish={(values) =>{
+                    debugger
+                    if(!getContentAsHTML()) {
+                        form.setFields([
+                            { name: "content", errors: ["Пожалуйста, введите содержание!"] },
+                        ]);
+                        return;
+                    }
                     postStore.createPost({ ...values, content: getContentAsHTML() }).then(() => {
                         router.push("/control-panel/posts");
                     })
-                }
+                }}
             >
                 <Row gutter={24}>
                     <Col span={12}>
@@ -117,7 +125,7 @@ const CreatePostPage = () => {
                 <Form.Item
                     name="content"
                     label="Контент поста"
-                    rules={[{ required: true, message: "Пожалуйста, введите содержание!" }]}
+                    rules={[{required: true,message: "Пожалуйста, введите содержание!"}]}
                 >
                     <div className="border p-3 rounded-md shadow-md">
                         <Editor

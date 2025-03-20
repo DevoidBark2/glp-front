@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Breadcrumb, Collapse, notification, Select , Modal } from "antd";
+import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Breadcrumb, Collapse, notification, Modal } from "antd";
 import { useParams, useRouter } from "next/navigation";
-import { AppstoreOutlined, FileTextOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, FileTextOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
 import nextConfig from "next.config.mjs";
@@ -13,6 +13,7 @@ import { Course } from "@/shared/api/course/model";
 import { Post } from "@/shared/api/posts/model";
 import {showUserStatus} from "@/shared/lib/showUserStatus";
 import {useMobxStores} from "@/shared/store/RootStore";
+import {UserAvatar} from "@/entities/user-profile";
 
 const { Title, Text } = Typography;
 
@@ -25,7 +26,6 @@ const UserDetailsPage = () => {
 
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<User | null>(null);
-    const [roleUpdating, setRoleUpdating] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
 
@@ -41,24 +41,16 @@ const UserDetailsPage = () => {
         }
     }, [userId, userStore]);
 
-    const showModal = (newRole: UserRole) => {
-        setSelectedRole(newRole);
-        setIsModalOpen(true);
-    };
-
     const handleConfirmRoleChange = async () => {
         if (!user || !selectedRole) {return;}
         setIsModalOpen(false);
-        setRoleUpdating(true);
 
         await userStore.updateUserRole(user.id, selectedRole).then(response => {
             setUser((prev) => (prev ? { ...prev, role: selectedRole } : null));
             notification.success({ message: response.message });
         }).catch(e => {
             notification.error({ message: e.response.data.message });
-        }).finally(() => {
-            setRoleUpdating(false);
-        });
+        })
     };
 
     const handleCancelRoleChange = () => {
@@ -128,8 +120,8 @@ const UserDetailsPage = () => {
                                         <strong>Длительность:</strong> {course.duration} часов
                                     </Typography.Paragraph>
                                     <Typography.Paragraph>
-                                        <strong>Опубликован:</strong>{" "}
-                                        {course.publish_date ? new Date(course.publish_date).toLocaleDateString() : "Не указано"}
+                                        <strong>Создан:</strong>{" "}
+                                        {course.created_at ? new Date(course.created_at).toLocaleDateString() : "Не указано"}
                                     </Typography.Paragraph>
                                     <Button
                                         type="primary"
@@ -243,21 +235,13 @@ const UserDetailsPage = () => {
             <Card>
                 <div className="flex items-center">
                     <div className="mr-4">
-                        <Avatar
-                            size={180}
-                            src={user?.profile_url ? `${nextConfig.env?.API_URL}${user.profile_url}` : ""}
-                            icon={<UserOutlined />}
-                            className="border border-gray-300"
-                        />
+                        <UserAvatar currentUser={user} size={180}/>
                     </div>
-                    <Descriptions column={2} bordered>
+                    <Descriptions column={1} bordered>
                         <Descriptions.Item label="Фамилия">{user?.second_name || "Не указано"}</Descriptions.Item>
                         <Descriptions.Item label="Имя">{user?.first_name || "Не указано"}</Descriptions.Item>
                         <Descriptions.Item label="Отчество">{user?.last_name || "Не указано"}</Descriptions.Item>
-                        <Descriptions.Item label="Дата рождения">
-                            {user?.birth_day ? new Date(user.birth_day).toLocaleDateString() : "Не указано"}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Электронная почта">{user?.email || "Не указано"}</Descriptions.Item>
+                        <Descriptions.Item label="Электронная почта">{user?.email}</Descriptions.Item>
                         <Descriptions.Item label="Телефон">{user?.phone || "Не указано"}</Descriptions.Item>
                     </Descriptions>
                 </div>
@@ -266,8 +250,7 @@ const UserDetailsPage = () => {
             <Divider />
 
             <Card>
-                <Descriptions title="Дополнительная информация" bordered>
-                    <Descriptions.Item label="Город">{user?.city || "Не указано"}</Descriptions.Item>
+                <Descriptions title="Дополнительная информация" column={1} bordered>
                     <Descriptions.Item label="Роль и статус">
                         <div className="flex items-center space-x-4">
                             {renderTag(user?.role, user?.status)}

@@ -1,13 +1,15 @@
-import { AutoComplete, Button, Form, Input, Table, TableColumnsType, Tag, Tooltip } from "antd"
+import React from "react"
+import { AutoComplete, Button, Form, Input, Table, TableColumnsType, Tooltip } from "antd"
 import {
     BookOutlined,
     CheckCircleOutlined,
     CodeOutlined,
     ProjectOutlined,
-    ReconciliationOutlined, EditOutlined
+    ReconciliationOutlined, EditOutlined, DeleteOutlined
 } from "@ant-design/icons";
 import Link from "next/link";
 import { FormInstance } from "antd/lib";
+import {observer} from "mobx-react";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
@@ -17,7 +19,7 @@ interface SelectComponentProps {
     createSectionForm: FormInstance
 }
 
-export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => {
+export const SelectComponent = observer(({ createSectionForm }: SelectComponentProps) => {
     const { courseComponentStore } = useMobxStores();
 
     const handleSearch = (value: string) => {
@@ -91,66 +93,61 @@ export const SelectComponent = ({ createSectionForm }: SelectComponentProps) => 
         {
             title: 'Действия',
             key: 'actions',
-            render: (_, record) => (
-                <Button onClick={() => handleDelete(record)}>Удалить</Button>
-            ),
+            render: (_, record) => <div className="flex justify-end">
+                <Button icon={<DeleteOutlined/>} type="primary" danger onClick={() => handleDelete(record)}/>
+            </div>
         },
     ];
 
-    return {
-        title: "Содержимое раздела",
-        content: (
-            <div className="flex">
-                <div className="w-1/4">
-                    <AutoComplete
-                        style={{ width: '100%' }}
-                        onSearch={handleSearch}
-                        onSelect={handleSelect}
-                        options={
-                            courseComponentStore.searchResults.length > 0
-                                ? courseComponentStore.searchResults.map(component => ({
-                                    value: component.title,
-                                    label: (
-                                        <div className="flex items-center p-2 border-b-2">
-                                            <div style={{ flex: 1 }}>
-                                                <strong>{component.title}</strong>
-                                                <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
-                                            </div>
-                                            <div style={{ marginLeft: '8px' }}>
-                                                {renderType(component.type)}
-                                            </div>
-                                        </div>
-                                    ),
-                                    key: component.id.toString(),
-                                }))
-                                : [
-                                    {
-                                        value: 'empty',
-                                        label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
-                                        disabled: true,
-                                    },
-                                ]
-                        }
-                        placeholder="Введите название или тег..."
-                    >
-                        <Input.Search />
-                    </AutoComplete>
+    return  <div className="flex">
+        <div className="w-1/4">
+            <AutoComplete
+                style={{ width: '100%' }}
+                onSearch={handleSearch}
+                onSelect={handleSelect}
+                options={
+                    courseComponentStore.searchResults.length > 0
+                        ? courseComponentStore.searchResults.map(component => ({
+                            value: component.title,
+                            label: (
+                                <div className="flex items-center p-2 border-b-2">
+                                    <div style={{ flex: 1 }}>
+                                        <strong>{component.title}</strong>
+                                        <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
+                                    </div>
+                                    <div style={{ marginLeft: '8px' }}>
+                                        {renderType(component.type)}
+                                    </div>
+                                </div>
+                            ),
+                            key: component.id.toString(),
+                        }))
+                        : [
+                            {
+                                value: 'empty',
+                                label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
+                                disabled: true,
+                            },
+                        ]
+                }
+                placeholder="Введите название или тег..."
+            >
+                <Input.Search />
+            </AutoComplete>
 
-                </div>
-                <div className="w-3/4 ml-5">
-                    <Form.Item
-                        name="components"
-                        label=" Компоненты"
-                        tooltip={{ title: "Выберите и добавьте компоненты раздела в таблицу. Эти компоненты будут связаны с текущим разделом." }}
-                    >
-                        <Table
-                            dataSource={courseComponentStore.selectedComponents}
-                            columns={columns}
-                            rowKey={(record) => record.id}
-                        />
-                    </Form.Item>
-                </div>
-            </div>
-        ),
-    }
-}
+        </div>
+        <div className="w-3/4 ml-5">
+            <Form.Item
+                name="components"
+                label=" Компоненты"
+                tooltip={{ title: "Выберите и добавьте компоненты раздела в таблицу. Эти компоненты будут связаны с текущим разделом." }}
+            >
+                <Table
+                    dataSource={courseComponentStore.selectedComponents}
+                    columns={columns}
+                    rowKey={(record) => record.id}
+                />
+            </Form.Item>
+        </div>
+    </div>
+})
