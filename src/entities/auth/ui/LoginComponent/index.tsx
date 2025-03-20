@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { notification, Button, Form, Input, Modal, Divider } from "antd";
+import { notification, Button, Form, Input, Divider } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import ReCAPTCHA from "react-google-recaptcha"
 import { useRouter } from "next/navigation";
@@ -32,6 +32,7 @@ export const LoginComponent = observer(() => {
             ...credentials,
             code: values.code
         } : values
+
         userStore.loginUser(body).then((response) => {
             if (response.message) {
                 notification.success({ message: response.message })
@@ -142,12 +143,13 @@ export const LoginComponent = observer(() => {
                 )}
 
                 <div className="flex justify-end mb-4 mt-4">
-                    <span
+                    <button
+                        type="button"
                         className="hover:cursor-pointer text-gray-500 hover:text-gray-800"
                         onClick={() => router.push('reset-password')}
                     >
                         Восстановить пароль
-                    </span>
+                    </button>
                 </div>
 
                 <div className="flex justify-center mt-10">
@@ -170,12 +172,13 @@ export const LoginComponent = observer(() => {
                     </Form.Item>
                     <p>
                         Нет аккаунта?
-                        <span
+                        <button
+                            type="button"
                             className="hover:cursor-pointer text-gray-500 hover:text-gray-800 ml-2"
                             onClick={() => router.push('register')}
                         >
                             Зарегистрируйся
-                        </span>
+                        </button>
                     </p>
                 </div>
             </Form>

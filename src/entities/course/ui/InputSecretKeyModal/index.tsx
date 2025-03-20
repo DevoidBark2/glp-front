@@ -17,9 +17,8 @@ export const InputSecretKeyModal: React.FC<IInputSecretKeyModalProps> = ({ input
             onCancel={() => setInputSecretKeyModal(false)}
             centered
             footer={null}
-            transitionName="ant-fade"
         >
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-4 flex flex-col items-center justify-center">
                 <Title level={4}>Введите код доступа</Title>
                 <Text type="secondary">
                     Для доступа к этому курсу вам необходимо ввести 8-значный код.
@@ -27,9 +26,16 @@ export const InputSecretKeyModal: React.FC<IInputSecretKeyModalProps> = ({ input
 
                 <Input.OTP length={8} className="mt-2" onChange={(value) => setSecretKey(value)} />
 
-                <Button type="primary" onClick={() => handleCheckSecretKey(secretKey)} block className="mt-4">
-                    Подтвердить
-                </Button>
+                <div className="flex justify-center w-full">
+                    <Button
+                        color="default"
+                        variant="solid"
+                        onClick={() => handleCheckSecretKey(secretKey)}
+                        className="mt-4 w-full max-w-[300px]"
+                    >
+                        Подтвердить
+                    </Button>
+                </div>
             </div>
         </Modal>
     );

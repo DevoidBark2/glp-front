@@ -44,12 +44,14 @@ const CoursePage = () => {
 
         courseStore.subscribeCourse(Number(courseId), userProfileStore.userProfile?.id).then(() => {
             router.push(`/platform/lessons/${courseId}`)
-        }).finally(() => {
-            courseStore.setSubscribeCourseLoading(false);
         })
     }
 
     const handleCheckSecretKey = (value: string) => {
+        if(value.length === 0) {
+            message.error("Введите код доступа.")
+            return;
+        }
         courseStore.handleCheckSecretKey(value, Number(courseId)).then(response => {
             setInputSecretKeyModal(false)
             courseStore.subscribeCourse(Number(courseId), String(userProfileStore.userProfile?.id)).then(() => {
@@ -69,7 +71,7 @@ const CoursePage = () => {
     }
 
     useEffect(() => {
-        courseStore.getCourseDetailsById(Number(courseId)).then(response => {
+        courseStore.getPlatformCourseById(Number(courseId)).then(response => {
             setCurrentCourse(response);
 
             reviewStore.getCourseReviews(Number(courseId))
@@ -77,7 +79,11 @@ const CoursePage = () => {
             router.push("/platform/courses");
             notification.error({ message: e.response.data.message });
         });
-    }, [courseId]);
+
+        return () => {
+            courseStore.setSubscribeCourseLoading(false);
+        }
+    }, [courseId, courseStore, reviewStore, router]);
 
     return (
         <>

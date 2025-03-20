@@ -19,10 +19,12 @@ const NewVerificationPage = () => {
             notification.error({message: e.response.data.message})
             router.push('/platform/auth/login')
         })
-    }, [token])
+    }, [authStore, router, token])
 
 
-    return <Spin size="large"/>
+    return <div className="flex justify-center">
+        <Spin size="large"/>
+    </div>
 }
 
 export default NewVerificationPage

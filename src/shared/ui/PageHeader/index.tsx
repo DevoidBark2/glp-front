@@ -1,6 +1,6 @@
 import { Button, Divider } from "antd";
 import { PlusCircleOutlined, MoreOutlined } from "@ant-design/icons";
-import { FC } from "react";
+import React, { FC } from "react";
 
 interface PageHeaderProps {
     title: string;
@@ -16,10 +16,11 @@ export const PageHeader: FC<PageHeaderProps> = ({ title, onClickButton, buttonTi
                 <h1 className="text-gray-800 font-bold text-3xl mb-2">{title}</h1>
                 {buttonTitle && <div>
                     <Button
-                        className="flex items-center justify-center transition-transform transform hover:scale-105"
+                        className="flex items-center justify-center transition-transform transform"
                         onClick={onClickButton}
                         icon={<PlusCircleOutlined />}
-                        type="primary"
+                        color="blue"
+                        variant="solid"
                     >
                         {buttonTitle}
                     </Button>

@@ -9,7 +9,6 @@ import { ChangePasswordType } from "@/shared/api/auth/model";
 import { ResetPassword } from "@/entities/user-settings/ui/ResetPassword";
 import { ManageProfile } from "@/entities/user-settings/ui/ManageProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { PlatformSettings } from "@/entities/user-settings/ui/PlatformSettings";
 
 
 const SettingsPage = observer(() => {
@@ -50,11 +49,6 @@ const SettingsPage = observer(() => {
             key: "2",
             label: <span className="dark:text-white">Управление аккаунтом</span>,
             children: (<ManageProfile showDeleteAccountModal={handleShowModal} />),
-        },
-        {
-            key: "3",
-            label: <span className="dark:text-white">Платформа</span>,
-            children: (<PlatformSettings />),
         },
     ];
 

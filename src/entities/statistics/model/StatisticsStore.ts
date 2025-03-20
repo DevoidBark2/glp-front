@@ -1,11 +1,6 @@
 import { action, makeAutoObservable } from "mobx";
 
-import { Course } from "@/shared/api/course/model";
-import {User} from "@/shared/api/user/model";
 import { getStatistics } from "@/shared/api/statistics";
-import {Post} from "@/shared/api/posts/model";
-
-import SectionCourse from "@/stores/SectionCourse";
 
 export type StatisticsData = {
     countUsers: number;
@@ -22,12 +17,6 @@ export type StatisticsData = {
 
 }
 
-export type ResultSearchItems = {
-    user: User[],
-    courses: Course[],
-    section: SectionCourse[],
-    posts: Post[]
-}
 class StatisticsStore {
     constructor() {
         makeAutoObservable(this)
@@ -35,6 +24,10 @@ class StatisticsStore {
 
     loadingStatisticsData: boolean = true;
     statisticsData: StatisticsData | null = null;
+
+    setStatisticsData = action((values: StatisticsData) => {
+        this.statisticsData = values;
+    })
 
     setLoadingStatisticsData = action((value: boolean) => {
         this.loadingStatisticsData = value;
@@ -44,22 +37,11 @@ class StatisticsStore {
     getAllStatisticsData = action(async () => {
         this.setLoadingStatisticsData(true)
         await getStatistics().then(response => {
-            this.statisticsData = response as StatisticsData;
+            this.setStatisticsData(response);
         }).catch(e => { }).finally(() => {
             this.setLoadingStatisticsData(false)
         });
     })
-}
-
-const globalSearchMapper = (result: ResultSearchItems) => {
-    const item: ResultSearchItems = {
-        user: result.user,
-        courses: result.courses,
-        section: result.section,
-        posts: result.posts,
-    }
-
-    return [item];
 }
 
 export default StatisticsStore;

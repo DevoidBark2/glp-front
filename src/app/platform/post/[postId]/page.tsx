@@ -24,7 +24,7 @@ const PostPage = () => {
         }).catch(e => {
             notification.error({ message: e.response.data.message })
         });
-    }, [postId]);
+    }, [postId, postStore]);
 
     return (
         <div className="container mx-auto">

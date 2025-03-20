@@ -7,7 +7,6 @@ import ReCAPTCHA from "react-google-recaptcha"
 import Image from "next/image"
 import { useRouter } from "next/navigation";
 
-import { MAIN_COLOR } from "@/shared/constants";
 import { useMobxStores } from "@/shared/store/RootStore";
 
 import nextConfig from "../../../../../next.config.mjs";
@@ -155,10 +154,10 @@ export const RegisterComponent = observer(() => {
                                 Зарегистрироваться
                             </Button>
                         </Form.Item>
-                        <p>Есть аккаунт? <span onClick={() => {
+                        <p>Есть аккаунт? <button type="button" onClick={() => {
                             router.push('login')
                             form.resetFields();
-                        }} className="hover:cursor-pointer text-gray-500 hover:text-gray-800">Авторизуйся</span></p>
+                        }} className="hover:cursor-pointer text-gray-500 hover:text-gray-800">Авторизуйся</button></p>
                     </div>
                 </Form>
             </div>

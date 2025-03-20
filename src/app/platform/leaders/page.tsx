@@ -97,7 +97,7 @@ const LeaderboardPage = observer(() => {
 
     useEffect(() => {
         userLevelStore.getAllUsersLevel();
-    }, []);
+    }, [userLevelStore]);
 
     return (
         <div className="container mx-auto px-4">

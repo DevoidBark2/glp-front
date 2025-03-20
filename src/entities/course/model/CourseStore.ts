@@ -16,7 +16,7 @@ import {
     searchCourseByFilter,
     sendToReviewCourse,
     submitReviewCourse,
-    handleCheckCourseSecretKey
+    handleCheckCourseSecretKey, getPlatformCourseById
 } from "@/shared/api/course";
 import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from "@/shared/api/course/model";
 import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
@@ -190,6 +190,8 @@ class CourseStore {
     })
 
     getCourseDetailsById = action(async (courseId: number) => await getCourseById(courseId))
+
+    getPlatformCourseById = action(async (courseId: number) => await getPlatformCourseById(courseId))
 
     getCourseDetailsSections = action(async (courseId: number) => {
         await getCourseDetailsSections(courseId).then(response => {

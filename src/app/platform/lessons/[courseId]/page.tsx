@@ -32,7 +32,7 @@ const LessonPage = () => {
             courseStore.setMessageWarning(null);
         };
 
-    }, [courseId]);
+    }, [courseId, courseStore, router, step]);
 
     return (
         <Layout>

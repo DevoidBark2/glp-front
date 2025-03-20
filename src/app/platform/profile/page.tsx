@@ -17,7 +17,7 @@ const ProfilePage = () => {
         userProfileStore.getUserProfile().finally(() => {
             userProfileStore.setLoading(false)
         });
-    }, []);
+    }, [userProfileStore]);
 
     return (
         !userProfileStore.loading && userProfileStore.userProfile ? (

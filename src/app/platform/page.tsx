@@ -18,11 +18,9 @@ const PlatformPage = () => {
         }
     }, [courseStore.courses]);
 
-
-
     useEffect(() => {
         courseStore.getAllCourses();
-    }, []);
+    }, [courseStore]);
 
     return <div className="container mx-auto max-lg:px-4 px-2">
 

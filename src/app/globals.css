@@ -60,6 +60,9 @@
     border-color: black !important;
 }
 
+.dark-theme-switch .ant-switch-handle:before {
+    background-color: black!important;
+}
 
 .frame {
     background-color: #ddc;

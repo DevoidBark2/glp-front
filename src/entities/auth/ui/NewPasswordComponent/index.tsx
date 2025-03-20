@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button, Form, Input, notification } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import ReCAPTCHA from "react-google-recaptcha";
+import {ReCAPTCHA} from "react-google-recaptcha";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import nextConfig from "next.config.mjs";
@@ -21,7 +21,7 @@ const NewPasswordComponent = () => {
             notification.error({ message: "Пожалуйста, завершите reCAPTCHA" })
             return;
         }
-        authStore.newPassword(values, token).then(response => {
+        authStore.newPassword(values, token).then(() => {
             notification.success({ message: "Пароль успешно обновлен" })
             router.push('login')
         }).catch(e => {

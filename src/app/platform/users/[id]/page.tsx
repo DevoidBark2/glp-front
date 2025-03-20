@@ -2,14 +2,13 @@
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Skeleton, Card, Divider, Row, Col, Avatar } from "antd";
-import { AppstoreAddOutlined, CalendarOutlined, UserOutlined } from "@ant-design/icons";
+import { Skeleton, Card, Divider, Row, Col } from "antd";
+import { AppstoreAddOutlined, CalendarOutlined } from "@ant-design/icons";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import { User } from "@/shared/api/user/model";
-import nextConfig from "next.config.mjs";
-import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseList } from "@/entities/course/ui";
+import {UserAvatar} from "@/entities/user-profile";
 
 const UserPage = observer(() => {
     const { id } = useParams();
@@ -23,7 +22,7 @@ const UserPage = observer(() => {
             setCurrentUser(response);
             setLoading(false);
         });
-    }, [id]);
+    }, [id, userStore]);
 
     return (
         <div className="container mx-auto p-6">
@@ -39,19 +38,7 @@ const UserPage = observer(() => {
                                     : ''
                             }
                         >
-                            <Avatar
-                                shape="square"
-                                size={250}
-                                src={
-                                    currentUser?.profile_url
-                                        ? currentUser?.method_auth === AuthMethodEnum.GOOGLE ||
-                                        currentUser?.method_auth === AuthMethodEnum.YANDEX
-                                            ? currentUser?.profile_url
-                                            : `${nextConfig.env?.API_URL}${currentUser?.profile_url}`
-                                        : undefined
-                                }
-                                icon={!currentUser?.profile_url && <UserOutlined />}
-                            />
+                            <UserAvatar currentUser={currentUser} size={250} />
                         </div>
                     )}
 

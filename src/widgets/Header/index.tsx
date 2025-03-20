@@ -9,9 +9,10 @@ import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 
 import { PlatformMenu } from "@/shared/constants";
-import { UserRole } from "@/shared/api/user/model";
+import {User, UserRole} from "@/shared/api/user/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
+import {UserAvatar} from "@/entities/user-profile";
 
 import nextConfig from "../../../next.config.mjs";
 

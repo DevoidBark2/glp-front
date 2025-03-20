@@ -1,3 +1,4 @@
+"use client"
 import { Button, Divider, Form, Input, Tooltip } from "antd";
 import React, { FC } from "react";
 import { observer } from "mobx-react";

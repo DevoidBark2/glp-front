@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import Link from "next/link";
 import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import { FORMAT_VIEW_DATE, MAIN_COLOR, statusCourseLabels, statusCourses } from "@/shared/constants";
 import { coursesTable } from "@/shared/config/tableConfig";

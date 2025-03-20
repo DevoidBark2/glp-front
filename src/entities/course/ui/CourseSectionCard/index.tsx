@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Button, Card, Divider, Result, Skeleton} from "antd";
 import {observer} from "mobx-react";
 import {useParams, useSearchParams} from "next/navigation";
@@ -23,12 +23,6 @@ export const CourseSectionCard = observer(() => {
     const { courseId } = useParams();
     const stepParam = searchParams.get("step");
     const step = !isNaN(Number(stepParam)) && Number(stepParam) !== 0 ? Number(stepParam) : null;
-
-    const [showStats, setShowStats] = useState(false); // Состояние для контроля видимости статистики
-
-    const toggleStats = () => {
-        setShowStats(!showStats); // Переключение видимости
-    };
 
     const handleCheckResult = async (quiz: ComponentTask, userAnswer: string | number[]) => await courseStore.handleCheckTask({
             task: quiz,
@@ -65,25 +59,8 @@ export const CourseSectionCard = observer(() => {
                     <div className={`p-4 rounded-2xl shadow-lg text-xl text-center text-white mb-2 ${courseStore.endExamUser.success ? 'bg-green-400' : 'bg-red-400'}`}>
                         {courseStore.endExamUser.message}
                     </div>
-
-                    {showStats && courseStore.examCourse && (
-                        <div className="mt-6 mb-3 text-center p-4 rounded-lg shadow-lg bg-blue-100">
-                            <p className="text-lg font-semibold">Итоговый результат</p>
-                            <p className="text-xl">
-                                {courseStore.examCourse?.components?.reduce((total, component) => {
-                                    const correctAnswersInComponent = component.componentTask?.userAnswer?.answer.filter(ans => ans.isCorrect).length;
-                                    return total + Number(correctAnswersInComponent);
-                                }, 0)} из {" "}
-                                {courseStore.examCourse?.components?.reduce((total, component) => total + (component.componentTask?.type === CourseComponentType.SimpleTask ? 1 : component.componentTask?.questions?.length || 0), 0)} правильных
-                            </p>
-                            <p className="mt-2 text-lg font-bold">
-                                Итоговый результат: {courseStore.examCourse.exam.progress}% правильных
-                            </p>
-                        </div>
-                    )}
                 </>
             )}
-
 
             {!courseStore.messageWarning ? <Card
                 loading={courseStore.loadingSection}

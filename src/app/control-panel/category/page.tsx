@@ -59,7 +59,7 @@ const CategoryPage = () => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
         nomenclatureStore.getCategories();
-    }, []);
+    }, [nomenclatureStore]);
 
     return (
         <PageContainerControlPanel>

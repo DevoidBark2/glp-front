@@ -46,6 +46,12 @@ export const getCourseById = async (courseId: number) => {
     return data.data;
 }
 
+export const getPlatformCourseById = async (courseId: number) => {
+    const data = (await axiosInstance.get(`api/courses/${courseId}`)).data;
+
+    return data.data;
+}
+
 export const deleteCourseById = async (id: number) => (await axiosInstance.delete(`api/course/${id}`)).data
 
 export const changeCourse = async (course: Course) => (await axiosInstance.put('api/course', course)).data

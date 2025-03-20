@@ -1,7 +1,6 @@
 import {
     Menu,
     Layout,
-    Button,
     Tooltip,
     Skeleton,
     Progress,
@@ -12,12 +11,9 @@ import {
     CheckCircleOutlined,
     CloseCircleOutlined,
     QuestionCircleOutlined,
-    PushpinOutlined,
-    PushpinTwoTone,
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useMediaQuery } from "react-responsive";
 import { useTheme } from "next-themes";
 
 import { useMobxStores } from "@/shared/store/RootStore";

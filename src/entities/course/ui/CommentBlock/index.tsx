@@ -1,13 +1,12 @@
-import { observer } from "mobx-react";
 import React from "react";
+import { observer } from "mobx-react";
 import { Button, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useSearchParams } from "next/navigation";
-import relativeTime from 'dayjs/plugin/relativeTime';
-import dayjs from "dayjs";
-
-import 'dayjs/locale/ru';
 import { useTheme } from "next-themes";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ru";
 
 import { CourseSectionComment } from "@/entities/comments/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
@@ -52,7 +51,7 @@ export const CommentBlock = observer(() => {
             </div>
             <div className="mt-6 space-y-4">
                 {commentsStore.sectionComments.length > 0 ? (
-                    commentsStore.sectionComments.map((comment, index) => (
+                    commentsStore.sectionComments.map((comment) => (
                         <CourseSectionComment key={comment.id} comment={comment} />
                     ))
                 ) : (
