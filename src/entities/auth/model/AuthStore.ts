@@ -3,7 +3,6 @@ import { action, makeAutoObservable } from "mobx";
 import {
     changePassword,
     deleteUserAccount,
-    logoutUser,
     newPassword,
     resetPassword,
     verificationEmail
@@ -17,7 +16,7 @@ class AuthStore {
 
     changePassword = action(async (values: ChangePasswordType) => {
         const { confirmNewPassword, ...passwordData } = values;
-        return await changePassword(passwordData);
+        return await changePassword(passwordData as ChangePasswordType);
     })
 
     resetPassword = action(async (email: string) => await resetPassword(email))

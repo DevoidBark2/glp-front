@@ -111,11 +111,6 @@ let dashboardMenuItems: MenuItem[] = [
         type: 'divider',
     },
     {
-        key: 'achievements',
-        label: <Link href={"/control-panel/achievements"}>Достижения</Link>,
-        icon: <StarOutlined />,
-    },
-    {
         key: 'platform',
         label: <Link href={"/platform"}>Вернуться на платформу</Link>,
         icon: <LogoutOutlined />,

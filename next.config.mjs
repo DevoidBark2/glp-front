@@ -25,8 +25,7 @@ const nextConfig = {
         serverActions: {
             bodySizeLimit: '50mb'
         }
-    },
-    transpilePackages: ['three']
+    }
 };
 
 export default nextConfig;

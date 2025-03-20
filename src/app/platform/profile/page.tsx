@@ -1,13 +1,17 @@
 "use client";
 import { Spin, Tabs } from "antd";
 import { observer } from "mobx-react";
-import React, { useEffect } from "react";
+import React, {lazy, useEffect} from "react";
 import { useMediaQuery } from "react-responsive"
 
-import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
+// import { CourseUserProfile } from "@/widgets/CoursesUserProfile";
 import { UserProfileBlock } from "@/widgets/UserProfile";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AddationalInfo, CustomizeProfile, UserAchievements } from "@/entities/user-profile";
+
+const CourseUserProfile = lazy(() =>
+    import("@/widgets/CoursesUserProfile").then(module => ({ default: module.CourseUserProfile }))
+);
 
 const ProfilePage = () => {
     const { userProfileStore } = useMobxStores();
