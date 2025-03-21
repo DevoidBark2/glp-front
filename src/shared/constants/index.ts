@@ -90,6 +90,37 @@ export const eventColors = {
     [ActionEvent.UNENROLL_STUDENT]: "magenta",
 };
 
+export const eventTooltips = {
+    [ActionEvent.LOGIN]: "Вход пользователя",
+    [ActionEvent.LOGOUT]: "Выход пользователя",
+    [ActionEvent.CREATE_COURSE]: "Создание нового курса",
+    [ActionEvent.DELETE_COURSE]: "Удаление курса",
+    [ActionEvent.PUBLISH_COURSE]: "Публикация курса",
+    [ActionEvent.UNPUBLISH_COURSE]: "Снятие курса с публикации",
+    [ActionEvent.ENROLL_STUDENT]: "Запись студента на курс",
+    [ActionEvent.UNENROLL_STUDENT]: "Удаление студента с курса",
+    // [ActionEvent.UPDATE_COURSE]: "Обновление существующего курса",
+    // [ActionEvent.CREATE_LESSON]: "Создание нового урока",
+    // [ActionEvent.UPDATE_LESSON]: "Обновление урока",
+    // [ActionEvent.DELETE_LESSON]: "Удаление урока",
+    //
+    // [ActionEvent.ADD_COMMENT]: "Добавление комментария",
+    // [ActionEvent.DELETE_COMMENT]: "Удаление комментария",
+    // [ActionEvent.UPDATE_COMMENT]: "Обновление комментария",
+
+
+
+    // [ActionEvent.PASSWORD_RESET]: "Сброс пароля",
+    // [ActionEvent.UPDATE_PROFILE]: "Обновление профиля пользователя",
+    //
+    // [ActionEvent.ADD_TEACHER]: "Добавление учителя",
+    // [ActionEvent.REMOVE_TEACHER]: "Удаление учителя",
+    // [ActionEvent.UPDATE_TEACHER]: "Обновление данных учителя",
+    //
+    // [ActionEvent.CREATE_CATEGORY]: "Создание новой категории курса",
+    // [ActionEvent.UPDATE_CATEGORY]: "Обновление категории курса",
+    // [ActionEvent.DELETE_CATEGORY]: "Удаление категории курса",
+};
 
 export const GeneralSettingTooltips = {
     PLATFORM_NAME: {

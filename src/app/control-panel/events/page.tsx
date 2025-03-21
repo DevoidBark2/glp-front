@@ -1,14 +1,12 @@
 "use client";
 import Link from "next/link";
-import { Table, TableColumnsType, Tooltip, Tag, Input, Button } from "antd";
+import { Table, TableColumnsType, Tooltip, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import {
     CheckCircleOutlined,
     CloseCircleOutlined,
-    SearchOutlined,
     UserOutlined,
-    DownloadOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 
@@ -21,8 +19,6 @@ import {SettingControlPanel} from "@/shared/model";
 
 const EventPage = () => {
     const { eventStore } = useMobxStores();
-    const [searchText, setSearchText] = useState<string>("");
-    const [filteredData, setFilteredData] = useState<EventUser[]>([]);
     const [settings, setSettings] = useState<SettingControlPanel | null>(null);
 
     const columns: TableColumnsType<EventUser> = [
@@ -99,39 +95,6 @@ const EventPage = () => {
         },
     ];
 
-    const handleRefresh = () => {
-        eventStore.getAllEvents().finally(() => {
-            eventStore.setLoadingEvents(false);
-        });
-    };
-
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value.toLowerCase();
-        setSearchText(value);
-        setFilteredData(
-            eventStore.userEvents.filter((item) =>
-                Object.values(item).some(
-                    (val) => typeof val === "string" && val.toLowerCase().includes(value)
-                )
-            )
-        );
-    };
-
-    const exportData = (format: "json") => {
-        const data = eventStore.userEvents.map((event) => ({
-            ...event,
-            createdAt: dayjs(event.createdAt).format(FORMAT_VIEW_DATE),
-        }));
-
-        const content = JSON.stringify(data, null, 2)
-
-        const blob = new Blob([content], { type: "application/json" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `audit-log.json`;
-        link.click();
-    };
-
     useEffect(() => {
         const settingUser = JSON.parse(window.localStorage.getItem('user_settings')!);
         setSettings(settingUser);
@@ -146,28 +109,12 @@ const EventPage = () => {
             <PageHeader
                 title="Журнал аудита"
                 showBottomDivider
-                buttonTitle="Обновить"
-                onClickButton={handleRefresh}
             />
-            <div className="flex items-center justify-between mb-4">
-                <Input
-                    placeholder="Поиск по событиям..."
-                    value={searchText}
-                    onChange={handleSearch}
-                    prefix={<SearchOutlined />}
-                    style={{ width: "300px" }}
-                />
-                <div className="flex gap-2">
-                    <Button type="primary" icon={<DownloadOutlined />} onClick={() => exportData("json")}>
-                        Скачать JSON
-                    </Button>
-                </div>
-            </div>
             <Table
                 size={(settings && settings.table_size) ?? "middle"}
                 footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
-                dataSource={filteredData.length > 0 ? filteredData : eventStore.userEvents}
+                dataSource={eventStore.userEvents}
                 columns={columns}
                 loading={eventStore.loadingEvents}
                 rowKey={(record) => record.id}
@@ -178,7 +125,7 @@ const EventPage = () => {
                             <p><strong>Событие:</strong> {record.action}</p>
                             <p><strong>Описание:</strong> {record.description || "Нет описания"}</p>
                             <p><strong>Статус:</strong> {record.success ? "Успешно" : "Неуспешно"}</p>
-                            <p><strong>Пользователь:</strong> {`${record.user.second_name} ${record.user.first_name} ${record.user.last_name}`} ({record.user.email})</p>
+                            <p><strong>Пользователь:</strong> {`${record.user.second_name ?? ''} ${record.user.first_name ?? ''} ${record.user.last_name ?? ''}`} ({record.user.email})</p>
                         </div>
                     )
                 }}
