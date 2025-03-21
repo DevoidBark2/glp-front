@@ -124,44 +124,46 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter()
     const selectedKey = findKeyByPathname(pathName, dashboardMenuItems)
 
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
     useEffect(() => {
 
-        userProfileStore.getUserProfile().then((response) => {
-            if (response.role === UserRole.STUDENT) {
-                router.push("/platform");
-                return;
-            }
-            if (response.role === UserRole.SUPER_ADMIN) {
-                dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
-            }
-
-            if (response.role === UserRole.TEACHER) {
-                dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
-                    menuItem?.key !== "moderators_items"
-                    && menuItem?.key !== "settings"
-                    && menuItem?.key !== "nomenclature"
-                    && menuItem?.key !== "logging"
-                    && menuItem?.key !== "users"
-                    && menuItem?.key !== "general"
-                )
-            }
-
-            if (response.role === UserRole.MODERATOR) {
-                dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
-                    menuItem?.key !== "settings"
-                    && menuItem?.key !== "nomenclature"
-                    && menuItem?.key !== "logging"
-                    && menuItem?.key !== "users"
-                    && menuItem?.key !== "courses-parent"
-                    && menuItem?.key !== "posts"
-                    && menuItem?.key !== "feedbacks"
-                    && menuItem?.key !== "general"
-                )
-            }
-        }).finally(() => {
-            setLoading(false)
-        })
+        if(!pathName.includes("control-panel/profile")) {
+            userProfileStore.getUserProfile().then((response) => {
+                if (response.role === UserRole.STUDENT) {
+                    router.push("/platform");
+                    return;
+                }
+                if (response.role === UserRole.SUPER_ADMIN) {
+                    dashboardMenuItems = dashboardMenuItems.filter(menuItem => menuItem?.key !== "moderators_items")
+                }
+    
+                if (response.role === UserRole.TEACHER) {
+                    dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
+                        menuItem?.key !== "moderators_items"
+                        && menuItem?.key !== "settings"
+                        && menuItem?.key !== "nomenclature"
+                        && menuItem?.key !== "logging"
+                        && menuItem?.key !== "users"
+                        && menuItem?.key !== "general"
+                    )
+                }
+    
+                if (response.role === UserRole.MODERATOR) {
+                    dashboardMenuItems = dashboardMenuItems.filter(menuItem =>
+                        menuItem?.key !== "settings"
+                        && menuItem?.key !== "nomenclature"
+                        && menuItem?.key !== "logging"
+                        && menuItem?.key !== "users"
+                        && menuItem?.key !== "courses-parent"
+                        && menuItem?.key !== "posts"
+                        && menuItem?.key !== "feedbacks"
+                        && menuItem?.key !== "general"
+                    )
+                }
+            }).finally(() => {
+                setLoading(false)
+            })
+        }
     }, [])
 
     if(loading) {
@@ -214,6 +216,7 @@ const ControlPanelLayout = ({ children }: { children: React.ReactNode }) => {
                 {
                     !loading ? (
                         <Menu
+                            className="overflow-y-auto"
                             style={{ width: 240 }}
                             selectedKeys={[selectedKey]}
                             defaultSelectedKeys={[selectedKey]}

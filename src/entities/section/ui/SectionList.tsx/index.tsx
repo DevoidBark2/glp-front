@@ -141,6 +141,7 @@ export const SectionList = observer(() => {
     return (
         <Table
             size={(settings && settings.table_size) ?? "middle"}
+            rowHoverable={false}
             footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
             pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}
             rowKey={(record) => record.id}

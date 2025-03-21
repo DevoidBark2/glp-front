@@ -143,7 +143,9 @@ const ProfilePage = () => {
         <Form
           form={formProfile}
           layout="vertical"
-          onFinish={(values) => userProfileStore.updateProfile(values)}
+          onFinish={(values) => userProfileStore.updateProfile(values).then(response => {
+            notification.success({message: response.message})
+          })}
         >
           <Row gutter={16}>
             <Col xs={24} md={12}>
@@ -198,23 +200,6 @@ const ProfilePage = () => {
                 ]}
               >
                 <Input placeholder="Введите ваш Email" />
-              </Form.Item>
-            </Col>
-
-
-            <Col xs={24} md={12}>
-              <Form.Item label="Дата рождения" name="birth_day">
-                <DatePicker
-                  showNow={false}
-                  placeholder="Выберите дату"
-                  style={{ width: "100%" }}
-                />
-              </Form.Item>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Form.Item label="Город" name="city">
-                <Input placeholder="Введите город..." />
               </Form.Item>
             </Col>
           </Row>

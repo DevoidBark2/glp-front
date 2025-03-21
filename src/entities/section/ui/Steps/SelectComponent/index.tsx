@@ -14,6 +14,10 @@ import {observer} from "mobx-react";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
 import {renderType} from "@/shared/lib/course/course.lib";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { DragHandle, Row } from "@/entities/course/ui";
 
 interface SelectComponentProps {
     createSectionForm: FormInstance
@@ -62,10 +66,25 @@ export const SelectComponent = observer(({ createSectionForm }: SelectComponentP
         }
     };
 
-
+    const onDragEnd = ({ active, over }: DragEndEvent) => {
+        if (!over || active.id === over.id) return;
+    
+        const currentComponents = [...courseComponentStore.selectedComponents];
+        const activeIndex = currentComponents.findIndex((record) => record.id === active.id);
+        const overIndex = currentComponents.findIndex((record) => record.id === over.id);
+    
+        const updatedComponents = arrayMove(currentComponents, activeIndex, overIndex).map((component, index) => ({
+            ...component,
+            sort: index + 1,
+        }));
+    
+        courseComponentStore.setSelectedComponent(updatedComponents);
+        createSectionForm.setFieldsValue({ components: updatedComponents });
+    };    
 
 
     const columns: TableColumnsType<CourseComponent> = [
+        { key: "sort", align: "center", width: 80, render: () => <DragHandle /> },
         {
             title: 'Название',
             dataIndex: 'title',
@@ -99,55 +118,64 @@ export const SelectComponent = observer(({ createSectionForm }: SelectComponentP
         },
     ];
 
-    return  <div className="flex">
-        <div className="w-1/4">
-            <AutoComplete
-                style={{ width: '100%' }}
-                onSearch={handleSearch}
-                onSelect={handleSelect}
-                options={
-                    courseComponentStore.searchResults.length > 0
-                        ? courseComponentStore.searchResults.map(component => ({
-                            value: component.title,
-                            label: (
-                                <div className="flex items-center p-2 border-b-2">
-                                    <div style={{ flex: 1 }}>
-                                        <strong>{component.title}</strong>
-                                        <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
-                                    </div>
-                                    <div style={{ marginLeft: '8px' }}>
-                                        {renderType(component.type)}
-                                    </div>
+    return  <div className="flex flex-col lg:flex-row">
+    <div className="w-full mb-4 lg:w-1/4 lg:mb-0">
+        <AutoComplete
+            style={{ width: '100%' }}
+            onSearch={handleSearch}
+            onSelect={handleSelect}
+            options={
+                courseComponentStore.searchResults.length > 0
+                    ? courseComponentStore.searchResults.map(component => ({
+                        value: component.title,
+                        label: (
+                            <div className="flex items-center p-2 border-b-2">
+                                <div style={{ flex: 1 }}>
+                                    <strong>{component.title}</strong>
+                                    <div style={{ color: 'grey', fontSize: '12px' }}>{component.description}</div>
                                 </div>
-                            ),
-                            key: component.id.toString(),
-                        }))
-                        : [
-                            {
-                                value: 'empty',
-                                label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
-                                disabled: true,
-                            },
-                        ]
-                }
-                placeholder="Введите название или тег..."
-            >
-                <Input.Search />
-            </AutoComplete>
+                                <div style={{ marginLeft: '8px' }}>
+                                    {renderType(component.type)}
+                                </div>
+                            </div>
+                        ),
+                        key: component.id.toString(),
+                    }))
+                    : [
+                        {
+                            value: 'empty',
+                            label: <div style={{ textAlign: 'center', padding: '8px', color: 'grey' }}>Empty</div>,
+                            disabled: true,
+                        },
+                    ]
+            }
+            placeholder="Введите название..."
+        >
+            <Input.Search />
+        </AutoComplete>
 
-        </div>
-        <div className="w-3/4 ml-5">
-            <Form.Item
-                name="components"
-                label=" Компоненты"
-                tooltip={{ title: "Выберите и добавьте компоненты раздела в таблицу. Эти компоненты будут связаны с текущим разделом." }}
-            >
-                <Table
-                    dataSource={courseComponentStore.selectedComponents}
-                    columns={columns}
-                    rowKey={(record) => record.id}
-                />
-            </Form.Item>
-        </div>
     </div>
+    <div className="w-full">
+        <Form.Item
+            name="components"
+            label=" Компоненты"
+            tooltip={{ title: "Выберите и добавьте компоненты раздела в таблицу. Эти компоненты будут связаны с текущим разделом." }}
+        >
+            <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
+                <SortableContext
+                    items={courseComponentStore.selectedComponents.map((comp) => comp.id)}
+                    strategy={verticalListSortingStrategy}
+                >
+                    <Table
+                        dataSource={courseComponentStore.selectedComponents.map((comp) => ({ ...comp, key: comp.id }))}
+                        columns={columns}
+                        rowKey={(record) => record.id}
+                        components={{ body: { row: Row } }}
+                    />
+                </SortableContext>
+            </DndContext>
+        </Form.Item>
+    </div>
+</div>
+
 })

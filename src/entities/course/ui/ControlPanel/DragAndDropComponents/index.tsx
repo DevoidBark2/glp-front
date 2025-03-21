@@ -45,14 +45,14 @@ export const DragAndDropComponents = ({handleDragDropComponent,handleDeleteCompo
                                         </div>
                                         <div className="text-sm text-gray-500">
                                                                             <span className="block mb-1">
-                                                                                Тип:
+                                                                                Тип: {" "}
                                                                                 <Tag className="ml-2"
                                                                                      icon={typeIcons[component.componentTask.type]}>
                                                                                     <span>{component.componentTask.type}</span>
                                                                                 </Tag>
                                                                             </span>
                                             <span className="block mb-1">
-                                                                                Статус:
+                                                                                Статус: {" "}
                                                                                 <Tag
                                                                                     color={component.componentTask.status === StatusCourseComponentEnum.ACTIVATED ? "green" : "red"}>
                                                                                     {component.componentTask.status === StatusCourseComponentEnum.ACTIVATED ? "Активен" : "Неактивен"}

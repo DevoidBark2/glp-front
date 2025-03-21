@@ -2,7 +2,7 @@
 import { Button, notification, Table, TableColumnsType } from "antd";
 import { observer } from "mobx-react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import React from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
@@ -211,7 +211,7 @@ export const CourseSections = observer(() => {
                                             rowKey={(record) => record.id}
                                             expandable={{
                                                 expandedRowRender: (section) =>
-                                                    section.sectionComponents.length > 0 ? (
+                                                    section.sectionComponents?.length > 0 ? (
                                                         <DragAndDropComponents
                                                             handleDragDropComponent={handleDragDropComponent}
                                                             handleDeleteComponent={handleDeleteComponent}
