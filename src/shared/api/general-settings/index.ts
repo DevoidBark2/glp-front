@@ -12,12 +12,8 @@ export const getFooterInfo = async () => {
     return data.data
 }
 
-export const changeGeneralSettings = async (form: FormData) => {
-    const data = (await axiosInstance.post('api/general-settings', form, {
+export const changeGeneralSettings = async (form: FormData) => (await axiosInstance.post('api/general-settings', form, {
         headers: {
             'Content-Type': 'multipart/form-data',
         }
     })).data
-
-    return data.data;
-}

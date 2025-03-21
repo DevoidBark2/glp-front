@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Divider, message, notification, Spin, Upload } from "antd";
+import { Avatar, Divider, message, Spin, Upload } from "antd";
 import {UploadOutlined, UserOutlined} from "@ant-design/icons";
 import { observer } from "mobx-react";
 
@@ -22,9 +22,7 @@ export const UserProfileBlock = observer(() => {
     const handleAvatarUpload = async (file: File) => {
         userProfileStore.setUploadingProfileImage(true);
         try {
-            const response = await userProfileStore.uploadAvatar(file);
-            userProfileStore.setUserAvatar(`${nextConfig.env?.API_URL}${response.data}`);
-            notification.success({ message: response.message });
+            await userProfileStore.uploadAvatar(file);
         } catch (error) {
             message.error("Ошибка загрузки аватара");
         } finally {
@@ -34,7 +32,6 @@ export const UserProfileBlock = observer(() => {
 
     return (
         <>
-
             <h1 className="text-2xl dark:text-white">Профиль пользователя</h1>
             <Divider style={{ borderColor: resolvedTheme === "dark" ? "gray" : undefined }} />
             <div className="w-full flex flex-col md:flex-row p-6">

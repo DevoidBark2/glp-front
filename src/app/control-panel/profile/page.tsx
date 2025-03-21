@@ -15,7 +15,6 @@ import {
   Tabs,
   notification,
   TabsProps,
-  DatePicker,
   Checkbox,
 } from "antd";
 import {
@@ -27,7 +26,6 @@ import PhoneInput from "react-phone-input-2";
 
 import "react-phone-input-2/lib/bootstrap.css";
 import { observer } from "mobx-react";
-import dayjs from "dayjs";
 
 import nextConfig from "next.config.mjs";
 import { UserRole } from "@/shared/api/user/model";
@@ -39,30 +37,18 @@ const ProfilePage = () => {
   const { userProfileStore } = useMobxStores();
   const [formProfile] = Form.useForm();
   const [formSettings] = Form.useForm();
-  const [avatar, setAvatar] = useState<string | null>(null);
   const [showFooterOptions, setShowFooterOptions] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleAvatarUpload = async (file: File) => {
-    setLoading(true);
     try {
-      const response = await userProfileStore.uploadAvatar(file);
-      setAvatar(`${nextConfig.env?.API_URL}${response.data}`);
-      notification.success({ message: response.message });
+      await userProfileStore.uploadAvatar(file);
     } catch (error) {
       message.error('Ошибка загрузки аватара');
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     userProfileStore.getUserProfile().then((response) => {
-      setAvatar(response.image ? `${nextConfig.env?.API_URL}${response.image}` : null);
-
-      if (response.birth_day) {
-        response.birth_day = dayjs(response.birth_day)
-      }
       formProfile.setFieldsValue(response);
       formSettings.setFieldsValue(response);
       if (response.show_footer_table) {
@@ -99,7 +85,7 @@ const ProfilePage = () => {
               return false;
             }}
           >
-            <div className="relative cursor-pointer transition-transform hover:scale-105">
+            <div className="relative cursor-pointer transition-transform hover:cursor-pointer">
               <Spin spinning={userProfileStore.loading}>
                 <Avatar
                   size={100}
@@ -211,7 +197,7 @@ const ProfilePage = () => {
           <Divider />
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4 dark:hover:bg-black">
+            <Button variant="solid" color="blue" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4">
               Сохранить изменения
             </Button>
           </Form.Item>
@@ -224,11 +210,15 @@ const ProfilePage = () => {
       children: <> <Form
         form={formSettings}
         layout="vertical"
-        onFinish={(values) => userProfileStore.updateProfile(values)}
+        onFinish={(values) => userProfileStore.updateProfile(values).then(response => {
+          notification.success({message: response.message})
+        })}
       >
         <Row gutter={16}>
           <Col xs={24} md={12}>
-            <Form.Item hidden name="settings_control_panel" initialValue={true}></Form.Item>
+            <Form.Item hidden name="settings_control_panel" initialValue={true}>
+              <Input hidden/>
+            </Form.Item>
             <Form.Item
               tooltip="Определяет количество элементов, отображаемых на одной странице списка."
               label="Количество элементов на странице"
@@ -279,7 +269,7 @@ const ProfilePage = () => {
         <Divider />
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4">
+          <Button variant="solid" color="blue" htmlType="submit" loading={userProfileStore.saveProfile} className="mt-4">
             Сохранить изменения
           </Button>
         </Form.Item>
