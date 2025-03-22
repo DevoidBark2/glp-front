@@ -68,7 +68,7 @@ const ControlPanel = () => {
                 </Card>
               </Col>
           }
-          {
+          {/* {
               (userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN || userProfileStore.userProfile?.role === UserRole.TEACHER) && <Col span={8}>
                 <Card title="Всего постов" extra={
                   <Tooltip title="Перейти к постам">
@@ -85,7 +85,7 @@ const ControlPanel = () => {
                   </Skeleton>
                 </Card>
               </Col>
-          }
+          } */}
           {(userProfileStore.userProfile?.role === UserRole.SUPER_ADMIN || userProfileStore.userProfile?.role === UserRole.TEACHER) && <Col span={8}>
             <Card title="Всего курсов" extra={
               <Tooltip title="Перейти к курсам">
@@ -142,7 +142,7 @@ const ControlPanel = () => {
             </Card>
           </Col>}
 
-          {userProfileStore.userProfile?.role !== UserRole.MODERATOR && <Col span={12}>
+          {/* {userProfileStore.userProfile?.role !== UserRole.MODERATOR && <Col span={12}>
             <Card title="Статистика постов">
               <div className="flex gap-10">
                 <Skeleton active loading={statisticsStore.loadingStatisticsData}>
@@ -174,7 +174,7 @@ const ControlPanel = () => {
                 </Skeleton>
               </div>
             </Card>
-          </Col>}
+          </Col>} */}
 
           {userProfileStore.userProfile?.role === UserRole.MODERATOR && (
               <Col span={12}>

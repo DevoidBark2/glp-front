@@ -63,11 +63,11 @@ let dashboardMenuItems: MenuItem[] = [
             },
         ]
     },
-    {
-        key: 'posts',
-        label: <Link href={"/control-panel/posts"}>Посты</Link>,
-        icon: <BarsOutlined />,
-    },
+    // {
+    //     key: 'posts',
+    //     label: <Link href={"/control-panel/posts"}>Посты</Link>,
+    //     icon: <BarsOutlined />,
+    // },
     {
         key: 'nomenclature',
         label: 'Справочники',

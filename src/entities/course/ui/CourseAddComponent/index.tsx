@@ -65,7 +65,9 @@ export const CourseAddComponent = observer(() => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     const handleEditorChange = (state) => {
+        debugger
         setEditorState(state);
+        createCourseForm.setFieldValue("content_description", getContentAsHTML());
     };
 
 
@@ -82,7 +84,9 @@ export const CourseAddComponent = observer(() => {
             >
                 <Row gutter={24}>
                     <Col span={12}>
-                        <Form.Item name="id" hidden />
+                        <Form.Item name="id" hidden>
+                            <Input hidden/>
+                        </Form.Item>
                         <Form.Item
                             name="name"
                             label="Название курса"
@@ -202,6 +206,11 @@ export const CourseAddComponent = observer(() => {
                         <Editor
                             editorState={editorState}
                             onEditorStateChange={handleEditorChange}
+                            toolbar={{
+                                options: ['inline', 'list'],
+                                inline: { options: ['bold', 'italic'] },
+                                list: { options: ['unordered', 'ordered'] },
+                            }}
                         />
                     </div>
                 </Form.Item>
