@@ -121,7 +121,6 @@ const UsersPage = () => {
                 showBottomDivider
             />
             <GroupActionComponent
-                loading={userStore.loadingSearchUser}
                 searchText={userStore.searchUserText}
                 setSearchText={userStore.setSearchUserText}
             />
