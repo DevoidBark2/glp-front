@@ -7,6 +7,7 @@ export type Exam = {
     components: CourseComponent[]
     status: ExamStatus
     exam: ExamBlock
+    created_at: Date
 }
 
 export type ExamBlock = {

@@ -1,7 +1,7 @@
 import { Button, Empty, FormInstance, List, notification, Radio } from "antd";
 import { observer } from "mobx-react";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 import { Exam } from "@/shared/api/exams/model";
@@ -33,6 +33,11 @@ export const AddationalSettings = observer(({ form }: AddationalSettingsProps) =
             <p className="text-gray-600 mb-4">
                 Выберите экзамен, который будет активным для курса. Нажмите "Сохранить",
                 чтобы подтвердить выбор.
+            </p>
+
+            <p className="text-red-500 text-sm mb-4">
+                Внимание: Вы не можете изменить экзамен для курса, если у него уже есть участники.
+                Пожалуйста, убедитесь, что курс не имеет участников перед изменением экзамена.
             </p>
 
             {examStore.exams.length > 0 ? <List
