@@ -13,6 +13,11 @@ export const createExam = async (title: string, components: CourseComponentTypeI
         components: components
     })).data
 
+export const changeExam = async (examId:number, title: string, components: CourseComponentTypeI[]) => (await axiosInstance.put(`api/exams/${examId}`, {
+        title: title,
+        components: components
+    })).data
+
 export const deleteExam = async (id: number) => (await axiosInstance.delete(`api/exams/${id}`)).data
 
 export const setExamForCourse = async (examId: number, courseId: number) => {
@@ -21,5 +26,10 @@ export const setExamForCourse = async (examId: number, courseId: number) => {
         courseId: courseId
     }))
 
+    return data.data
+}
+
+export const getExamById = async (id: number) => {
+    const data = await (axiosInstance.get(`/api/exams/${id}`))
     return data.data
 }

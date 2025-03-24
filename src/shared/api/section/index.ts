@@ -30,25 +30,37 @@ export const getMainCourseSection = async () => {
 
 export const createMainSection = async (values: MainSection) => (await axiosInstance.post('api/main-section', values)).data
 
-export const createSection = async (values: SectionCourseItem) => 
-    // const formData = new FormData();
-    //
-    // Object.keys(values).forEach((key) => {
-    //     if (key === "uploadFile") {
-    //         // Обрабатываем файлы
-    //         values[key].fileList.forEach((file: any) => {
-    //             formData.append("uploadFile", file.originFileObj || file);
-    //         });
-    //     } else if (key === "course" || key === "externalLinks" || key === "uploadFile") {
-    //         // Преобразуем сложные структуры в JSON-строку
-    //         formData.append(key, JSON.stringify(values[key]));
-    //     } else {
-    //         // Остальные обычные поля
-    //         formData.append(key, values[key]);
-    //     }
-    // });
+export const createSection = async (values: SectionCourseItem) => {
+    const formData = new FormData();
 
-     await (await axiosInstance.post('api/sections', values)).data
-;
+    (Object.keys(values) as Array<keyof SectionCourseItem>).forEach((key) => {
+        if (key === "uploadFile") {
+            const uploadFiles = values[key] as File[];  // Приведение типа
+            if (Array.isArray(uploadFiles)) {
+                uploadFiles.forEach((file) => {
+                    formData.append("uploadFile", file); // Здесь корректно добавляем бинарный файл
+                });
+            }
+        } else if (key === "course" || key === "externalLinks") {
+            formData.append(key, JSON.stringify(values[key]));
+        } else if (key !== "parentSection") {
+            formData.append(key, String(values[key]));
+        }
+    });
+
+    try {
+        const response = await axiosInstance.post('api/sections', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Ошибка при создании раздела", error);
+        throw error;
+    }
+};
+
 
 export const changeSection = async (values: SectionCourseItem): Promise<{ message: string }> => (await axiosInstance.put('api/sections', values)).data

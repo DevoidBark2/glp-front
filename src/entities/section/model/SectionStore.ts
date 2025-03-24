@@ -1,8 +1,7 @@
 import {action, makeAutoObservable, runInAction} from "mobx";
 import dayjs from "dayjs";
+import {UploadFile} from "antd/es/upload/interface";
 
-import {Course, CourseComponentTypeI} from "@/shared/api/course/model";
-import {StatusSectionEnum} from "@/shared/api/section/model";
 import {
     changeSection,
     createMainSection,
@@ -12,21 +11,7 @@ import {
     getMainCourseSection,
     getSectionCourseById
 } from "@/shared/api/section";
-import {User} from "@/shared/api/user/model";
-
-export type SectionCourseItem = {
-    id: number;
-    name: string;
-    description: string;
-    externalLinks: string[];
-    course: Course;
-    uploadFile: File[];
-    components: CourseComponentTypeI[];
-    user: User
-    status: StatusSectionEnum;
-    sectionComponents: any
-    created_at: Date
-}
+import {SectionCourseItem} from "@/shared/api/section/model";
 
 
 export type MainSection = {
@@ -42,6 +27,11 @@ class SectionStore {
     loadingSectionsCourse: boolean = false;
     sectionCourse: SectionCourseItem[] = []
     createSectionLoading: boolean = false;
+    uploadedImages: UploadFile[] = [];
+
+    setUploadedImages = action((images) => {
+        this.uploadedImages = images;
+    });
 
     mainSections: MainSection[] = [];
 
@@ -65,6 +55,7 @@ class SectionStore {
     }
 
     addSection = action(async (values: SectionCourseItem) => {
+        debugger
         this.setCreateSectionLoading(true);
         return await createSection(values).finally(() => {
             this.setLoadingSectionsCourse(false)

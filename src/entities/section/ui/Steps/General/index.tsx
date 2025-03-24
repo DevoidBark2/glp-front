@@ -1,13 +1,18 @@
-import { Button, Col, Form, Input, Modal, notification, Row, Select, Upload } from "antd"
+import {Button, Col, Form, Input, Modal, notification, Row, Select, Upload, UploadFile} from "antd"
 import TextArea from "antd/es/input/TextArea"
 import React, { useEffect, useState } from "react";
 import { DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import {observer} from "mobx-react";
+import {FormInstance} from "antd/lib";
 
 import { useMobxStores } from "@/shared/store/RootStore";
-import { MainSection } from "@/shared/api/section/model";
+import {MainSection, SectionCourseItem} from "@/shared/api/section/model";
 
-export const General = observer(() => {
+interface GeneralProps {
+    createSectionForm: FormInstance<SectionCourseItem>
+}
+
+export const General = observer(({createSectionForm}: GeneralProps) => {
     const { sectionCourseStore } = useMobxStores();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [form] = Form.useForm<MainSection>();
@@ -20,9 +25,26 @@ export const General = observer(() => {
         })
     };
 
+    const handleChange = ({ file, fileList }: {file: UploadFile<any>, fileList: UploadFile<any>[]}) => {
+        const { status } = file;
+
+        debugger
+        if (status === "done") {
+            createSectionForm.setFieldValue("uploadFile", file);
+            sectionCourseStore.setUploadedImages(fileList);
+        } else if (status === "removed") {
+            createSectionForm.setFieldValue("uploadFile", null);
+            sectionCourseStore.setUploadedImages(fileList);
+        } else if (status === "error") {
+            notification.error({ message: `${file.name} ошибка загрузки.` });
+        }
+
+        sectionCourseStore.setUploadedImages(fileList);
+    };
+
     useEffect(() => {
         sectionCourseStore.getMainSections();
-    }, [sectionCourseStore])
+    }, [])
     return <>
         <Modal
             title="Добавить новый раздел"
@@ -131,7 +153,14 @@ export const General = observer(() => {
             label="Дополнительные материалы"
             tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
         >
-            <Upload beforeUpload={() => false} multiple>
+            <Upload
+                name="file"
+                beforeUpload={() => false}
+                multiple
+                fileList={sectionCourseStore.uploadedImages}
+                onChange={handleChange}
+                listType="picture"
+            >
                 <Button icon={<UploadOutlined />}>Загрузить файл</Button>
             </Upload>
         </Form.Item>

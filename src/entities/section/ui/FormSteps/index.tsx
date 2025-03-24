@@ -34,7 +34,7 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
             title: "Общее",
             content: (
                 <Suspense fallback={<p>Загрузка...</p>}>
-                    <General />
+                    <General createSectionForm={sectionCourseForm ?? createSectionForm} />
                 </Suspense>
             ),
         },
@@ -86,7 +86,10 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
                 courseComponentStore.setSearchResult([]);
                 courseComponentStore.setSelectedComponent([]);
             })
-            .catch((e) => notification.error({ message: e.response.data.message }))
+            .catch((e) => {
+                debugger
+                notification.error({ message: e.response.data.message })
+            })
             .finally(() => sectionCourseStore.setCreateSectionLoading(false));
     };
 
@@ -100,17 +103,17 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
             <div className="steps-content mt-5">{steps[current].content}</div>
             <div className="steps-action mt-5 flex justify-end">
                 {current > 0 && (
-                    <Button style={{ marginRight: 8 }} onClick={() => prev()}>
+                    <Button variant="solid" color="blue" style={{ marginRight: 8 }} onClick={() => prev()}>
                         Назад
                     </Button>
                 )}
                 {current < steps.length - 1 && (
-                    <Button type="primary" onClick={() => next()}>
+                    <Button variant="solid" color="blue" onClick={() => next()}>
                         Далее
                     </Button>
                 )}
                 {current === steps.length - 1 && (
-                    <Button type="primary" htmlType="submit" loading={sectionCourseStore.createSectionLoading}>
+                    <Button variant="solid" color="blue" htmlType="submit" loading={sectionCourseStore.createSectionLoading}>
                         {sectionCourseForm ? "Изменить" : "Создать"}
                     </Button>
                 )}

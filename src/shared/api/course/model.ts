@@ -2,7 +2,7 @@ import { UploadFile } from "antd";
 
 import { CourseComponentType, QuestionsType, StatusCourseComponentEnum } from "@/shared/api/component/model";
 
-import { StatusSectionEnum } from "../section/model";
+import {SectionCourseItem, StatusSectionEnum} from "../section/model";
 import { User } from "../user/model";
 import { Exam } from "../exams/model";
 
@@ -36,20 +36,6 @@ export enum LevelCourseEnum {
     LIGHT = 1,
     MIDDLE = 2,
     HARD = 3
-}
-
-export type SectionCourseItem = {
-    id: number;
-    name: string;
-    description: string;
-    externalLinks: string[];
-    course: Course;
-    uploadFile: File[];
-    components: CourseComponentTypeI[];
-    status: StatusSectionEnum
-    created_at: Date
-    user: User
-    children: any;
 }
 
 export type ComponentTask = {

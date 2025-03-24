@@ -90,7 +90,7 @@ export const SectionList = observer(() => {
                     <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
                         <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
                         <Link href={`/control-panel/users/${record.user?.id}`} className="hover:text-blue-500">
-                            {`${record.user?.second_name} ${record.user?.first_name} ${record.user?.last_name}`}
+                            {`${record.user?.second_name ?? ''} ${record.user?.first_name ?? ''} ${record.user?.last_name ?? ''}`}
                         </Link>
                     </Popover>
                 )

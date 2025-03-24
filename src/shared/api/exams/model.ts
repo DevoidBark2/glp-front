@@ -8,6 +8,7 @@ export type Exam = {
     status: ExamStatus
     exam: ExamBlock
     created_at: Date
+    user: User
 }
 
 export type ExamBlock = {

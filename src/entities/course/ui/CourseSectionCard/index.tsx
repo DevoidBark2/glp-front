@@ -132,12 +132,8 @@ export const CourseSectionCard = observer(() => {
 
                 {courseStore.messageWarning && <h1>{courseStore.messageWarning}</h1>}
 
-                {(courseStore.sectionCourse?.files && courseStore.sectionCourse?.files.length > 0 || courseStore.sectionCourse?.links && courseStore.sectionCourse?.links.length > 0) &&
+                {(courseStore.sectionCourse?.files && courseStore.sectionCourse?.files.length > 0) || (courseStore.sectionCourse?.links && courseStore.sectionCourse?.links.length > 0) &&
                     <Divider />}
-                <div className="space-y-12">
-                    <FileAttachment />
-                    <LinksAttachment />
-                </div>
                 <div className="space-y-12">
                     <FileAttachment />
                     <LinksAttachment />

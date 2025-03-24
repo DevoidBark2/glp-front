@@ -4,7 +4,7 @@ import { CrownOutlined, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {observer} from "mobx-react";
 
 import { UserHoverCard } from "@/widgets";
@@ -98,6 +98,7 @@ const ExamsPage = observer(() => {
                     <Tooltip title="Редактировать экзамен">
                         <Button
                             type="default"
+                            onClick={() => router.push(`exams/${record.id}`)}
                             icon={<EditOutlined />}
                         />
                     </Tooltip>
@@ -129,6 +130,7 @@ const ExamsPage = observer(() => {
 
         examStore.getUserExams();
     }, [])
+
     return (
         <PageContainerControlPanel>
             <PageHeader
@@ -139,6 +141,7 @@ const ExamsPage = observer(() => {
             />
 
             <Table
+                rowKey={record => record.id}
                 size={(settings && settings.table_size) ?? "middle"}
                 footer={settings && settings.show_footer_table ? (table) => <div>Общее количество: {table.length}</div> : undefined}
                 pagination={{ pageSize: Number((settings && settings.pagination_size) ?? 5) }}

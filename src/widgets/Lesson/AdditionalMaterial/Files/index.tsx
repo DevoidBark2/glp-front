@@ -1,9 +1,13 @@
+import React from "react";
 import Image from "next/image"
 import {
     FileOutlined
 } from "@ant-design/icons";
+import Link from "next/link";
 
 import { useMobxStores } from "@/shared/store/RootStore";
+
+import nextConfig from "../../../../../next.config.mjs";
 
 export const FileAttachment = () => {
     const { courseStore } = useMobxStores()
@@ -32,28 +36,27 @@ export const FileAttachment = () => {
     };
 
     return (
-        // courseStore.fullDetailCourse?.files && courseStore.fullDetailCourse?.files.length > 0 && <div className="mt-6">
-        //     <h2 className="text-2xl font-extrabold mb-6 text-gray-900">📂 Дополнительный материал</h2>
-        //     <div className="space-y-4">
-        //         {(courseStore.fullDetailCourse?.files || []).map((file, index) => (
-        //             <div
-        //                 key={index}
-        //                 className="flex items-center p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
-        //             >
-        //                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-500">
-        //                     {getFileIcon(file.fileName)}
-        //                 </div>
-        //                 <Link
-        //                     href={`${nextConfig.env?.API_URL}${file.filePath}`}
-        //                     download
-        //                     className="ml-4 text-gray-800 font-medium text-sm hover:text-blue-500 transition-colors truncate"
-        //                 >
-        //                     {file.fileName}
-        //                 </Link>
-        //             </div>
-        //         ))}
-        //     </div>
-        // </div>
-        <div></div>
+        courseStore.sectionCourse?.files && courseStore.sectionCourse?.files.length > 0 && <div className="mt-6">
+            <h2 className="text-2xl font-extrabold mb-6 text-gray-900">📂 Дополнительный материал</h2>
+            <div className="space-y-4">
+                {(courseStore.sectionCourse?.files || []).map((file, index) => (
+                    <div
+                        key={index}
+                        className="flex items-center p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
+                    >
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-500">
+                            {getFileIcon(file.fileName)}
+                        </div>
+                        <Link
+                            href={`${nextConfig.env?.API_URL}${file.filePath}`}
+                            download
+                            className="ml-4 text-gray-800 font-medium text-sm hover:text-blue-500 transition-colors truncate"
+                        >
+                            {file.fileName}
+                        </Link>
+                    </div>
+                ))}
+            </div>
+        </div>
     )
 }
