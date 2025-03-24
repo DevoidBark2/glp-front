@@ -1,27 +1,27 @@
-import { action, makeAutoObservable, runInAction } from "mobx";
-import { notification } from "antd";
+import {action, makeAutoObservable, observable, runInAction} from "mobx";
+import {notification} from "antd";
+import {DragEndEvent} from "@dnd-kit/core";
+import {arrayMove} from "@dnd-kit/sortable";
 
 import {
     changeCourse,
     createCourse,
-    deleteCourseById, deleteCourseMember,
-    getAllCourses, getAllMembersCourse,
+    deleteCourseById,
+    deleteCourseMember,
+    getAllCourses,
+    getAllCoursesByUser,
+    getAllMembersCourse,
     getCourseById,
     getCourseDetailsSections,
     getCourseTitleAndMenuById,
-    getAllCoursesByUser,
-    getPopularCourses,
-    handleFilterByCategory,
-    handleFilterBySearch,
-    searchCourseByFilter,
-    sendToReviewCourse,
-    submitReviewCourse,
-    handleCheckCourseSecretKey, getPlatformCourseById
+    getPlatformCourseById,
+    handleCheckCourseSecretKey,
+    submitReviewCourse
 } from "@/shared/api/course";
-import { Course, CourseMember, CourseMenu, CourseReview, StatusCourseEnum } from "@/shared/api/course/model";
-import { courseMapper, courseMemberMapper } from "@/entities/course/mappers/courseMapper";
-import { axiosInstance } from "@/shared/api/http-client";
-import { TaskAnswerUserDto } from "@/shared/api/task/model";
+import {Course, CourseMember, CourseMenu, CourseReview} from "@/shared/api/course/model";
+import {courseMapper, courseMemberMapper} from "@/entities/course/mappers/courseMapper";
+import {axiosInstance} from "@/shared/api/http-client";
+import {TaskAnswerUserDto} from "@/shared/api/task/model";
 import {
     getCurrentSection,
     handleCheckUserTask,
@@ -29,10 +29,17 @@ import {
     startExam,
     submitExamUserAnswer
 } from "@/shared/api/task";
-import { ParentSection, SectionCourse, SectionCourseItem } from "@/shared/api/section/model";
-import { Exam } from "@/shared/api/exams/model";
-import { FilterValues } from "@/shared/api/filter/model";
-import {handleDownloadCertificate, updateComponentOrder, updateOrderParentSection} from "@/shared/api/component";
+import {SectionCourse, SectionCourseItem} from "@/shared/api/section/model";
+import {Exam} from "@/shared/api/exams/model";
+import {
+    deleteParentSection,
+    deleteSection, deleteSectionComponent,
+    handleDownloadCertificate,
+    updateComponentOrder,
+    updateOrderParentSection,
+    updateOrderSection
+} from "@/shared/api/component";
+import {ParentColumn} from "@/entities/course/ui";
 
 class CourseStore {
     constructor() {
@@ -62,6 +69,76 @@ class CourseStore {
     coursePageTitle: string = ""
     secret_key: string = ""
     accessRight: number = 0
+    groupedSections: Record<string, ParentColumn> = {};
+
+    setGroupedSections = action((sections: SectionCourseItem[]) => {
+        this.groupedSections = sections.reduce((acc: Record<string, ParentColumn>, section) => {
+            const parentId = section.parentSection?.id;
+            const parentTitle = section.parentSection?.title;
+            const parentSort = section.parentSection?.sort;
+            const sectionId = section.id;
+
+            if (!parentId) {return acc;}
+
+            if (!acc[parentId]) {
+                acc[parentId] = {
+                    id: parentId,
+                    title: parentTitle ?? '',
+                    sections: [],
+                    sort: parentSort ?? 0,
+                    sectionId: sectionId,
+                };
+            }
+
+            acc[parentId].sections.push({
+                ...section,
+                sectionComponents: section.sectionComponents,
+            });
+
+            return acc;
+        }, {});
+    });
+
+    onDragEndParentSection = action(async ({ active, over }: DragEndEvent,courseId: number) => {
+        if (!over || active.id === over.id) {return;}
+
+        const sectionsArray = Object.values(this.groupedSections).sort((a, b) => a.sort - b.sort);
+        const activeIndex = sectionsArray.findIndex((record) => record.id === active.id);
+        const overIndex = sectionsArray.findIndex((record) => record.id === over.id);
+
+        const updatedSections = arrayMove(sectionsArray, activeIndex, overIndex);
+        updatedSections.forEach((section, index) => section.sort = index);
+
+        this.groupedSections = Object.fromEntries(updatedSections.map(section => [section.id, section]));
+
+        const updatedOrder = updatedSections.map((section) => ({
+            id: section.id,
+            sectionId: section.sectionId,
+            sort: section.sort
+        }));
+
+        await this.updateParentSectionsOrder(courseId, updatedOrder);
+    });
+
+    onDragEndSection = action(async ({ active, over }: DragEndEvent, parentId: number,courseId: number) => {
+        if (!over || active.id === over.id) {return;}
+
+        const parentSection = this.groupedSections[parentId];
+        if (!parentSection) {return;}
+
+        const activeIndex = parentSection.sections.findIndex((record) => record.id === active?.id);
+        const overIndex = parentSection.sections.findIndex((record) => record.id === over?.id);
+
+        parentSection.sections = arrayMove(parentSection.sections, activeIndex, overIndex);
+        parentSection.sections.forEach((section, index) => section.sort = index);
+
+        const updatedSectionOrder = parentSection.sections.map((section) => ({
+            id: section.id,
+            sort: section.sort,
+        }));
+
+        await this.updateSectionOrder(courseId, parentId, updatedSectionOrder);
+    });
 
     setAccessRight = action((value: number) => {
         this.accessRight = value
@@ -150,12 +227,6 @@ class CourseStore {
         }
     })
 
-    getAllPopularCourses = action(async () => {
-        const data = await getPopularCourses()
-
-        this.setPopularCourses(data.map(courseMapper));
-    })
-
     deleteMember = action(async (id: number) => {
         const data = await deleteCourseMember(id)
         this.courseMembers = this.courseMembers.filter(it => id !== it.id)
@@ -180,15 +251,6 @@ class CourseStore {
         })
     })
 
-    publishCourse = action(async (courseId: number) => {
-        await sendToReviewCourse(courseId).then(response => {
-            notification.success({ message: response.message })
-            this.userCourses = this.userCourses.map(course => course.id === courseId ? { ...course, status: StatusCourseEnum.IN_PROCESSING } : course)
-        }).catch(e => {
-            notification.warning({ message: e.response.data.message })
-        })
-    })
-
     getCourseDetailsById = action(async (courseId: number) => await getCourseById(courseId))
 
     getPlatformCourseById = action(async (courseId: number) => await getPlatformCourseById(courseId))
@@ -196,6 +258,7 @@ class CourseStore {
     getCourseDetailsSections = action(async (courseId: number) => {
         await getCourseDetailsSections(courseId).then(response => {
             this.setCourseDetailsSections(response);
+            this.setGroupedSections(response)
         })
 
     })
@@ -411,24 +474,6 @@ class CourseStore {
         this.examCourse = data;
     })
 
-    searchCourseByFilter = action(async (values: FilterValues) => {
-        const data = await searchCourseByFilter(values)
-        this.setResultSearchCourses(data.data)
-    })
-
-    handleFilterCoursesByCategory = action(async (id: number) => {
-        this.setLoadingCourses(true)
-        const data = await handleFilterByCategory(id)
-        this.courses = data.map(courseMapper)
-        this.setLoadingCourses(false)
-    })
-
-    handleFilterCoursesBySearch = action(async (value: string) => {
-        const data = await handleFilterBySearch(value)
-        this.setResultSearchCourses(data)
-    })
-
-
     handleReviewSubmitCourse = action(async (values: CourseReview) => await submitReviewCourse(values))
 
 
@@ -438,12 +483,30 @@ class CourseStore {
         const sectionIndex = this.courseDetailsSections.findIndex(section => section.id === sectionId);
 
         if (sectionIndex === -1) {return;}
-
-        // Обновляем порядок компонентов в указанном разделе
-        this.courseDetailsSections[sectionIndex].sectionComponents = updatedComponents;
-
-        // Принудительно обновляем состояние MobX (если используешь makeAutoObservable, это нужно)
+        this.courseDetailsSections[sectionIndex].sectionComponents = observable([...updatedComponents]);
         this.courseDetailsSections = [...this.courseDetailsSections];
+    })
+
+    handleDragDropComponent = action((result: any, record: SectionCourseItem) => {
+        if (!result.destination) {return;}
+
+        const sectionId = record.id;
+        const updatedComponents = [...record.sectionComponents];
+        const [movedComponent] = updatedComponents.splice(result.source.index, 1);
+        updatedComponents.splice(result.destination.index, 0, movedComponent);
+
+        updatedComponents.forEach((component, index) => {
+            component.sort = index;
+        });
+
+        this.updateSectionComponentsOrder(sectionId, updatedComponents);
+
+        this.updateComponentOrder(sectionId, updatedComponents.map((comp, index) => ({
+            id: comp.id,
+            sort: index
+        }))).catch((e) => {
+            notification.error({ message: e.response.data.message });
+        });
     })
 
     updateComponentOrder = action(async (sectionId: number, components: { id: string; sort: number }[]) => await updateComponentOrder(sectionId, components));
@@ -452,9 +515,38 @@ class CourseStore {
         await updateOrderParentSection(courseId, sections);
     })
 
+    updateSectionOrder = action(async (courseId: number, parentId: number, sections: {id: number; sort: number}[]) => {
+        await updateOrderSection(courseId, parentId, sections);
+    })
+
     handleDownloadCertificate = action(async (courseId: number) => {
         await handleDownloadCertificate(courseId)
     })
+
+    deleteParentSection = action(async (courseId: number, parentId: number) => await deleteParentSection(courseId, parentId).then((response) => {
+            this.setGroupedSections(this.courseDetailsSections.filter((section) => section.parentSection?.id !== parentId));
+
+            return response;
+        }))
+
+    deleteSection = action(async (courseId: number, sectionId: number) => await deleteSection(courseId, sectionId).then(response => {
+            this.setGroupedSections(this.courseDetailsSections.filter((section) => section.id !== sectionId))
+
+           return response
+        }))
+
+    deleteComponent = action(async (componentId: string, sectionId: number) => {
+        const response = await deleteSectionComponent(componentId, sectionId);
+
+        this.setGroupedSections(this.courseDetailsSections.map((section) => {
+            if (section.id === sectionId) {
+                section.sectionComponents = section.sectionComponents.filter(componentTask => componentTask.componentTask.id !== componentId);
+            }
+            return section;
+        }));
+
+        return response;
+    });
 
 }
 

@@ -71,7 +71,6 @@ const CreatePostPage = () => {
                 form={form}
                 layout="vertical"
                 onFinish={(values) =>{
-                    debugger
                     if(!getContentAsHTML()) {
                         form.setFields([
                             { name: "content", errors: ["Пожалуйста, введите содержание!"] },

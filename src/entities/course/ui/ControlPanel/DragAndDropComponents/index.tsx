@@ -1,3 +1,4 @@
+import React from "react";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {Button, Tag} from "antd";
 import {DeleteOutlined} from "@ant-design/icons";
@@ -40,7 +41,7 @@ export const DragAndDropComponents = ({handleDragDropComponent,handleDeleteCompo
                                                 icon={<DeleteOutlined/>}
                                                 type="primary"
                                                 danger
-                                                onClick={() => handleDeleteComponent(component.id, section.id)}
+                                                onClick={() => handleDeleteComponent(component.componentTask.id, section.id)}
                                             />
                                         </div>
                                         <div className="text-sm text-gray-500">

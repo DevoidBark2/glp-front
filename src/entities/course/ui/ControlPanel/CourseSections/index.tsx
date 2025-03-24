@@ -1,77 +1,56 @@
 "use client"
-import { Button, notification, Table, TableColumnsType } from "antd";
+import {Button, Modal, notification, Table, TableColumnsType} from "antd";
 import { observer } from "mobx-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { DeleteOutlined } from "@ant-design/icons";
-import React from "react";
+import React, {useState} from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 import { DragAndDropComponents, DragHandle, Row } from "@/entities/course/ui";
 import { SectionCourseItem } from "@/shared/api/section/model";
 import { useMobxStores } from "@/shared/store/RootStore";
+import {sectionsTable} from "@/shared/config";
 
-interface ParentColumn {
+export interface ParentColumn {
     id: number;
     title: string;
     sections: SectionCourseItem[],
-    sort_number: number
+    sort: number
     sectionId: number
 }
 
 export const CourseSections = observer(() => {
     const { courseId } = useParams();
-    const { courseStore, sectionCourseStore } = useMobxStores();
-    const router = useRouter();
+    const { courseStore } = useMobxStores();
+    const [openModalDeleteParentSection, setOpenModalDeleteParentSection] = useState(false);
+    const [openModalDeleteSection, setOpenModalDeleteSection] = useState(false);
+    const [selectedParentSectionId, setSelectedParentSectionId] = useState<number | null>(null);
+    const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
 
-    const handleDeleteComponent = (componentId: string, sectionId: number) => { };
 
-    const handleDragDropComponent = (result: any, record: SectionCourseItem) => {
-        if (!result.destination) {return;}
+    const handleDeleteParentSection = (parentId: number) => {
+        courseStore.deleteParentSection(Number(courseId), parentId).then(response => {
+            notification.success({message: response.message})
+            setSelectedParentSectionId(null)
+            setOpenModalDeleteParentSection(false)
+        })
+    }
 
-        const sectionId = record.id;
-        const updatedComponents = [...record.sectionComponents];
-        const [movedComponent] = updatedComponents.splice(result.source.index, 1);
-        updatedComponents.splice(result.destination.index, 0, movedComponent);
-
-        updatedComponents.forEach((component, index) => {
-            component.sort = index;
+    const handleDeleteSection = (sectionId: number) => {
+        courseStore.deleteSection(Number(courseId), sectionId).then(response => {
+            notification.success({message: response.message})
+            setSelectedSectionId(null)
+            setOpenModalDeleteSection(false)
         });
+    }
 
-        courseStore.updateSectionComponentsOrder(sectionId, updatedComponents);
-
-        courseStore.updateComponentOrder(sectionId, updatedComponents.map((comp, index) => ({
-            id: comp.id,
-            sort: index
-        }))).catch((e) => {
-            notification.error({ message: e.response.data.message });
-        });
+    const handleDeleteComponent = (componentId: string, sectionId: number) => {
+        courseStore.deleteComponent(componentId, sectionId).then(response => {
+            notification.success({message: response.message})
+        })
     };
-
-    const groupedSections = courseStore.courseDetailsSections.reduce((acc, section) => {
-        const parentId = section.parentSection?.id;
-        const parentTitle = section.parentSection?.title;
-        const parentSort = section.sort_number;
-        const sectionId = section.id;
-
-        if (!acc[parentId]) {
-            acc[parentId] = {
-                id: parentId,
-                title: parentTitle,
-                sections: [],
-                sort_number: parentSort,
-                sectionId: sectionId
-            };
-        }
-
-        acc[parentId].sections.push({
-            ...section,
-            sectionComponents: section.sectionComponents,
-        });
-
-        return acc;
-    }, {} as Record<string, ParentColumn>);
 
     const parentColumns: TableColumnsType<ParentColumn> = [
         { key: 'sort', align: 'center', width: 80, render: () => <DragHandle /> },
@@ -89,6 +68,10 @@ export const CourseSections = observer(() => {
                     <Button
                         danger
                         type="primary"
+                        onClick={() => {
+                            setOpenModalDeleteParentSection(true)
+                            setSelectedParentSectionId(record.id)
+                        }}
                         icon={<DeleteOutlined />}
                     />
                 </div>
@@ -111,6 +94,10 @@ export const CourseSections = observer(() => {
                     <Button
                         danger
                         type="primary"
+                        onClick={() => {
+                            setOpenModalDeleteSection(true)
+                            setSelectedSectionId(record.id)
+                        }}
                         icon={<DeleteOutlined />}
                     />
                 </div>
@@ -118,117 +105,134 @@ export const CourseSections = observer(() => {
         },
     ];
 
-    const [parentSections, setParentSections] = React.useState<ParentColumn[]>(Object.values(groupedSections).sort((a, b) => a.sort_number - b.sort_number));
-
-    const onDragEndParentSection = async ({ active, over }: DragEndEvent) => {
-        if (!over || active.id === over.id) {return;}
-
-        // Обновляем состояние и получаем новое значение
-        const updatedSections = await new Promise<ParentColumn[]>((resolve) => {
-            setParentSections((prevState) => {
-                const activeIndex = prevState.findIndex((record) => record.id === active.id);
-                const overIndex = prevState.findIndex((record) => record.id === over.id);
-                const newState = arrayMove(prevState, activeIndex, overIndex);
-                resolve(newState);
-                return newState;
-            });
-        });
-
-        // Создаем массив с актуальными данными
-        const updatedOrder = updatedSections.map((section, index) => ({
-            id: section.id,
-            sectionId: section.sectionId,
-            sort: index
-        }));
-
-        // Обновляем порядок секций в хранилище
-        await courseStore.updateParentSectionsOrder(Number(courseId), updatedOrder);
-    };
-
-
-    const onDragEndSection = async ({ active, over }: DragEndEvent, parentId: number) => {
-        if (active.id !== over?.id) {
-            // Обновляем состояние и получаем новое значение
-            const updatedParentSections = await new Promise<ParentColumn[]>((resolve) => {
-                setParentSections((prevState) => {
-                    const parentIndex = prevState.findIndex((record) => record.id === parentId);
-                    if (parentIndex === -1) {return prevState;}
-
-                    const updatedParent = { ...prevState[parentIndex] };
-                    const activeIndex = updatedParent.sections.findIndex((record) => record.id === active?.id);
-                    const overIndex = updatedParent.sections.findIndex((record) => record.id === over?.id);
-
-                    updatedParent.sections = arrayMove(updatedParent.sections, activeIndex, overIndex);
-
-                    const newParentSections = [...prevState];
-                    newParentSections[parentIndex] = updatedParent;
-
-                    resolve(newParentSections);
-                    return newParentSections;
-                });
-            });
-
-            // Создаем массив с актуальными данными для секций
-            const updatedSectionOrder = updatedParentSections
-                .find((section) => section.id === parentId)
-                ?.sections.map((section, index) => ({
-                    id: section.id,
-                    sort: index,
-                }));
-
-            if (updatedSectionOrder) {
-                debugger
-                // await courseStore.updateSectionOrder(Number(courseId), parentId, updatedSectionOrder);
-            }
-        }
-    };
-
-
-
     return (
-        <div className="p-2">
-            <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEndParentSection}>
-                <SortableContext items={parentSections.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-                    <Table<ParentColumn>
-                        rowKey={(record) => record.id}
-                        bordered
-                        pagination={false}
-                        components={{ body: { row: Row } }}
-                        columns={parentColumns}
-                        dataSource={parentSections}
-                        expandable={{
-                            expandedRowRender: (parentRecord) => (
-                                <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={(event) => onDragEndSection(event, parentRecord.id)}>
-                                    <SortableContext items={parentRecord.sections.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-                                        <Table<SectionCourseItem>
-                                            dataSource={parentRecord.sections.map(section => ({
-                                                ...section,
-                                                key: section.id,
-                                            }))}
-                                            columns={sectionColumns}
-                                            components={{ body: { row: Row } }}
-                                            pagination={false}
-                                            rowKey={(record) => record.id}
-                                            expandable={{
-                                                expandedRowRender: (section) =>
-                                                    section.sectionComponents?.length > 0 ? (
-                                                        <DragAndDropComponents
-                                                            handleDragDropComponent={handleDragDropComponent}
-                                                            handleDeleteComponent={handleDeleteComponent}
-                                                            section={section}
-                                                        />
-                                                    ) : (
-                                                        <span className="text-gray-500">Нет компонентов</span>
-                                                    ),
-                                            }}
-                                        />
-                                    </SortableContext>
-                                </DndContext>
-                            ),
+        <>
+            <Modal
+                centered
+                zIndex={10000}
+                open={openModalDeleteSection}
+                onCancel={() => {
+                    setOpenModalDeleteSection(false)
+                    setSelectedSectionId(null)
+                }}
+                title="Удаление раздела"
+                footer={[
+                    <Button
+                        key="cancel"
+                        onClick={() => {
+                            setOpenModalDeleteSection(false)
+                            setSelectedSectionId(null)
                         }}
-                    />
-                </SortableContext>
-            </DndContext>
-        </div>
+                    >
+                        Отменить
+                    </Button>,
+                    <Button
+                        key="delete"
+                        type="primary"
+                        danger
+                        onClick={() => handleDeleteSection(selectedSectionId!)}
+                    >
+                        Удалить
+                    </Button>
+                ]}
+            >
+                <div>
+                    <h3 className="text-[#FF4D4F] font-bold text-center mb-2">
+                        Внимание! Вы уверены, что хотите удалить раздел?
+                    </h3>
+                    <p className="text-[#595959] text-center mb-3">
+                        После удаления раздела все дополнительные материалы (включая прикрепленные файлы и изображения), связанные с ним,
+                        будут удалены. Это действие невозможно отменить.
+                    </p>
+                </div>
+            </Modal>
+
+            <Modal
+                zIndex={10000}
+                centered
+                open={openModalDeleteParentSection}
+                onCancel={() => {
+                    setOpenModalDeleteParentSection(false)
+                    setSelectedParentSectionId(null)
+                }}
+                title="Удаление родительского раздела"
+                footer={[
+                    <Button key="cancel" onClick={() => {
+                        setOpenModalDeleteParentSection(false)
+                        setSelectedParentSectionId(null)
+                    }}>
+                        Отменить
+                    </Button>,
+                    <Button
+                        key="delete"
+                        type="primary"
+                        danger
+                        onClick={() => handleDeleteParentSection(selectedParentSectionId!)}
+                    >
+                        Удалить
+                    </Button>
+                ]}
+            >
+                <div>
+                    <h3 className="text-[#FF4D4F] font-bold text-center mb-2">
+                        Внимание! Вы уверены, что хотите удалить все дочерние разделы?
+                    </h3>
+                    <p className="text-[#595959] text-center">
+                        После удаления родительский раздел останется в системе, но все дочерние разделы
+                        будут удалены. Это действие невозможно отменить.
+                    </p>
+                </div>
+            </Modal>
+
+            <div className="p-2">
+                <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={({active,over}) => courseStore.onDragEndParentSection({active,over} as DragEndEvent, Number(courseId))}>
+                    <SortableContext items={Object.values(courseStore.groupedSections).sort((a, b) => a.sort - b.sort).map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                        <Table<ParentColumn>
+                            rowKey={(record) => record.id}
+                            bordered
+                            locale={sectionsTable}
+                            pagination={false}
+                            components={{ body: { row: Row } }}
+                            columns={parentColumns}
+                            dataSource={Object.values(courseStore.groupedSections).sort((a, b) => a.sort - b.sort)}
+                            expandable={{
+                                expandedRowRender: (parentRecord) => (
+                                    <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={(event) => courseStore.onDragEndSection(event, parentRecord.id,Number(courseId))}>
+                                        <SortableContext items={parentRecord.sections.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                                            <Table<SectionCourseItem>
+                                                dataSource={parentRecord.sections.map(section => ({
+                                                    ...section,
+                                                    key: section.id,
+                                                })).sort((a,b) => a.sort - b.sort)}
+                                                columns={sectionColumns}
+                                                components={{ body: { row: Row } }}
+                                                bordered
+                                                pagination={false}
+                                                rowKey={(record) => record.id}
+                                                expandable={{
+                                                    expandedRowRender: (section) =>
+                                                        section.sectionComponents?.length > 0 ? (
+                                                            <DragAndDropComponents
+                                                                handleDragDropComponent={courseStore.handleDragDropComponent}
+                                                                handleDeleteComponent={handleDeleteComponent}
+                                                                section={section}
+                                                            />
+                                                        ) : (
+                                                            <span className="text-gray-500">
+                                                                Этот раздел неполный, поскольку в нем отсутствуют компоненты.
+                                                                Пожалуйста, добавьте компоненты для полноценного функционирования.
+                                                            </span>
+                                                        ),
+                                                }}
+                                            />
+                                        </SortableContext>
+                                    </DndContext>
+                                ),
+                            }}
+                        />
+                    </SortableContext>
+                </DndContext>
+            </div>
+        </>
     );
 });

@@ -26,7 +26,7 @@ export type SectionCourse = {
 export type ParentSection = {
     id: number;
     title: string;
-    sort_number: number;
+    sort: number;
 }
 
 export type SectionCourseItem = {

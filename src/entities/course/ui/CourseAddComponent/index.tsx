@@ -65,7 +65,6 @@ export const CourseAddComponent = observer(() => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     const handleEditorChange = (state) => {
-        debugger
         setEditorState(state);
         createCourseForm.setFieldValue("content_description", getContentAsHTML());
     };

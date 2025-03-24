@@ -25,8 +25,7 @@ const ExamAddPage = observer(() => {
         const selectedComponent = courseComponentStore.searchResults.find(component => component.id === option.key);
 
         if (selectedComponent && !addedComponents.some(component => component.id === selectedComponent.id)) {
-            // Присваиваем сортировку в зависимости от текущей длины массива addedComponents
-            selectedComponent.sort = addedComponents.length;  // Присваиваем текущий индекс
+            selectedComponent.sort = addedComponents.length;
             setAddedComponents((prev) => [...prev, selectedComponent]);
         } else if (selectedComponent) {
             message.warning("Этот компонент уже был добавлен.");
@@ -51,10 +50,9 @@ const ExamAddPage = observer(() => {
         const [removed] = items.splice(source.index, 1);
         items.splice(destination.index, 0, removed);
 
-        // Обновляем сортировку для всех компонентов
         const updatedItems = items.map((item, index) => ({
             ...item,
-            sort: index,  // Обновляем сортировку по индексу
+            sort: index,
         }));
 
         setAddedComponents(updatedItems);
@@ -136,7 +134,16 @@ const ExamAddPage = observer(() => {
                 </AutoComplete>
 
                 <p className="text-gray-800 text-lg">Вопросы в экзамене</p>
+
                 {addedComponents.length > 0 ? (
+                    // addedComponents.map(component => (
+                    //     <DragAndDropComponents
+                    //         key={component.id}
+                    //         handleDragDropComponent={onDragEnd}
+                    //         handleDeleteComponent={handleDeleteComponent}
+                    //         section={component}
+                    //     />
+                    // ))
                     <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="droppable-list">
                             {(provided) => (
@@ -195,7 +202,7 @@ const ExamAddPage = observer(() => {
                 ): <Empty description="Список пуст"/>}
 
                 <div className="mt-4 text-center">
-                    <Button type="primary" onClick={handleCreateExam}>
+                    <Button variant="solid" color="blue" onClick={handleCreateExam}>
                         Создать экзамен
                     </Button>
                 </div>

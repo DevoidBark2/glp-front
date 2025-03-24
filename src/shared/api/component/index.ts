@@ -48,6 +48,22 @@ export const updateOrderParentSection = async (courseId: number, section: { id: 
     return data.data
 }
 
+export const updateOrderSection = async (courseId: number, parentId: number, sections: { id: number, sort: number }[]) => {
+    const data = (await axiosInstance.post('api/update-order-section', {
+        courseId: courseId,
+        parentId: parentId,
+        sections: sections
+    })).data
+
+    return data.data
+}
+
+export const deleteParentSection = async (courseId: number, parentId: number) => (await axiosInstance.delete(`api/delete-parent-section/${parentId}?courseId=${courseId}`)).data
+
+export const deleteSection = async (courseId: number, sectionId: number) => (await axiosInstance.delete(`api/delete-section/${sectionId}?courseId=${courseId}`)).data
+
+export const deleteSectionComponent = async (componentId: string, courseId: number) => (await axiosInstance.delete(`api/delete-component-section/${componentId}?courseId=${courseId}`)).data
+
 export const handleDownloadCertificate = async (courseId: number) => {
     const response= (await axiosInstance.get(`api/get-certificate?courseId=${courseId}`, {
         responseType: "blob"
