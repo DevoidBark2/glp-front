@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { observer } from "mobx-react";
-import {Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, Upload, UploadFile} from "antd";
+import {Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, Upload} from "antd";
 const Editor = dynamic(
     () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
@@ -51,7 +51,6 @@ const CreatePostPage = () => {
                 notification.error({ message: `${file.name} ошибка загрузки.` });
             }
         },
-        beforeUpload: () => true,
     };
 
     return (

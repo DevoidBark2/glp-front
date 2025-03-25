@@ -8,8 +8,8 @@ import {ComponentTask} from "@/shared/api/course/model";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {QuizMultiComponent} from "@/entities/course/ui";
 import {FileAttachment, LinksAttachment} from "@/widgets/Lesson";
-import ExamCourse from "@/entities/exams/ui/ExamCourse";
 import {CourseComponentType} from "@/shared/api/component/model";
+import {ExamCourse} from "@/entities/exams/ui";
 
 import {TextComponent} from "../TextComponent";
 import {QuizComponent} from "../QuizComponent";
