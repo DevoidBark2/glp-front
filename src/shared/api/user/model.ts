@@ -1,5 +1,5 @@
 import {AuthMethodEnum} from "@/shared/api/auth/model";
-import {CustomizeCategoryItem, Effect, Frame, Icon} from "@/shared/api/customize/model";
+import {Effect, Frame, Icon} from "@/shared/api/customize/model";
 
 import { Course } from "../course/model";
 import { Post } from "../posts/model";

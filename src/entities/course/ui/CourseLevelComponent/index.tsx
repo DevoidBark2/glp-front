@@ -8,8 +8,8 @@ type CourseLevelComponentProps = {
 };
 
 export const CourseLevelComponent: React.FC<CourseLevelComponentProps> = ({ level }) => {
-    const getLevelDescription = (level: LevelCourseEnum) => {
-        switch (level) {
+    const getLevelDescription = (levelValue: LevelCourseEnum) => {
+        switch (levelValue) {
             case LevelCourseEnum.LIGHT:
                 return "Легкий";
             case LevelCourseEnum.MIDDLE:

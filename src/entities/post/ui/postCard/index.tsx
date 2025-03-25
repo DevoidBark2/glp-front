@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, Divider } from "antd";
 import dayjs from "dayjs";
 import Image from "next/image";

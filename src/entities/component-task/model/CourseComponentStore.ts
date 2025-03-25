@@ -11,6 +11,7 @@ import {
     searchComponentsByTitle
 } from "@/shared/api/component";
 import {componentTaskMapper} from "@/entities/component-task";
+import {ComponentTask} from "@/shared/api/course/model";
 
 class CourseComponentStore {
     constructor() {
@@ -18,8 +19,8 @@ class CourseComponentStore {
     }
 
     loadingCourseComponent: boolean = false;
-    courseComponents: CourseComponent[] = []
-    searchResults: CourseComponent[] = [];
+    courseComponents: ComponentTask[] = []
+    searchResults: ComponentTask[] = [];
     selectedComponents: CourseComponent[] = [];
     createLoading: boolean = false
 
@@ -27,7 +28,7 @@ class CourseComponentStore {
         this.createLoading = value
     })
 
-    setSearchResult = action((value: CourseComponent[]) => {
+    setSearchResult = action((value: ComponentTask[]) => {
         this.searchResults = value;
     })
 
@@ -38,7 +39,7 @@ class CourseComponentStore {
         this.loadingCourseComponent = value
     })
 
-    addComponentCourse = action(async (values: CourseComponent) => {
+    addComponentCourse = action(async (values: ComponentTask) => {
         this.setCreateLoading(true)
         await createComponent(values).then(response => {
             this.courseComponents = [...this.courseComponents, componentTaskMapper(response.component)]
@@ -59,16 +60,15 @@ class CourseComponentStore {
         })
     })
 
-    changeComponent = action(async (values: CourseComponent) => {
-        await changeComponent(values).then(response => {
-            notification.success({ message: response.message })
+    changeComponent = action(async (values: ComponentTask) => await changeComponent(values).then(response => {
             const changedComponentIndex = this.courseComponents.findIndex(component => component.id === values.id);
             this.courseComponents[changedComponentIndex] = values;
             this.courseComponents = [...this.courseComponents];
+
+            return response.message;
         }).catch(e => {
             notification.error({ message: e.response.data.message })
-        })
-    })
+        }))
 
     deleteComponent = action(async (componentId: string) => {
         await deleteComponentById(componentId).then(response => {
@@ -96,7 +96,7 @@ class CourseComponentStore {
         this.selectedComponents = this.selectedComponents.filter(item => item.id !== id);
     })
 
-    getComponentById = action(async (id: string): Promise<CourseComponent> => {
+    getComponentById = action(async (id: string): Promise<ComponentTask> => {
         this.setLoadingCourseComponent(true)
         return await getComponentById(id).finally(() => {
             this.setLoadingCourseComponent(false)

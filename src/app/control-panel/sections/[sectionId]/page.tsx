@@ -3,7 +3,7 @@ import { Breadcrumb, Form } from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react"
 
 import { FormSteps } from "@/entities/section/ui"
 import {PageContainerControlPanel} from "@/shared/ui";

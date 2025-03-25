@@ -70,6 +70,7 @@ class CourseStore {
     secret_key: string = ""
     accessRight: number = 0
     groupedSections: Record<string, ParentColumn> = {};
+    courseDetails: Course | null = null;
 
     setGroupedSections = action((sections: SectionCourseItem[]) => {
         this.groupedSections = sections.reduce((acc: Record<string, ParentColumn>, section) => {
@@ -150,6 +151,10 @@ class CourseStore {
 
     setCoursePageTitle = action((value: string) => {
         this.coursePageTitle = value
+    })
+
+    setCourseDetails = action((value: Course) => {
+        this.courseDetails = value;
     })
 
     setMessageWarning = action((value: { message: string, success: boolean } | null) => {

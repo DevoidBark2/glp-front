@@ -4,7 +4,7 @@ import { Button, Form, Input, notification } from "antd";
 import { useRouter } from "next/navigation";
 import ReCAPTCHA from "react-google-recaptcha";
 import { observer } from "mobx-react";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined } from "@ant-design/icons"
 
 import nextConfig from "next.config.mjs";
 import { useMobxStores } from "@/shared/store/RootStore";

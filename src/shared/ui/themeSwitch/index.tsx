@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Switch } from "antd";
 import { BulbOutlined, MoonOutlined } from "@ant-design/icons";

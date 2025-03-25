@@ -1,6 +1,4 @@
 "use client"
-import { PageContainerControlPanel } from "@/shared/ui";
-
 import { Breadcrumb, Button, Divider, Form, Input, notification, Select, Tag, Upload, UploadProps } from "antd";
 import { observer } from "mobx-react";
 import Link from "next/link";
@@ -11,37 +9,32 @@ import {
     InboxOutlined,
     SyncOutlined,
 } from "@ant-design/icons";
-
 const Editor = dynamic(
     () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
 );
-
 import dynamic from "next/dynamic";
-import {convertToRaw, EditorState} from "draft-js";
+import {EditorState} from "draft-js";
 
+import { PageContainerControlPanel } from "@/shared/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
 import nextConfig from "next.config.mjs";
 import { Post, PostStatusEnum } from "@/shared/api/posts/model";
 
-const postPage = () => {
+const PostPage = () => {
     const { postStore } = useMobxStores();
     const { postId } = useParams();
     const router = useRouter();
+
     const [form] = Form.useForm<Post>();
 
     const [currentPost, setCurrentPost] = useState<Post | null>(null);
     const [fileList, setFileList] = useState<any[]>([]);
 
-    const getContentAsHTML = () => {
-        const content = convertToRaw(editorState.getCurrentContent());
-        return JSON.stringify(content);
-    };
-
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
-    const handleEditorChange = (state) => {
+    const handleEditorChange = (state:any) => {
         setEditorState(state);
     };
 
@@ -51,7 +44,7 @@ const postPage = () => {
         multiple: false,
         fileList,
         listType: "picture",
-        onChange(info) {
+        onChange(info:any) {
             const { status } = info.file;
 
             setFileList(info.fileList);
@@ -202,4 +195,4 @@ const postPage = () => {
     )
 }
 
-export default observer(postPage);
+export default observer(PostPage);

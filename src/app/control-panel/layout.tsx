@@ -7,7 +7,7 @@ import {usePathname, useRouter} from "next/navigation";
 import {
     AppstoreOutlined,
     BarsOutlined, LogoutOutlined,
-    SettingOutlined, StarOutlined, UserOutlined
+    SettingOutlined, UserOutlined
 } from "@ant-design/icons";
 import {useTheme} from "next-themes";
 

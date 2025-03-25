@@ -1,4 +1,3 @@
-import { FilterValues } from "../filter/model";
 import { axiosInstance } from "../http-client";
 
 import { Course, CourseReview } from "./model";
@@ -8,12 +7,6 @@ export const getAllCourses = async (): Promise<Course[]> => {
     return data.data;
 }
 
-export const getPopularCourses = async () => {
-    const data = (await axiosInstance.get('api/popular-courses')).data
-
-    return data.data
-}
-
 export const getAllCoursesByUser = async (): Promise<Course[]> => {
     const data = (await axiosInstance.get('api/get-user-courses')).data
 
@@ -21,6 +14,7 @@ export const getAllCoursesByUser = async (): Promise<Course[]> => {
 }
 
 export const createCourse = async (values: Course): Promise<Course> => {
+    debugger
     const form = new FormData();
     form.append('name', values.name)
     form.append('small_description', values.small_description)
@@ -34,7 +28,11 @@ export const createCourse = async (values: Course): Promise<Course> => {
     if (values.category) {form.append('category', values.category.toString());}
     if (values.content_description) {form.append("content_description", values.content_description)}
 
-    const data = (await axiosInstance.post('/api/course', form)).data;
+    const data = (await axiosInstance.post('/api/course', form, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })).data;
     return data.data;
 }
 
@@ -64,20 +62,7 @@ export const getCourseDetailsSections = async (courseId: number) => {
     return data.data
 }
 
-
 export const getCourseTitleAndMenuById = async (courserId: number) => (await axiosInstance.get(`api/get-course-menu?courseId=${courserId}`)).data
-
-export const handleFilterByCategory = async (id: number) => {
-    const data = (await axiosInstance.get(`api/get-courses?categoryId=${id}`)).data
-
-    return data.data;
-}
-
-export const handleFilterBySearch = async (value: string) => {
-    const data = (await axiosInstance.get(`api/search-courses?search=${value}`)).data
-
-    return data.data;
-}
 
 export const getAllMembersCourse = async (courseId: number) => {
     const data = (await axiosInstance.get(`api/get-course-members?courseId=${courseId}`)).data
@@ -86,16 +71,6 @@ export const getAllMembersCourse = async (courseId: number) => {
 }
 
 export const deleteCourseMember = async (id: number) => (await axiosInstance.delete(`api/delete-course-member?id=${id}`)).data
-
-export const getAllExams = async () => {
-    const data = (await axiosInstance.get(`api/get-user-exams`)).data
-}
-
-export const searchCourseByFilter = async (values: FilterValues) => {
-    const data = (await axiosInstance.post('/api/search-course-by-filter', values))
-
-    return data.data
-}
 
 export const submitReviewCourse = async (values: CourseReview) => (await axiosInstance.post('/api/course-review', values)).data
 

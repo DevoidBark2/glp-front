@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {Divider, Form, FormInstance, Input} from "antd";
 import { MathfieldElement } from "mathlive";
-import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { MathJaxContext } from "better-react-mathjax";
 
 const { TextArea } = Input;
 
@@ -14,7 +14,6 @@ interface TaskWithFormulaProps {
 export const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
   const [formula, setFormula] = useState<string>("");
   const [taskDescription, setTaskDescription] = useState<string>("");
-  const [parsedDescription, setParsedDescription] = useState<JSX.Element[]>([]);
 
   const mathFieldRef = useRef<MathfieldElement | null>(null);
 
@@ -27,44 +26,6 @@ export const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     const value = e.target.value;
     setTaskDescription(value);
-
-    const parsed = parseDescription(value);
-    setParsedDescription(parsed);
-  };
-
-  const parseDescription = (description: string) => {
-    // Регулярное выражение для поиска формул внутри \{...\}
-    const regex = /\\\{[\s\S]*?\\\}/g;
-
-    // Находим все совпадения: формулы и обычные текстовые блоки
-    const parts = description.split(regex);
-
-    // Находим сами формулы отдельно
-    const formulas = description.match(regex) || [];
-
-    // Итоговый массив (объединяем текст и формулы)
-    const parsedParts: JSX.Element[] = [];
-    let formulaIndex = 0;
-
-    parts.forEach((part, index) => {
-      // Добавляем текстовые блоки
-      if (part.trim() !== "") {
-        parsedParts.push(<span key={`text-${index}`}>{part}</span>);
-      }
-
-      // Если есть формула в текущей позиции, добавляем её
-      if (formulaIndex < formulas.length) {
-        const formula = formulas[formulaIndex];
-        parsedParts.push(
-            <MathJax key={`formula-${formulaIndex}`}>
-              {formula}
-            </MathJax>
-        );
-        formulaIndex++;
-      }
-    });
-
-    return parsedParts;
   };
 
   useEffect(() => {
@@ -132,21 +93,6 @@ export const TaskWithFormula: React.FC<TaskWithFormulaProps> = ({form}) => {
         >
           <Input placeholder="Введите ответ (например, число или формулу в формате MathLax)" />
         </Form.Item>
-
-        {/*<Divider />*/}
-
-        {/*<Title level={4}>Предпросмотр задачи</Title>*/}
-        {/*<div style={{ marginBottom: "16px" }}>*/}
-        {/*  <strong>Описание задачи:</strong>*/}
-        {/*  <div>{parsedDescription}</div>*/}
-        {/*</div>*/}
-
-        {/*<Divider />*/}
-
-        {/*<div>*/}
-        {/*  <strong>Формула:</strong>*/}
-        {/*  <MathJax>{`\\(${formula}\\)`}</MathJax>*/}
-        {/*</div>*/}
       </MathJaxContext>
   );
 };

@@ -1,3 +1,4 @@
+import React from "react";
 import { Skeleton } from "antd";
 import Image from "next/image";
 

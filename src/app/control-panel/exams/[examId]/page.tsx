@@ -11,7 +11,7 @@ import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { PageContainerControlPanel } from "@/shared/ui";
 import { typeIcons } from "@/shared/columnsTables/taskColumns";
-import { StatusCourseComponentEnum } from "@/shared/api/component/model";
+import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 import { FORMAT_VIEW_DATE } from "@/shared/constants";
 import {renderType} from "@/shared/lib/course/course.lib";
 
@@ -22,7 +22,6 @@ const ExamPage = observer(() => {
     const [addedComponents, setAddedComponents] = useState<any[]>([]);
 
     const handleChangeExam = () => {
-        debugger
         if(addedComponents.length < 1) {
             message.warning("Добавьте хотя бы один компонент в экзамен.")
             return;
@@ -152,11 +151,11 @@ const ExamPage = observer(() => {
                                     <div {...provided.droppableProps} ref={provided.innerRef}>
                                         {addedComponents.map((component, index) => (
                                             <Draggable key={component.id} draggableId={String(component.id)} index={index}>
-                                                {(provided) => (
+                                                {(dragProvided) => (
                                                     <div
                                                         ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
+                                                        {...dragProvided.draggableProps}
+                                                        {...dragProvided.dragHandleProps}
                                                         className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow mb-2"
                                                     >
                                                         <div
@@ -175,7 +174,7 @@ const ExamPage = observer(() => {
                                                                             <span className="block mb-1">
                                                                                 Тип: {" "}
                                                                                 <Tag className="ml-2"
-                                                                                     icon={typeIcons[component.type]}>
+                                                                                     icon={typeIcons[component.type as CourseComponentType]}>
                                                                                     <span>{component.type}</span>
                                                                                 </Tag>
                                                                             </span>

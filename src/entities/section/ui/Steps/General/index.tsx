@@ -1,7 +1,7 @@
-import {Button, Col, Form, Input, Modal, notification, Row, Select, Upload, UploadFile} from "antd"
+import {Button, Col, Form, Input, Modal, notification, Row, Select} from "antd"
 import TextArea from "antd/es/input/TextArea"
 import React, { useEffect, useState } from "react";
-import { DeleteOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import {observer} from "mobx-react";
 import {FormInstance} from "antd/lib";
 
@@ -25,22 +25,21 @@ export const General = observer(({createSectionForm}: GeneralProps) => {
         })
     };
 
-    const handleChange = ({ file, fileList }: {file: UploadFile<any>, fileList: UploadFile<any>[]}) => {
-        const { status } = file;
-
-        debugger
-        if (status === "done") {
-            createSectionForm.setFieldValue("uploadFile", file);
-            sectionCourseStore.setUploadedImages(fileList);
-        } else if (status === "removed") {
-            createSectionForm.setFieldValue("uploadFile", null);
-            sectionCourseStore.setUploadedImages(fileList);
-        } else if (status === "error") {
-            notification.error({ message: `${file.name} ошибка загрузки.` });
-        }
-
-        sectionCourseStore.setUploadedImages(fileList);
-    };
+    // const handleChange = ({ file, fileList }: {file: UploadFile<any>, fileList: UploadFile<any>[]}) => {
+    //     const { status } = file;
+    //
+    //     if (status === "done") {
+    //         createSectionForm.setFieldValue("uploadFile", file);
+    //         sectionCourseStore.setUploadedImages(fileList);
+    //     } else if (status === "removed") {
+    //         createSectionForm.setFieldValue("uploadFile", null);
+    //         sectionCourseStore.setUploadedImages(fileList);
+    //     } else if (status === "error") {
+    //         notification.error({ message: `${file.name} ошибка загрузки.` });
+    //     }
+    //
+    //     sectionCourseStore.setUploadedImages(fileList);
+    // };
 
     useEffect(() => {
         sectionCourseStore.getMainSections();
@@ -148,22 +147,22 @@ export const General = observer(({createSectionForm}: GeneralProps) => {
             />
         </Form.Item>
 
-        <Form.Item
-            name="uploadFile"
-            label="Дополнительные материалы"
-            tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"
-        >
-            <Upload
-                name="file"
-                beforeUpload={() => false}
-                multiple
-                fileList={sectionCourseStore.uploadedImages}
-                onChange={handleChange}
-                listType="picture"
-            >
-                <Button icon={<UploadOutlined />}>Загрузить файл</Button>
-            </Upload>
-        </Form.Item>
+        {/*<Form.Item*/}
+        {/*    name="uploadFile"*/}
+        {/*    label="Дополнительные материалы"*/}
+        {/*    tooltip="Загрузите дополнительные материалы (PDF, документы и т.д.)"*/}
+        {/*>*/}
+        {/*    <Upload*/}
+        {/*        name="file"*/}
+        {/*        beforeUpload={() => false}*/}
+        {/*        multiple*/}
+        {/*        fileList={sectionCourseStore.uploadedImages}*/}
+        {/*        onChange={handleChange}*/}
+        {/*        listType="picture"*/}
+        {/*    >*/}
+        {/*        <Button icon={<UploadOutlined />}>Загрузить файл</Button>*/}
+        {/*    </Upload>*/}
+        {/*</Form.Item>*/}
 
         <Form.Item
             label="Ссылки на внешние ресурсы"

@@ -81,13 +81,12 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
         action
             .then((response) => {
                 notification.success({ message: response.message });
-                if (!sectionCourseForm) {router.push("/control-panel/sections");}
+                router.push("/control-panel/sections");
                 courseStore.setSelectedCourse(null);
                 courseComponentStore.setSearchResult([]);
                 courseComponentStore.setSelectedComponent([]);
             })
             .catch((e) => {
-                debugger
                 notification.error({ message: e.response.data.message })
             })
             .finally(() => sectionCourseStore.setCreateSectionLoading(false));

@@ -1,3 +1,4 @@
+import React from "react";
 import {Badge, Card, List, Tag, Tooltip} from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
@@ -14,9 +15,9 @@ interface CourseMiniCardProps {
 export const CourseMiniCard = observer(({course,createSectionForm} : CourseMiniCardProps) => {
     const { courseStore } = useMobxStores();
 
-    const handleSelectCourse = (course:Course) => {
-        courseStore.setSelectedCourse(course.id)
-        createSectionForm.setFieldsValue({ course: course });
+    const handleSelectCourse = (courseItem:Course) => {
+        courseStore.setSelectedCourse(courseItem.id)
+        createSectionForm.setFieldsValue({ course: courseItem });
     }
 
     const renderLevelCourse = (levelCourse: number) => {

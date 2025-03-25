@@ -1,7 +1,6 @@
 "use client";
 import { observer } from "mobx-react";
-import { Button, Table, Tag, Tooltip, Popconfirm, notification } from "antd";
-import type { TableColumnsType } from "antd";
+import {Button, Table, Tag, Tooltip, Popconfirm, notification, TableColumnsType} from "antd";
 import React, { useEffect, useState } from "react";
 import {
     EditOutlined,
@@ -52,12 +51,12 @@ const UsersPage = () => {
             title: "Email",
             render: (value, record) => (
                 <Tooltip title="Нажмите, чтобы скопировать">
-                    <span
+                    <button
                         className="cursor-pointer"
                         onClick={() => navigator.clipboard.writeText(value)}
                     >
                         {value}
-                    </span>
+                    </button>
                     <span style={{ marginLeft: 8 }}>
                         {record.isVerified ? (
                             <CheckOutlined style={{ color: "green", fontSize: "16px" }} />

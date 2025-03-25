@@ -28,7 +28,6 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
     const [isRetrying, setIsRetrying] = useState(false);
     const { resolvedTheme } = useTheme();
 
-    console.log(task)
     const currentQuestion = question![currentQuestionIndex];
 
     const handleOptionChange = (index: number) => {

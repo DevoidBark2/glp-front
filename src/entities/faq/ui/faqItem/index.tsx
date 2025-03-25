@@ -1,5 +1,5 @@
+import React, { FC } from "react";
 import { Collapse } from 'antd';
-import { FC } from 'react';
 
 import { Faq } from '@/shared/api/faq/model';
 

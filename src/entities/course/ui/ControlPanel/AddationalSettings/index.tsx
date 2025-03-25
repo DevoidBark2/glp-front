@@ -21,6 +21,8 @@ export const AddationalSettings = observer(({ form }: AddationalSettingsProps) =
         if (selectedExam) {
             examStore.setExamForCourse(selectedExam.id, Number(courseId)).then(response => {
                 notification.success({ message: response.message })
+            }).catch(e => {
+                notification.error({message: e.response.data.message})
             })
         }
     };
@@ -31,7 +33,7 @@ export const AddationalSettings = observer(({ form }: AddationalSettingsProps) =
                 Выбор экзамена
             </h2>
             <p className="text-gray-600 mb-4">
-                Выберите экзамен, который будет активным для курса. Нажмите "Сохранить",
+                Выберите экзамен, который будет активным для курса. Нажмите `Сохранить`,
                 чтобы подтвердить выбор.
             </p>
 
@@ -75,7 +77,8 @@ export const AddationalSettings = observer(({ form }: AddationalSettingsProps) =
             />}
 
             <Button
-                type="primary"
+                variant="solid"
+                color="blue"
                 onClick={handleSave}
                 className="w-full md:w-auto mt-4"
                 disabled={!selectedExam}

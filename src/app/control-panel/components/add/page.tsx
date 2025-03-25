@@ -7,7 +7,8 @@ import React, { lazy, Suspense, useState } from "react"
 
 import { PageContainerControlPanel } from "@/shared/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
+import { CourseComponentType } from "@/shared/api/component/model";
+import {ComponentTask} from "@/shared/api/course/model";
 
 const TextTask = lazy(() => import("@/entities/course/ui").then(module => ({ default: module.TextTask })));
 
@@ -17,20 +18,11 @@ const TaskWithFormula =lazy(() => import("@/entities/course/ui").then(module => 
 
 const TaskAddPage = () => {
     const { courseComponentStore } = useMobxStores()
-    const [form] = Form.useForm<CourseComponent>();
+    const [form] = Form.useForm<ComponentTask>();
     const router = useRouter();
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
-    const [options, setOptions] = useState<Record<number, string[]>>({});
 
-    const handleValuesChange = (_: CourseComponentType, allValues: CourseComponent) => {
-        const updatedOptions = allValues.questions?.reduce<Record<number, string[]>>((acc, question, index: number) => {
-            acc[index] = question?.options || [];
-            return acc;
-        }, {});
-        setOptions(updatedOptions!);
-    };
-
-    const onFinish = (values: CourseComponent) => {
+    const onFinish = (values: ComponentTask) => {
         courseComponentStore.addComponentCourse(values).finally(() => {
             form.resetFields();
             router.push('/control-panel/components')
@@ -53,7 +45,21 @@ const TaskAddPage = () => {
                 layout="vertical"
                 form={form}
                 onFinish={onFinish}
-                onValuesChange={handleValuesChange}
+                onValuesChange={() => {
+                    const componentTask = form.getFieldValue("componentTask") || {};
+                    const updatedQuestions = componentTask.questions || [];
+
+                    const newComponentTask = {
+                        ...componentTask,
+                        questions: updatedQuestions.map((question: any) => {
+                            const currentOptions = question?.options || [];
+                            return { ...question, options: currentOptions };
+                        })
+                    };
+
+                    form.setFieldsValue({ componentTask: newComponentTask });
+                }}
+
             >
                 <Form.Item
                     label="Тип задания"
@@ -79,7 +85,7 @@ const TaskAddPage = () => {
                 </Suspense>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={courseComponentStore.createLoading}>Добавить</Button>
+                    <Button color="blue" variant="solid" htmlType="submit" loading={courseComponentStore.createLoading}>Добавить</Button>
                 </Form.Item>
             </Form>
         </PageContainerControlPanel>

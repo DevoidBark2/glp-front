@@ -1,5 +1,4 @@
-import { Breadcrumb, ThemeConfig } from "antd";
-import {Theme} from "emoji-picker-react";
+import { ThemeConfig } from "antd";
 
 import { MAIN_COLOR } from "../constants";
 
@@ -36,9 +35,6 @@ export const themeConfig: ThemeConfig = {
             colorPrimaryBorder: MAIN_COLOR
         },
         Menu: {
-            // darkPrimary: MAIN_COLOR,
-            // darkItemBg: MAIN_COLOR,
-            // darkColor: MAIN_COLOR,
             colorPrimary: MAIN_COLOR,
             colorPrimaryBg: MAIN_COLOR,
             colorBgLayout: MAIN_COLOR,
@@ -65,12 +61,5 @@ export const themeConfig: ThemeConfig = {
         Table: {
             colorPrimary: "back"
         },
-        // Switch: {
-        //     colorPrimary: "#00FFFF",
-        //     colorPrimaryHover: "#00FFFF"
-        // },
-    },
-    token: {
-
     }
 }

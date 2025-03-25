@@ -12,7 +12,6 @@ import {
 import { observer } from "mobx-react";
 import {
   UserOutlined,
-  FileTextOutlined,
   BookOutlined, UnorderedListOutlined,
   ClockCircleOutlined,
   CheckCircleOutlined,

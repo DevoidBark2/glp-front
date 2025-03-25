@@ -1,3 +1,4 @@
+import React from "react";
 import { MathJax } from "better-react-mathjax";
 
 export const parseMathFormula = (description: string) => {

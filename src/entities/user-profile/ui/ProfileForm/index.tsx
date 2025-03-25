@@ -1,10 +1,10 @@
 import React from "react";
-import {Button, Form, Input, notification} from "antd";
+import { Button, Form, Input, notification } from "antd";
 import PhoneInput from "react-phone-input-2";
+import { observer } from "mobx-react";
+import { useTheme } from "next-themes";
 
 import "react-phone-input-2/lib/bootstrap.css";
-import { observer } from "mobx-react";
-import {useTheme} from "next-themes";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import { UserProfile } from "@/entities/user-profile/model/UserProfileStore";
@@ -34,7 +34,7 @@ export const ProfileForm = observer(() => {
             >
                 <Form.Item
                     name="first_name"
-                    label={<label className="dark:text-white">Имя</label>}
+                    label={<p className="dark:text-white">Имя</p>}
                     rules={[{ required: true, message: "Поле обязательно!" }]}
                 >
                     <Input placeholder="Введите имя"
@@ -47,7 +47,7 @@ export const ProfileForm = observer(() => {
 
                 <Form.Item
                     name="second_name"
-                    label={<label className="dark:text-white">Фамилия</label>}
+                    label={<p className="dark:text-white">Фамилия</p>}
                 >
                     <Input
                         placeholder="Введите фамилию"
@@ -60,7 +60,7 @@ export const ProfileForm = observer(() => {
 
                 <Form.Item
                     name="last_name"
-                    label={<label className="dark:text-white">Отчество</label>}
+                    label={<p className="dark:text-white">Отчество</p>}
                 >
                     <Input
                         placeholder="Введите отчество"
@@ -73,7 +73,7 @@ export const ProfileForm = observer(() => {
 
                 <Form.Item
                     name="email"
-                    label={<label className="dark:text-white">Email</label>}
+                    label={<p className="dark:text-white">Email</p>}
                 >
                     <Input
                         disabled
@@ -87,7 +87,7 @@ export const ProfileForm = observer(() => {
 
                 <Form.Item
                     name="phone"
-                    label={<label className="dark:text-white">Телефон</label>}
+                    label={<p className="dark:text-white">Телефон</p>}
                 >
                     <PhoneInput
                         disableSearchIcon={true}

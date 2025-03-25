@@ -1,7 +1,7 @@
 import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 import {StatusCourseEnum} from "@/shared/api/course/model";
+import {ActionEvent} from "@/shared/api/action-user";
 
-import { ActionEvent } from "../api/action-user";
 import { PostStatusEnum } from "../api/posts/model";
 import { StatusUserEnum, UserRole } from "../api/user/model";
 

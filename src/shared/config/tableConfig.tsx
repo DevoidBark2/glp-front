@@ -1,14 +1,5 @@
+import React from "react";
 import { Empty } from "antd";
-
-export const avatarIconTable = {
-    filterEmptyText: "Список пуст",
-    filterReset: "Сбросить фильтр",
-    filterConfirm: "Применить",
-    filterSearchPlaceholder: "Поиск...",
-    emptyText: <Empty description="Список пуст" />
-}
-
-export const paginationCount = 10;
 
 export const coursesTable = {
     filterEmptyText: "Список пуст",
@@ -17,8 +8,6 @@ export const coursesTable = {
     filterSearchPlaceholder: "Поиск...",
     emptyText: <Empty description="Список пуст" />
 }
-
-
 
 export const postTable = () => ({
     filterEmptyText: "Список пуст",

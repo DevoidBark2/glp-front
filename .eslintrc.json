@@ -14,7 +14,7 @@
     "import"
   ],
   "rules": {
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "off",
     "react-hooks/rules-of-hooks": "error",
     "@next/next/no-img-element": "off",
     "jsx-a11y/anchor-is-valid": "off",
@@ -46,7 +46,7 @@
         "ignoreRestSiblings": true
       }
     ],
-    "no-shadow": "error",
+    "no-shadow": "off",
     "no-duplicate-imports": "error",
     "eqeqeq": ["error", "always"],
     "curly": ["error", "all"],

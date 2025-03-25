@@ -16,7 +16,7 @@ interface ExamCourseProps {
     exam?: Exam;
 }
 
-const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
+export const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     const { courseStore } = useMobxStores();
     const { courseId } = useParams();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -43,8 +43,6 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
     };
 
     const currentComponent = exam?.components[currentQuestionIndex];
-
-    console.log(currentComponent);
 
     const handleAnswerSelect = async (quiz: ComponentTask, answer: number[] | string) => await courseStore.handleCheckTask({
             task: quiz,
@@ -195,5 +193,3 @@ const ExamCourse: FC<ExamCourseProps> = observer(({ exam }) => {
         </>
     );
 });
-
-export default ExamCourse;

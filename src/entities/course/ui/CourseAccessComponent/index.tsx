@@ -8,8 +8,8 @@ type CourseAccessComponentProps = {
 };
 
 export const CourseAccessComponent: React.FC<CourseAccessComponentProps> = ({ access_level }) => {
-    const getAccessDetails = (access_level: AccessRightEnum) => {
-        switch (access_level) {
+    const getAccessDetails = (level: AccessRightEnum) => {
+        switch (level) {
             case AccessRightEnum.PUBLIC:
                 return {
                     icon: "/static/open_access_icon.svg",

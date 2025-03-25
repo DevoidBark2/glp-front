@@ -10,13 +10,13 @@ import {
 import Link from "next/link";
 import { FormInstance } from "antd/lib";
 import {observer} from "mobx-react";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
 import {renderType} from "@/shared/lib/course/course.lib";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { DragHandle, Row } from "@/entities/course/ui";
 
 interface SelectComponentProps {
@@ -67,7 +67,7 @@ export const SelectComponent = observer(({ createSectionForm }: SelectComponentP
     };
 
     const onDragEnd = ({ active, over }: DragEndEvent) => {
-        if (!over || active.id === over.id) return;
+        if (!over || active.id === over.id) {return;}
     
         const currentComponents = [...courseComponentStore.selectedComponents];
         const activeIndex = currentComponents.findIndex((record) => record.id === active.id);

@@ -3,7 +3,7 @@ import { Breadcrumb, Button, Divider, Form, Input, notification } from "antd";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { PageContainerControlPanel } from "@/shared/ui";
 import { useMobxStores } from "@/shared/store/RootStore";

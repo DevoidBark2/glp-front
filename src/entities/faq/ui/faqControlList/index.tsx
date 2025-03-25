@@ -2,7 +2,7 @@
 import { Button, Popconfirm, Table, TableColumnsType, Tooltip } from "antd";
 import { observer } from "mobx-react";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useMobxStores } from "@/shared/store/RootStore";

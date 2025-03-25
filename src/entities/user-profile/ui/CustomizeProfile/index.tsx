@@ -1,12 +1,12 @@
 import { observer } from "mobx-react";
-import { useState } from "react";
-import { Divider, notification, Tabs, Tooltip } from "antd";
+import React, { useState } from "react";
+import { Divider, Tabs, Tooltip } from "antd";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import { Categories, CustomizeCategoryItem } from "@/shared/api/customize/model";
 import { CustomizeList } from "@/entities/customize/ui";
 
-const categoryLabels: { [key in keyof Categories]: string } = {
+const categoryLabels = {
     frames: 'Рамки',
     icons: 'Иконки',
     effects: 'Эффекты',
@@ -14,7 +14,7 @@ const categoryLabels: { [key in keyof Categories]: string } = {
 
 export const CustomizeProfile = observer(() => {
     const { userProfileStore, customizeStore } = useMobxStores();
-    const [selectedItems, setSelectedItems] = useState<Categories>({
+    const [selectedItems] = useState<Categories>({
         frames: [],
         icons: [],
         effects: [],
@@ -26,17 +26,17 @@ export const CustomizeProfile = observer(() => {
 
 
     const handleBuy = (category: keyof Categories, item: CustomizeCategoryItem) => {
-        customizeStore.buyItem(category, item).then(response => {
-            if (userProfileStore.userProfile) {
-                userProfileStore.setUserProfile({
-                    ...userProfileStore.userProfile,
-                    coins: response.balance
-                });
-            }
-            notification.success({ message: response.message })
-        }).catch(e => {
-            notification.error({ message: e.response.data.message });
-        });
+        // customizeStore.buyItem(category, item).then(response => {
+        //     if (userProfileStore.userProfile) {
+        //         userProfileStore.setUserProfile({
+        //             ...userProfileStore.userProfile,
+        //             coins: response.balance
+        //         });
+        //     }
+        //     notification.success({ message: response.message })
+        // }).catch(e => {
+        //     notification.error({ message: e.response.data.message });
+        // });
     };
 
     return (

@@ -31,29 +31,25 @@ export const getMainCourseSection = async () => {
 export const createMainSection = async (values: MainSection) => (await axiosInstance.post('api/main-section', values)).data
 
 export const createSection = async (values: SectionCourseItem) => {
-    const formData = new FormData();
-
-    (Object.keys(values) as Array<keyof SectionCourseItem>).forEach((key) => {
-        if (key === "uploadFile") {
-            const uploadFiles = values[key] as File[];  // Приведение типа
-            if (Array.isArray(uploadFiles)) {
-                uploadFiles.forEach((file) => {
-                    formData.append("uploadFile", file); // Здесь корректно добавляем бинарный файл
-                });
-            }
-        } else if (key === "course" || key === "externalLinks") {
-            formData.append(key, JSON.stringify(values[key]));
-        } else if (key !== "parentSection") {
-            formData.append(key, String(values[key]));
-        }
-    });
+    // const formData = new FormData();
+    //
+    // (Object.keys(values) as Array<keyof SectionCourseItem>).forEach((key) => {
+    //     if (key === "uploadFile") {
+    //         const uploadFiles = values[key] as File[];  // Приведение типа
+    //         if (Array.isArray(uploadFiles)) {
+    //             uploadFiles.forEach((file) => {
+    //                 formData.append("uploadFile", file); // Здесь корректно добавляем бинарный файл
+    //             });
+    //         }
+    //     } else if (key === "course" || key === "externalLinks") {
+    //         formData.append(key, JSON.stringify(values[key]));
+    //     } else if (key !== "parentSection") {
+    //         formData.append(key, String(values[key]));
+    //     }
+    // });
 
     try {
-        const response = await axiosInstance.post('api/sections', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await axiosInstance.post('api/sections', values);
 
         return response.data;
     } catch (error) {

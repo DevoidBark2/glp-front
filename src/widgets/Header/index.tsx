@@ -4,15 +4,14 @@ import Link from "next/link";
 import { Avatar, Button, MenuProps, Spin, Drawer, Dropdown } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, BookOutlined, DownOutlined, UpOutlined, BarChartOutlined } from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, DownOutlined, UpOutlined, BarChartOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 
 import { PlatformMenu } from "@/shared/constants";
-import {User, UserRole} from "@/shared/api/user/model";
+import {UserRole} from "@/shared/api/user/model";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
-import {UserAvatar} from "@/entities/user-profile";
 
 import nextConfig from "../../../next.config.mjs";
 
@@ -33,7 +32,6 @@ export const Header = observer(() => {
 
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
-        // { key: 2, title: "Курсы", link: '/platform/courses', icon: <BookOutlined /> },
         { key: 2, title: "Лидерборд", link: '/platform/leaders', icon: <BarChartOutlined /> },
         { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
@@ -81,10 +79,10 @@ export const Header = observer(() => {
             {
                 key: "4",
                 label: (
-                    <div className="flex items-center group" onClick={handleLogoutUser}>
+                    <button className="flex items-center group" onClick={handleLogoutUser}>
                         <Image src="/static/logout_icon.svg" alt="Выйти" width={20} height={20} />
                         <p className="ml-2 text-gray-800 group-hover:text-gray-900 transition-all duration-200">Выйти</p>
-                    </div>
+                    </button>
                 ),
             },
         ];
@@ -209,7 +207,7 @@ export const Header = observer(() => {
                                     open={menuOpen}
                                     onOpenChange={setMenuOpen}
                                 >
-                                    <div
+                                    <button
                                         className="flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-gray-800 cursor-pointer"
                                         onClick={handleMenuClick}
                                     >
@@ -239,7 +237,7 @@ export const Header = observer(() => {
                                         {menuOpen ?
                                             <UpOutlined style={{ color: resolvedTheme === "dark" ? "white" : "black" }} /> :
                                             <DownOutlined style={{ color: resolvedTheme === "dark" ? "white" : "black" }} />}
-                                    </div>
+                                    </button>
                                 </Dropdown>
                             </div>
                         ) : (

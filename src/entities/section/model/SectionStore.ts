@@ -55,7 +55,6 @@ class SectionStore {
     }
 
     addSection = action(async (values: SectionCourseItem) => {
-        debugger
         this.setCreateSectionLoading(true);
         return await createSection(values).finally(() => {
             this.setLoadingSectionsCourse(false)

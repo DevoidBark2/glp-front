@@ -1,3 +1,4 @@
+import React from "react";
 import { Collapse } from "antd";
 import { observer } from "mobx-react";
 import Image from "next/image";

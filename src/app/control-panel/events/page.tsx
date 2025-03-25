@@ -10,12 +10,12 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 
-import { ActionEvent } from "@/shared/api/action-user";
 import { eventColors, eventTooltips, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { EventUser } from "@/shared/api/events/model";
 import { PageContainerControlPanel, PageHeader } from "@/shared/ui";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {SettingControlPanel} from "@/shared/model";
+import {ActionEvent} from "@/shared/api/action-user";
 
 const EventPage = () => {
     const { eventStore } = useMobxStores();

@@ -23,7 +23,13 @@ const LessonPage = () => {
             const currentStep = step || firstStep;
             router.push(`?step=${currentStep}`);
         }).catch(e => {
+            if(!e.response) {
+                notification.error({message: "Ошибка получения данных курса."})
+                router.push("/platform")
+                return;
+            }
             notification.error({ message: e.response.data.message });
+            router.push("/platform")
         });
 
         return () => {

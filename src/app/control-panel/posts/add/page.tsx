@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { observer } from "mobx-react";
-import { Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, Upload } from "antd";
+import {Breadcrumb, Button, Col, Divider, Form, Input, notification, Row, Upload, UploadFile} from "antd";
 const Editor = dynamic(
     () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
@@ -24,7 +24,7 @@ const CreatePostPage = () => {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
-    const handleEditorChange = (state) => {
+    const handleEditorChange = (state:any) => {
         setEditorState(state);
     };
 
@@ -37,8 +37,7 @@ const CreatePostPage = () => {
     const props = {
         name: "file",
         multiple: false,
-        listType: "picture",
-        onChange(info) {
+        onChange(info: any) {
             const { file, fileList } = info;
             const { status } = file;
 
@@ -108,7 +107,7 @@ const CreatePostPage = () => {
                 </Row>
 
                 <Form.Item name="image" label="Изображение поста">
-                    <Upload.Dragger {...props}>
+                    <Upload.Dragger {...props} listType="picture">
                         <p className="ant-upload-drag-icon">
                             <InboxOutlined />
                         </p>

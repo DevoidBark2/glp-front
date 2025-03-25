@@ -1,7 +1,7 @@
 import {Button, message} from "antd";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { ComponentTask } from "@/shared/api/course/model";
 

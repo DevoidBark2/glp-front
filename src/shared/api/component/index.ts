@@ -1,26 +1,26 @@
 import {CourseComponent} from "@/shared/api/component/model";
-import {ParentSection} from "@/shared/api/section/model";
+import {ComponentTask} from "@/shared/api/course/model";
 
 import { axiosInstance } from "../http-client"
 
-export const getAllComponents = async (): Promise<CourseComponent[]> => {
+export const getAllComponents = async (): Promise<ComponentTask[]> => {
     const data  = (await axiosInstance.get('/api/components')).data
 
     return data.data
 }
 
-export const getComponentById = async (id: string): Promise<CourseComponent> => {
+export const getComponentById = async (id: string): Promise<ComponentTask> => {
     const data = (await axiosInstance.get(`api/component-task/${id}`)).data;
     return data.data;
 }
 
-export const searchComponentsByTitle = async (query: string): Promise<CourseComponent[]> => {
+export const searchComponentsByTitle = async (query: string): Promise<ComponentTask[]> => {
     const data = (await axiosInstance.get(`api/search-components?query=${query}`)).data
 
     return data.data
 }
 
-export const createComponent = async (body: CourseComponent): Promise<{component: CourseComponent, message: string}> => {
+export const createComponent = async (body: CourseComponent): Promise<{component: ComponentTask, message: string}> => {
     const data = (await axiosInstance.post('api/components', body)).data
 
     return data.data;

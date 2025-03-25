@@ -1,35 +1,29 @@
 "use client"
-import { Breadcrumb, Button, Divider, Form, Select, Spin, Tag } from "antd"
+import {Breadcrumb, Button, Divider, Form, Input, notification, Select, Spin, Tag} from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import {PageContainerControlPanel} from "@/shared/ui";
 import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
-import TaskWithFormula from "@/entities/course/ui/CreateTask/TaskWithFormula";
+import {TaskWithFormula} from "@/entities/course/ui/CreateTask/TaskWithFormula";
 import {useMobxStores} from "@/shared/store/RootStore";
-import {CourseComponent, CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {ComponentTask} from "@/shared/api/course/model";
 
 const ComponentPage = () => {
     const { courseComponentStore } = useMobxStores()
     const { componentId } = useParams();
-    const [form] = Form.useForm<CourseComponent>();
+    const [form] = Form.useForm<ComponentTask>();
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
-    const [changedComponent, setChangedComponent] = useState<CourseComponent | null>(null)
-    const [options, setOptions] = useState<Record<number, string[]>>({});
+    const [changedComponent, setChangedComponent] = useState<ComponentTask | null>(null)
 
-    const onFinish = (values: CourseComponent) => {
-        courseComponentStore.changeComponent(values)
+    const onFinish = (values: ComponentTask) => {
+        courseComponentStore.changeComponent(values).then(response => {
+            notification.success({ message: response! })
+        })
     }
-
-    const handleValuesChange = (_: CourseComponentType, allValues: CourseComponent) => {
-        const updatedOptions = allValues.questions?.reduce<Record<number, string[]>>((acc, question, index: number) => {
-            acc[index] = question?.options || [];
-            return acc;
-        }, {});
-        setOptions(updatedOptions!);
-    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,16 +31,11 @@ const ComponentPage = () => {
             form.setFieldsValue(component!);
             setChangedComponent(component!);
             setTypeTask(component!.type);
-            const initialOptions = component.questions?.reduce((acc, question, index) => {
-                acc[index] = question.options || [];
-                return acc;
-            }, {} as Record<number, string[]>) || {};
-
-            setOptions(initialOptions);
         }
 
         fetchData();
     }, [])
+
     return (
         <PageContainerControlPanel>
             <Breadcrumb
@@ -62,10 +51,25 @@ const ComponentPage = () => {
                 layout="vertical"
                 form={form}
                 onFinish={onFinish}
-                onValuesChange={handleValuesChange}
+                onValuesChange={() => {
+                    const componentTask = form.getFieldValue("componentTask") || {};
+                    const updatedQuestions = componentTask.questions || [];
+
+                    const newComponentTask = {
+                        ...componentTask,
+                        questions: updatedQuestions.map((question: any) => {
+                            const currentOptions = question?.options || [];
+                            return { ...question, options: currentOptions };
+                        })
+                    };
+
+                    form.setFieldsValue({ componentTask: newComponentTask });
+                }}
             >
                {!courseComponentStore.loadingCourseComponent ?  <>
-                {changedComponent && <Form.Item name="id" hidden></Form.Item>}
+                {changedComponent && <Form.Item name="id" hidden>
+                    <Input/>
+                </Form.Item>}
                 <Form.Item
                     label="Тип задания"
                     name="type"
@@ -107,7 +111,7 @@ const ComponentPage = () => {
                 {typeTask === CourseComponentType.SimpleTask && <TaskWithFormula form={form} />}
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">Изменить</Button>
+                    <Button variant="solid" color="blue" type="primary" htmlType="submit">Изменить</Button>
                 </Form.Item>
                </> : <Spin/>}
             </Form>

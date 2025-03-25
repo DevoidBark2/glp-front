@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, Button, Divider, List, Rate } from "antd"
 import { DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";

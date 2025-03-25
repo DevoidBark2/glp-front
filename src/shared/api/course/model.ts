@@ -2,9 +2,8 @@ import { UploadFile } from "antd";
 
 import { CourseComponentType, QuestionsType, StatusCourseComponentEnum } from "@/shared/api/component/model";
 
-import {SectionCourseItem, StatusSectionEnum} from "../section/model";
+import {SectionCourseItem} from "../section/model";
 import { User } from "../user/model";
-import { Exam } from "../exams/model";
 
 type Category = {
     id: number;
@@ -63,7 +62,7 @@ export type CourseComponentTypeI = {
 export type Course = {
     id: number;
     name: string;
-    image: string | UploadFile;
+    image: string | UploadFile
     category: Category;
     access_right: number;
     level: number;

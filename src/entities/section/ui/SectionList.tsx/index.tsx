@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 
 import { sectionsTable } from "@/shared/config";

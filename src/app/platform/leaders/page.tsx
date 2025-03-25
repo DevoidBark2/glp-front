@@ -6,8 +6,7 @@ import Link from "next/link";
 import {UserOutlined} from "@ant-design/icons";
 
 import { useMobxStores } from "@/shared/store/RootStore";
-import { UserLevel } from "@/shared/api/users-level/model";
-import { UserLevelEnum } from "@/entities/user-profile";
+import {UserLevel, UserLevelEnum} from "@/shared/api/users-level/model";
 import {AuthMethodEnum} from "@/shared/api/auth/model";
 
 import nextConfig from "../../../../next.config.mjs";

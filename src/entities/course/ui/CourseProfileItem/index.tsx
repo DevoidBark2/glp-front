@@ -25,7 +25,6 @@ export const CourseProfileItem: FC<CourseProfileItemProps> = ({ course }) => {
     const { userProfileStore, courseStore } = useMobxStores();
     const router = useRouter();
 
-    console.log(course)
     const [form] = Form.useForm<CourseReview>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalLeaveCourse, setIsModalLeaveCourse] = useState(false);

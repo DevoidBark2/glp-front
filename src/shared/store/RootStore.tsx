@@ -1,6 +1,7 @@
 "use client"
-import React from "react";
+import React, { ReactNode } from "react";
 
+// Импортируем сторы
 import { PostStore } from "@/entities/post";
 import { CourseStore } from "@/entities/course";
 import { FaqStore } from "@/entities/faq";
@@ -19,6 +20,7 @@ import CourseComponentStore from "@/entities/component-task/model/CourseComponen
 import { UserLevelStore } from "@/entities/user-level";
 import { CustomizeStore } from "@/entities/customize";
 
+// Создаём экземпляры стора
 const userStore = new UserStore();
 const postStore = new PostStore();
 const courseStore = new CourseStore();
@@ -30,14 +32,34 @@ const statisticsStore = new StatisticsStore();
 const commentsStore = new CommentsStore();
 const examStore = new ExamStore();
 const courseComponentStore = new CourseComponentStore();
-const nomenclatureStore = new NomenclatureStore()
-const reviewStore = new ReviewStore()
-const sectionCourseStore = new SectionStore()
-const eventStore = new EventStore()
-const userLevelStore = new UserLevelStore()
-const customizeStore = new CustomizeStore()
+const nomenclatureStore = new NomenclatureStore();
+const reviewStore = new ReviewStore();
+const sectionCourseStore = new SectionStore();
+const eventStore = new EventStore();
+const userLevelStore = new UserLevelStore();
+const customizeStore = new CustomizeStore();
 
-export const RootStore = {
+export interface RootStoreType {
+    userStore: UserStore;
+    postStore: PostStore;
+    courseStore: CourseStore;
+    faqStore: FaqStore;
+    authStore: AuthStore;
+    generalSettingsStore: GeneralSettings;
+    userProfileStore: UserProfileStore;
+    statisticsStore: StatisticsStore;
+    commentsStore: CommentsStore;
+    courseComponentStore: CourseComponentStore;
+    examStore: ExamStore;
+    nomenclatureStore: NomenclatureStore;
+    reviewStore: ReviewStore;
+    sectionCourseStore: SectionStore;
+    eventStore: EventStore;
+    userLevelStore: UserLevelStore;
+    customizeStore: CustomizeStore;
+}
+
+export const RootStore: RootStoreType = {
     userStore,
     postStore,
     courseStore,
@@ -54,19 +76,23 @@ export const RootStore = {
     sectionCourseStore,
     eventStore,
     userLevelStore,
-    customizeStore
+    customizeStore,
 };
 
-const StoreContext = React.createContext(RootStore);
+const StoreContext = React.createContext<RootStoreType | undefined>(undefined);
 
-export function StoresProvider(props) {
-    return (
-        <StoreContext.Provider value={RootStore}>
-            {props.children}
-        </StoreContext.Provider>
-    );
+interface StoresProviderProps {
+    children: ReactNode;
+}
+
+export function StoresProvider({ children }: StoresProviderProps) {
+    return <StoreContext.Provider value={RootStore}>{children}</StoreContext.Provider>;
 }
 
 export function useMobxStores() {
-    return React.useContext(StoreContext);
+    const context = React.useContext(StoreContext);
+    if (!context) {
+        throw new Error("useMobxStores must be used within a StoresProvider");
+    }
+    return context;
 }

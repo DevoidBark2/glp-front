@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Popconfirm, Popover, TableColumnsType, Tag, Tooltip } from "antd";
 import {
     BookOutlined,
@@ -16,8 +17,9 @@ import Link from "next/link";
 import { FILTER_STATUS_COMPONENT_COURSE, FILTER_TYPE_COMPONENT_COURSE, FORMAT_VIEW_DATE, MAIN_COLOR } from "@/shared/constants";
 import { UserRole } from "@/shared/api/user/model";
 import { UserHoverCard } from "@/widgets";
-import {CourseComponent, CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
+import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 import {UserProfile} from "@/entities/user-profile/model/UserProfileStore";
+import {ComponentTask} from "@/shared/api/course/model";
 
 export const typeIcons = {
     [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
@@ -36,20 +38,20 @@ interface TaskColumnsProps {
     currentUser: UserProfile | null
 }
 
-export const taskColumns = ({ handleChangeComponentById, handleDeleteComponentById, currentUser }: TaskColumnsProps): TableColumnsType<CourseComponent> => [
+export const taskColumns = ({ handleChangeComponentById, handleDeleteComponentById, currentUser }: TaskColumnsProps): TableColumnsType<ComponentTask> => [
     {
         title: 'Название',
         dataIndex: 'title',
         width: "20%",
         render: (text, record) => (
             <Tooltip title={text ? `Перейти к редактированию: ${text}` : 'Название не указано'}>
-                <p
+                <button
                     className="cursor-pointer"
                     onClick={() => handleChangeComponentById(record.id)}
                     style={{ color: !text ? 'grey' : "black" }}
                 >
                     {text?.length > 30 ? `${text.slice(0, 30)}...` : text ?? 'Название не указано'}
-                </p>
+                </button>
             </Tooltip>
         ),
     },

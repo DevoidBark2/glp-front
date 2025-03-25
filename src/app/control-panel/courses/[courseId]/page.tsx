@@ -27,9 +27,8 @@ const CoursePage = () => {
         ]);
 
         if (courseDetails) {
-            form.setFieldsValue(courseDetails);
-            form.setFieldValue("category", courseDetails.category?.id);
-
+            courseStore.setCourseDetails(courseDetails)
+            form.setFieldsValue({...courseDetails, image: courseDetails.image, category: courseDetails.category?.id});
             courseStore.setCoursePageTitle(courseDetails.name);
             courseStore.setSecretKey(courseDetails.secret_key);
             courseStore.setAccessRight(

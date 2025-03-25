@@ -1,5 +1,5 @@
 import {Button, Form, Input, Modal} from "antd";
-import {FC} from "react";
+import React, {FC} from "react";
 
 interface CreateCategoryModalProps {
     openModal: boolean;
