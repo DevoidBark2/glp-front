@@ -22,9 +22,9 @@ export const createPost = async (values: PostCreateForm) => {
     form.append("name", values.name);
     form.append("content", values.content);
     if (values.description) {form.append("description", values.description);}
-    if (values.image) {
-        form.append("image", values.image);
-    }
+    // if (values.image) {
+    //     form.append("image", values.image);
+    // }
 
     return (await axiosInstance.post("/api/posts", form)).data;
 };

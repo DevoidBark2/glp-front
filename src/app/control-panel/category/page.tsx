@@ -94,7 +94,7 @@ const CategoryPage = () => {
                     emptyText: (
                         <Empty
                             description="Нет категорий"
-                            imageStyle={{ height: 60 }}
+                            styles={{ image: {height: 60} }}
                         />
                     ),
                 }}

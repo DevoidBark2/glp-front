@@ -42,7 +42,9 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
 
     useEffect(() => {
         const typesetMath = async () => {
+            // @ts-ignore
             if (window.MathJax && window.MathJax.typesetPromise) {
+                // @ts-ignore
                 await window.MathJax.typesetPromise();
             }
         };
@@ -59,6 +61,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
             await onCheckResult(task, userAnswer);
 
             setCurrentAnswer({
+                // @ts-ignore
                 answer: [{ userAnswer }],
             });
 
@@ -82,6 +85,7 @@ export const SimpleTask: FC<QuizMultiComponentProps> = observer(({ task, onCheck
     useEffect(() => {
         if(mfe){
             if(containerRef.current){
+                // @ts-ignore
                 containerRef.current.appendChild(mfe);
             }
         }

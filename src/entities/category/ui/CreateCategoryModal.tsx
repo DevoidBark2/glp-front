@@ -34,7 +34,7 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({ openModal, s
 
                 <div className="flex items-center justify-end">
                     <Form.Item>
-                        <Button type="default" onClick={() => {
+                        <Button color="blue" variant="solid" onClick={() => {
                             form.resetFields();
                             setOpenModal(false)
                         }}>
@@ -42,7 +42,7 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({ openModal, s
                         </Button>
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="ml-2">Добавить</Button>
+                        <Button color="blue" variant="solid" htmlType="submit" className="ml-2">Добавить</Button>
                     </Form.Item>
                 </div>
             </Form>

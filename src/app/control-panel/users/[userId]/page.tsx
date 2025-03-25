@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, List, Breadcrumb, Collapse, notification, Modal } from "antd";
+import { Card, Descriptions, Divider, Tag, Typography, Spin, Button, Avatar, Breadcrumb, Collapse, notification, Modal } from "antd";
 import { useParams, useRouter } from "next/navigation";
 import { AppstoreOutlined, FileTextOutlined } from "@ant-design/icons";
 import Link from "next/link";
@@ -80,63 +80,57 @@ const UserDetailsPage = () => {
         </>
     );
 
+
     const renderCourses = (courses: Course[]) => {
         if (!courses || courses.length === 0) {
             return <Text type="secondary" className="block text-center">Нет созданных курсов.</Text>;
         }
 
-        return (
-            <List
-                itemLayout="horizontal"
-                dataSource={courses}
-                renderItem={(course) => (
-                    <List.Item>
-                        <Collapse bordered={false} className="w-full" expandIconPosition="end">
-                            <Collapse.Panel
-                                header={
-                                    <div className="flex items-center space-x-4">
-                                        <Avatar
-                                            src={course.image ? `${nextConfig.env?.API_URL}${course.image}` : ""}
-                                            size={64}
-                                            icon={<AppstoreOutlined />}
-                                            shape="square"
-                                        />
-                                        <div>
-                                            <Typography.Text strong>{course.name}</Typography.Text>
-                                            <br />
-                                            <Typography.Text type="secondary" ellipsis>
-                                                {course.small_description || "Описание отсутствует"}
-                                            </Typography.Text>
-                                        </div>
-                                    </div>
-                                }
-                                key={course.id}
-                            >
-                                <div className="p-4 bg-gray-50 rounded-md">
-                                    <Typography.Paragraph>
-                                        <strong>Категория:</strong> {course.category?.name || "Не указано"}
-                                    </Typography.Paragraph>
-                                    <Typography.Paragraph>
-                                        <strong>Длительность:</strong> {course.duration} часов
-                                    </Typography.Paragraph>
-                                    <Typography.Paragraph>
-                                        <strong>Создан:</strong>{" "}
-                                        {course.created_at ? new Date(course.created_at).toLocaleDateString() : "Не указано"}
-                                    </Typography.Paragraph>
-                                    <Button
-                                        type="primary"
-                                        size="small"
-                                        onClick={() => router.push(`/control-panel/courses/${course.id}`)}
-                                    >
-                                        Подробнее
-                                    </Button>
-                                </div>
-                            </Collapse.Panel>
-                        </Collapse>
-                    </List.Item>
-                )}
-            />
-        );
+        const items = courses.map((course) => ({
+            key: course.id,
+            label: (
+                <div className="flex items-center space-x-4">
+                    <Avatar
+                        src={course.image ? `${nextConfig.env?.API_URL}${course.image}` : ""}
+                        size={64}
+                        icon={<AppstoreOutlined />}
+                        shape="square"
+                    />
+                    <div>
+                        <Typography.Text strong>{course.name}</Typography.Text>
+                        <br />
+                        <Typography.Text type="secondary" ellipsis>
+                            {course.small_description || "Описание отсутствует"}
+                        </Typography.Text>
+                    </div>
+                </div>
+            ),
+            children: (
+                <div className="p-4 bg-gray-50 rounded-md">
+                    <Typography.Paragraph>
+                        <strong>Категория:</strong> {course.category?.name || "Не указано"}
+                    </Typography.Paragraph>
+                    <Typography.Paragraph>
+                        <strong>Длительность:</strong> {course.duration} часов
+                    </Typography.Paragraph>
+                    <Typography.Paragraph>
+                        <strong>Создан:</strong>{" "}
+                        {course.created_at ? new Date(course.created_at).toLocaleDateString() : "Не указано"}
+                    </Typography.Paragraph>
+                    <Button
+                        color="blue"
+                        variant="solid"
+                        size="small"
+                        onClick={() => router.push(`/control-panel/courses/${course.id}`)}
+                    >
+                        Подробнее
+                    </Button>
+                </div>
+            ),
+        }));
+
+
+        return <Collapse items={items} bordered={false} className="w-full" expandIconPosition="end" />;
     };
 
     const renderPosts = (posts: Post[]) => {
@@ -144,62 +138,53 @@ const UserDetailsPage = () => {
             return <Text type="secondary" className="block text-center">Нет созданных постов.</Text>;
         }
 
-        return (
-            <List
-                className="mt-3"
-                itemLayout="horizontal"
-                dataSource={posts}
-                renderItem={(post) => (
-                    <List.Item>
-                        <Collapse bordered={false} className="w-full" expandIconPosition="end">
-                            <Collapse.Panel
-                                header={
-                                    <div className="flex items-center space-x-4">
-                                        <Avatar
-                                            src={post.image ? `${nextConfig.env?.API_URL}${post.image}` : ""}
-                                            size={64}
-                                            icon={<FileTextOutlined />}
-                                            shape="square"
-                                        />
-                                        <div>
-                                            <Typography.Text strong>{post.name}</Typography.Text>
-                                            <br />
-                                            <Typography.Text type="secondary" ellipsis>
-                                                {post.description || "Описание отсутствует"}
-                                            </Typography.Text>
-                                        </div>
-                                    </div>
-                                }
-                                key={post.id}
-                            >
-                                <div className="p-4 bg-gray-50 rounded-md">
-                                    <Typography.Paragraph>
-                                        <strong>Опубликован:</strong>{" "}
-                                        {post.created_at ? new Date(post.created_at).toLocaleDateString() : "Не указано"}
-                                    </Typography.Paragraph>
-                                    <Button
-                                        type="primary"
-                                        size="small"
-                                        onClick={() => router.push(`/control-panel/posts/${post.id}`)}
-                                    >
-                                        Подробнее
-                                    </Button>
-                                </div>
-                            </Collapse.Panel>
-                        </Collapse>
-                    </List.Item>
-                )}
-            />
-        );
+        const items = posts.map((post) => ({
+            key: post.id,
+            label: (
+                <div className="flex items-center space-x-4">
+                    <Avatar
+                        src={post.image ? `${nextConfig.env?.API_URL}${post.image}` : ""}
+                        size={64}
+                        icon={<FileTextOutlined />}
+                        shape="square"
+                    />
+                    <div>
+                        <Typography.Text strong>{post.name}</Typography.Text>
+                        <br />
+                        <Typography.Text type="secondary" ellipsis>
+                            {post.description || "Описание отсутствует"}
+                        </Typography.Text>
+                    </div>
+                </div>
+            ),
+            children: (
+                <div className="p-4 bg-gray-50 rounded-md">
+                    <Typography.Paragraph>
+                        <strong>Опубликован:</strong>{" "}
+                        {post.created_at ? new Date(post.created_at).toLocaleDateString() : "Не указано"}
+                    </Typography.Paragraph>
+                    <Button
+                        color="blue"
+                        variant="solid"
+                        size="small"
+                        onClick={() => router.push(`/control-panel/posts/${post.id}`)}
+                    >
+                        Подробнее
+                    </Button>
+                </div>
+            ),
+        }));
+
+        return <Collapse items={items} bordered={false} className="w-full" expandIconPosition="end" />;
     };
 
-   /* const handleBlockUser = async () => {
-        const changeStatus = user?.status === StatusUserEnum.ACTIVATED ? StatusUserEnum.BLOCKED : StatusUserEnum.ACTIVATED
-        await userStore.blockUser(user!.id, changeStatus).then(response => {
-            setUser((prev) => (prev ? { ...prev, status: changeStatus } : null));
-            notification.success({ message: response.message })
-        });
-    }*/
+    /* const handleBlockUser = async () => {
+         const changeStatus = user?.status === StatusUserEnum.ACTIVATED ? StatusUserEnum.BLOCKED : StatusUserEnum.ACTIVATED
+         await userStore.blockUser(user!.id, changeStatus).then(response => {
+             setUser((prev) => (prev ? { ...prev, status: changeStatus } : null));
+             notification.success({ message: response.message })
+         });
+     }*/
 
     if (loading) {
         return (

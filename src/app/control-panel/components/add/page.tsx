@@ -1,5 +1,5 @@
 "use client"
-import { Breadcrumb, Button, Divider, Form, Select } from "antd"
+import {Breadcrumb, Button, Divider, Form, notification, Select} from "antd"
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -23,7 +23,9 @@ const TaskAddPage = () => {
     const [typeTask, setTypeTask] = useState<CourseComponentType | null>(null)
 
     const onFinish = (values: ComponentTask) => {
-        courseComponentStore.addComponentCourse(values).finally(() => {
+        courseComponentStore.addComponentCourse(values).then(response => {
+            notification.success({ message: response.message })
+        }).finally(() => {
             form.resetFields();
             router.push('/control-panel/components')
             courseComponentStore.setCreateLoading(false)

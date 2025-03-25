@@ -29,7 +29,7 @@ class SectionStore {
     createSectionLoading: boolean = false;
     uploadedImages: UploadFile[] = [];
 
-    setUploadedImages = action((images) => {
+    setUploadedImages = action((images:any) => {
         this.uploadedImages = images;
     });
 

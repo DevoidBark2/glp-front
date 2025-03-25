@@ -1,7 +1,7 @@
 import { User } from "@/shared/api/user/model";
 import { CourseComponent } from "@/shared/api/component/model";
 
-import { Course, CourseComponentTypeI } from "../course/model";
+import {ComponentTask, Course, CourseComponentTypeI} from "../course/model";
 
 export enum StatusSectionEnum {
     ACTIVE = 'active',
@@ -41,14 +41,14 @@ export type SectionCourseItem = {
     status: StatusSectionEnum;
     sectionComponents: SectionComponentTask[]
     parentSection: ParentSection
-    sort_number: number
+    sort: number
     created_at: Date
 }
 
 export type SectionComponentTask = {
     id: string;
     sort: number;
-    componentTask: CourseComponent
+    componentTask: ComponentTask;
 }
 
 

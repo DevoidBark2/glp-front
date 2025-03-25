@@ -38,12 +38,9 @@ const getLevelColor = (level: string) => {
 export const Leaderboard = observer(() => {
     const { userLevelStore } = useMobxStores();
 
-    // Столбцы таблицы
     const columns: TableColumnsType<UserLevel> = [
         {
             title: '#',
-            dataIndex: 'rank',
-            key: 'rank',
             render: (text: any, record: any, index: number) => index + 1,
             align: 'center',
             width: '10%',
@@ -76,21 +73,12 @@ export const Leaderboard = observer(() => {
         },
     ];
 
-    // Данные для таблицы
-    const data = userLevelStore.leaderBordUsers.map((userLevel, index) => ({
-        key: index,
-        rank: index + 1,
-        user: userLevel.user,
-        level: userLevel.level,
-        points: userLevel.points,
-    }));
-
     return (
         <div className="p-4">
             <h2 className="text-3xl font-bold mb-6">🏆 Лидерборд</h2>
             <Table
                 columns={columns}
-                dataSource={data}
+                dataSource={userLevelStore.leaderBordUsers}
                 pagination={false}
                 rowHoverable={false}
                 rowClassName={(record, index) =>

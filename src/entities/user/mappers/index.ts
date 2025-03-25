@@ -18,7 +18,8 @@ export const usersMapper = (value: User) => {
         city: value.city,
         method_auth: value.method_auth,
         profile_url: value.profile_url,
-        isVerified: value.isVerified
+        isVerified: value.isVerified,
+        activeCustomization: value.activeCustomization,
     }
 
     return user;

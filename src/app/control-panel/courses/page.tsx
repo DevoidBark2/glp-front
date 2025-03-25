@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
+import React, { lazy } from "react";
 import { observer } from "mobx-react";
 import { useRouter } from "next/navigation";
 
 import {PageContainerControlPanel} from "@/shared/ui";
 import {PageHeader} from "@/shared/ui/PageHeader";
 import { CourseControlList } from "@/entities/course/ui";
-import {SuccessfulCreateCourseModal} from "@/widgets";
+const SuccessfulCreateCourseModal = lazy(() => import('@/widgets').then(module => ({ default: module.SuccessfulCreateCourseModal })));
 import {useMobxStores} from "@/shared/store/RootStore";
 
 const CoursesPage = () => {

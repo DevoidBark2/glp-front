@@ -28,7 +28,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "types": ["./src/shared/config/global.d.ts"]
   },
   "include": [
     "next-env.d.ts",

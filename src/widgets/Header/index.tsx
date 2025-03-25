@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Avatar, Button, MenuProps, Spin, Drawer, Dropdown } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { UserOutlined, HomeOutlined, ReadOutlined, CloseOutlined, MenuOutlined, DownOutlined, UpOutlined, BarChartOutlined } from "@ant-design/icons";
+import { UserOutlined, HomeOutlined, CloseOutlined, MenuOutlined, DownOutlined, UpOutlined, BarChartOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useTheme } from "next-themes";
 
@@ -33,7 +33,7 @@ export const Header = observer(() => {
     const platformMenu: PlatformMenu[] = [
         { key: 1, title: "Главная", link: '/platform', icon: <HomeOutlined /> },
         { key: 2, title: "Лидерборд", link: '/platform/leaders', icon: <BarChartOutlined /> },
-        { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
+        // { key: 3, title: "Блог", link: '/platform/blog', icon: <ReadOutlined /> },
     ]
 
 
@@ -100,7 +100,7 @@ export const Header = observer(() => {
                     </span>
                 </Link>
 
-                <div className="w-1/5 justify-between items-center space-x-6 hidden xl:flex">
+                <div className="justify-between gap-5 items-center hidden xl:flex">
                     {platformMenu.map((menuItem) => (
                         <Link
                             key={menuItem.key}
@@ -112,8 +112,8 @@ export const Header = observer(() => {
                             <span
                                 className={`absolute bottom-0 left-0 w-full h-[2px] transition-all duration-300 
             ${pathName === menuItem.link
-                                        ? "bg-black dark:bg-white opacity-100"  // Активный пункт: чёрный в светлой, белый в тёмной теме
-                                        : "opacity-0 group-hover:opacity-100 bg-black dark:bg-white"}`} // Наведение: подчёркивание белым в тёмной
+                                        ? "bg-black dark:bg-white opacity-100"
+                                        : "opacity-0 group-hover:opacity-100 bg-black dark:bg-white"}`}
                             ></span>
                         </Link>
                     ))}

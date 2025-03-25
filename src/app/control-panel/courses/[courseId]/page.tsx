@@ -1,16 +1,16 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { Breadcrumb, Divider, Form, notification, Tabs } from "antd";
-import React, { useEffect, useCallback } from "react";
+import React, {useEffect, useCallback, lazy} from "react";
 import Link from "next/link";
 import { observer } from "mobx-react";
 
 import { PageContainerControlPanel } from "@/shared/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
-import { CourseSections } from "@/entities/course/ui";
-import { CourseMembers } from "@/entities/course/ui/ControlPanel/CourseMembers";
-import { AddationalSettings } from "@/entities/course/ui/ControlPanel/AddationalSettings";
-import { CourseDetailsMain } from "@/entities/course/ui/ControlPanel/CourseDetailsMain";
+const CourseSections = lazy(() => import('@/entities/course/ui').then(module => ({ default: module.CourseSections })));
+const CourseMembers = lazy(() => import('@/entities/course/ui/ControlPanel/CourseMembers').then(module => ({ default: module.CourseMembers })));
+const AddationalSettings = lazy(() => import('@/entities/course/ui/ControlPanel/AddationalSettings').then(module => ({ default: module.AddationalSettings })));
+const CourseDetailsMain = lazy(() => import('@/entities/course/ui/ControlPanel/CourseDetailsMain').then(module => ({ default: module.CourseDetailsMain })));
 import { AccessRightEnum, Course } from "@/shared/api/course/model";
 
 const CoursePage = () => {

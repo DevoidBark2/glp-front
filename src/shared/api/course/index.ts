@@ -13,8 +13,7 @@ export const getAllCoursesByUser = async (): Promise<Course[]> => {
     return data.data
 }
 
-export const createCourse = async (values: Course): Promise<Course> => {
-    debugger
+export const createCourse = async (values: Course) => {
     const form = new FormData();
     form.append('name', values.name)
     form.append('small_description', values.small_description)
@@ -28,12 +27,11 @@ export const createCourse = async (values: Course): Promise<Course> => {
     if (values.category) {form.append('category', values.category.toString());}
     if (values.content_description) {form.append("content_description", values.content_description)}
 
-    const data = (await axiosInstance.post('/api/course', form, {
+    return (await axiosInstance.post('/api/course', form, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
     })).data;
-    return data.data;
 }
 
 export const confirmLeaveCourse = async (courseId: number) => (await axiosInstance.delete(`api/leave-course/${courseId}`)).data

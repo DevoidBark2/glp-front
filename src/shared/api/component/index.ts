@@ -20,11 +20,7 @@ export const searchComponentsByTitle = async (query: string): Promise<ComponentT
     return data.data
 }
 
-export const createComponent = async (body: CourseComponent): Promise<{component: ComponentTask, message: string}> => {
-    const data = (await axiosInstance.post('api/components', body)).data
-
-    return data.data;
-}
+export const createComponent = async (body: CourseComponent) => (await axiosInstance.post('api/components', body)).data
 
 export const deleteComponentById = async (id: string): Promise<{message: string}> => (await axiosInstance.delete(`api/component-task/${id}`)).data
 

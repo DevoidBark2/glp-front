@@ -153,7 +153,7 @@ const ExamPage = observer(() => {
                                             <Draggable key={component.id} draggableId={String(component.id)} index={index}>
                                                 {(dragProvided) => (
                                                     <div
-                                                        ref={provided.innerRef}
+                                                        ref={dragProvided.innerRef}
                                                         {...dragProvided.draggableProps}
                                                         {...dragProvided.dragHandleProps}
                                                         className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow mb-2"

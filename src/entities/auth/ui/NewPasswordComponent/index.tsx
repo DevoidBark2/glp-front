@@ -1,9 +1,9 @@
 "use client"
-import React, { useState } from "react";
-import { Button, Form, Input, notification } from "antd";
+import React, { Suspense, useState } from "react";
+import { Button, Form, Input, notification, Spin } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import {ReCAPTCHA} from "react-google-recaptcha";
+import { ReCAPTCHA } from "react-google-recaptcha";
 
 import { useMobxStores } from "@/shared/store/RootStore";
 import nextConfig from "next.config.mjs";
@@ -11,23 +11,24 @@ import nextConfig from "next.config.mjs";
 const NewPasswordComponent = () => {
     const [recaptcha, setRecaptcha] = useState<string | null>(null);
     const [form] = Form.useForm();
-    const router = useRouter()
+    const router = useRouter();
     const { authStore } = useMobxStores();
+
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
 
     const onSubmit = (values: any) => {
         if (!recaptcha) {
-            notification.error({ message: "Пожалуйста, завершите reCAPTCHA" })
+            notification.error({ message: "Пожалуйста, завершите reCAPTCHA" });
             return;
         }
         authStore.newPassword(values, token).then(() => {
-            notification.success({ message: "Пароль успешно обновлен" })
-            router.push('login')
+            notification.success({ message: "Пароль успешно обновлен" });
+            router.push('login');
         }).catch(e => {
-            notification.error({ message: e.response.data.message })
-        })
-    }
+            notification.error({ message: e.response.data.message });
+        });
+    };
 
     return (
         <div className="flex mt-8 px-4">
@@ -84,7 +85,7 @@ const NewPasswordComponent = () => {
                     <div className="flex flex-col items-center">
                         <Form.Item style={{ marginTop: '22px' }}>
                             <Button color="default" variant="solid" htmlType="submit"
-                                style={{ padding: '20px 43px', display: "flex", alignItems: "center" }}>
+                                    style={{ padding: '20px 43px', display: "flex", alignItems: "center" }}>
                                 Продолжить
                             </Button>
                         </Form.Item>
@@ -92,7 +93,13 @@ const NewPasswordComponent = () => {
                 </Form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default NewPasswordComponent
+const SuspenseWrapper = () => (
+        <Suspense fallback={<div className="flex justify-center"><Spin size="large" /></div>}>
+            <NewPasswordComponent />
+        </Suspense>
+    );
+
+export default SuspenseWrapper;

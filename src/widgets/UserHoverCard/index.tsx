@@ -16,9 +16,6 @@ export const UserHoverCard: FC<UserHoverCardProps> = ({ user }) => (
         <Typography.Paragraph>
             <strong>Email:</strong> {user.email}
         </Typography.Paragraph>
-        <Typography.Paragraph>
-            <strong>Телефон:</strong> {user.phone}
-        </Typography.Paragraph>
         <Link href={`/control-panel/users/${user.id}`}>
             <Button type="link" style={{ paddingLeft: 0 }}>
                 Посмотреть профиль

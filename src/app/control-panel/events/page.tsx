@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
-import { Table, TableColumnsType, Tooltip, Tag } from "antd";
+import {Table, TableColumnsType, Tooltip, Tag, Popover} from "antd";
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import {
     CheckCircleOutlined,
-    CloseCircleOutlined,
+    CloseCircleOutlined, CrownOutlined,
     UserOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -16,6 +16,8 @@ import { PageContainerControlPanel, PageHeader } from "@/shared/ui";
 import {useMobxStores} from "@/shared/store/RootStore";
 import {SettingControlPanel} from "@/shared/model";
 import {ActionEvent} from "@/shared/api/action-user";
+import {UserRole} from "@/shared/api/user/model";
+import {UserHoverCard} from "@/widgets";
 
 const EventPage = () => {
     const { eventStore } = useMobxStores();
@@ -81,16 +83,23 @@ const EventPage = () => {
         {
             dataIndex: "user",
             title: "Пользователь",
-            render: (value, record) => (
-                <div>
-                    <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
-                    <Link
-                        href={`/control-panel/users/${record.id}`}
-                        className="hover:text-black"
-                    >
-                        {`${record.user.second_name ?? ""} ${record.user.first_name ?? ""} ${record.user.last_name ?? ""}`}
+            render: (_, record) => (
+                record.user?.role === UserRole.SUPER_ADMIN ? (
+                    <Link href={`/control-panel/profile`} className="hover:text-yellow-500">
+                        <Tooltip title="Перейти в профиль">
+                            <Tag icon={<CrownOutlined />} color="gold" style={{ marginRight: 8 }}>
+                                Администратор
+                            </Tag>
+                        </Tooltip>
                     </Link>
-                </div>
+                ) : (
+                    <Popover content={<UserHoverCard user={record.user} />} title="Краткая информация" trigger="hover">
+                        <UserOutlined style={{ marginRight: 8, color: MAIN_COLOR, fontSize: "18px" }} />
+                        <Link href={`/control-panel/users/${record.user?.id}`} className="hover:text-blue-500">
+                            {`${record.user?.second_name ?? ''} ${record.user?.first_name ?? ''} ${record.user?.last_name ?? ''}`}
+                        </Link>
+                    </Popover>
+                )
             ),
         },
     ];

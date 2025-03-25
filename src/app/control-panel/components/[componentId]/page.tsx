@@ -3,11 +3,13 @@ import {Breadcrumb, Button, Divider, Form, Input, notification, Select, Spin, Ta
 import { observer } from "mobx-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React, {lazy, useEffect, useState} from "react"
 
 import {PageContainerControlPanel} from "@/shared/ui";
-import {MultiPlayChoice, QuizTask, TextTask} from "@/entities/course/ui";
-import {TaskWithFormula} from "@/entities/course/ui/CreateTask/TaskWithFormula";
+const MultiPlayChoice = lazy(() => import('@/entities/course/ui').then(module => ({ default: module.MultiPlayChoice })));
+const QuizTask = lazy(() => import('@/entities/course/ui').then(module => ({ default: module.QuizTask })));
+const TextTask = lazy(() => import('@/entities/course/ui').then(module => ({ default: module.TextTask })));
+const TaskWithFormula = lazy(() => import('@/entities/course/ui').then(module => ({ default: module.TaskWithFormula })));
 import {useMobxStores} from "@/shared/store/RootStore";
 import {CourseComponentType, StatusCourseComponentEnum} from "@/shared/api/component/model";
 import {ComponentTask} from "@/shared/api/course/model";

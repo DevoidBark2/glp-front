@@ -1,12 +1,6 @@
 import React from "react"
 import { AutoComplete, Button, Form, Input, Table, TableColumnsType, Tooltip } from "antd"
-import {
-    BookOutlined,
-    CheckCircleOutlined,
-    CodeOutlined,
-    ProjectOutlined,
-    ReconciliationOutlined, EditOutlined, DeleteOutlined
-} from "@ant-design/icons";
+import { DeleteOutlined  } from "@ant-design/icons";
 import Link from "next/link";
 import { FormInstance } from "antd/lib";
 import {observer} from "mobx-react";
@@ -15,9 +9,11 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-ki
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
 import { useMobxStores } from "@/shared/store/RootStore";
-import { CourseComponent, CourseComponentType } from "@/shared/api/component/model";
+import { CourseComponent } from "@/shared/api/component/model";
 import {renderType} from "@/shared/lib/course/course.lib";
 import { DragHandle, Row } from "@/entities/course/ui";
+import {ComponentTask} from "@/shared/api/course/model";
+import {typeIcons} from "@/shared/columnsTables/taskColumns";
 
 interface SelectComponentProps {
     createSectionForm: FormInstance
@@ -30,15 +26,6 @@ export const SelectComponent = observer(({ createSectionForm }: SelectComponentP
         if (value && value.length > 2) {
             courseComponentStore.searchComponents(value);
         }
-    };
-
-    const typeIcons = {
-        [CourseComponentType.Text]: <BookOutlined style={{ color: '#1890ff' }} />,
-        [CourseComponentType.Quiz]: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
-        [CourseComponentType.Coding]: <CodeOutlined style={{ color: '#ff4d4f' }} />,
-        [CourseComponentType.MultiPlayChoice]: <ProjectOutlined style={{ color: '#faad14' }} />,
-        [CourseComponentType.Matching]: <ReconciliationOutlined style={{ color: '#2f54eb' }} />,
-        [CourseComponentType.Sequencing]: <EditOutlined style={{ color: '#13c2c2' }} />,
     };
 
     const handleDelete = (record: CourseComponent) => {
@@ -83,7 +70,7 @@ export const SelectComponent = observer(({ createSectionForm }: SelectComponentP
     };    
 
 
-    const columns: TableColumnsType<CourseComponent> = [
+    const columns: TableColumnsType<ComponentTask> = [
         { key: "sort", align: "center", width: 80, render: () => <DragHandle /> },
         {
             title: 'Название',

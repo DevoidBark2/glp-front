@@ -240,7 +240,7 @@ class CourseStore {
 
     createCourse = action(async (values: Course) => {
         this.setLoadingCreateCourse(true)
-        return await createCourse(values).catch(e => {
+        return await createCourse(values).then(response => response).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => this.setLoadingCreateCourse(false))
     })
@@ -323,25 +323,31 @@ class CourseStore {
         })
 
         this.examCourse = {
+            id: data.id,
+            status: data.status,
+            created_at: data.created_at,
+            user: data.user,
             title: data.title,
             exam: data.exam,
-            components: this.examCourse?.components.map(component => {
-                const matchingComponent = data.components.find(
-                    newComponent => newComponent.componentTask.id === component.componentTask.id
-                );
+            components: this.examCourse?.components
+                ? this.examCourse.components.map(component => {
+                    const matchingComponent = data.components.find(
+                        (newComponent: any) => newComponent.componentTask.id === component.componentTask.id
+                    );
 
-                if (matchingComponent) {
-                    return {
-                        ...component,
-                        componentTask: {
-                            ...component.componentTask,
-                            userAnswer: matchingComponent.componentTask.userAnswer
-                        }
-                    };
-                }
+                    if (matchingComponent) {
+                        return {
+                            ...component,
+                            componentTask: {
+                                ...component.componentTask,
+                                userAnswer: matchingComponent.componentTask.userAnswer
+                            }
+                        };
+                    }
 
-                return component;
-            })
+                    return component;
+                })
+                : []
         };
     });
 

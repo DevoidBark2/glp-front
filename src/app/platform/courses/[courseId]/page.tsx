@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {lazy, useEffect, useState} from "react";
 import { observer } from "mobx-react";
 import { Avatar, Breadcrumb, Button, Divider, message, notification, Spin } from "antd";
 import { useParams , useRouter } from "next/navigation";
@@ -9,11 +9,12 @@ import Image from "next/image";
 
 import nextConfig from "next.config.mjs";
 import { AccessRightEnum, Course } from "@/shared/api/course/model";
-import { CourseLevelComponent, InputSecretKeyModal } from "@/entities/course/ui";
+import { CourseLevelComponent } from "@/entities/course/ui";
 import { useMobxStores } from "@/shared/store/RootStore";
 import { AuthMethodEnum } from "@/shared/api/auth/model";
 import { CourseReviews } from "@/entities/review";
 
+const InputSecretKeyModal = lazy(() => import("@/entities/course/ui").then(module => ({ default: module.InputSecretKeyModal })));
 
 const CoursePage = () => {
     const { courseStore, userProfileStore, reviewStore } = useMobxStores();

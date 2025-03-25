@@ -48,14 +48,15 @@ const ProfilePage = () => {
 
   useEffect(() => {
     userProfileStore.getUserProfile().then((response) => {
-      formProfile.setFieldsValue(response);
-      formSettings.setFieldsValue(response);
-      if (response.show_footer_table) {
-        setShowFooterOptions(true)
+      if (response) {
+        formProfile.setFieldsValue(response);
+        formSettings.setFieldsValue(response);
+        if (response.show_footer_table) {
+          setShowFooterOptions(true)
+        }
       }
-
     }).finally(() => {
-      userProfileStore.setLoading(false)
+      userProfileStore.setLoading(false);
     });
   }, []);
 

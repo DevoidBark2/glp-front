@@ -17,7 +17,7 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
     const { title, description, questions, userAnswer } = task;
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswers, setSelectedAnswers] = useState<(number[] | null)>(() =>
+    const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(() =>
         userAnswer
             ? userAnswer.answer.map((ans) => ans.userAnswer)
             : Array(questions.length).fill(null)
@@ -43,13 +43,16 @@ export const QuizComponent = observer(({ task, onCheckResult, isExamTask, isEndE
         }
 
         if(selectedAnswers) {
+            const filteredAnswers = selectedAnswers.filter(
+                (answer): answer is number => answer !== null
+            )
             if (isRetrying) {
-                await onCheckResult(task, selectedAnswers).then((result) => {
+                await onCheckResult(task, filteredAnswers).then((result) => {
                     setUserAnswers(result.userAnswer);
                 });
             } else {
                 if (onCheckResult) {
-                    await onCheckResult(task, selectedAnswers).then((result) => {
+                    await onCheckResult(task, filteredAnswers).then((result) => {
                         setUserAnswers(result.userAnswer);
                     });
 

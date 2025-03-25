@@ -120,5 +120,3 @@ export const FormSteps = observer(({ sectionCourseForm }: FormStepsProps) => {
         </Form>
     );
 });
-
-export default FormSteps;

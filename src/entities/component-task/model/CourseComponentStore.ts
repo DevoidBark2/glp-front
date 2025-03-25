@@ -21,7 +21,7 @@ class CourseComponentStore {
     loadingCourseComponent: boolean = false;
     courseComponents: ComponentTask[] = []
     searchResults: ComponentTask[] = [];
-    selectedComponents: CourseComponent[] = [];
+    selectedComponents: ComponentTask[] = [];
     createLoading: boolean = false
 
     setCreateLoading = action((value: boolean) => {
@@ -32,7 +32,7 @@ class CourseComponentStore {
         this.searchResults = value;
     })
 
-    setSelectedComponent = action((value: CourseComponent[]) => {
+    setSelectedComponent = action((value: ComponentTask[]) => {
         this.selectedComponents = value
     })
     setLoadingCourseComponent = action((value: boolean) => {
@@ -41,10 +41,7 @@ class CourseComponentStore {
 
     addComponentCourse = action(async (values: ComponentTask) => {
         this.setCreateLoading(true)
-        await createComponent(values).then(response => {
-            this.courseComponents = [...this.courseComponents, componentTaskMapper(response.component)]
-            notification.success({ message: response.message })
-        }).catch(e => {
+        return await createComponent(values).then(response => response).catch(e => {
             notification.error({ message: e.response.data.message })
         }).finally(() => {
             this.setCreateLoading(true)
@@ -85,7 +82,7 @@ class CourseComponentStore {
         });
     })
 
-    addComponentToTableForSection = action((component: CourseComponent) => {
+    addComponentToTableForSection = action((component: ComponentTask) => {
         const exists = this.selectedComponents.find(item => item.id === component.id);
         if (!exists) {
             this.selectedComponents = [...this.selectedComponents, component];
